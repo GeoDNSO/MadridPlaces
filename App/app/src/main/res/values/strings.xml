@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name" translatable="false">AppX</string>
+    <string name="menu_settings_text">Ajustes</string>
+    <string name="menu_aboutus_text">¿Quiénes Somos?</string>
+    <string name="menu_home_text">Inicio</string>
+    <string name="menu_history_text">Historial</string>
+    <string name="menu_browser_text">Buscador</string>
+</resources>
