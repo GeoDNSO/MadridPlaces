@@ -2,21 +2,35 @@ package com.example.App.ui.register;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.App.R;
 
 public class RegisterFragment extends Fragment {
 
     private RegisterViewModel mViewModel;
+
+    /*MVVM*/
+    EditText completeName;
+    EditText username;
+    EditText email;
+    EditText password, repeatpassword;
+    Button register;
+    TextView to_login;
 
     public static RegisterFragment newInstance() {
         return new RegisterFragment();
@@ -25,7 +39,42 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.register_fragment, container, false);
+        View root = inflater.inflate(R.layout.register_fragment, container, false);
+
+        completeName = (EditText) root.findViewById(R.id.register_completename);
+        username = (EditText) root.findViewById(R.id.username);
+        email = (EditText) root.findViewById(R.id.register_email);
+        password = (EditText) root.findViewById(R.id.password);
+        repeatpassword = (EditText) root.findViewById(R.id.register_repeat_password);
+        register = (Button) root.findViewById(R.id.button);
+        to_login = (TextView) root.findViewById(R.id.to_login);
+
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String pass = password.getText().toString();
+                String pass2 = repeatpassword.getText().toString();
+                if(!pass.isEmpty()){
+                    if(pass.equals(pass2)) {
+                        Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_homeFragment);
+                    }
+                    else{
+                        Toast.makeText(getActivity(), "Contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Toast.makeText(getActivity(), "Contraseña vacía", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        to_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_loginFragment);
+            }
+        });
+
+        return root;
     }
 
     @Override
