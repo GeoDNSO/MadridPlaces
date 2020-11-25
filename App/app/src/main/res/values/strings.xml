@@ -5,4 +5,16 @@
     <string name="menu_home_text">Inicio</string>
     <string name="menu_history_text">Historial</string>
     <string name="menu_browser_text">Buscador</string>
+    <string name="register_button_text">Registrarse</string>
+    <string name="login_button_text">Login</string>
+
+    <string name="app_login">Login</string>
+    <string name="app_register">Register</string>
+    <string name="app_user_name">Nombre de Usuario</string>
+    <string name="app_user_pass">Contraseña</string>
+    <string name="app_user_pass2">Repite contraseña</string>
+    <string name="app_user_email">E-mail</string>
+    <string name="app_user_real_name">Nombre completo</string>
+    <string name="app_already_login"><u>Haz login aquí</u></string>
+    <string name="app_new_login"><u>Create una cuenta</u></string>
 </resources>

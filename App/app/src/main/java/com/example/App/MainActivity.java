@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Thread.sleep(300); //Para añadir un pequeño delay antes del splash screen
-        setTheme(R.style.Theme_ModuloUsuario);
+        setTheme(R.style.Theme_App);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
