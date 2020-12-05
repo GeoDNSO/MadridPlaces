@@ -20,16 +20,18 @@ import android.widget.TextView;
 
 import com.example.App.R;
 import com.example.App.SessionManager;
+import com.example.App.ui.aboutus.AboutUsViewModel;
 import com.example.App.ui.home.HomeFragment;
 
 public class LoginFragment extends Fragment {
 
     private LoginViewModel mViewModel;
-
+    private View root;
     /*MVVM*/
-    EditText username, password;
-    TextView to_create;
-    Button login;
+    private EditText username;
+    private EditText password;
+    private TextView to_create;
+    private Button login;
     private SessionManager session; //global variable
 
     public static LoginFragment newInstance() {
@@ -39,16 +41,13 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.login_fragment, container, false);
-
-        username = (EditText) root.findViewById(R.id.username);
-        password = (EditText) root.findViewById(R.id.password);
-        login = (Button) root.findViewById(R.id.button);
-        to_create = (TextView) root.findViewById(R.id.login_to_create2);
+        initializateVariables();
+        root = inflater.inflate(R.layout.login_fragment, container, false);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Hay que cambiarlo, esta solo como prueba
                 session = new SessionManager(getActivity());
                 session.setUsername("Hola");
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeFragment);
@@ -62,6 +61,14 @@ public class LoginFragment extends Fragment {
             }
         });
         return root;
+    }
+
+    private void initializateVariables(){
+        mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        username = (EditText) root.findViewById(R.id.username);
+        password = (EditText) root.findViewById(R.id.password);
+        login = (Button) root.findViewById(R.id.button);
+        to_create = (TextView) root.findViewById(R.id.login_to_create2);
     }
 
     @Override
