@@ -31,10 +31,5 @@ public class Validator {
         return true;
     }
 
-    public static boolean userNotExists(String username, String password){
-        //TODO --> APP --> LLAMAR A DAO, CONECTAR CON BD Y VERIFICAR QUE LA COMBINACIÓN USUARIO Y CONTASEÑA NO EXISTE
-        return true;
-    }
-
 
 }

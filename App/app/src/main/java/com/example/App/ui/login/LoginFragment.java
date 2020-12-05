@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
+import com.example.App.transfer.TUser;
 import com.example.App.utilities.Validator;
 
 public class LoginFragment extends Fragment {
@@ -88,24 +89,18 @@ public class LoginFragment extends Fragment {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
 
-        if(Validator.userNotExists(username, pass)){ //TODO funcion userNotExists en Validator. HAY QUE LLAMAR a app EN LA FUNCION
-            tv_LoginText.setError(getString(R.string.login_failed));
-        }
-
-        if(!errorsInForm() && true){ //TODO true --> Llamar a APP para loguear y actuar en consecuencia si el login ha salido bien o no
+        if(true){ //TODO true --> Llamar a APP para loguear y actuar en consecuencia si el login ha salido bien o no
             //las primeras dos líneas de codigo son de ejemplo
             app = App.getInstance(getActivity());
-            app.setUsername("Hola");
+            //TODO En vez de crear user por defecto hay que obtenerlo a traves de la app;
+            TUser u = new TUser("username", "xxxx","Pepe", "Perez", "pepe@gmail.com", "H", "01/01/1990", "Madrid", false);
+            app.setUserSession(u);
             Toast.makeText(getActivity(), getString(R.string.sign_in), Toast.LENGTH_SHORT).show();
             Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeFragment);
         }
         else{
             Toast.makeText(getActivity(), getString(R.string.register_failed), Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private boolean errorsInForm(){
-        return !(tv_LoginText.getError() == null);
     }
 
 }

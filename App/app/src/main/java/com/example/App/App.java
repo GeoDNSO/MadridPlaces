@@ -2,6 +2,8 @@ package com.example.App;
 
 import android.content.Context;
 
+import com.example.App.transfer.TUser;
+
 public class App {
 
     private SessionManager sessionManager;
@@ -48,8 +50,9 @@ public class App {
 
     }
 
-    public void setUsername(String username){
-        sessionManager.setUsername(username);
+    public void setUserSession(TUser user){
+        sessionManager.setLogged(true);
+        sessionManager.setUserInfo(user);
     }
 
     public String getUsername(){
