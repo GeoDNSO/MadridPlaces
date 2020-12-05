@@ -15,10 +15,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.SessionManager;
+import com.example.App.utilities.Validator;
 
 public class LoginFragment extends Fragment {
 
@@ -26,9 +27,10 @@ public class LoginFragment extends Fragment {
     private LoginViewModel mViewModel;
 
     /*MVVM*/
-    private EditText username, password;
-    private TextView to_create;
-    private Button login;
+    private TextView tv_LoginText;
+    private EditText et_Username, et_Password;
+    private TextView tv_ToCreate;
+    private Button loginButton;
     private App app; //global variable
 
     public static LoginFragment newInstance() {
@@ -56,13 +58,13 @@ public class LoginFragment extends Fragment {
     }
 
     private void initializeListeners(){
-        login.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginOnClickAction(v);
             }
         });
-        to_create.setOnClickListener(new View.OnClickListener() {
+        tv_ToCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_registerFragment);
@@ -71,17 +73,39 @@ public class LoginFragment extends Fragment {
     }
 
     private void initializeUI(){
-        username = (EditText) root.findViewById(R.id.username);
-        password = (EditText) root.findViewById(R.id.password);
-        login = (Button) root.findViewById(R.id.button);
-        to_create = (TextView) root.findViewById(R.id.login_to_create2);
+        et_Username = (EditText) root.findViewById(R.id.username);
+        et_Password = (EditText) root.findViewById(R.id.password);
+        loginButton = (Button) root.findViewById(R.id.button);
+        tv_ToCreate = (TextView) root.findViewById(R.id.login_to_create2);
+        tv_LoginText = (TextView) root.findViewById(R.id.login_text);
     }
 
     private void loginOnClickAction(View v){
-        //De ejemplo
-        app = App.getInstance(getActivity());
-        app.setUsername("Hola");
-        Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeFragment);
+        String username = et_Username.getText().toString();
+        String pass = et_Password.getText().toString();
+
+        if (Validator.argumentsEmpty(username, pass)) {
+            Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
+        }
+
+        if(Validator.userNotExists(username, pass)){ //TODO funcion userNotExists en Validator. HAY QUE LLAMAR a app EN LA FUNCION
+            tv_LoginText.setError(getString(R.string.login_failed));
+        }
+
+        if(!errorsInForm() && true){ //TODO true --> Llamar a APP para loguear y actuar en consecuencia si el login ha salido bien o no
+            //las primeras dos líneas de codigo son de ejemplo
+            app = App.getInstance(getActivity());
+            app.setUsername("Hola");
+            Toast.makeText(getActivity(), getString(R.string.sign_in), Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeFragment);
+        }
+        else{
+            Toast.makeText(getActivity(), getString(R.string.register_failed), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean errorsInForm(){
+        return !(tv_LoginText.getError() == null);
     }
 
 }

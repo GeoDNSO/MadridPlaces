@@ -25,5 +25,7 @@
     <string name="empty_fields">Hay algún campo vacío</string>
     <string name="username_exists">El nombre de usuario ya existe</string>
     <string name="account_created">Cuenta creado con éxito</string>
+    <string name="sign_in">Se ha iniciado la sesión</string>
     <string name="register_failed">Error al registrarse</string>
+    <string name="login_failed">Usuario o contraseña incorrectas</string>
 </resources>
