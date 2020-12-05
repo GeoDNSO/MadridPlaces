@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.App.App;
 import com.example.App.R;
 import com.example.App.SessionManager;
 
@@ -28,9 +29,7 @@ public class LoginFragment extends Fragment {
     private EditText username, password;
     private TextView to_create;
     private Button login;
-    private SessionManager session; //global variable
-
-
+    private App app; //global variable
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -48,8 +47,9 @@ public class LoginFragment extends Fragment {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                session = new SessionManager(getActivity());
-                session.setUsername("Hola");
+                //De ejemplo
+                app = new App();
+                app.setUsername("Hola");
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeFragment);
             }
         });

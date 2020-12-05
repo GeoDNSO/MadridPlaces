@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.App.App;
 import com.example.App.R;
 import com.example.App.SessionManager;
 
@@ -24,8 +25,7 @@ public class HomeFragment extends Fragment {
     private Button btn_register;
     private Button btn_login;
     private Button btn_logout;
-
-    private SessionManager session;//global variable
+    private App app; //global variable
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -40,18 +40,12 @@ public class HomeFragment extends Fragment {
 
         initializeUI();
 
-        //crear una sessionManager
-        session = new SessionManager(getActivity());
+        //crear una app
+        app = new App();
 
         //TODO :Use the ViewModel to obtain Data/Implement observers
-        Button btn_register = root.findViewById(R.id.home_register_button);
-        Button btn_login = root.findViewById(R.id.home_login_button);
-        Button btn_logout = root.findViewById(R.id.home_logout_button);
 
-
-        session = new SessionManager(getActivity());
-
-        if(!session.getUsername().isEmpty()) {
+        if(!app.getUsername().isEmpty()) {
             btn_register.setVisibility(View.GONE);
             btn_login.setVisibility(View.GONE);
             btn_logout.setVisibility(View.VISIBLE);
@@ -78,7 +72,7 @@ public class HomeFragment extends Fragment {
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                session.logout();
+                app.logout();
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_loginFragment);
             }
         });

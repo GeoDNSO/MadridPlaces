@@ -24,8 +24,8 @@ public class App {
         return false;
     }
 
-    public boolean logout(){
-        return false;
+    public void logout(){
+        sessionManager.logout();
     }
 
     public void getUserData(){
@@ -34,6 +34,14 @@ public class App {
 
     public void getUsersList(){
 
+    }
+
+    public void setUsername(String username){
+        sessionManager.setUsername(username);
+    }
+
+    public String getUsername(){
+        return sessionManager.getUsername();
     }
 
 }
