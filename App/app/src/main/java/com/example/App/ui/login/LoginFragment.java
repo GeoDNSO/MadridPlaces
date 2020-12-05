@@ -3,6 +3,7 @@ package com.example.App.ui.login;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.App.R;
+import com.example.App.SessionManager;
+import com.example.App.ui.home.HomeFragment;
 
 public class LoginFragment extends Fragment {
 
@@ -27,6 +30,7 @@ public class LoginFragment extends Fragment {
     EditText username, password;
     TextView to_create;
     Button login;
+    private SessionManager session; //global variable
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -45,6 +49,8 @@ public class LoginFragment extends Fragment {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                session = new SessionManager(getActivity());
+                session.setUsername("Hola");
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeFragment);
             }
         });

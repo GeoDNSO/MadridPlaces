@@ -10,6 +10,7 @@
 
     <string name="app_login">Login</string>
     <string name="app_register">Registrase</string>
+    <string name="app_logout">Logout</string>
     <string name="app_user_name">Nombre de Usuario</string>
     <string name="app_user_pass">Contraseña</string>
     <string name="app_user_pass2">Repite contraseña</string>
