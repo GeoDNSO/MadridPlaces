@@ -23,8 +23,8 @@
 
     <EditText
         android:id="@+id/username"
-        android:layout_width="332dp"
-        android:layout_height="50dp"
+        android:layout_width="300dp"
+        android:layout_height="45dp"
         android:layout_marginTop="20dp"
         android:autofillHints=""
         android:drawableStart="@drawable/ic_username"
@@ -41,9 +41,9 @@
 
     <EditText
         android:id="@+id/register_completename"
-        android:layout_width="332dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="15dp"
         android:autofillHints=""
         android:drawableStart="@drawable/ic_contact"
         android:drawablePadding="10dp"
@@ -58,9 +58,9 @@
 
     <EditText
         android:id="@+id/register_surname"
-        android:layout_width="332dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="15dp"
         android:autofillHints=""
         android:drawableStart="@drawable/ic_contact"
         android:drawablePadding="10dp"
@@ -75,9 +75,9 @@
 
     <EditText
         android:id="@+id/register_email"
-        android:layout_width="332dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="15dp"
         android:autofillHints=""
         android:drawableStart="@drawable/ic_baseline_email_24"
         android:drawablePadding="10dp"
@@ -92,9 +92,9 @@
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="332dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="15dp"
         android:autofillHints=""
         android:drawableStart="@drawable/ic_password"
         android:drawablePadding="10dp"
@@ -109,9 +109,9 @@
 
     <EditText
         android:id="@+id/register_repeat_password"
-        android:layout_width="332dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:autofillHints=""
         android:drawableStart="@drawable/ic_password"
         android:drawablePadding="10dp"
@@ -128,7 +128,7 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:text="@string/app_register"
         app:backgroundTint="#239EFF"
         app:layout_constraintEnd_toEndOf="parent"
@@ -139,7 +139,7 @@
         android:id="@+id/to_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="15dp"
         android:text="@string/app_already_login"
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"

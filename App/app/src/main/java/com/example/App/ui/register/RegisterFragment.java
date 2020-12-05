@@ -55,6 +55,7 @@ public class RegisterFragment extends Fragment {
     private void initializeUI(){
         et_Name = (EditText) root.findViewById(R.id.register_completename);
         et_Username = (EditText) root.findViewById(R.id.username);
+        et_Surname = (EditText) root.findViewById(R.id.register_surname);
         et_Email = (EditText) root.findViewById(R.id.register_email);
         et_Password = (EditText) root.findViewById(R.id.password);
         et_RepeatPassword = (EditText) root.findViewById(R.id.register_repeat_password);
@@ -90,10 +91,11 @@ public class RegisterFragment extends Fragment {
     private void registerOnClickAction(View v){
         String username = et_Username.getText().toString();
         String name = et_Name.getText().toString();
+        String email = et_Email.getText().toString();
         String surname = et_Surname.getText().toString();
         String pass = et_Password.getText().toString();
         String pass2 = et_RepeatPassword.getText().toString();
-        if(!pass.isEmpty()){
+        if(!pass.isEmpty() && !pass2.isEmpty()){
             if(pass.equals(pass2)) {
                 Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_homeFragment);
             }
