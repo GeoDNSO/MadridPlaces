@@ -4,7 +4,6 @@ public class App {
 
     private SessionManager sessionManager;
 
-
     public App(){
 
     }
@@ -36,6 +35,5 @@ public class App {
     public void getUsersList(){
 
     }
-
 
 }

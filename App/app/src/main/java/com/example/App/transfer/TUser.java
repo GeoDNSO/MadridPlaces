@@ -1,6 +1,6 @@
 package com.example.App.transfer;
 
-public class User {
+public class TUser {
     private String username;
     private String password;
     private String name;
@@ -11,7 +11,7 @@ public class User {
     private String city;
     private boolean admin;
 
-    public User(String username, String password, String name, String surname, String email, String gender, String birthDate, String city, boolean admin) {
+    public TUser(String username, String password, String name, String surname, String email, String gender, String birthDate, String city, boolean admin) {
         this.username = username;
         this.password = password;
         this.name = name;
