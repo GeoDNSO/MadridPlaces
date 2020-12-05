@@ -22,15 +22,14 @@ import com.example.App.R;
 public class RegisterFragment extends Fragment {
 
     private RegisterViewModel mViewModel;
-    private View root;
+
     /*MVVM*/
-    private EditText completeName;
-    private EditText username;
-    private EditText email;
-    private EditText password;
-    private EditText repeatpassword;
-    private Button register;
-    private TextView to_login;
+    EditText completeName;
+    EditText username;
+    EditText email;
+    EditText password, repeatpassword;
+    Button register;
+    TextView to_login;
 
     public static RegisterFragment newInstance() {
         return new RegisterFragment();

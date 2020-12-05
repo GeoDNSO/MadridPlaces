@@ -22,12 +22,11 @@ import com.example.App.SessionManager;
 public class LoginFragment extends Fragment {
 
     private LoginViewModel mViewModel;
-    private View root;
+
     /*MVVM*/
-    private EditText username;
-    private EditText password;
-    private TextView to_create;
-    private Button login;
+    EditText username, password;
+    TextView to_create;
+    Button login;
     private SessionManager session; //global variable
 
     public static LoginFragment newInstance() {
@@ -46,7 +45,6 @@ public class LoginFragment extends Fragment {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Hay que cambiarlo, esta solo como prueba
                 session = new SessionManager(getActivity());
                 session.setUsername("Hola");
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeFragment);
