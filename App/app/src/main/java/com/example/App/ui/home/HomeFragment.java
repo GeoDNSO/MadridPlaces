@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.App.R;
-import com.example.App.ui.sessionManager.SessionManager;
+import com.example.App.SessionManager;
 
 public class HomeFragment extends Fragment {
 
