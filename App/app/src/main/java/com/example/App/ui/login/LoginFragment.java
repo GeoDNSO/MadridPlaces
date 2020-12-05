@@ -21,13 +21,16 @@ import com.example.App.SessionManager;
 
 public class LoginFragment extends Fragment {
 
+    private View root;
     private LoginViewModel mViewModel;
 
     /*MVVM*/
-    EditText username, password;
-    TextView to_create;
-    Button login;
+    private EditText username, password;
+    private TextView to_create;
+    private Button login;
     private SessionManager session; //global variable
+
+
 
     public static LoginFragment newInstance() {
         return new LoginFragment();

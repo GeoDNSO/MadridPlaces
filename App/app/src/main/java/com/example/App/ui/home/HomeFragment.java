@@ -18,7 +18,13 @@ import com.example.App.SessionManager;
 
 public class HomeFragment extends Fragment {
 
+    private View root;
     private HomeViewModel mViewModel;
+
+    private Button btn_register;
+    private Button btn_login;
+    private Button btn_logout;
+
     private SessionManager session;//global variable
 
     public static HomeFragment newInstance() {
