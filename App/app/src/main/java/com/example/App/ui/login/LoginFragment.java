@@ -43,24 +43,31 @@ public class LoginFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
         initializeUI();
+        initializeListeners();
 
+        return root;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        // TODO: Use the ViewModel
+    }
+
+    private void initializeListeners(){
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //De ejemplo
-                app = new App();
-                app.setUsername("Hola");
-                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeFragment);
+                loginOnClickAction(v);
             }
         });
-
         to_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_registerFragment);
             }
         });
-        return root;
     }
 
     private void initializeUI(){
@@ -70,11 +77,11 @@ public class LoginFragment extends Fragment {
         to_create = (TextView) root.findViewById(R.id.login_to_create2);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-        // TODO: Use the ViewModel
+    private void loginOnClickAction(View v){
+        //De ejemplo
+        app = App.getInstance(getActivity());
+        app.setUsername("Hola");
+        Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeFragment);
     }
 
 }

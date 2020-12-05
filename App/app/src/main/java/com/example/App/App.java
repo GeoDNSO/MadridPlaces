@@ -1,11 +1,23 @@
 package com.example.App;
 
+import android.content.Context;
+
 public class App {
 
     private SessionManager sessionManager;
 
-    public App(){
+    private static App app;
 
+    private App(Context context){
+        sessionManager = new SessionManager(context);
+    }
+
+    public static App getInstance(Context context){
+        if(app == null)
+            app = new App(context);
+
+        app.sessionManager.setContext(context);
+        return app;
     }
 
     public boolean registerUser(){

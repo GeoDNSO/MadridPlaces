@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     tools:context=".ui.register.RegisterFragment">
+
+    <TextView
+        android:id="@+id/login_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:text="@string/app_register"
+        android:textColor="@color/black"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/username"
@@ -13,9 +28,8 @@
         android:layout_marginTop="20dp"
         android:autofillHints=""
         android:drawableStart="@drawable/ic_username"
-        android:drawableLeft="@drawable/ic_username"
-        android:ems="10"
         android:drawablePadding="10dp"
+        android:ems="10"
         android:hint="@string/app_user_name"
         android:inputType="textPersonName"
         android:singleLine="false"
@@ -26,15 +40,65 @@
         app:layout_constraintTop_toBottomOf="@+id/register_completename" />
 
     <EditText
+        android:id="@+id/register_completename"
+        android:layout_width="332dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:autofillHints=""
+        android:drawableStart="@drawable/ic_contact"
+        android:drawablePadding="10dp"
+        android:ems="10"
+        android:hint="@string/app_user_real_name"
+        android:inputType="textPersonName"
+        android:textColorHint="@color/grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_text" />
+
+    <EditText
+        android:id="@+id/register_surname"
+        android:layout_width="332dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:autofillHints=""
+        android:drawableStart="@drawable/ic_contact"
+        android:drawablePadding="10dp"
+        android:ems="10"
+        android:hint="@string/app_user_surname"
+        android:inputType="textPersonName"
+        android:textColorHint="@color/grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_text" />
+
+    <EditText
+        android:id="@+id/register_email"
+        android:layout_width="332dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:autofillHints=""
+        android:drawableStart="@drawable/ic_baseline_email_24"
+        android:drawablePadding="10dp"
+        android:ems="10"
+        android:hint="@string/app_user_email"
+        android:inputType="textEmailAddress"
+        android:textColorHint="@color/grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <EditText
         android:id="@+id/password"
         android:layout_width="332dp"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:autofillHints=""
         android:drawableStart="@drawable/ic_password"
-        android:drawableLeft="@drawable/ic_password"
-        android:ems="10"
         android:drawablePadding="10dp"
+        android:ems="10"
         android:hint="@string/app_user_pass"
         android:inputType="textPassword"
         android:textColorHint="@color/grey"
@@ -42,6 +106,23 @@
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/register_email" />
+
+    <EditText
+        android:id="@+id/register_repeat_password"
+        android:layout_width="332dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:autofillHints=""
+        android:drawableStart="@drawable/ic_password"
+        android:drawablePadding="10dp"
+        android:ems="10"
+        android:hint="@string/app_user_pass2"
+        android:inputType="textPassword"
+        android:textColorHint="@color/grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
 
     <Button
         android:id="@+id/button"
@@ -55,56 +136,6 @@
         app:layout_constraintTop_toBottomOf="@+id/register_repeat_password" />
 
     <TextView
-        android:id="@+id/login_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:text="@string/app_register"
-        android:textColor="@color/black"
-        android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/register_email"
-        android:layout_width="332dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/app_user_email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username"
-        android:drawablePadding="10dp"
-        android:textColorHint="@color/grey"
-        android:drawableLeft="@drawable/ic_baseline_email_24"
-        android:drawableStart="@drawable/ic_baseline_email_24"
-        />
-
-    <EditText
-        android:id="@+id/register_completename"
-        android:layout_width="332dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="32dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/app_user_real_name"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_text"
-        android:drawablePadding="10dp"
-        android:textColorHint="@color/grey"
-        android:drawableLeft="@drawable/ic_contact"
-        android:drawableStart="@drawable/ic_contact" />
-
-    <TextView
         android:id="@+id/to_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -116,22 +147,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
 
-    <EditText
-        android:id="@+id/register_repeat_password"
-        android:layout_width="332dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:drawablePadding="10dp"
-        android:hint="@string/app_user_pass2"
-        android:inputType="textPassword"
-        android:textColorHint="@color/grey"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password"
-        android:drawableLeft="@drawable/ic_password"
-        android:drawableStart="@drawable/ic_password"
-        android:autofillHints="" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

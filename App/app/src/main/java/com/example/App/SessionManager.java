@@ -17,6 +17,12 @@ public class SessionManager {
         this.editor = prefs.edit();
     }
 
+    public void setContext(Context context){
+        this.context = context;
+        this.prefs = context.getSharedPreferences(SHARED_PRIVATE_FILE, Context.MODE_PRIVATE);
+        this.editor = prefs.edit();
+    }
+
     public void setUsername(String username) {
         editor.putString(AppConstants.USERNAME, username).commit();
     }

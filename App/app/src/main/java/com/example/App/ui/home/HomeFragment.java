@@ -1,4 +1,5 @@
 package com.example.App.ui.home;
+
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -39,22 +40,37 @@ public class HomeFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         initializeUI();
+        initializeListeners();
 
-        //crear una app
-        app = new App();
+        viewAccToUser();
 
-        //TODO :Use the ViewModel to obtain Data/Implement observers
+        return root;
+    }
 
-        if(!app.getUsername().isEmpty()) {
+    //View according to the user's status (logged or not)
+    private void viewAccToUser() {
+
+        app = App.getInstance(getActivity());
+
+        if (!app.getUsername().isEmpty()) {
             btn_register.setVisibility(View.GONE);
             btn_login.setVisibility(View.GONE);
             btn_logout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             btn_register.setVisibility(View.VISIBLE);
             btn_login.setVisibility(View.VISIBLE);
             btn_logout.setVisibility(View.GONE);
         }
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        // TODO: Use the ViewModel
+    }
+
+    private void initializeListeners() {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,21 +92,13 @@ public class HomeFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_loginFragment);
             }
         });
-
-        return root;
     }
 
-    private void initializeUI(){
+    private void initializeUI() {
         btn_register = root.findViewById(R.id.home_register_button);
         btn_login = root.findViewById(R.id.home_login_button);
         btn_logout = root.findViewById(R.id.home_logout_button);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        // TODO: Use the ViewModel
-    }
 
 }
