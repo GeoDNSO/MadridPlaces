@@ -17,6 +17,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 import com.example.App.R;
 
 public class RegisterFragment extends Fragment {
@@ -32,7 +35,6 @@ public class RegisterFragment extends Fragment {
     private EditText et_Password, et_RepeatPassword;
     private Button registerButton;
     private TextView tv_ToLogin;
-
 
 
     public static RegisterFragment newInstance() {
@@ -91,8 +93,10 @@ public class RegisterFragment extends Fragment {
         String username = et_Username.getText().toString();
         String name = et_Name.getText().toString();
         String surname = et_Surname.getText().toString();
+        String email = et_Email.getText().toString();
         String pass = et_Password.getText().toString();
         String pass2 = et_RepeatPassword.getText().toString();
+
         if(!pass.isEmpty()){
             if(pass.equals(pass2)) {
                 Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_homeFragment);

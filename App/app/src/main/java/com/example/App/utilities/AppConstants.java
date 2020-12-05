@@ -1,4 +1,4 @@
-package com.example.App;
+package com.example.App.utilities;
 
 public class AppConstants {
 

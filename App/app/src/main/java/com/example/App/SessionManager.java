@@ -2,7 +2,8 @@ package com.example.App;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import com.example.App.utilities.AppConstants;
 
 public class SessionManager {
 
