@@ -35,12 +35,19 @@ public class HomeFragment extends Fragment {
         //TODO :Use the ViewModel to obtain Data/Implement observers
         Button btn_register = root.findViewById(R.id.home_register_button);
         Button btn_login = root.findViewById(R.id.home_login_button);
+        Button btn_logout = root.findViewById(R.id.home_logout_button);
+
 
         session = new SessionManager(getActivity());
 
-        if(!session.getusename().isEmpty()) {
+        if(!session.getUsername().isEmpty()) {
             btn_register.setVisibility(View.GONE);
             btn_login.setVisibility(View.GONE);
+            btn_logout.setVisibility(View.VISIBLE);
+        }else{
+            btn_register.setVisibility(View.VISIBLE);
+            btn_login.setVisibility(View.VISIBLE);
+            btn_logout.setVisibility(View.GONE);
         }
 
         btn_register.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +60,14 @@ public class HomeFragment extends Fragment {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_loginFragment);
+            }
+        });
+
+        btn_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                session.logout();
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_loginFragment);
             }
         });

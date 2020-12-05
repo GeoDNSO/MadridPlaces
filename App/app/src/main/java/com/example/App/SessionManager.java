@@ -33,4 +33,10 @@ public class SessionManager {
     public boolean isLogged(){
         return prefs.getBoolean(AppConstants.LOGGED, false);
     }
+
+    public void logout() {
+        editor.clear();
+        editor.commit();
+    }
+
 }
