@@ -46,7 +46,22 @@ public class RegisterFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
 
         initializeUI();
+        initializeListeners();
 
+        return root;
+    }
+
+    private void initializeUI(){
+        completeName = (EditText) root.findViewById(R.id.register_completename);
+        username = (EditText) root.findViewById(R.id.username);
+        email = (EditText) root.findViewById(R.id.register_email);
+        password = (EditText) root.findViewById(R.id.password);
+        repeatpassword = (EditText) root.findViewById(R.id.register_repeat_password);
+        register = (Button) root.findViewById(R.id.button);
+        to_login = (TextView) root.findViewById(R.id.to_login);
+    }
+
+    private void initializeListeners(){
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,18 +86,6 @@ public class RegisterFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_loginFragment);
             }
         });
-
-        return root;
-    }
-
-    private void initializeUI(){
-        completeName = (EditText) root.findViewById(R.id.register_completename);
-        username = (EditText) root.findViewById(R.id.username);
-        email = (EditText) root.findViewById(R.id.register_email);
-        password = (EditText) root.findViewById(R.id.password);
-        repeatpassword = (EditText) root.findViewById(R.id.register_repeat_password);
-        register = (Button) root.findViewById(R.id.button);
-        to_login = (TextView) root.findViewById(R.id.to_login);
     }
 
     @Override
