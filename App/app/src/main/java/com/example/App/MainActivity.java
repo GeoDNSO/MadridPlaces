@@ -27,27 +27,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initializeUI();
+
+    }
+
+
+    public void initializeUI(){
         //Set Bottom Navigation
         bottomNavView = findViewById(R.id.app_navigation);
         appNavController = Navigation.findNavController(this, R.id.app_host_fragment);
-
 
         //Drawer Navigation
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerNavigationView = findViewById(R.id.drawer_navigation_view);
         //drawerNavController = Navigation.findNavController(this, R.id.bottom_host_fragment);
 
-        //Flecha arriba
+        //Flecha de arriba
         appBarConfiguration = new AppBarConfiguration.Builder(appNavController.getGraph())
-                .setDrawerLayout(drawerLayout).build();
-
+                .setDrawerLayout(drawerLayout).build(); //SetDrawerLayout(...) is deprecated but the app doens't work if we use other methods
 
         //Navigation UI Setup
         NavigationUI.setupWithNavController(bottomNavView, appNavController);
         NavigationUI.setupWithNavController(drawerNavigationView, appNavController);
         NavigationUI.setupActionBarWithNavController(this, appNavController, drawerLayout);
-
-
     }
 
     //Para la flecha de arriba

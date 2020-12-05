@@ -38,7 +38,7 @@ public class HomeFragment extends Fragment {
 
         session = new SessionManager(getActivity());
 
-        if(!session.getusename().isEmpty()) {
+        if(!session.getUsername().isEmpty()) {
             btn_register.setVisibility(View.GONE);
             btn_login.setVisibility(View.GONE);
         }
