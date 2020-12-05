@@ -13,12 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.App.R;
-import com.example.App.ui.aboutus.AboutUsViewModel;
 
 public class HistoryFragment extends Fragment {
 
     private HistoryViewModel mViewModel;
-    private View root;
 
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
@@ -27,17 +25,14 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        initializateVariables();
-        root = inflater.inflate(R.layout.history_fragment, container, false);
+        mViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
+        View root = inflater.inflate(R.layout.history_fragment, container, false);
 
         //TODO :Use the ViewModel to obtain Data/Implement observers
 
         return root;
     }
 
-    private void initializateVariables(){
-        mViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
-    }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

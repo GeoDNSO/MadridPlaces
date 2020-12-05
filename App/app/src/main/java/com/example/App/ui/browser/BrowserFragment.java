@@ -13,12 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.App.R;
-import com.example.App.ui.aboutus.AboutUsViewModel;
 
 public class BrowserFragment extends Fragment {
 
     private BrowserViewModel mViewModel;
-    private View root;
+
     public static BrowserFragment newInstance() {
         return new BrowserFragment();
     }
@@ -26,16 +25,12 @@ public class BrowserFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        initializateVariables();
-        root = inflater.inflate(R.layout.browser_fragment, container, false);
+        mViewModel = new ViewModelProvider(this).get(BrowserViewModel.class);
+        View root = inflater.inflate(R.layout.browser_fragment, container, false);
 
         //TODO :Use the ViewModel to obtain Data/Implement observers
 
         return root;
-    }
-
-    private void initializateVariables(){
-        mViewModel = new ViewModelProvider(this).get(BrowserViewModel.class);
     }
 
     @Override
