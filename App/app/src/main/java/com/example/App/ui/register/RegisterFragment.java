@@ -19,18 +19,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.App.R;
+import com.example.App.ui.login.LoginViewModel;
 
 public class RegisterFragment extends Fragment {
 
     private RegisterViewModel mViewModel;
-
+    private View root;
     /*MVVM*/
-    EditText completeName;
-    EditText username;
-    EditText email;
-    EditText password, repeatpassword;
-    Button register;
-    TextView to_login;
+    private EditText completeName;
+    private EditText username;
+    private EditText email;
+    private EditText password;
+    private EditText repeatpassword;
+    private Button register;
+    private TextView to_login;
 
     public static RegisterFragment newInstance() {
         return new RegisterFragment();
@@ -39,15 +41,8 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.register_fragment, container, false);
-
-        completeName = (EditText) root.findViewById(R.id.register_completename);
-        username = (EditText) root.findViewById(R.id.username);
-        email = (EditText) root.findViewById(R.id.register_email);
-        password = (EditText) root.findViewById(R.id.password);
-        repeatpassword = (EditText) root.findViewById(R.id.register_repeat_password);
-        register = (Button) root.findViewById(R.id.button);
-        to_login = (TextView) root.findViewById(R.id.to_login);
+        initializateVariables();
+        root = inflater.inflate(R.layout.register_fragment, container, false);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +70,17 @@ public class RegisterFragment extends Fragment {
         });
 
         return root;
+    }
+
+    private void initializateVariables(){
+        mViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
+        completeName = (EditText) root.findViewById(R.id.register_completename);
+        username = (EditText) root.findViewById(R.id.username);
+        email = (EditText) root.findViewById(R.id.register_email);
+        password = (EditText) root.findViewById(R.id.password);
+        repeatpassword = (EditText) root.findViewById(R.id.register_repeat_password);
+        register = (Button) root.findViewById(R.id.button);
+        to_login = (TextView) root.findViewById(R.id.to_login);
     }
 
     @Override

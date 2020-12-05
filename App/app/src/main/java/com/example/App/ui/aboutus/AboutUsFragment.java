@@ -17,7 +17,7 @@ import com.example.App.R;
 public class AboutUsFragment extends Fragment {
 
     private AboutUsViewModel mViewModel;
-
+    private View root;
     public static AboutUsFragment newInstance() {
         return new AboutUsFragment();
     }
@@ -26,12 +26,16 @@ public class AboutUsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        mViewModel = new ViewModelProvider(this).get(AboutUsViewModel.class);
-        View root = inflater.inflate(R.layout.about_us_fragment, container, false);
+        initializateVariables();
+        root = inflater.inflate(R.layout.about_us_fragment, container, false);
 
         //TODO :Use the ViewModel to obtain Data/Implement observers
 
         return root;
+    }
+
+    private void initializateVariables(){
+        mViewModel = new ViewModelProvider(this).get(AboutUsViewModel.class);
     }
 
     @Override

@@ -13,10 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.App.R;
+import com.example.App.ui.aboutus.AboutUsViewModel;
 
 public class SettingsFragment extends Fragment {
 
     private SettingsViewModel mViewModel;
+    private View root;
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -25,12 +27,16 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
-        View root = inflater.inflate(R.layout.settings_fragment, container, false);
-
+        initializateVariables();
+        root = inflater.inflate(R.layout.settings_fragment, container, false);
         //TODO :Use the ViewModel to obtain Data/Implement observers
 
         return root;
+    }
+
+    private void initializateVariables(){
+        mViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
+
     }
 
     @Override
