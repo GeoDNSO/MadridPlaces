@@ -2,8 +2,6 @@ package com.example.App.ui.login;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,8 +18,6 @@ import android.widget.TextView;
 
 import com.example.App.R;
 import com.example.App.SessionManager;
-import com.example.App.ui.aboutus.AboutUsViewModel;
-import com.example.App.ui.home.HomeFragment;
 
 public class LoginFragment extends Fragment {
 
@@ -41,8 +37,11 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        initializateVariables();
+
         root = inflater.inflate(R.layout.login_fragment, container, false);
+        mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+
+        initializeUI();
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,8 +62,7 @@ public class LoginFragment extends Fragment {
         return root;
     }
 
-    private void initializateVariables(){
-        mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+    private void initializeUI(){
         username = (EditText) root.findViewById(R.id.username);
         password = (EditText) root.findViewById(R.id.password);
         login = (Button) root.findViewById(R.id.button);

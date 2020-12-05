@@ -2,7 +2,6 @@ package com.example.App.ui.register;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.App.R;
-import com.example.App.ui.login.LoginViewModel;
 
 public class RegisterFragment extends Fragment {
 
@@ -41,8 +39,11 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        initializateVariables();
+
         root = inflater.inflate(R.layout.register_fragment, container, false);
+        mViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
+
+        initializeUI();
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,8 +73,7 @@ public class RegisterFragment extends Fragment {
         return root;
     }
 
-    private void initializateVariables(){
-        mViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
+    private void initializeUI(){
         completeName = (EditText) root.findViewById(R.id.register_completename);
         username = (EditText) root.findViewById(R.id.username);
         email = (EditText) root.findViewById(R.id.register_email);

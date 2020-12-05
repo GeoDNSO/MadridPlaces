@@ -33,8 +33,14 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        initializateVariables();
+
         root = inflater.inflate(R.layout.home_fragment, container, false);
+        mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+
+        initializeUI();
+
+        //crear una sessionManager
+        session = new SessionManager(getActivity());
 
         //TODO :Use the ViewModel to obtain Data/Implement observers
 
@@ -74,13 +80,10 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-    private void initializateVariables(){
-        mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+    private void initializeUI(){
         btn_register = root.findViewById(R.id.home_register_button);
         btn_login = root.findViewById(R.id.home_login_button);
         btn_logout = root.findViewById(R.id.home_logout_button);
-        //crear una sessionManager
-        session = new SessionManager(getActivity());
     }
 
     @Override
