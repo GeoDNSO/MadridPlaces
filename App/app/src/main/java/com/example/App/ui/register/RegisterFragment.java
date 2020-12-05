@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 import com.example.App.R;
+import com.example.App.utilities.Validator;
 
 public class RegisterFragment extends Fragment {
 
@@ -54,7 +55,7 @@ public class RegisterFragment extends Fragment {
         return root;
     }
 
-    private void initializeUI(){
+    private void initializeUI() {
         et_Name = (EditText) root.findViewById(R.id.register_completename);
         et_Username = (EditText) root.findViewById(R.id.username);
         et_Surname = (EditText) root.findViewById(R.id.register_surname);
@@ -73,7 +74,7 @@ public class RegisterFragment extends Fragment {
     }
 
 
-    private void initializeListeners(){
+    private void initializeListeners() {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,24 +91,53 @@ public class RegisterFragment extends Fragment {
     }
 
 
-    private void registerOnClickAction(View v){
+    //Validate form
+    private void registerOnClickAction(View v) {
         String username = et_Username.getText().toString();
         String name = et_Name.getText().toString();
         String email = et_Email.getText().toString();
         String surname = et_Surname.getText().toString();
-        String email = et_Email.getText().toString();
         String pass = et_Password.getText().toString();
         String pass2 = et_RepeatPassword.getText().toString();
-        if(!pass.isEmpty() && !pass2.isEmpty()){
-            if(pass.equals(pass2)) {
-                Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_homeFragment);
-            }
-            else{
-                Toast.makeText(getActivity(), "Contraseñas no coinciden", Toast.LENGTH_SHORT).show();
-            }
-        }else {
-            Toast.makeText(getActivity(), "Contraseña vacía", Toast.LENGTH_SHORT).show();
+
+        if (Validator.argumentsEmpty(username, name, email, surname, pass, pass2)) {
+            Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
+        if (!Validator.validEmail(email)) {
+            et_Email.setError(getString(R.string.email_not_valid));
+        }
+        if (!pass.equals(pass2)) {
+            et_Password.setError(getString(R.string.password_not_equal));
+            et_RepeatPassword.setError(getString(R.string.password_not_equal));
+        }
+        if (Validator.usernameAlredyExists(username)) { //TODO HAY QUE LLAMAR a app EN LA FUNCION
+            et_Username.setError(getString(R.string.username_exists));
+        }
+
+        //Si los campos son correctos mandamos la petición al servidor
+
+        if(!errorsInForm() && true){ //TODO true --> Llamar a APP para registrar y actuar en consecuencia si el registro ha salido bien o no
+            Toast.makeText(getActivity(), getString(R.string.account_created), Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_homeFragment);
+        }
+        else{
+            Toast.makeText(getActivity(), getString(R.string.register_failed), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void resetErrors(){
+        et_Username.setError(null);
+        et_Name.setError(null);
+        et_Email.setError(null);
+        et_Surname.setError(null);
+        et_Password.setError(null);
+        et_RepeatPassword.setError(null);
+    }
+
+    private boolean errorsInForm(){
+        return !( et_Username.getError() == null && et_Name.getError() == null &&
+                et_Email.getError() == null && et_Surname.getError() == null &&
+                et_Password.getError() == null && et_RepeatPassword.getError() == null);
     }
 
 }

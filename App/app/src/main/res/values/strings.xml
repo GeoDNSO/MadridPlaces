@@ -19,4 +19,11 @@
     <string name="app_user_surname">Apellidos</string>
     <string name="app_already_login"><u>¿Ya estás registrado? Inicia sesión aquí</u></string>
     <string name="app_new_login"><u>¿No tienes una cuenta? Registrate aquí</u></string>
+
+    <string name="email_not_valid">Correo Electrónico Inválido</string>
+    <string name="password_not_equal">Las contraseñas son distintas</string>
+    <string name="empty_fields">Hay algún campo vacío</string>
+    <string name="username_exists">El nombre de usuario ya existe</string>
+    <string name="account_created">Cuenta creado con éxito</string>
+    <string name="register_failed">Error al registrarse</string>
 </resources>

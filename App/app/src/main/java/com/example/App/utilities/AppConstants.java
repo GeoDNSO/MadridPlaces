@@ -8,5 +8,7 @@ public class AppConstants {
     public static final String LOGGED = "login";
     public static final String ADMIN = "admin";
 
+    public static final String RETURN_OK = "ok";
+
 
 }
