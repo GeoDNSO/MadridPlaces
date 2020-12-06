@@ -5,4 +5,11 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".ui.admin.AdminFragment"/>
+    tools:context=".ui.admin.AdminFragment">
+
+    <ListView
+        android:id="@+id/lvUserList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
+
