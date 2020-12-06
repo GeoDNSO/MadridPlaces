@@ -4,6 +4,11 @@
     <!--El id de los items debe coincidir con el id de los fragment del navigation -->
 
     <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/ic_baseline_info_24"
+        android:title="@string/menu_profile_text" />
+
+    <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/menu_settings_text" />
@@ -12,5 +17,12 @@
         android:id="@+id/aboutUsFragment"
         android:icon="@drawable/ic_baseline_info_24"
         android:title="@string/menu_aboutus_text" />
+
+    <item
+        android:id="@+id/adminFragment"
+        android:icon="@drawable/ic_baseline_admin_user_24"
+        android:title="@string/menu_admin_text" />
+
+
 
 </menu>

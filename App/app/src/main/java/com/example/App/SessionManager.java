@@ -56,6 +56,11 @@ public class SessionManager {
         editor.putString(AppConstants.GENDER, user.getGender());
         editor.putString(AppConstants.BIRTH_DATE, user.getBirthDate());
         editor.putString(AppConstants.PROFILE_PICTURE, "AA");//TODO Usuario con imagen de perfil??
+        editor.putBoolean(AppConstants.ADMIN, user.isAdmin());
         editor.commit();
+    }
+
+    public boolean isAdmin() {
+        return prefs.getBoolean(AppConstants.ADMIN, false);
     }
 }

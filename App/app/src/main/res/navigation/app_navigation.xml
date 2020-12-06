@@ -61,4 +61,14 @@
             android:id="@+id/action_registerFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/adminFragment"
+        android:name="com.example.App.ui.admin.AdminFragment"
+        android:label="@string/menu_admin_text"
+        tools:layout="@layout/admin_fragment" />
+    <fragment
+        android:id="@+id/profileFragment2"
+        android:name="com.example.App.ui.profile.ProfileFragment"
+        android:label="profile_fragment"
+        tools:layout="@layout/profile_fragment" />
 </navigation>

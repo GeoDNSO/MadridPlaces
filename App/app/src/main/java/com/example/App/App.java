@@ -59,4 +59,11 @@ public class App {
         return sessionManager.getUsername();
     }
 
+    public boolean isLogged() {
+        return sessionManager.isLogged();
+    }
+
+    public boolean isAdmin() {
+        return sessionManager.isAdmin();
+    }
 }

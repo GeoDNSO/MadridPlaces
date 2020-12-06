@@ -9,14 +9,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.AttributeSet;
+import android.util.Xml;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.SessionManager;
+
+import org.xmlpull.v1.XmlPullParser;
 
 public class HomeFragment extends Fragment {
 
@@ -52,15 +58,30 @@ public class HomeFragment extends Fragment {
 
         app = App.getInstance(getActivity());
 
-        if (!app.getUsername().isEmpty()) {
+        if (app.isLogged()) {
             btn_register.setVisibility(View.GONE);
             btn_login.setVisibility(View.GONE);
             btn_logout.setVisibility(View.VISIBLE);
-        } else {
+            if(app.isAdmin()){
+                createAdminButtons();
+            }
+        }
+        else {
             btn_register.setVisibility(View.VISIBLE);
             btn_login.setVisibility(View.VISIBLE);
             btn_logout.setVisibility(View.GONE);
         }
+    }
+
+    private void createAdminButtons(){
+        //TODO
+        //Button myButton = new Button(root.getContext(), null,);
+        //myButton.setText("Add Me");
+
+
+        //LinearLayout ll = (LinearLayout) root.findViewById(R.id.homeLayout);
+        //ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        //ll.addView(myButton, lp);
     }
 
     @Override
