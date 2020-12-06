@@ -28,6 +28,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initializeUI();
+
+
+        App app = App.getInstance(this);
+        app.setMenu(drawerNavigationView.getMenu());
     }
 
 

@@ -80,7 +80,7 @@ public class ProfileFragment extends Fragment {
 
                 deleteAccountDialog.setPositiveButton(getString(R.string.alert_yes), (dialog, which) -> {
                     //Borrar cuenta desde DAO
-                    
+
                     app.logout();
                     Navigation.findNavController(v).navigate(R.id.homeFragment);
                 });

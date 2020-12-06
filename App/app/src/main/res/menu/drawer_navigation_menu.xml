@@ -6,7 +6,8 @@
     <item
         android:id="@+id/profileFragment"
         android:icon="@drawable/ic_baseline_info_24"
-        android:title="@string/menu_profile_text" />
+        android:title="@string/menu_profile_text"
+        android:visible="false" />
 
     <item
         android:id="@+id/settingsFragment"
@@ -21,7 +22,9 @@
     <item
         android:id="@+id/adminFragment"
         android:icon="@drawable/ic_baseline_admin_user_24"
-        android:title="@string/menu_admin_text" />
+        android:title="@string/menu_admin_text"
+        android:visible="false"
+        />
 
 
 
