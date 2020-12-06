@@ -66,4 +66,8 @@ public class App {
     public boolean isAdmin() {
         return sessionManager.isAdmin();
     }
+
+    public SessionManager getSessionManager() {
+        return this.sessionManager;
+    }
 }

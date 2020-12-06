@@ -32,6 +32,7 @@ public class HomeFragment extends Fragment {
     private Button btn_register;
     private Button btn_login;
     private Button btn_logout;
+
     private App app; //global variable
 
     public static HomeFragment newInstance() {
@@ -43,6 +44,8 @@ public class HomeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.home_fragment, container, false);
+        app = App.getInstance(getActivity());
+
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         initializeUI();
@@ -55,8 +58,6 @@ public class HomeFragment extends Fragment {
 
     //View according to the user's status (logged or not)
     private void viewAccToUser() {
-
-        app = App.getInstance(getActivity());
 
         if (app.isLogged()) {
             btn_register.setVisibility(View.GONE);

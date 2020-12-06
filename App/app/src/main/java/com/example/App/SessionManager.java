@@ -63,4 +63,20 @@ public class SessionManager {
     public boolean isAdmin() {
         return prefs.getBoolean(AppConstants.ADMIN, false);
     }
+
+    public String getEmail(){
+        return prefs.getString(AppConstants.EMAIL, "");
+    }
+
+    public String getFirstName(){
+        return prefs.getString(AppConstants.NAME, "");
+    }
+
+    public String getSurname(){
+        return prefs.getString(AppConstants.SURNAME, "");
+    }
+
+    public String getPassword(){
+        return prefs.getString(AppConstants.PASSWORD, "SIN_PETICION_A_PASS"); //Llamar a la BD
+    }
 }

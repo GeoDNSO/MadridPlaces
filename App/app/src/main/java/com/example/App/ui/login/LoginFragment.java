@@ -93,8 +93,8 @@ public class LoginFragment extends Fragment {
             //las primeras dos líneas de codigo son de ejemplo
             app = App.getInstance(getActivity());
             //TODO En vez de crear user por defecto hay que obtenerlo a traves de la app;
-            TUser u = new TUser("username", "xxxx","Pepe", "Perez",
-                    "pepe@gmail.com", "H", "01/01/1990",
+            TUser u = new TUser("JMorales", "xxxx","Juan", "Morales",
+                    "juan@gmail.com", "H", "01/01/1990",
                     "Madrid", true);
 
             app.setUserSession(u);

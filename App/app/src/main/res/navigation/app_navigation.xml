@@ -67,8 +67,8 @@
         android:label="@string/menu_admin_text"
         tools:layout="@layout/admin_fragment" />
     <fragment
-        android:id="@+id/profileFragment2"
+        android:id="@+id/profileFragment"
         android:name="com.example.App.ui.profile.ProfileFragment"
-        android:label="profile_fragment"
+        android:label="@string/menu_profile_text"
         tools:layout="@layout/profile_fragment" />
 </navigation>
