@@ -1,3 +1,5 @@
+#HEMOS MODIFICADO LAS PASS DONDE ANTES SE MOSTRABAN ""
+
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask import request
@@ -54,9 +56,9 @@ def login():
                    name=userQuery.name,
                    surname=userQuery.surname,
                    email=userQuery.email,
-                   password="",
+                   password=userQuery.password,
                    gender=userQuery.gender,
-                   birth_date=userQuery.birth_date.strftime("%d %b %Y"),
+                   birth_date=userQuery.birth_date,#.strftime("%d %b %Y"),
                    city=userQuery.city,
                    rol=userQuery.rol)
 
@@ -83,7 +85,7 @@ def registration():
                    name=newUser.name,
                    surname=newUser.surname,
                    email=newUser.email,
-                   password="",
+                   password=newUser.password,
                    gender=newUser.gender,
                    birth_date=newUser.birth_date.strftime("%d %b %Y"),
                    city=newUser.city,
@@ -177,7 +179,7 @@ def profileUser():
                    name=userQuery.name,
                    surname=userQuery.surname,
                    email=userQuery.email,
-                   password="",
+                   password=userQuery.password,
                    gender=userQuery.gender,
                    birth_date=userQuery.birth_date,#.strftime("%d %b %Y"),
                    city=userQuery.city,

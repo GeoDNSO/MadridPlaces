@@ -196,7 +196,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
             while(!controller);
             if(responseGetUser != null) {
                 JSONObject response = new JSONObject(responseGetUser);
-                return new TUser(response.getString("nickname"), "", response.getString("name"), response.getString("surname"),response.getString("email"), response.getString("gender"), response.getString("birth_date"),response.getString("city") , response.getString("rol"));
+                return new TUser(response.getString("nickname"), response.getString("password")/*antes estaba con ""*/, response.getString("name"), response.getString("surname"),response.getString("email"), response.getString("gender"), response.getString("birth_date"),response.getString("city") , response.getString("rol"));
             }
         }
         catch (JSONException e){
