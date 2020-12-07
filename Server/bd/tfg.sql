@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-12-2020 a las 14:47:03
+-- Tiempo de generación: 07-12-2020 a las 17:04:25
 -- Versión del servidor: 10.4.14-MariaDB
 -- Versión de PHP: 7.2.34
 
@@ -56,8 +56,18 @@ CREATE TABLE `user` (
   `gender` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `birth_date` date NOT NULL,
   `city` varchar(255) COLLATE utf8_spanish_ci NOT NULL DEFAULT 'Madrid',
-  `Rol` varchar(255) COLLATE utf8_spanish_ci NOT NULL
+  `rol` varchar(255) COLLATE utf8_spanish_ci NOT NULL DEFAULT 'user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `user`
+--
+
+INSERT INTO `user` (`nickname`, `name`, `surname`, `email`, `password`, `gender`, `birth_date`, `city`, `rol`) VALUES
+('El pepe', 'juanAn', 'Esco', 'asdasd', '1234', 'nosesabe', '1998-11-20', 'Madrid', 'user'),
+('pepe', 'juanAn', 'Esco', 'asdasd', '1234', 'nosesabe', '1998-11-20', 'Madrid', 'user'),
+('poti4', 'juanAn', 'Esco', 'asdasd', '1234', 'nosesabe', '1998-11-20', 'Madrid', 'user'),
+('poti5', 'juanAn', 'Esco', 'asdasd', '1234', 'nosesabe', '1998-11-20', 'Madrid', 'user');
 
 --
 -- Índices para tablas volcadas
