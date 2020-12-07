@@ -79,15 +79,15 @@ def registration():
         sqlAlchemy.session.commit()
         return jsonify(
                    exito = "true",
-                   nickname=json_data["nickname"],
-                   name=json_data["name"],
-                   surname=json_data["surname"],
-                   email=json_data["email"],
+                   nickname=newUser.nickname,
+                   name=newUser.name,
+                   surname=newUser.surname,
+                   email=newUser.email,
                    password="",
-                   gender=json_data["gender"],
-                   birth_date=userQuery.birth_date.strftime("%d %b %Y"),
-                   city=json_data["city"],
-                   rol=json_data["rol"])
+                   gender=newUser.gender,
+                   birth_date=newUser.birth_date.strftime("%d %b %Y"),
+                   city=newUser.city,
+                   rol=newUser.rol)
 
     except Exception as e:
         print("Error insertando la nueva fila :", repr(e))
