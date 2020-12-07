@@ -59,7 +59,7 @@ public class UserListAdapter extends BaseAdapter {
 
         //iv_imgProfile.setImageResource(user.getImage());
         tv_nameProfile.setText(user.getUsername());
-        tv_entireNameProfile.setText(user.getName() + user.getSurname());
+        tv_entireNameProfile.setText(user.getName() + " " + user.getSurname());
         tv_birthdayProfile.setText(user.getBirthDate());
         tv_emailProfile.setText(user.getEmail());
         tv_genderProfile.setText(user.getGender());

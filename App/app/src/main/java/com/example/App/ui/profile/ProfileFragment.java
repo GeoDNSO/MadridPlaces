@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.SessionManager;
-import com.example.App.ui.home.HomeViewModel;
+import com.example.App.transfer.TUser;
 
 public class ProfileFragment extends Fragment {
 
@@ -33,7 +33,12 @@ public class ProfileFragment extends Fragment {
     private TextView tv_Username;
     private TextView tv_FullName;
     private TextView tv_Email;
+    private TextView tv_Password;
+    private EditText et_Email;
     private EditText et_Password;
+
+
+
 
     private TextView tv_Comments;
     private TextView tv_VisitedPlaces;
@@ -65,9 +70,11 @@ public class ProfileFragment extends Fragment {
         tv_Username = root.findViewById(R.id.tv_username);
         tv_FullName = root.findViewById(R.id.tv_full_name);
         tv_Email = root.findViewById(R.id.tv_email);
-        et_Password = root.findViewById(R.id.profile_password);
-        //editar perfil
+        tv_Password = root.findViewById(R.id.profile_password);
 
+        //editar perfil
+        et_Email = root.findViewById(R.id.tv_email_editable);
+        et_Password = root.findViewById(R.id.profile_password_editable);
 
         //Maybe used in the future
         tv_Comments = root.findViewById(R.id.tv_n_comments);;
@@ -126,7 +133,7 @@ public class ProfileFragment extends Fragment {
 
         tv_Username.setText(sm.getUsername());
         tv_FullName.setText((sm.getFirstName() + " " + sm.getSurname()));
-        et_Password.setText(sm.getPassword());
+        tv_Password.setText(sm.getPassword());
         tv_Email.setText(sm.getEmail());
     }
 
@@ -155,18 +162,46 @@ public class ProfileFragment extends Fragment {
     }
 
     private void editProfileAction(View v){
+        tv_Email.setVisibility(View.GONE);
+        et_Email.setVisibility(View.VISIBLE);
+        et_Email.setText(tv_Email.getText().toString());
+        tv_Password.setVisibility(View.GONE);
+        et_Password.setVisibility(View.VISIBLE);
+        et_Password.setText(tv_Password.getText().toString());
         deleteAccountButton.setVisibility(View.GONE);
         confirmChangesButton.setVisibility(View.VISIBLE);
         cancelChangesButton.setVisibility(View.VISIBLE);
     }
 
     private void cancelChangesAction(View v){
+        tv_Email.setVisibility(View.VISIBLE);
+        et_Email.setVisibility(View.GONE);
+
+        tv_Password.setVisibility(View.VISIBLE);
+        et_Password.setVisibility(View.GONE);
+
         deleteAccountButton.setVisibility(View.VISIBLE);
         confirmChangesButton.setVisibility(View.GONE);
         cancelChangesButton.setVisibility(View.GONE);
     }
 
     private void confirmChangesAction(View v){
+        et_Email.setVisibility(View.GONE);
+        tv_Email.setVisibility(View.VISIBLE);
+        tv_Email.setText(et_Email.getText().toString());
+
+        et_Password.setVisibility(View.GONE);
+        tv_Password.setVisibility(View.VISIBLE);
+        tv_Password.setText(et_Password.getText().toString());
+
+        app = App.getInstance(getActivity());
+        if(app.modifyUser()){
+            Toast.makeText(getActivity(), "Se ha modificado el perfil", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(getActivity(), "Algo ha funcionado mal", Toast.LENGTH_SHORT).show();
+        }
+
         deleteAccountButton.setVisibility(View.VISIBLE);
         confirmChangesButton.setVisibility(View.GONE);
         cancelChangesButton.setVisibility(View.GONE);
