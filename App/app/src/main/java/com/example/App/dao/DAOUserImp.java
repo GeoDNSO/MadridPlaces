@@ -20,15 +20,15 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class DAOUserImp implements CRUD<TUser>, DAOUser{
+public class DAOUserImp implements /*CRUD<TUser>,*/ DAOUser{
 
     //SI NECESITAIS PARAMETROS; CAMBIAD LA INTERFAZ
     volatile String responseRegister = null;
     volatile boolean controller = false;
 
 
-    @Override
-    public TUser registerObject(TUser object) {
+    //@Override
+    public String registerObject(TUser object) {
 
         TUser u = new TUser("JMorales", "xxxx","Juan", "Morales",
                 "juan@gmail.com", "H", "01/01/1990",
@@ -56,21 +56,29 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
                 @Override
                 public void onFailure(Call call, IOException e) {
                     e.printStackTrace();
+                    controller = true;
+                    call.cancel();
                 }
 
                 @Override
                 public void onResponse(Call call, final Response response) throws IOException {
+
                     if (!response.isSuccessful()) {
                         throw new IOException("Unexpected code " + response);
                     } else {
-                        // do something wih the result
+                        try {
+                            responseRegister = response.body().string();
+                            controller = true;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             });
 
             while(!controller);
-            return null;
-            //return responseRegister;
+
+            return responseRegister;
         }
         catch (JSONException e){
             e.printStackTrace();
@@ -79,23 +87,5 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
         return null;
     }
 
-    @Override
-    public TUser getObject() {
-        return null;
-    }
 
-    @Override
-    public TUser deleteObject(TUser object) {
-        return null;
-    }
-
-    @Override
-    public TUser modifyObject(TUser object) {
-        return null;
-    }
-
-    @Override
-    public List<TUser> getListOfObjects() {
-        return null;
-    }
 }
