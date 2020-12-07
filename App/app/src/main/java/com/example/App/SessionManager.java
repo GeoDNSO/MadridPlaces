@@ -60,10 +60,6 @@ public class SessionManager {
         editor.commit();
     }
 
-    public boolean isAdmin() {
-        return prefs.getBoolean(AppConstants.ADMIN, false);
-    }
-
     public String getEmail(){
         return prefs.getString(AppConstants.EMAIL, "");
     }
