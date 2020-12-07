@@ -171,6 +171,6 @@ public class ProfileFragment extends Fragment {
         confirmChangesButton.setVisibility(View.GONE);
         cancelChangesButton.setVisibility(View.GONE);
     }
-    
+
 
 }

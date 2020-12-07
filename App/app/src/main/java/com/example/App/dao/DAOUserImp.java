@@ -20,21 +20,26 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class DAOUserImp implements DAOUser{
+public class DAOUserImp implements CRUD<TUser>, DAOUser{
 
     //SI NECESITAIS PARAMETROS; CAMBIAD LA INTERFAZ
     volatile String responseRegister = null;
     volatile boolean controller = false;
 
+
     @Override
-    public String registerObject(String nickname, String name, String password) {
+    public TUser registerObject(TUser object) {
+
+        TUser u = new TUser("JMorales", "xxxx","Juan", "Morales",
+                "juan@gmail.com", "H", "01/01/1990",
+                "Madrid", true);
         JSONObject dataLogin = new JSONObject();
         controller = false;
         try {
             //Creando el JSON
-            dataLogin.put("nickname",nickname);
-            dataLogin.put("name",name);
-            dataLogin.put("password",password);
+            dataLogin.put("nickname",u.getUsername());
+            dataLogin.put("name",u.getName());
+            dataLogin.put("password",u.getPassword());
             String json = dataLogin.toString();
 
             String postBodyString = json;
@@ -49,64 +54,47 @@ public class DAOUserImp implements DAOUser{
                     .build();
             client.newCall(request).enqueue(new Callback() {
                 @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            e.getMessage();
-                            controller = true;
-                            //Toast.makeText(MainActivity.this, "Algo no ha ido bien" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            call.cancel();
-
-                        }
-                    });
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
                 }
 
                 @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            try {
-                                responseRegister = response.body().string();
-                                controller = true;
-                                //Toast.makeText(MainActivity.this, response.body().string(), Toast.LENGTH_SHORT).show();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-
-                        }
-                    });
+                public void onResponse(Call call, final Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        throw new IOException("Unexpected code " + response);
+                    } else {
+                        // do something wih the result
+                    }
                 }
             });
 
             while(!controller);
-            return responseRegister;
+            return null;
+            //return responseRegister;
         }
         catch (JSONException e){
             e.printStackTrace();
         }
+
         return null;
     }
 
-    //@Override
+    @Override
     public TUser getObject() {
         return null;
     }
 
-    //@Override
-    public TUser deleteObject() {
+    @Override
+    public TUser deleteObject(TUser object) {
         return null;
     }
 
-    //@Override
-    public TUser modifyObject() {
+    @Override
+    public TUser modifyObject(TUser object) {
         return null;
     }
 
-    //@Override
+    @Override
     public List<TUser> getListOfObjects() {
         return null;
     }
