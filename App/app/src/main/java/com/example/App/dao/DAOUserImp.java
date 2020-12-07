@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -40,6 +41,13 @@ public class DAOUserImp implements /*CRUD<TUser>,*/ DAOUser{
             dataLogin.put("nickname",u.getUsername());
             dataLogin.put("name",u.getName());
             dataLogin.put("password",u.getPassword());
+            dataLogin.put("surname",u.getSurname());
+            dataLogin.put("email",u.getSurname());
+            dataLogin.put("Rol",1);
+            dataLogin.put("gender",u.getGender());
+            dataLogin.put("birth_date",u.getGender());
+            dataLogin.put("city",u.getCity());
+
             String json = dataLogin.toString();
 
             String postBodyString = json;
@@ -52,7 +60,9 @@ public class DAOUserImp implements /*CRUD<TUser>,*/ DAOUser{
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
                     .build();
-            client.newCall(request).enqueue(new Callback() {
+            Call call = client.newCall(request);
+            //call.timeout();
+            call.enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     e.printStackTrace();
@@ -64,12 +74,14 @@ public class DAOUserImp implements /*CRUD<TUser>,*/ DAOUser{
                 public void onResponse(Call call, final Response response) throws IOException {
 
                     if (!response.isSuccessful()) {
+                        controller = true;
                         throw new IOException("Unexpected code " + response);
                     } else {
                         try {
                             responseRegister = response.body().string();
                             controller = true;
                         } catch (IOException e) {
+                            controller = true;
                             e.printStackTrace();
                         }
                     }
