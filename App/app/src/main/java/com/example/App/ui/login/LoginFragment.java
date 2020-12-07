@@ -84,19 +84,14 @@ public class LoginFragment extends Fragment {
     private void loginOnClickAction(View v){
         String username = et_Username.getText().toString();
         String pass = et_Password.getText().toString();
+        app = App.getInstance(getActivity());
 
         if (Validator.argumentsEmpty(username, pass)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
 
-        if(true){ //TODO true --> Llamar a APP para loguear y actuar en consecuencia si el login ha salido bien o no
-            //las primeras dos líneas de codigo son de ejemplo
-            app = App.getInstance(getActivity());
-            //TODO En vez de crear user por defecto hay que obtenerlo a traves de la app;
-            TUser u = new TUser("JMorales", "xxxx","Juan", "Morales",
-                    "juan@gmail.com", "H", "01/01/1990",
-                    "Madrid", "admin");
-
+        if(app.loginUser(username,pass)){
+            TUser u = app.getUser(username);
             app.setUserSession(u);
             Toast.makeText(getActivity(), getString(R.string.sign_in), Toast.LENGTH_SHORT).show();
             Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeFragment);

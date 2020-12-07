@@ -29,16 +29,12 @@ public class ProfileFragment extends Fragment {
     private View root;
     private ProfileViewModel mViewModel;
 
-
     private TextView tv_Username;
     private TextView tv_FullName;
     private TextView tv_Email;
     private TextView tv_Password;
     private EditText et_Email;
     private EditText et_Password;
-
-
-
 
     private TextView tv_Comments;
     private TextView tv_VisitedPlaces;
@@ -195,8 +191,17 @@ public class ProfileFragment extends Fragment {
         tv_Password.setText(et_Password.getText().toString());
 
         app = App.getInstance(getActivity());
-        if(app.modifyUser()){
+        SessionManager sm = app.getSessionManager();
+        TUser u = app.getUser(sm.getUsername());
+
+        u.setEmail(et_Email.getText().toString());
+        u.setPassword(et_Password.getText().toString());
+
+        if(app.modifyUser(u)){
+            u = app.getUser(u.getUsername());
+            app.setUserSession(u);
             Toast.makeText(getActivity(), "Se ha modificado el perfil", Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(v).navigate(R.id.profileFragment);
         }
         else{
             Toast.makeText(getActivity(), "Algo ha funcionado mal", Toast.LENGTH_SHORT).show();

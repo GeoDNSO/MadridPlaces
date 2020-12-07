@@ -52,6 +52,7 @@ public class SessionManager {
         editor.putString(AppConstants.NAME, user.getName());
         editor.putString(AppConstants.SURNAME, user.getSurname());
         editor.putString(AppConstants.CITY, user.getCity());
+        editor.putString(AppConstants.PASSWORD, user.getPassword());
         editor.putString(AppConstants.EMAIL, user.getEmail());
         editor.putString(AppConstants.GENDER, user.getGender());
         editor.putString(AppConstants.BIRTH_DATE, user.getBirthDate());

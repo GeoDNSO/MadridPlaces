@@ -179,7 +179,7 @@ def profileUser():
                    email=userQuery.email,
                    password="",
                    gender=userQuery.gender,
-                   birth_date=userQuery.birth_date.strftime("%d %b %Y"),
+                   birth_date=userQuery.birth_date,#.strftime("%d %b %Y"),
                    city=userQuery.city,
                    rol=userQuery.rol)
 

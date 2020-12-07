@@ -21,9 +21,12 @@ public class App {
     private BottomNavigationView bottomNavigationView;
     private List<TUser> userList;
 
+    private DAOUserImp d;
+
     private App(Context context){
         this.context = context;
         sessionManager = new SessionManager(context);
+        d = new DAOUserImp();
     }
 
     public static App getInstance(Context ctx){
@@ -40,12 +43,14 @@ public class App {
         return daoUser.registerObject(user);
     }
 
-    public boolean loginUser(){
-        return false;
+    public boolean loginUser(String username, String pass){
+        boolean ok = d.login(username, pass);
+        return ok;
     }
 
-    public boolean modifyUser(){
-        return false;
+    public boolean modifyUser(TUser user){
+        boolean u = d.modifyObject(user);
+        return u;
     }
 
     public boolean deleteUser(){
@@ -117,4 +122,10 @@ public class App {
     public boolean isAdmin() {
         return (sessionManager.getRol().equals(AppConstants.USER_ROL_ADMIN));
     }
+
+    public TUser getUser(String username) {
+        TUser u = d.getUser(username);
+        return u;
+    }
+
 }
