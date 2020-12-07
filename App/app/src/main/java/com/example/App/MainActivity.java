@@ -8,6 +8,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         App app = App.getInstance(this);
         app.setMenu(drawerNavigationView.getMenu());
+        app.setBottomNavigationView(bottomNavView);
     }
 
 
@@ -66,4 +68,5 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(appNavController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
 }

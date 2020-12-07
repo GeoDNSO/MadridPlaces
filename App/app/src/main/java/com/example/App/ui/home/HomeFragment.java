@@ -63,9 +63,7 @@ public class HomeFragment extends Fragment {
             btn_register.setVisibility(View.GONE);
             btn_login.setVisibility(View.GONE);
             btn_logout.setVisibility(View.VISIBLE);
-            if(app.isAdmin()){
-                createAdminButtons();
-            }
+            app.menuOptions(app.isLogged(), app.isAdmin());
         }
         else {
             btn_register.setVisibility(View.VISIBLE);
@@ -74,16 +72,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void createAdminButtons(){
-        //TODO
-        //Button myButton = new Button(root.getContext(), null,);
-        //myButton.setText("Add Me");
-
-
-        //LinearLayout ll = (LinearLayout) root.findViewById(R.id.homeLayout);
-        //ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        //ll.addView(myButton, lp);
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

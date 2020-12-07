@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.Menu;
 
 import com.example.App.transfer.TUser;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class App {
     private static App app;
     private Context context;
     private Menu menu;
+    private BottomNavigationView bottomNavigationView;
     private List<TUser> userList;
 
     private App(Context context){
@@ -74,6 +76,15 @@ public class App {
         }
     }
 
+    public void menuOptions(boolean logged, boolean admin) {
+        if(logged){
+            menu.findItem(R.id.profileFragment).setVisible(true);
+        }
+        if(admin){
+            menu.findItem(R.id.adminFragment).setVisible(true);
+        }
+    }
+
     public String getUsername(){
         return sessionManager.getUsername();
     }
@@ -94,4 +105,11 @@ public class App {
         this.menu = menu;
     }
 
+    public void setBottomNavigationView(BottomNavigationView menu){
+        this.bottomNavigationView = menu;
+    }
+
+    public void setBottomMenuVisible(int val) {
+        this.bottomNavigationView.setVisibility(val);
+    }
 }
