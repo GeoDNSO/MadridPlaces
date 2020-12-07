@@ -63,7 +63,7 @@ public class HomeFragment extends Fragment {
             btn_register.setVisibility(View.GONE);
             btn_login.setVisibility(View.GONE);
             btn_logout.setVisibility(View.VISIBLE);
-            app.menuOptions(app.isLogged(), app.getUsername());
+            app.menuOptions(app.isLogged(), app.isAdmin());
         }
         else {
             btn_register.setVisibility(View.VISIBLE);

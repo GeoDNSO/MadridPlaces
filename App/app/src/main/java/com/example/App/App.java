@@ -81,11 +81,11 @@ public class App {
         }
     }
 
-    public void menuOptions(boolean logged, String rol) {
+    public void menuOptions(boolean logged, boolean admin) {
         if(logged){
             menu.findItem(R.id.profileFragment).setVisible(true);
         }
-        if(rol.equals("admin")){
+        if(admin){
             menu.findItem(R.id.adminFragment).setVisible(true);
         }
     }
@@ -112,5 +112,9 @@ public class App {
 
     public void setBottomMenuVisible(int val) {
         this.bottomNavigationView.setVisibility(val);
+    }
+
+    public boolean isAdmin() {
+        return (sessionManager.getRol().equals(AppConstants.USER_ROL_ADMIN));
     }
 }

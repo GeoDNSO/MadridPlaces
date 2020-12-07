@@ -75,4 +75,8 @@ public class SessionManager {
     public String getPassword(){
         return prefs.getString(AppConstants.PASSWORD, "SIN_PETICION_A_PASS"); //Llamar a la BD
     }
+
+    public String getRol(){
+        return prefs.getString(AppConstants.ADMIN, "user");
+    }
 }
