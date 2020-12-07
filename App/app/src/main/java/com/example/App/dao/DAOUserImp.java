@@ -28,10 +28,10 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
     volatile boolean controller = false;
 
     @Override
-    public boolean registerObject(TUser u) throws JSONException, IOException {
+    public boolean registerObject(TUser u) {
         JSONObject dataLogin = new JSONObject();
         controller = false;
-
+        try {
             //Creando el JSON
             dataLogin.put("nickname",u.getUsername());
             dataLogin.put("name",u.getName());
@@ -54,14 +54,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
                     .header("Content-Type", "application/json")
                     .build();
             Call call = client.newCall(request);
-            Response response = call.execute();
-
-            response.body().toString();
-
-            return true;
-    }
-
-    /*
+            //call.timeout();
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -98,7 +91,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
         }
 
         return false;
-        */
+    }
 
     @Override
     public TUser getObject() {

@@ -8,9 +8,6 @@ import com.example.App.transfer.TUser;
 import com.example.App.utilities.AppConstants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,18 +37,7 @@ public class App {
     public boolean registerUser(String username, String pass, String name, String surname, String email, String gender, String birthDate, String city, String rol){
         DAOUserImp daoUser = new DAOUserImp();
         TUser user = new TUser(username, pass, name, surname, email, gender, birthDate, city, rol);
-
-        boolean ok = false;
-
-        try {
-            ok = daoUser.registerObject(user);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return ok;
+        return daoUser.registerObject(user);
     }
 
     public boolean loginUser(){
