@@ -5,6 +5,9 @@ import android.view.Menu;
 
 import com.example.App.transfer.TUser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class App {
 
     private SessionManager sessionManager;
@@ -12,6 +15,7 @@ public class App {
     private static App app;
     private Context context;
     private Menu menu;
+    private List<TUser> userList;
 
     private App(Context context){
         this.context = context;
@@ -52,8 +56,10 @@ public class App {
 
     }
 
-    public void getUsersList(){
+    public List<TUser> getUsersList(){
+        userList = new ArrayList<>();
 
+        return userList;
     }
 
     public void setUserSession(TUser user){
@@ -87,4 +93,5 @@ public class App {
     public void setMenu(Menu menu) {
         this.menu = menu;
     }
+
 }

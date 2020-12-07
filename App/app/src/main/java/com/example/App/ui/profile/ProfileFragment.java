@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ public class ProfileFragment extends Fragment {
     private View root;
     private ProfileViewModel mViewModel;
 
+    private ImageButton ib_editProfile;
     private TextView tv_Username;
     private TextView tv_FullName;
     private TextView tv_Email;
@@ -58,7 +60,9 @@ public class ProfileFragment extends Fragment {
         tv_Username = root.findViewById(R.id.tv_username);
         tv_FullName = root.findViewById(R.id.tv_full_name);
         tv_Email = root.findViewById(R.id.tv_email);
-        et_Password = root.findViewById(R.id.profile_password);;
+        et_Password = root.findViewById(R.id.profile_password);
+        //editar perfil
+        ib_editProfile = root.findViewById(R.id.edit_button);
 
         //Maybe used in the future
         tv_Comments = root.findViewById(R.id.tv_n_comments);;
@@ -90,6 +94,13 @@ public class ProfileFragment extends Fragment {
                 });
 
                 deleteAccountDialog.create().show();
+            }
+        });
+
+        ib_editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
