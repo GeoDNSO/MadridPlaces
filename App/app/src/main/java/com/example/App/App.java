@@ -81,11 +81,11 @@ public class App {
         }
     }
 
-    public void menuOptions(boolean logged, boolean admin) {
+    public void menuOptions(boolean logged, String rol) {
         if(logged){
             menu.findItem(R.id.profileFragment).setVisible(true);
         }
-        if(admin){
+        if(rol.equals("admin")){
             menu.findItem(R.id.adminFragment).setVisible(true);
         }
     }
@@ -96,10 +96,6 @@ public class App {
 
     public boolean isLogged() {
         return sessionManager.isLogged();
-    }
-
-    public boolean isAdmin() {
-        return sessionManager.isAdmin();
     }
 
     public SessionManager getSessionManager() {
