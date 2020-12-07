@@ -21,19 +21,14 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class DAOUserImp implements /*CRUD<TUser>,*/ DAOUser{
+public class DAOUserImp implements CRUD<TUser>, DAOUser{
 
     //SI NECESITAIS PARAMETROS; CAMBIAD LA INTERFAZ
     volatile String responseRegister = null;
     volatile boolean controller = false;
 
-
-    //@Override
-    public String registerObject(TUser object) {
-
-        TUser u = new TUser("JMorales", "xxxx","Juan", "Morales",
-                "juan@gmail.com", "H", "01/01/1990",
-                "Madrid", true);
+    @Override
+    public boolean registerObject(TUser u) {
         JSONObject dataLogin = new JSONObject();
         controller = false;
         try {
@@ -42,11 +37,9 @@ public class DAOUserImp implements /*CRUD<TUser>,*/ DAOUser{
             dataLogin.put("name",u.getName());
             dataLogin.put("password",u.getPassword());
             dataLogin.put("surname",u.getSurname());
-            dataLogin.put("email",u.getSurname());
-            dataLogin.put("Rol",1);
+            dataLogin.put("email",u.getEmail());
             dataLogin.put("gender",u.getGender());
-            dataLogin.put("birth_date",u.getGender());
-            dataLogin.put("city",u.getCity());
+            dataLogin.put("birth_date",u.getBirthDate());
 
             String json = dataLogin.toString();
 
@@ -89,13 +82,34 @@ public class DAOUserImp implements /*CRUD<TUser>,*/ DAOUser{
             });
 
             while(!controller);
-
-            return responseRegister;
+            JSONObject response = new JSONObject(responseRegister);
+            boolean success = response.get("exito").equals("true");
+            return success;
         }
         catch (JSONException e){
             e.printStackTrace();
         }
 
+        return false;
+    }
+
+    @Override
+    public TUser getObject() {
+        return null;
+    }
+
+    @Override
+    public boolean deleteObject(TUser object) {
+        return false;
+    }
+
+    @Override
+    public boolean modifyObject(TUser object) {
+        return false;
+    }
+
+    @Override
+    public List<TUser> getListOfObjects() {
         return null;
     }
 
