@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 import com.example.App.R;
+import com.example.App.dao.DAOUserImp;
 import com.example.App.utilities.Validator;
 
 public class RegisterFragment extends Fragment {
@@ -117,6 +118,8 @@ public class RegisterFragment extends Fragment {
         //Si los campos son correctos mandamos la petición al servidor
 
         if(!errorsInForm() && true){ //TODO true --> Llamar a APP para registrar y actuar en consecuencia si el registro ha salido bien o no
+            DAOUserImp d = new DAOUserImp();
+            d.registerObject(null);
             Toast.makeText(getActivity(), getString(R.string.account_created), Toast.LENGTH_SHORT).show();
             Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_homeFragment);
         }

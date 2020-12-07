@@ -28,7 +28,7 @@ public class Validator {
 
     public static boolean usernameAlredyExists(String username){
         //TODO --> APP --> LLAMAR A DAO, CONECTAR CON BD Y VERIFICAR QUE EL NOMBRE NO EXISTE
-        return true;
+        return false;
     }
 
 
