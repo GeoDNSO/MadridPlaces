@@ -184,11 +184,9 @@ public class ProfileFragment extends Fragment {
     private void confirmChangesAction(View v){
         et_Email.setVisibility(View.GONE);
         tv_Email.setVisibility(View.VISIBLE);
-        //tv_Email.setText(et_Email.getText().toString());
 
         et_Password.setVisibility(View.GONE);
         tv_Password.setVisibility(View.VISIBLE);
-        //tv_Password.setText(et_Password.getText().toString());
 
         app = App.getInstance(getActivity());
         SessionManager sm = app.getSessionManager();

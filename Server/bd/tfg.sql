@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.3
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-12-2020 a las 17:04:25
--- Versión del servidor: 10.4.14-MariaDB
--- Versión de PHP: 7.2.34
+-- Tiempo de generación: 07-12-2020 a las 23:04:56
+-- Versión del servidor: 10.4.11-MariaDB
+-- Versión de PHP: 7.4.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -20,8 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `tfg`
 --
-CREATE DATABASE IF NOT EXISTS `tfg` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci;
-USE `tfg`;
 
 -- --------------------------------------------------------
 
@@ -64,10 +63,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`nickname`, `name`, `surname`, `email`, `password`, `gender`, `birth_date`, `city`, `rol`) VALUES
-('El pepe', 'juanAn', 'Esco', 'asdasd', '1234', 'nosesabe', '1998-11-20', 'Madrid', 'user'),
-('pepe', 'juanAn', 'Esco', 'asdasd', '1234', 'nosesabe', '1998-11-20', 'Madrid', 'user'),
-('poti4', 'juanAn', 'Esco', 'asdasd', '1234', 'nosesabe', '1998-11-20', 'Madrid', 'user'),
-('poti5', 'juanAn', 'Esco', 'asdasd', '1234', 'nosesabe', '1998-11-20', 'Madrid', 'user');
+('aaa', 'aaa', 'aaa', 'aadadad', 'aaa', 'H', '2020-12-08', 'Madrid', 'user'),
+('Fpoti', 'poti', 'poti', 'poti@gmail.com', '1234', 'H', '1990-01-01', 'Madrid', 'user');
 
 --
 -- Índices para tablas volcadas

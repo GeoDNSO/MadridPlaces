@@ -58,7 +58,7 @@ def login():
                    email=userQuery.email,
                    password=userQuery.password,
                    gender=userQuery.gender,
-                   birth_date=userQuery.birth_date,#.strftime("%d %b %Y"),
+                   birth_date=userQuery.birth_date.strftime("%Y-%m-%d"),
                    city=userQuery.city,
                    rol=userQuery.rol)
 
@@ -87,7 +87,7 @@ def registration():
                    email=newUser.email,
                    password=newUser.password,
                    gender=newUser.gender,
-                   birth_date=newUser.birth_date.strftime("%d %b %Y"),
+                   birth_date=newUser.birth_date.strftime("%Y-%m-%d"),
                    city=newUser.city,
                    rol=newUser.rol)
 
@@ -181,7 +181,7 @@ def profileUser():
                    email=userQuery.email,
                    password=userQuery.password,
                    gender=userQuery.gender,
-                   birth_date=userQuery.birth_date,#.strftime("%d %b %Y"),
+                   birth_date=userQuery.birth_date.strftime("%Y-%m-%d"),
                    city=userQuery.city,
                    rol=userQuery.rol)
 
