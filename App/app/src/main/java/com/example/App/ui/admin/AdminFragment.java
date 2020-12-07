@@ -39,17 +39,17 @@ public class AdminFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.admin_fragment, container, false);
-
+        app = App.getInstance(getActivity());
         listViewUser = root.findViewById(R.id.lvUserList);
         UserListAdapter adapter = new UserListAdapter(getActivity(), app.getUsersList());
         listViewUser.setAdapter(adapter);
-        listViewUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*listViewUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TUser user = listUser.get(position);
                 Toast.makeText(getActivity(), user.getName(), Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
         return root;
     }
