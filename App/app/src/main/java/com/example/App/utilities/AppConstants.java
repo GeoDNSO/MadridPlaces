@@ -15,6 +15,9 @@ public class AppConstants {
 
     public static final String LOGGED = "login";
     public static final String ADMIN = "admin";
+    public static final String USER_ROL_ADMIN = "admin";
+    public static final String USER_ROL_USER = "user";
+
 
     public static final String RETURN_OK = "ok";
 

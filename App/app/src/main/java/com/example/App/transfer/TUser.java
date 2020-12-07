@@ -9,9 +9,9 @@ public class TUser {
     private String gender;
     private String birthDate;
     private String city;
-    private boolean admin;
+    private String rol;
 
-    public TUser(String username, String password, String name, String surname, String email, String gender, String birthDate, String city, boolean admin) {
+    public TUser(String username, String password, String name, String surname, String email, String gender, String birthDate, String city, String rol) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -20,7 +20,7 @@ public class TUser {
         this.gender = gender;
         this.birthDate = birthDate;
         this.city = city;
-        this.admin = admin;
+        this.rol = rol;
     }
 
     public String getUsername() {
@@ -87,11 +87,11 @@ public class TUser {
         this.city = city;
     }
 
-    public boolean isAdmin() {
-        return admin;
+    public String getRol() {
+        return rol;
     }
 
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 }

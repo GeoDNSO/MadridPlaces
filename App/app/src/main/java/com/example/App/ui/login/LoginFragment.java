@@ -95,7 +95,7 @@ public class LoginFragment extends Fragment {
             //TODO En vez de crear user por defecto hay que obtenerlo a traves de la app;
             TUser u = new TUser("JMorales", "xxxx","Juan", "Morales",
                     "juan@gmail.com", "H", "01/01/1990",
-                    "Madrid", true);
+                    "Madrid", "admin");
 
             app.setUserSession(u);
             Toast.makeText(getActivity(), getString(R.string.sign_in), Toast.LENGTH_SHORT).show();

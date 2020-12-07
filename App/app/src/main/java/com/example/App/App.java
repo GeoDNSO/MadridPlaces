@@ -3,7 +3,9 @@ package com.example.App;
 import android.content.Context;
 import android.view.Menu;
 
+import com.example.App.dao.DAOUserImp;
 import com.example.App.transfer.TUser;
+import com.example.App.utilities.AppConstants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -32,8 +34,10 @@ public class App {
         return app;
     }
 
-    public boolean registerUser(){
-        return false;
+    public boolean registerUser(String username, String pass, String name, String surname, String email, String gender, String birthDate, String city, String rol){
+        DAOUserImp daoUser = new DAOUserImp();
+        TUser user = new TUser(username, pass, name, surname, email, gender, birthDate, city, rol);
+        return daoUser.registerObject(user);
     }
 
     public boolean loginUser(){
@@ -60,20 +64,7 @@ public class App {
 
     public List<TUser> getUsersList(){
         userList = new ArrayList<>();
-        userList.add(new TUser("kqilsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", false));
-        userList.add(new TUser("asdasd", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", false));
-        userList.add(new TUser("kqisdfslsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", false));
-        userList.add(new TUser("kqisdflsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", false));
-        userList.add(new TUser("kqiasdalsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", false));
-        userList.add(new TUser("kqiasdalsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", false));
-        userList.add(new TUser("kqiassdasdalsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", false));
-        userList.add(new TUser("kqiasdaassdalsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", false));
-        userList.add(new TUser("kqiasdalasdassa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", false));
-        userList.add(new TUser("kqiasdaasdasdlsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", false));
-        userList.add(new TUser("kqiasasddalsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", false));
-        userList.add(new TUser("kqiasdasdalsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", false));
-        userList.add(new TUser("kqiasasdasdalsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", false));
-        userList.add(new TUser("kqiasasdadalsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", false));
+        userList.add(new TUser("kqilsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", "user"));
 
         return userList;
     }
@@ -85,7 +76,7 @@ public class App {
         //Opciones del menu
 
         menu.findItem(R.id.profileFragment).setVisible(true);
-        if(user.isAdmin()){
+        if(user.getRol().equals(AppConstants.USER_ROL_ADMIN)){
             menu.findItem(R.id.adminFragment).setVisible(true);
         }
     }
