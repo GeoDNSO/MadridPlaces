@@ -25,7 +25,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser {
     @Override
     public boolean registerObject(TUser u) {
 
-        String postBodyString = infoToString(u);
+        String postBodyString = u.jsonToString();
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -115,7 +115,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser {
 
     @Override
     public boolean modifyObject(TUser u) {
-        String postBodyString = infoToString(u);
+        String postBodyString = u.jsonToString();
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -147,28 +147,8 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser {
         return  getListFromResponse(response);
     }
 
-    public String infoToString(TUser u) {
-        JSONObject infoJSON = new JSONObject();
-        String infoString = "";
 
-        //Creando el JSON
-        try {
-            infoJSON.put("nickname", u.getUsername());
-            infoJSON.put("name", u.getName());
-            infoJSON.put("password", u.getPassword());
-            infoJSON.put("surname", u.getSurname());
-            infoJSON.put("email", u.getEmail());
-            infoJSON.put("gender", u.getGender());
-            infoJSON.put("birth_date", u.getBirthDate());
-        } catch (JSONException e) {
-            e.printStackTrace();
-            infoString = "error";
-        }
-
-        infoString = infoJSON.toString();
-
-        return infoString;
-    }
+    //Metodos privados para la gestion de los JSON de este DAO
 
     private String loginInfoToString(String nickname, String password){
         JSONObject jsonUser = new JSONObject();
@@ -185,7 +165,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser {
         return infoString;
     }
 
-    public TUser jsonStringToUser(String jsonString){
+    private TUser jsonStringToUser(String jsonString){
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(jsonString);
@@ -196,7 +176,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser {
         }
     }
 
-    public  List<TUser> getListFromResponse(String response){
+    private List<TUser> getListFromResponse(String response){
         JSONObject jresponse = null;
         try {
             jresponse = new JSONObject(response);
