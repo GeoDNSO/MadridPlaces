@@ -1,9 +1,7 @@
 package com.example.App.dao;
 
-import android.widget.Toast;
-
-import com.example.App.MainActivity;
 import com.example.App.transfer.TUser;
+import com.example.App.utilities.AppConstants;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -13,7 +11,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -23,191 +20,67 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class DAOUserImp implements CRUD<TUser>, DAOUser{
+public class DAOUserImp implements CRUD<TUser>, DAOUser {
 
-    //SI NECESITAIS PARAMETROS; CAMBIAD LA INTERFAZ
-    volatile String responseRegister = null;
-    volatile String responseGetUser = null;
-    volatile String responseLoginUser = null;
-    volatile String responseModifyUser = null;
-    volatile String responseDeleteUser = null;
-    volatile String responseListUsers = null;
-    volatile boolean controller = false;
-
-    //Coment refactor
     @Override
     public boolean registerObject(TUser u) {
-        JSONObject dataLogin = new JSONObject();
-        controller = false;
-        responseRegister = null;
-        try {
-            //Creando el JSON
-            dataLogin.put("nickname",u.getUsername());
-            dataLogin.put("name",u.getName());
-            dataLogin.put("password",u.getPassword());
-            dataLogin.put("surname",u.getSurname());
-            dataLogin.put("email",u.getEmail());
-            dataLogin.put("gender",u.getGender());
-            dataLogin.put("birth_date",u.getBirthDate());
 
-            String json = dataLogin.toString();
+        String postBodyString = infoToString(u);
 
-            String postBodyString = json;
-            MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-            RequestBody body = RequestBody.create(postBodyString, mediaType);
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .post(body)
-                    .url("http://" + "10.0.2.2" + ":" + 5000 + "/registration/")
-                    .header("Accept", "application/json")
-                    .header("Content-Type", "application/json")
-                    .build();
-            Call call = client.newCall(request);
-            //call.timeout();
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    e.printStackTrace();
-                    controller = true;
-                    call.cancel();
-                }
+        SimpleRequest simpleRequest = new SimpleRequest();
 
-                @Override
-                public void onResponse(Call call, final Response response) throws IOException {
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/registration/");
 
-                    if (!response.isSuccessful()) {
-                        controller = true;
-                        throw new IOException("Unexpected code " + response);
-                    } else {
-                        try {
-                            responseRegister = response.body().string();
-                            controller = true;
-                        } catch (IOException e) {
-                            controller = true;
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
+        simpleRequest.createAndRunCall(request);
 
-            while(!controller);
-            JSONObject response = new JSONObject(responseRegister);
-            boolean success = response.get("exito").equals("true");
-            return success;
-        }
-        catch (JSONException e){
-            e.printStackTrace();
-        }
+        String response = simpleRequest.getResponse();
 
-        return false;
+        return simpleRequest.isSuccessful(response);
     }
 
-    public boolean login(String nickname, String password){
-        JSONObject jsonUser = new JSONObject();
-        controller = false;
-        responseLoginUser = null;
-        try{
-            jsonUser.put("nickname", nickname);
-            jsonUser.put("password", password);
+    public boolean login(String nickname, String password) {
 
-            String postBodyString = jsonUser.toString();
-            MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-            RequestBody body = RequestBody.create(postBodyString, mediaType);
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .post(body)
-                    .url("http://" + "10.0.2.2" + ":" + 5000 + "/login/")
-                    .header("Accept", "application/json")
-                    .header("Content-Type", "application/json")
-                    .build();
-            Call call = client.newCall(request);
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure( Call call,  IOException e) {
-                    e.printStackTrace();
-                    controller = true;
-                    call.cancel();
-                }
+        String postBodyString = loginInfoToString(nickname, password);
 
-                @Override
-                public void onResponse( Call call, Response response) throws IOException {
-                    if (!response.isSuccessful()) {
-                        controller = true;
-                        throw new IOException("Unexpected code " + response);
-                    } else {
-                        try {
-                            responseLoginUser = response.body().string();
-                            controller = true;
-                        } catch (IOException e) {
-                            controller = true;
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-            while(!controller);
-            if(responseLoginUser != null){
-                JSONObject response = new JSONObject(responseLoginUser);
-                return response.get("exito").equals("true");
-            }
-        }
-        catch (JSONException e){
-            e.printStackTrace();
-        }
-        return false;
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/login/");
+
+        simpleRequest.createAndRunCall(request);
+
+        String response = simpleRequest.getResponse();
+
+        return simpleRequest.isSuccessful(response);
     }
+
     public TUser getUser(String nickname) {
+
         JSONObject jsonUser = new JSONObject();
-        controller = false;
-        responseGetUser = null;
+
         try {
             jsonUser.put("nickname", nickname);
-            String postBodyString = jsonUser.toString();
-            MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-            RequestBody body = RequestBody.create(postBodyString, mediaType);
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .post(body)
-                    .url("http://" + "10.0.2.2" + ":" + 5000 + "/profileUser/")
-                    .header("Accept", "application/json")
-                    .header("Content-Type", "application/json")
-                    .build();
-            Call call = client.newCall(request);
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    e.printStackTrace();
-                    controller = true;
-                    call.cancel();
-                }
-
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    if (!response.isSuccessful()) {
-                        controller = true;
-                        throw new IOException("Unexpected code " + response);
-                    } else {
-                        try {
-                            responseGetUser = response.body().string();
-                            controller = true;
-                        } catch (IOException e) {
-                            controller = true;
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-
-            while(!controller);
-            if(responseGetUser != null) {
-                JSONObject response = new JSONObject(responseGetUser);
-                return new TUser(response.getString("nickname"), response.getString("password")/*antes estaba con ""*/, response.getString("name"), response.getString("surname"),response.getString("email"), response.getString("gender"), response.getString("birth_date"),response.getString("city") , response.getString("rol"));
-            }
-        }
-        catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+
+        String postBodyString = jsonUser.toString();
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/profileUser/");
+
+        simpleRequest.createAndRunCall(request);
+
+        String response = simpleRequest.getResponse();
+
+        if(response == null) {
+            return null;
+        }
+
+        return jsonStringToUser(response);
     }
 
     @Override
@@ -217,177 +90,128 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
 
     @Override
     public boolean deleteObject(String nickname) {
+
         JSONObject jsonUser = new JSONObject();
-        controller = false;
-        responseDeleteUser = null;
-        try{
+
+        try {
             jsonUser.put("nickname", nickname);
-
-            String postBodyString = jsonUser.toString();
-            MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-            RequestBody body = RequestBody.create(postBodyString, mediaType);
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .delete(body)
-                    .url("http://" + "10.0.2.2" + ":" + 5000 + "/deleteUser/")
-                    .header("Accept", "application/json")
-                    .header("Content-Type", "application/json")
-                    .build();
-            Call call = client.newCall(request);
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure( Call call,  IOException e) {
-                    e.printStackTrace();
-                    controller = true;
-                    call.cancel();
-                }
-
-                @Override
-                public void onResponse( Call call, Response response) throws IOException {
-                    if (!response.isSuccessful()) {
-                        controller = true;
-                        throw new IOException("Unexpected code " + response);
-                    } else {
-                        try {
-                            responseDeleteUser = response.body().string();
-                            controller = true;
-                        } catch (IOException e) {
-                            controller = true;
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-            while(!controller);
-            if(responseDeleteUser != null){
-                JSONObject response = new JSONObject(responseDeleteUser);
-                return response.get("exito").equals("true");
-            }
-        }
-        catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-        return false;
+
+        String postBodyString = jsonUser.toString();
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_DELETE, "/deleteUser/");
+
+        simpleRequest.createAndRunCall(request);
+
+        String response = simpleRequest.getResponse();
+
+        return simpleRequest.isSuccessful(response);
     }
 
     @Override
     public boolean modifyObject(TUser u) {
-        JSONObject dataLogin = new JSONObject();
-        controller = false;
-        responseModifyUser = null;
-        try {
-            //Creando el JSON
-            dataLogin.put("nickname",u.getUsername());
-            dataLogin.put("name",u.getName());
-            dataLogin.put("password",u.getPassword());
-            dataLogin.put("surname",u.getSurname());
-            dataLogin.put("email",u.getEmail());
-            dataLogin.put("gender",u.getGender());
-            dataLogin.put("birth_date",u.getBirthDate());
+        String postBodyString = infoToString(u);
 
-            String json = dataLogin.toString();
+        SimpleRequest simpleRequest = new SimpleRequest();
 
-            String postBodyString = json;
-            MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-            RequestBody body = RequestBody.create(postBodyString, mediaType);
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .put(body)
-                    .url("http://" + "10.0.2.2" + ":" + 5000 + "/modifyUser/")
-                    .header("Accept", "application/json")
-                    .header("Content-Type", "application/json")
-                    .build();
-            Call call = client.newCall(request);
-            //call.timeout();
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    e.printStackTrace();
-                    controller = true;
-                    call.cancel();
-                }
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_PUT, "/modifyUser/");
 
-                @Override
-                public void onResponse(Call call, final Response response) throws IOException {
+        simpleRequest.createAndRunCall(request);
 
-                    if (!response.isSuccessful()) {
-                        controller = true;
-                        throw new IOException("Unexpected code " + response);
-                    } else {
-                        try {
-                            responseModifyUser = response.body().string();
-                            controller = true;
-                        } catch (IOException e) {
-                            controller = true;
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
+        String response = simpleRequest.getResponse();
 
-            while(!controller);
-            JSONObject response = new JSONObject(responseModifyUser);
-            boolean success = response.get("exito").equals("true");
-            return success;
-        }
-        catch (JSONException e){
-            e.printStackTrace();
-        }
-
-        return false;
+        return simpleRequest.isSuccessful(response);
     }
 
     @Override
     public List<TUser> getListOfObjects() {
-        controller = false;
-        responseListUsers = null;
-        try {
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .get() //No recibe nada en el body, asi que mejor get en vez de post
-                    .url("http://" + "10.0.2.2" + ":" + 5000 + "/listUsers/")
-                    .header("Accept", "application/json")
-                    .header("Content-Type", "application/json")
-                    .build();
-            Call call = client.newCall(request);
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    e.printStackTrace();
-                    controller = true;
-                    call.cancel();
-                }
 
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    if (!response.isSuccessful()) {
-                        controller = true;
-                        throw new IOException("Unexpected code " + response);
-                    } else {
-                        try {
-                            responseListUsers = response.body().string();
-                            controller = true;
-                        } catch (IOException e) {
-                            controller = true;
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-            while (!controller) ;
-            if (responseListUsers != null) {
-                JSONObject response = new JSONObject(responseListUsers);
-                List<TUser> listUsers = new ArrayList<TUser>(); //dentro de get("users") contiene una lista de nicknames ["poti", "aaa", "pepe"]
-                JSONArray arrayNicknames = response.getJSONArray("users");
-                for (int i = 0; i < arrayNicknames.length(); i++) {
-                    TUser tUser = getUser(arrayNicknames.getString(i));
-                    listUsers.add(tUser);
-                }
-                return listUsers;
-            }
+       SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest("",
+                AppConstants.METHOD_GET, "/listUsers/");
+
+        simpleRequest.createAndRunCall(request);
+
+        String response = simpleRequest.getResponse();
+
+        if(response == null){
+            return null;
+        }
+        return  getListFromResponse(response);
+    }
+
+    public String infoToString(TUser u) {
+        JSONObject infoJSON = new JSONObject();
+        String infoString = "";
+
+        //Creando el JSON
+        try {
+            infoJSON.put("nickname", u.getUsername());
+            infoJSON.put("name", u.getName());
+            infoJSON.put("password", u.getPassword());
+            infoJSON.put("surname", u.getSurname());
+            infoJSON.put("email", u.getEmail());
+            infoJSON.put("gender", u.getGender());
+            infoJSON.put("birth_date", u.getBirthDate());
         } catch (JSONException e) {
             e.printStackTrace();
+            infoString = "error";
         }
-        return null;
+
+        infoString = infoJSON.toString();
+
+        return infoString;
+    }
+
+    private String loginInfoToString(String nickname, String password){
+        JSONObject jsonUser = new JSONObject();
+        String infoString;
+        try {
+            jsonUser.put("nickname", nickname);
+            jsonUser.put("password", password);
+        }catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = jsonUser.toString();
+
+        return infoString;
+    }
+
+    public TUser jsonStringToUser(String jsonString){
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(jsonString);
+            return new TUser(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public  List<TUser> getListFromResponse(String response){
+        JSONObject jresponse = null;
+        try {
+            jresponse = new JSONObject(response);
+
+            //dentro de get("users") contiene una lista de nicknames ["poti", "aaa", "pepe"]
+            List<TUser> listUsers = new ArrayList<TUser>();
+            JSONArray arrayNicknames = jresponse.getJSONArray("users");
+            for (int i = 0; i < arrayNicknames.length(); i++) {
+                TUser tUser = getUser(arrayNicknames.getString(i));
+                listUsers.add(tUser);
+            }
+            return listUsers;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return  null;
+        }
     }
 }

@@ -2,6 +2,13 @@ package com.example.App.utilities;
 
 public class AppConstants {
 
+
+    public static final String METHOD_POST = "POST";
+    public static final String METHOD_PUT = "PUT";
+    public static final String METHOD_REQUEST = "REQUEST";
+    public static final String METHOD_GET = "GET";
+    public static final String METHOD_DELETE = "DELETE";
+
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String NAME = "name";
