@@ -6,7 +6,7 @@ public interface CRUD<T> {
 
     public boolean registerObject(T object);
     public T getObject();
-    public boolean deleteObject(T object);
+    public boolean deleteObject(String nickname);
     public boolean modifyObject(T object);
     public List<T> getListOfObjects();
 

@@ -28,6 +28,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
     volatile String responseGetUser = null;
     volatile String responseLoginUser = null;
     volatile String responseModifyUser = null;
+    volatile String responseDeleteUser = null;
     volatile boolean controller = false;
 
     @Override
@@ -211,7 +212,57 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
     }
 
     @Override
-    public boolean deleteObject(TUser object) {
+    public boolean deleteObject(String nickname) {
+        JSONObject jsonUser = new JSONObject();
+        controller = false;
+        responseDeleteUser = null;
+        try{
+            jsonUser.put("nickname", nickname);
+
+            String postBodyString = jsonUser.toString();
+            MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+            RequestBody body = RequestBody.create(postBodyString, mediaType);
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .delete(body)
+                    .url("http://" + "10.0.2.2" + ":" + 5000 + "/deleteUser/")
+                    .header("Accept", "application/json")
+                    .header("Content-Type", "application/json")
+                    .build();
+            Call call = client.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure( Call call,  IOException e) {
+                    e.printStackTrace();
+                    controller = true;
+                    call.cancel();
+                }
+
+                @Override
+                public void onResponse( Call call, Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        controller = true;
+                        throw new IOException("Unexpected code " + response);
+                    } else {
+                        try {
+                            responseDeleteUser = response.body().string();
+                            controller = true;
+                        } catch (IOException e) {
+                            controller = true;
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+            while(!controller);
+            if(responseDeleteUser != null){
+                JSONObject response = new JSONObject(responseDeleteUser);
+                return response.get("exito").equals("true");
+            }
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
         return false;
     }
 

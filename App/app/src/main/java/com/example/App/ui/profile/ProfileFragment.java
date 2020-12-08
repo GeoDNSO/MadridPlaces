@@ -145,11 +145,18 @@ public class ProfileFragment extends Fragment {
         final AlertDialog.Builder deleteAccountDialog = new AlertDialog.Builder(root.getContext());
         deleteAccountDialog.setTitle(getString(R.string.profile_delete_account_title));
         deleteAccountDialog.setMessage(getString(R.string.profile_delete_account_message));
-
+        app = App.getInstance(getActivity());
+        SessionManager sm = app.getSessionManager();
         deleteAccountDialog.setPositiveButton(getString(R.string.alert_yes), (dialog, which) -> {
             //Borrar cuenta desde DAO
-            app.logout();
-            Navigation.findNavController(v).navigate(R.id.homeFragment);
+            if(app.deleteUser(sm.getUsername())){
+                Toast.makeText(getActivity(), "Se ha eliminado el perfil", Toast.LENGTH_SHORT).show();
+                app.logout();
+                Navigation.findNavController(v).navigate(R.id.homeFragment);
+            }
+            else{
+                Toast.makeText(getActivity(), "Algo ha funcionado mal", Toast.LENGTH_SHORT).show();
+            }
         });
          deleteAccountDialog.setNegativeButton(getString(R.string.alert_no), (dialog, which) -> {
              //Close

@@ -53,8 +53,9 @@ public class App {
         return u;
     }
 
-    public boolean deleteUser(){
-        return false;
+    public boolean deleteUser(String username){
+        boolean ok = d.deleteObject(username);
+        return ok;
     }
 
     public void logout(){
