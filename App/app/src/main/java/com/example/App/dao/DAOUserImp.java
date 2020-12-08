@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +30,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
     volatile String responseLoginUser = null;
     volatile String responseModifyUser = null;
     volatile String responseDeleteUser = null;
+    volatile String responseListUsers = null;
     volatile boolean controller = false;
 
     @Override
@@ -335,8 +337,56 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
 
     @Override
     public List<TUser> getListOfObjects() {
-        return null;
-    }
+        controller = false;
+        responseListUsers = null;
+        try {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .get() //No recibe nada en el body, asi que mejor get en vez de post
+                    .url("http://" + "10.0.2.2" + ":" + 5000 + "/listUsers/")
+                    .header("Accept", "application/json")
+                    .header("Content-Type", "application/json")
+                    .build();
+            Call call = client.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    e.printStackTrace();
+                    controller = true;
+                    call.cancel();
+                }
 
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        controller = true;
+                        throw new IOException("Unexpected code " + response);
+                    } else {
+                        try {
+                            responseListUsers = response.body().string();
+                            controller = true;
+                        } catch (IOException e) {
+                            controller = true;
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+            while(!controller);
+            if(responseListUsers != null) {
+                JSONObject response = new JSONObject(responseListUsers);
+                List<TUser> listUsers = new ArrayList<TUser>(); //dentro de get("users") contiene una lista de nicknames ["poti", "aaa", "pepe"]
+                List<String> reponseNicknames = (List<String>) response.get("users");  //get() recoge un objeto generico, no se si se puede haacer casting a un array de String
+                for (String user:reponseNicknames) {
+                    TUser tUser = getUser(user);
+                    listUsers.add(tUser);
+                }
+                return listUsers;
+            }
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+        return null;
 
 }
