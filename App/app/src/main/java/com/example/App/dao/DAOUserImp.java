@@ -34,6 +34,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
     volatile String responseListUsers = null;
     volatile boolean controller = false;
 
+    //Coment refactor
     @Override
     public boolean registerObject(TUser u) {
         JSONObject dataLogin = new JSONObject();
