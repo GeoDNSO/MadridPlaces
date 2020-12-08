@@ -69,9 +69,9 @@ public class App {
     }
 
     public List<TUser> getUsersList(){
-        userList = new ArrayList<>();
-        userList.add(new TUser("kqilsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", "user"));
-
+        //userList = new ArrayList<>();
+        //userList.add(new TUser("kqilsa", "dasdasdasd", "lsadnas", "asdasd","hola@gmail.com", "Hombre", "11/07/1992", "Madrid", "user"));
+        userList = d.getListOfObjects();
         return userList;
     }
 

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-12-2020 a las 23:04:56
+-- Tiempo de generación: 08-12-2020 a las 11:24:53
 -- Versión del servidor: 10.4.11-MariaDB
--- Versión de PHP: 7.4.2
+-- Versión de PHP: 7.4.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,6 +21,8 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `tfg`
 --
+CREATE DATABASE IF NOT EXISTS `tfg` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci;
+USE `tfg`;
 
 -- --------------------------------------------------------
 
@@ -63,7 +65,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`nickname`, `name`, `surname`, `email`, `password`, `gender`, `birth_date`, `city`, `rol`) VALUES
-('aaa', 'aaa', 'aaa', 'aadadad', 'aaa', 'H', '2020-12-08', 'Madrid', 'user'),
+('aaa', 'aaa', 'aaa', 'aadadadfdgf', 'a', 'H', '2020-12-08', 'Madrid', 'user'),
+('admin', 'ADMIN', 'administrador', 'admin@ucm.es', '1234', 'H', '1998-11-20', 'Madrid', 'admin'),
 ('Fpoti', 'poti', 'poti', 'poti@gmail.com', '1234', 'H', '1990-01-01', 'Madrid', 'user');
 
 --

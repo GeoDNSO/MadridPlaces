@@ -6,6 +6,7 @@ import com.example.App.MainActivity;
 import com.example.App.transfer.TUser;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -372,21 +373,20 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
                     }
                 }
             });
-            while(!controller);
-            if(responseListUsers != null) {
+            while (!controller) ;
+            if (responseListUsers != null) {
                 JSONObject response = new JSONObject(responseListUsers);
                 List<TUser> listUsers = new ArrayList<TUser>(); //dentro de get("users") contiene una lista de nicknames ["poti", "aaa", "pepe"]
-                List<String> reponseNicknames = (List<String>) response.get("users");  //get() recoge un objeto generico, no se si se puede haacer casting a un array de String
-                for (String user:reponseNicknames) {
-                    TUser tUser = getUser(user);
+                JSONArray arrayNicknames = response.getJSONArray("users");
+                for (int i = 0; i < arrayNicknames.length(); i++) {
+                    TUser tUser = getUser(arrayNicknames.getString(i));
                     listUsers.add(tUser);
                 }
                 return listUsers;
             }
-        }
-        catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
-
+    }
 }
