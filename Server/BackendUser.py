@@ -5,6 +5,8 @@ from flask import Flask
 from flask import request
 from flask import jsonify
 
+import bcrypt #Para hashear las contraseñas, necesidad de instalar con pip install bcrypt
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/TFG'
 
@@ -26,6 +28,19 @@ class user(sqlAlchemy.Model):
 
 #Funciones
 
+#Cifrado de Passwords
+
+def passwordCipher(password):#Servirá en el momento de crear una cuenta nueva o para modificar una contraseña
+    #Generamos la salt aleatoria, con (rounds=16) lo ejecuta 16 veces para una mayor seguridad, pero realentiza el proceso
+    hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()) #Es necesario tenerlo como bytes para hacer el hash
+    return hashed
+
+def passwordVerify(password, pwdCipher): #Comprueba si la contraseña es correcta
+    if (bcrypt.checkpw(password.encode(), pwdCipher.encode()) is False):
+        return False
+    return True
+
+
 """ @app.route('/', methods=['GET', 'POST'])
 def parseArguments():
     json_received = request.get_json()
@@ -44,23 +59,25 @@ def login():
     nickname = json_data["nickname"]
     password = json_data["password"]
 
-    userQuery = user.query.filter_by(nickname = nickname, password = password).first()
-    if userQuery is None:
-        print("failure")
-        return jsonify(exito = "false")
-    else:
-        print("success")
-        return jsonify(
-                   exito = "true",
-                   nickname = userQuery.nickname,
-                   name=userQuery.name,
-                   surname=userQuery.surname,
-                   email=userQuery.email,
-                   password=userQuery.password,
-                   gender=userQuery.gender,
-                   birth_date=userQuery.birth_date.strftime("%Y-%m-%d"),
-                   city=userQuery.city,
-                   rol=userQuery.rol)
+    #userQuery = user.query.filter_by(nickname = nickname, password = password).first()
+    userQuery = user.query.filter_by(nickname = nickname).first()
+
+    if (userQuery is not None):
+        if (passwordVerify(password, userQuery.password) is True):
+            print("success")
+            return jsonify(
+                    exito = "true",
+                    nickname = userQuery.nickname,
+                    name=userQuery.name,
+                    surname=userQuery.surname,
+                    email=userQuery.email,
+                    password=userQuery.password,
+                    gender=userQuery.gender,
+                    birth_date=userQuery.birth_date.strftime("%Y-%m-%d"),
+                    city=userQuery.city,
+                    rol=userQuery.rol)
+    print("failure")
+    return jsonify(exito = "false")    
 
 #Registro
 @app.route('/registration/', methods=['GET', 'POST'])
@@ -74,7 +91,8 @@ def registration():
     gender = json_data["gender"]
     birth_date = json_data["birth_date"]
 
-    newUser = user(nickname=nickname, name=name, surname=surname, email=email, password=password, gender=gender, birth_date=birth_date)
+    pwdCipher = passwordCipher(password)
+    newUser = user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date)
     
     try:
         sqlAlchemy.session.add(newUser)
@@ -145,14 +163,14 @@ def modifyUser():
     password = json_data["password"]
     gender = json_data["gender"]
     birth_date = json_data["birth_date"]
-    
+    pwdCipher = passwordCipher(password)
     try:
         modifiedUser = user.query.filter_by(nickname=nickname).first()
         modifiedUser.nickname = nickname
         modifiedUser.name = name
         modifiedUser.surname = surname
         modifiedUser.email = email
-        modifiedUser.password = password
+        modifiedUser.password = pwdCipher
         modifiedUser.gender = gender
         modifiedUser.birth_date = birth_date
         sqlAlchemy.session.commit()
