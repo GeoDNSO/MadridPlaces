@@ -1,4 +1,4 @@
-package com.example.App.transfer;
+package com.example.App.models.transfer;
 
 public class TUser {
     private String username;

@@ -3,12 +3,11 @@ package com.example.App;
 import android.content.Context;
 import android.view.Menu;
 
-import com.example.App.dao.DAOUserImp;
-import com.example.App.transfer.TUser;
+import com.example.App.models.dao.DAOUserImp;
+import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class App {

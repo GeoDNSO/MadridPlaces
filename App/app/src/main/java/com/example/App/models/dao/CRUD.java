@@ -1,4 +1,4 @@
-package com.example.App.dao;
+package com.example.App.models.dao;
 
 import java.util.List;
 

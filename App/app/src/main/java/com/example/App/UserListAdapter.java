@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.App.transfer.TUser;
+import com.example.App.models.transfer.TUser;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package com.example.App;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.App.transfer.TUser;
+import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
 
 public class SessionManager {

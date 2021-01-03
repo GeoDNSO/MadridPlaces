@@ -11,14 +11,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.App.UserListAdapter;
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.transfer.TUser;
+import com.example.App.models.transfer.TUser;
 
 import java.util.List;
 

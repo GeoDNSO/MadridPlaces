@@ -1,9 +1,6 @@
-package com.example.App.dao;
+package com.example.App.models.dao;
 
-import android.widget.Toast;
-
-import com.example.App.MainActivity;
-import com.example.App.transfer.TUser;
+import com.example.App.models.transfer.TUser;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -13,7 +10,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -25,6 +21,7 @@ import okhttp3.Response;
 
 public class DAOUserImp implements CRUD<TUser>, DAOUser{
 
+    private static DAOUserImp instance;
     //SI NECESITAIS PARAMETROS; CAMBIAD LA INTERFAZ
     volatile String responseRegister = null;
     volatile String responseGetUser = null;
@@ -34,7 +31,13 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
     volatile String responseListUsers = null;
     volatile boolean controller = false;
 
-    @Override
+    public static DAOUserImp getInstance() {
+        if (instance == null){
+            instance = new DAOUserImp();
+        }
+        return instance;
+    }
+    /*@Override
     public boolean registerObject(TUser u) {
         JSONObject dataLogin = new JSONObject();
         controller = false;
@@ -95,6 +98,53 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
             return success;
         }
         catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }*/
+
+    @Override
+    public boolean registerObject(TUser u) {
+
+        JSONObject dataLogin = new JSONObject();
+        controller = false;
+        responseRegister = null;
+        try {
+            //Creando el JSON
+            dataLogin.put("nickname",u.getUsername());
+            dataLogin.put("name",u.getName());
+            dataLogin.put("password",u.getPassword());
+            dataLogin.put("surname",u.getSurname());
+            dataLogin.put("email",u.getEmail());
+            dataLogin.put("gender",u.getGender());
+            dataLogin.put("birth_date",u.getBirthDate());
+
+            String json = dataLogin.toString();
+
+            String postBodyString = json;
+            MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+            RequestBody body = RequestBody.create(postBodyString, mediaType);
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .post(body)
+                    .url("http://" + "10.0.2.2" + ":" + 5000 + "/registration/")
+                    .header("Accept", "application/json")
+                    .header("Content-Type", "application/json")
+                    .build();
+            Call call = client.newCall(request);
+            //call.timeout();
+            Response respuesta = call.execute();
+
+            responseRegister = respuesta.body().string();
+
+            JSONObject response = new JSONObject(responseRegister);
+            boolean success = response.get("exito").equals("true");
+            return success;
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

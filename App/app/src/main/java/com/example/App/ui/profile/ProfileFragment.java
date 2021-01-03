@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.SessionManager;
-import com.example.App.transfer.TUser;
+import com.example.App.models.transfer.TUser;
 
 public class ProfileFragment extends Fragment {
 
