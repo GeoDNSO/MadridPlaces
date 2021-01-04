@@ -36,11 +36,11 @@ public class App {
         return app;
     }
 
-    public boolean registerUser(String username, String pass, String name, String surname, String email, String gender, String birthDate, String city, String rol){
+    /*public boolean registerUser(String username, String pass, String name, String surname, String email, String gender, String birthDate, String city, String rol){
         DAOUserImp daoUser = new DAOUserImp();
         TUser user = new TUser(username, pass, name, surname, email, gender, birthDate, city, rol);
         return daoUser.registerObject(user);
-    }
+    }*/
 
     public boolean loginUser(String username, String pass){
         boolean ok = d.login(username, pass);

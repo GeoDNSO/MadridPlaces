@@ -1,5 +1,8 @@
 package com.example.App.models.dao;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.App.models.transfer.TUser;
 
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +33,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
     volatile String responseDeleteUser = null;
     volatile String responseListUsers = null;
     volatile boolean controller = false;
+    private MutableLiveData<Boolean> mSuccess = new MutableLiveData<>();
 
     public static DAOUserImp getInstance() {
         if (instance == null){
@@ -37,8 +41,12 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
         }
         return instance;
     }
-    /*@Override
-    public boolean registerObject(TUser u) {
+
+    public LiveData<Boolean> getSuccess(){
+        return mSuccess;
+    }
+    @Override
+    public void registerObject(TUser u) {
         JSONObject dataLogin = new JSONObject();
         controller = false;
         responseRegister = null;
@@ -84,6 +92,15 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
                         try {
                             responseRegister = response.body().string();
                             controller = true;
+                            JSONObject respuesta = null;
+                            try {
+                                respuesta = new JSONObject(responseRegister);
+                                boolean success = respuesta.get("exito").equals("true");
+                                mSuccess.postValue(success);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                         } catch (IOException e) {
                             controller = true;
                             e.printStackTrace();
@@ -92,19 +109,19 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
                 }
             });
 
-            while(!controller);
-            JSONObject response = new JSONObject(responseRegister);
-            boolean success = response.get("exito").equals("true");
-            return success;
+            //while(!controller);
+            //JSONObject response = new JSONObject(responseRegister);
+            //boolean success = response.get("exito").equals("true");
+            //return success;
         }
         catch (JSONException e){
             e.printStackTrace();
         }
 
-        return false;
-    }*/
+        //return false;
+    }
 
-    @Override
+    /*@Override
     public boolean registerObject(TUser u) {
 
         JSONObject dataLogin = new JSONObject();
@@ -149,7 +166,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
         }
 
         return false;
-    }
+    }*/
 
     public boolean login(String nickname, String password){
         JSONObject jsonUser = new JSONObject();

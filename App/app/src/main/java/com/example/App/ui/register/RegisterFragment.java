@@ -76,6 +76,19 @@ public class RegisterFragment extends Fragment {
             }
         });
 
+        mRegisterViewModel.getIsDoneRegistration().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    Toast.makeText(getActivity(), "Registrado con exito", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    hideProgressBar();
+                    Toast.makeText(getActivity(), "Error al registrar", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         initializeUI();
         initializeListeners();
 
@@ -129,7 +142,7 @@ public class RegisterFragment extends Fragment {
 
     //Validate form
     private void registerOnClickAction(View v) {
-        //mRegisterViewModel.registrar("","","","","","","","","");
+
         String username = et_Username.getText().toString();
         String name = et_Name.getText().toString();
         String email = et_Email.getText().toString();
@@ -151,14 +164,15 @@ public class RegisterFragment extends Fragment {
             et_Username.setError(getString(R.string.username_exists));
         }
 
-        if (!errorsInForm() && mRegisterViewModel.registrar(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user"))
+        mRegisterViewModel.registrar(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user");
+        /*if (!errorsInForm() && mRegisterViewModel.registrar(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user"))
         {
             Toast.makeText(getActivity(), getString(R.string.account_created), Toast.LENGTH_SHORT).show();
             Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_homeFragment);
         }
         else{
             Toast.makeText(getActivity(), getString(R.string.register_failed), Toast.LENGTH_SHORT).show();
-        }
+        }*/
         /*//Si los campos son correctos mandamos la petición al servidor
         app = App.getInstance(getActivity());
 
@@ -170,6 +184,7 @@ public class RegisterFragment extends Fragment {
             Toast.makeText(getActivity(), getString(R.string.register_failed), Toast.LENGTH_SHORT).show();
         }*/
     }
+
 
     private void resetErrors(){
         et_Username.setError(null);
