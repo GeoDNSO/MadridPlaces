@@ -41,6 +41,7 @@ public class RegisterFragment extends Fragment {
     private Button registerButton;
     private TextView tv_ToLogin;
     private ProgressBar progressBar;
+    private View vistaBoton;
 
 
     public static RegisterFragment newInstance() {
@@ -67,11 +68,9 @@ public class RegisterFragment extends Fragment {
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
                     showProgressBar();
-                    Toast.makeText(getActivity(), "enseñate", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     hideProgressBar();
-                    Toast.makeText(getActivity(), "escondete", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -81,6 +80,7 @@ public class RegisterFragment extends Fragment {
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
                     Toast.makeText(getActivity(), "Registrado con exito", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(vistaBoton).navigate(R.id.action_registerFragment_to_homeFragment);
                 }
                 else {
                     hideProgressBar();
@@ -127,6 +127,7 @@ public class RegisterFragment extends Fragment {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                vistaBoton = v;
                 registerOnClickAction(v);
             }
         });
