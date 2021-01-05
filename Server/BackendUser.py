@@ -26,7 +26,32 @@ class user(sqlAlchemy.Model):
     rol = sqlAlchemy.Column(sqlAlchemy.String(255), default="user")
 
 
-#Funciones
+class location(sqlAlchemy.Model):
+    __tablename__ = 'location'
+    name = sqlAlchemy.Column(sqlAlchemy.String(255), primary_key = True)
+    description = sqlAlchemy.Column(sqlAlchemy.String(255)) #A lo mejor es necesario cambiar la longitud
+    direction = sqlAlchemy.Column(sqlAlchemy.String(255))
+    coordinate_latitude = sqlAlchemy.Column(sqlAlchemy.Float())
+    coordinate_longitude = sqlAlchemy.Column(sqlAlchemy.Float())
+    picture = sqlAlchemy.Column(sqlAlchemy.String(255)) #Aun no esta decidido de como mostrar una imagen, si por URL o por BD
+    type_of_place = sqlAlchemy.Column(sqlAlchemy.String(255))
+    city = sqlAlchemy.Column(sqlAlchemy.String(255), default="Madrid")
+    affluence = sqlAlchemy.Column(sqlAlchemy.String(255))
+
+class comments(sqlAlchemy.Model):
+    __tablename__ = 'comments'
+    id_comment = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
+    user = sqlAlchemy.Column(sqlAlchemy.String(255))
+    location = sqlAlchemy.Column(sqlAlchemy.String(255))
+    comment = sqlAlchemy.Column(sqlAlchemy.String(255))  
+
+class ratings(sqlAlchemy.Model):
+    __tablename__ = 'ratings'
+    id_rate = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
+    user = sqlAlchemy.Column(sqlAlchemy.String(255))
+    location = sqlAlchemy.Column(sqlAlchemy.String(255))
+    rate = sqlAlchemy.Column(sqlAlchemy.Integer())  
+#Funciones Usuario
 
 #Cifrado de Passwords
 
@@ -41,17 +66,11 @@ def passwordVerify(password, pwdCipher): #Comprueba si la contraseña es correct
     return True
 
 
-""" @app.route('/', methods=['GET', 'POST'])
-def parseArguments():
-    json_received = request.get_json()
-    print(json_received)
+#app = Flask(__name__)
+#api = Api(app)
+#api.add_resource(user, '/login/')
 
-    operation = json_received["operation"]
-    if operation == "login":
-        return login(json_received)
-    elif operation == "registration":
-        return registration(json_received)
- """
+
 #Login
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
@@ -185,10 +204,7 @@ def modifyUser():
 def profileUser():
     json_data = request.get_json()
     nickname = json_data["nickname"]
-    #nickname = '""OR 1=1 --'
-    
     userQuery = user.query.filter_by(nickname=nickname).first()
-
     if userQuery is None:
         return jsonify(exito = "false")
     
@@ -203,9 +219,142 @@ def profileUser():
                    city=userQuery.city,
                    rol=userQuery.rol)
 
-""" @app.route('/saludo/<name>', methods=['GET', 'POST'])
-def saludar(name):
-    print("hola!")
-    return "Buenas "+ name + "!" """
+
+#Funciones Lugares
+@app.route('/location/newLocation', methods=['POST'])
+def newLocation():
+    json_data = request.get_json()
+    name = json_data["name"]
+    description = json_data["description"]
+    direction = json_data["direction"]
+    coordinate_latitude = json_data["coordinate_latitude"]
+    coordinate_longitude = json_data["coordinate_longitude"]
+    picture = json_data["picture"]
+    type_of_place = json_data["type_of_place"]
+    affluence = json_data["affluence"]
+    createLocation = location(name = name, description = description, direction = direction, coordinate_latitude = coordinate_latitude, 
+        coordinate_longitude = coordinate_longitude, picture = picture, type_of_place = type_of_place, affluence = affluence)
+    
+    try:
+        sqlAlchemy.session.add(createLocation)
+        sqlAlchemy.session.commit()
+        return jsonify(
+                   exito = "true",
+                   name=createLocation.name,
+                   description=createLocation.description,
+                   direction=createLocation.direction,
+                   coordinate_latitude=createLocation.coordinate_latitude,
+                   coordinate_longitude=createLocation.coordinate_longitude,
+                   picture=createLocation.picture,
+                   type_of_place=createLocation.type_of_place,
+                   city=createLocation.city,
+                   affluence=createLocation.affluence)
+    except Exception as e:
+        print("Error insertando la nueva fila :", repr(e))
+        return jsonify(exito = "false")
+
+@app.route('/location/modifyLocation', methods=['POST'])
+def modifyLocation():
+
+    json_data = request.get_json()
+    name = json_data["name"]
+    description = json_data["description"]
+    direction = json_data["direction"]
+    coordinate_latitude = json_data["coordinate_latitude"]
+    coordinate_longitude = json_data["coordinate_longitude"]
+    picture = json_data["picture"]
+    type_of_place = json_data["type_of_place"]
+    affluence = json_data["affluence"]
+    try:
+        modifiedLocation = location.query.filter_by(name=name).first()
+        modifiedLocation.name = name
+        modifiedLocation.description = description
+        modifiedLocation.direction = direction
+        modifiedLocation.coordinate_latitude = coordinate_latitude
+        modifiedLocation.coordinate_longitude = coordinate_longitude
+        modifiedLocation.picture = picture
+        modifiedLocation.type_of_place = type_of_place
+        modifiedLocation.affluence = affluence
+        sqlAlchemy.session.commit()
+    except Exception as e:
+        print("Error modificando lugar:", repr(e))
+        return jsonify(exito = "false")
+        
+    return jsonify(exito = "true")
+
+@app.route('/location/readLocation', methods=['GET', 'POST'])
+def readLocation():
+    json_data = request.get_json()
+    name = json_data["name"]    
+
+    lcQuery = location.query.filter_by(name = name).first()
+
+    if (lcQuery is not None):
+        print("success")
+        return jsonify(
+                exito = "true",
+                name = lcQuery.name,
+                description=lcQuery.description,
+                direction=lcQuery.direction,
+                coordinate_latitude=lcQuery.coordinate_latitude,
+                coordinate_longitude=lcQuery.coordinate_longitude,
+                picture=lcQuery.picture,
+                type_of_place=lcQuery.type_of_place,
+                city=lcQuery.city,
+                affluence=lcQuery.affluence)
+
+    print("failure")
+    return jsonify(exito = "false")    
+
+@app.route('/location/deleteLocation', methods=['DELETE'])
+def deleteLocation():
+    json_data = request.get_json()
+    name = json_data["name"]    
+    try:
+        deleteQuery = location.query.filter_by(name=name).delete()
+        sqlAlchemy.session.commit()
+        if(deleteQuery == 0):
+            print("Error al borrar el lugar:")
+            return jsonify(exito = "false")
+        return jsonify(exito = "true") 
+    except Exception as e:
+        print("Error borrando la fila :", repr(e))
+        return jsonify(exito = "false")   
+
+@app.route('/location/newComment', methods=['POST'])
+def newComment():
+    json_data = request.get_json()
+    user = json_data["user"]
+    location = json_data["location"]
+    comment = json_data["comment"]
+    createComment = comments(user = user, location = location, comment = comment)
+    
+    try:
+        sqlAlchemy.session.add(createComment)
+        sqlAlchemy.session.commit()
+        return jsonify(
+                   exito = "true",
+                   id_comment = createComment.id_comment,
+                   user=createComment.user,
+                   location=createComment.location,
+                   comment=createComment.comment)
+    except Exception as e:
+        print("Error insertando la nueva fila :", repr(e))
+        return jsonify(exito = "false")    
+
+@app.route('/location/listComments', methods=['POST'])
+def listComments():
+    json_data = request.get_json()
+    location = json_data["location"]
+    try:
+        cmQuery = comments.query.filter_by(location = location).all()
+        lista = []
+        for comment in cmQuery:
+            lista.append(usuario.nickname)
+    except Exception as e:
+        print("Error leyendo usuarios:", repr(e))
+        return jsonify(exito = "false")
+
+    return jsonify(exito = "true", users = lista)   
 
 app.run(host="0.0.0.0", port=5000, debug=True, threaded=True)
