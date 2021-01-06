@@ -43,7 +43,8 @@ class comments(sqlAlchemy.Model):
     id_comment = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
     user = sqlAlchemy.Column(sqlAlchemy.String(255))
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
-    comment = sqlAlchemy.Column(sqlAlchemy.String(255))  
+    comment = sqlAlchemy.Column(sqlAlchemy.String(255)) 
+    created =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now(), onupdate = sqlAlchemy.func.now())
 
 class ratings(sqlAlchemy.Model):
     __tablename__ = 'ratings'
@@ -337,10 +338,43 @@ def newComment():
                    id_comment = createComment.id_comment,
                    user=createComment.user,
                    location=createComment.location,
-                   comment=createComment.comment)
+                   comment=createComment.comment,
+                   created=createComment.created.strftime('%Y-%m-%d %H:%M:%S'))
     except Exception as e:
         print("Error insertando la nueva fila :", repr(e))
         return jsonify(exito = "false")    
+
+@app.route('/location/modifyComment', methods=['POST'])
+def modifyComment():
+    json_data = request.get_json()
+    comment = json_data["comment"]
+    id_comment = json_data["id_comment"]
+    try:
+        modifiedComment = comments.query.filter_by(id_comment = id_comment).first()
+        modifiedComment.comment = comment
+        sqlAlchemy.session.commit()
+    except Exception as e:
+        print("Error modificando comentario:", repr(e))
+        return jsonify(exito = "false")
+        
+    return jsonify(exito = "true")
+
+@app.route('/location/deleteComment', methods=['DELETE'])
+def deleteComment():
+    json_data = request.get_json()
+    id_comment = json_data["id_comment"]
+    try:
+        cmQuery = comments.query.filter_by(id_comment = id_comment).delete()
+        sqlAlchemy.session.commit()
+        if(cmQuery == 0):
+            print("Error al borrar el comentario")
+            return jsonify(exito = "false")
+        return jsonify(exito = "true")
+
+    except Exception as e:
+        print("Error eliminando comentario: ", repr(e))
+        return jsonify(exito = "false")    
+
 
 @app.route('/location/listComments', methods=['POST'])
 def listComments():
@@ -350,11 +384,87 @@ def listComments():
         cmQuery = comments.query.filter_by(location = location).all()
         lista = []
         for comment in cmQuery:
-            lista.append(usuario.nickname)
+            cmDict = {comment.user : comment.comment}
+            lista.append(cmDict)
     except Exception as e:
-        print("Error leyendo usuarios:", repr(e))
+        print("Error leyendo comentarios:", repr(e))
         return jsonify(exito = "false")
 
-    return jsonify(exito = "true", users = lista)   
+    return jsonify(exito = "true", comments = lista)   
 
+
+@app.route('/location/newRate', methods=['POST'])
+def newRate():
+    json_data = request.get_json()
+    user = json_data["user"]
+    location = json_data["location"]
+    rate = json_data["rate"]
+    createRate = ratings(user = user, location = location, rate = rate)
+    
+    try:
+        rtQuery = ratings.query.filter_by(user = user, location = location).first()
+        if(rtQuery is None):
+            sqlAlchemy.session.add(createRate)
+            sqlAlchemy.session.commit()
+            return jsonify(
+                    exito = "true",
+                    id_rate = createRate.id_rate,
+                    user=createRate.user,
+                    location=createRate.location,
+                    rate=createRate.rate)
+        print("El usuario no puede valorar dos veces")
+        return jsonify(exito = "false")
+    except Exception as e:
+        print("Error insertando la nueva fila :", repr(e))
+        return jsonify(exito = "false")
+
+@app.route('/location/deleteRate', methods=['DELETE'])
+def deleteRate():
+    json_data = request.get_json()
+    id_rate = json_data["id_rate"]
+    try:
+        rtQuery = ratings.query.filter_by(id_rate = id_rate).delete()
+        sqlAlchemy.session.commit()
+        if(rtQuery == 0):
+            print("Error al borrar la valoracion")
+            return jsonify(exito = "false")
+        return jsonify(exito = "true")
+
+    except Exception as e:
+        print("Error eliminando comentario: ", repr(e))
+        return jsonify(exito = "false")  
+
+
+@app.route('/location/modifyRate', methods=['POST'])
+def modifyRate():
+    json_data = request.get_json()
+    rate = json_data["rate"]
+    id_rate = json_data["id_rate"]
+    try:
+        modifiedRate = ratings.query.filter_by(id_rate = id_rate).first()
+        modifiedRate.rate = rate
+        sqlAlchemy.session.commit()
+    except Exception as e:
+        print("Error modificando la valoración:", repr(e))
+        return jsonify(exito = "false")
+        
+    return jsonify(exito = "true")
+
+@app.route('/location/averageRate', methods=['POST'])
+def averageRate():
+    json_data = request.get_json()
+    location = json_data["location"]
+    try:
+        rtQuery = ratings.query.filter_by(location = location).all()
+        cant = 0
+        total = 0
+        for rate in rtQuery:
+            cant = cant + 1
+            total = total + rate.rate
+        result = total / cant
+    except Exception as e:
+        print("Error leyendo comentarios:", repr(e))
+        return jsonify(exito = "false")
+
+    return jsonify(exito = "true", avgRate = result)   
 app.run(host="0.0.0.0", port=5000, debug=True, threaded=True)
