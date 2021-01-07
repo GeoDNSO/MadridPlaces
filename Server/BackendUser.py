@@ -52,6 +52,13 @@ class ratings(sqlAlchemy.Model):
     user = sqlAlchemy.Column(sqlAlchemy.String(255))
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
     rate = sqlAlchemy.Column(sqlAlchemy.Integer())  
+
+class visited(sqlAlchemy.Model):
+    __tablename__ = 'visited'
+    id_visited = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
+    user = sqlAlchemy.Column(sqlAlchemy.String(255))
+    location = sqlAlchemy.Column(sqlAlchemy.String(255))
+    date_visited =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now())
 #Funciones Usuario
 
 #Cifrado de Passwords
@@ -329,7 +336,6 @@ def newComment():
     location = json_data["location"]
     comment = json_data["comment"]
     createComment = comments(user = user, location = location, comment = comment)
-    
     try:
         sqlAlchemy.session.add(createComment)
         sqlAlchemy.session.commit()
@@ -376,10 +382,10 @@ def deleteComment():
         return jsonify(exito = "false")    
 
 
-@app.route('/location/listComments', methods=['POST'])
-def listComments():
-    json_data = request.get_json()
-    location = json_data["location"]
+#@app.route('/location/listComments', methods=['POST'])
+def listComments(location): #A lo mejor no se necesita un URL 
+    #json_data = request.get_json()
+    #location = json_data["location"]
     try:
         cmQuery = comments.query.filter_by(location = location).all()
         lista = []
@@ -388,9 +394,11 @@ def listComments():
             lista.append(cmDict)
     except Exception as e:
         print("Error leyendo comentarios:", repr(e))
-        return jsonify(exito = "false")
+        #return jsonify(exito = "false")
+        return None
 
-    return jsonify(exito = "true", comments = lista)   
+    #return jsonify(exito = "true", comments = lista)  
+    return lista 
 
 
 @app.route('/location/newRate', methods=['POST'])
@@ -450,10 +458,10 @@ def modifyRate():
         
     return jsonify(exito = "true")
 
-@app.route('/location/averageRate', methods=['POST'])
-def averageRate():
-    json_data = request.get_json()
-    location = json_data["location"]
+#@app.route('/location/averageRate', methods=['POST'])
+def averageRate(location): #A lo mejor no se necesita un URL 
+    #json_data = request.get_json()
+    #location = json_data["location"]
     try:
         rtQuery = ratings.query.filter_by(location = location).all()
         cant = 0
@@ -464,7 +472,112 @@ def averageRate():
         result = total / cant
     except Exception as e:
         print("Error leyendo comentarios:", repr(e))
-        return jsonify(exito = "false")
+        #return jsonify(exito = "false")
+        return None
 
-    return jsonify(exito = "true", avgRate = result)   
+    #return jsonify(exito = "true", avgRate = result)   
+    return round(result, 2)
+
+@app.route('/location/newLocationVisited', methods=['POST'])
+def newLocationVisited():    
+    json_data = request.get_json()
+    user = json_data["user"]
+    location = json_data["location"]
+    locationVisited = visited(user = user, location = location)
+    try:
+        sqlAlchemy.session.add(locationVisited)
+        sqlAlchemy.session.commit()
+        return jsonify(
+                   exito = "true",
+                   id_visited = locationVisited.id_visited,
+                   user=locationVisited.user,
+                   location=locationVisited.location,
+                   date_visited=locationVisited.date_visited.strftime('%Y-%m-%d'))
+    except Exception as e:
+        print("Error insertando la nueva fila :", repr(e))
+        return jsonify(exito = "false")  
+
+@app.route('/location/readHistory', methods=['POST']) #Devuelve un listado de lugares, las fechas y las veces que se visitaron
+def readHistory():
+    json_data = request.get_json()
+    user = json_data["user"]
+    try:
+        vtQuery = visited.query.filter_by(user = user).order_by(visited.date_visited).all()
+        visitedDict = {}
+        for locationVisited in vtQuery:
+            date = locationVisited.date_visited.strftime('%Y-%m-%d')
+            if(visitedDict.get(date) is None):
+                visitedDict[date] = {locationVisited.location : 1}
+            elif(locationVisited.location not in visitedDict[date]):
+                d1 = {locationVisited.location : 1}
+                visitedDict[date].update(d1)
+            else:
+                visitedDict[date][locationVisited.location] += 1
+        return jsonify(exito = "true", historial = visitedDict) 
+    except Exception as e:
+        print("Error leyendo el historial:", repr(e))
+        return jsonify(exito = "false")
+  
+
+
+@app.route('/location/deleteHistory', methods=['DELETE']) #No se si es necesario una funcion para eliminar los lugares visitados
+def deleteHistory():
+    json_data = request.get_json()
+    user = json_data["user"]
+    try:
+        vtQuery = visited.query.filter_by(user  = user).delete()
+        if(vtQuery == 0):
+            print("Error al borrar el historial")
+            return jsonify(exito = "false")
+        sqlAlchemy.session.commit()
+        return jsonify(exito = "true")
+
+    except Exception as e:
+        print("Error eliminando el historial: ", repr(e))
+        return jsonify(exito = "false")  
+
+@app.route('/location/stats', methods=['POST'])
+def stats():
+    json_data = request.get_json()
+    name = json_data["name"] 
+    try:
+        stQuery = location.query.filter_by(name=name).first()
+        comments = listComments(name)
+        avgRate = averageRate(name)
+        return jsonify(
+                exito = "true",
+                name = stQuery.name,
+                description=stQuery.description,
+                direction=stQuery.direction,
+                coordinate_latitude=stQuery.coordinate_latitude,
+                coordinate_longitude=stQuery.coordinate_longitude,
+                picture=stQuery.picture,
+                type_of_place=stQuery.type_of_place,
+                city=stQuery.city,
+                affluence=stQuery.affluence,
+                rate = avgRate,
+                appComments = comments)
+
+    except Exception as e:
+        print("Error mostrando las estadisticas: ", repr(e))
+        return jsonify(exito = "false")  
+
+@app.route('/location/top100Rated', methods=['GET'])
+def top100Rated():
+    try:
+        rtQuery = ratings.query.order_by(ratings.location).all()
+        topDict = {}
+        for rate in rtQuery:
+            location = rate.location
+            if(topDict.get(location) is None): #Crea un diccionario siendo la clave el lugar y el valor su valoración media
+                topDict[location] = averageRate(location)
+        sortedTop = dict(sorted(topDict.items(), key=lambda item: item[1],reverse=True)) #Ordena el diccionario en base a sus valores
+        while(len(sortedTop) > 100): #Elimina los utlimos pares hasta que haya al menos 100 
+            sortedTop.popitem()
+        print(sortedTop)
+        return jsonify(exito = "true", TOP100 = sortedTop)  
+    except Exception as e:
+        print("Error mostrando el TOP 100 de los lugares ", repr(e))
+        return jsonify(exito = "false")  
+
 app.run(host="0.0.0.0", port=5000, debug=True, threaded=True)
