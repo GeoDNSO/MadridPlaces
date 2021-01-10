@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -36,7 +37,9 @@ public class SimpleRequest {
     }
 
     public void createAndRunCall(Request request) {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(250, TimeUnit.MILLISECONDS)
+                .build();
         Call call = client.newCall(request);
 
         call.enqueue(new Callback() {
