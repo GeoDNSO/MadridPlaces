@@ -1,6 +1,9 @@
 package com.example.App.models.transfer;
 
-public class TUser {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class TUser implements JSONSerializable{
     private String username;
     private String password;
     private String name;
@@ -93,5 +96,29 @@ public class TUser {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject infoJSON = new JSONObject();
+        //Creando el JSON
+        try {
+            infoJSON.put("nickname", this.getUsername());
+            infoJSON.put("name", this.getName());
+            infoJSON.put("password", this.getPassword());
+            infoJSON.put("surname", this.getSurname());
+            infoJSON.put("email", this.getEmail());
+            infoJSON.put("gender", this.getGender());
+            infoJSON.put("birth_date", this.getBirthDate());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            infoJSON = null;
+        }
+        return infoJSON;
+    }
+
+    @Override
+    public String jsonToString() {
+        return this.toJSON().toString();
     }
 }

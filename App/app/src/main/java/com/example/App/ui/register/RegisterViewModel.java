@@ -26,8 +26,8 @@ public class RegisterViewModel extends ViewModel {
 
     //observamos los objetos del repositorio, en este caso, el success devuelto por la llamada okhttp
     public void init(){
-        repositorio = DAOUserImp.getInstance();
-
+        //repositorio = DAOUserImp.getInstance();
+        repositorio = new DAOUserImp();
         mIsDoneRegistration = Transformations.switchMap(
                 repositorio.getSuccess(),
                 success -> getNuevoIsDone(success));

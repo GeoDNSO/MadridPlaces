@@ -41,7 +41,6 @@ public class RegisterFragment extends Fragment {
     private Button registerButton;
     private TextView tv_ToLogin;
     private ProgressBar progressBar;
-    private View vistaBoton;
 
 
     public static RegisterFragment newInstance() {
@@ -80,7 +79,7 @@ public class RegisterFragment extends Fragment {
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
                     Toast.makeText(getActivity(), "Registrado con exito", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(vistaBoton).navigate(R.id.action_registerFragment_to_homeFragment);
+                    Navigation.findNavController(root).navigate(R.id.action_registerFragment_to_homeFragment);
                 }
                 else {
                     hideProgressBar();
@@ -122,12 +121,16 @@ public class RegisterFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
     private void initializeListeners() {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                vistaBoton = v;
+                //root = v;
                 registerOnClickAction(v);
             }
         });

@@ -36,12 +36,12 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
     volatile boolean controller = false;
     private MutableLiveData<Boolean> mSuccess = new MutableLiveData<>();
 
-    public static DAOUserImp getInstance() {
+    /*public static DAOUserImp getInstance() {
         if (instance == null){
             instance = new DAOUserImp();
         }
         return instance;
-    }
+    }*/
 
     public LiveData<Boolean> getSuccess(){
         return mSuccess;
