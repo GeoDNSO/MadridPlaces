@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -65,7 +66,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
             String postBodyString = json;
             MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
             RequestBody body = RequestBody.create(postBodyString, mediaType);
-            OkHttpClient client = new OkHttpClient();
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).build();
             Request request = new Request.Builder()
                     .post(body)
                     .url("http://" + "10.0.2.2" + ":" + 5000 + "/registration/")
@@ -73,6 +74,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
                     .header("Content-Type", "application/json")
                     .build();
             Call call = client.newCall(request);
+            call.timeout();
             //call.timeout();
             call.enqueue(new Callback() {
                 @Override
