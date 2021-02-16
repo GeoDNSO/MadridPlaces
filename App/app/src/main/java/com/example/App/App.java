@@ -41,11 +41,11 @@ public class App {
         TUser user = new TUser(username, pass, name, surname, email, gender, birthDate, city, rol);
         return daoUser.registerObject(user);
     }*/
-
+/*
     public boolean loginUser(String username, String pass){
         boolean ok = d.login(username, pass);
         return ok;
-    }
+    }*/
 
     public boolean modifyUser(TUser user){
         boolean u = d.modifyObject(user);

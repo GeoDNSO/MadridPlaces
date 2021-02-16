@@ -29,12 +29,12 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
     private static DAOUserImp instance;
     //SI NECESITAIS PARAMETROS; CAMBIAD LA INTERFAZ
     volatile String responseGetUser = null;
-    volatile String responseLoginUser = null;
     volatile String responseModifyUser = null;
     volatile String responseDeleteUser = null;
     volatile String responseListUsers = null;
     volatile boolean controller = false;
     private MutableLiveData<Boolean> mSuccess = new MutableLiveData<>();
+    private MutableLiveData<TUser> mUser = new MutableLiveData<>();
 
     /*public static DAOUserImp getInstance() {
         if (instance == null){
@@ -46,6 +46,7 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
     public LiveData<Boolean> getSuccess(){
         return mSuccess;
     }
+    public LiveData<TUser> getUser(){ return mUser; }
     @Override
     public void registerObject(TUser user) {
 
@@ -80,60 +81,82 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
         });
     }
 
-    public boolean login(String nickname, String password){
+    /*
+
+
+        Call call = simpleRequest.createCall(request);*/
+
+    //TODO
+    public void login(String nickname, String password) {
+
+        String postBodyString = loginInfoToString(nickname, password);
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/login/");
+
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(false);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    controller = true;
+                    throw new IOException("Unexpected code " + response);
+                }
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if (success){
+                    mUser.postValue(jsonStringToUser(res));
+                }
+                else{
+                    mUser.postValue(null);
+                }
+                mSuccess.postValue(success);//Importante que este despues del postValue de mUser
+            }
+        });
+
+    }
+
+    //Crea String formato JSON con Strings de usuario
+    private String loginInfoToString(String nickname, String password){
         JSONObject jsonUser = new JSONObject();
-        controller = false;
-        responseLoginUser = null;
-        try{
+        String infoString;
+        try {
             jsonUser.put("nickname", nickname);
             jsonUser.put("password", password);
-
-            String postBodyString = jsonUser.toString();
-            MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-            RequestBody body = RequestBody.create(postBodyString, mediaType);
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .post(body)
-                    .url("http://" + "10.0.2.2" + ":" + 5000 + "/login/")
-                    .header("Accept", "application/json")
-                    .header("Content-Type", "application/json")
-                    .build();
-            Call call = client.newCall(request);
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure( Call call,  IOException e) {
-                    e.printStackTrace();
-                    controller = true;
-                    call.cancel();
-                }
-
-                @Override
-                public void onResponse( Call call, Response response) throws IOException {
-                    if (!response.isSuccessful()) {
-                        controller = true;
-                        throw new IOException("Unexpected code " + response);
-                    } else {
-                        try {
-                            responseLoginUser = response.body().string();
-                            controller = true;
-                        } catch (IOException e) {
-                            controller = true;
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-            while(!controller);
-            if(responseLoginUser != null){
-                JSONObject response = new JSONObject(responseLoginUser);
-                return response.get("exito").equals("true");
-            }
-        }
-        catch (JSONException e){
+        }catch (JSONException e) {
             e.printStackTrace();
+            infoString = "error";
         }
-        return false;
+        infoString = jsonUser.toString();
+
+        return infoString;
     }
+
+    //TODO
+    //Convierte String con formato json en usuario
+    private TUser jsonStringToUser(String jsonString){
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(jsonString);
+            return new TUser(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public TUser getUser(String nickname) {
         JSONObject jsonUser = new JSONObject();
         controller = false;

@@ -55,12 +55,6 @@ public class RegisterFragment extends Fragment {
         mRegisterViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
 
         mRegisterViewModel.init();
-        /*mRegisterViewModel.getTUser().observe(getViewLifecycleOwner(), new Observer<TUser>() {
-            @Override
-            public void onChanged(TUser tUser) {
-
-            }
-        });*/
 
         mRegisterViewModel.getIsDoingRegistration().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
@@ -121,11 +115,6 @@ public class RegisterFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
     private void initializeListeners() {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,24 +158,6 @@ public class RegisterFragment extends Fragment {
         }
 
         mRegisterViewModel.registrar(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user");
-        /*if (!errorsInForm() && mRegisterViewModel.registrar(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user"))
-        {
-            Toast.makeText(getActivity(), getString(R.string.account_created), Toast.LENGTH_SHORT).show();
-            Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_homeFragment);
-        }
-        else{
-            Toast.makeText(getActivity(), getString(R.string.register_failed), Toast.LENGTH_SHORT).show();
-        }*/
-        /*//Si los campos son correctos mandamos la petición al servidor
-        app = App.getInstance(getActivity());
-
-        if(!errorsInForm() && app.registerUser(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user")){ //TODO true --> Llamar a APP para registrar y actuar en consecuencia si el registro ha salido bien o no
-            Toast.makeText(getActivity(), getString(R.string.account_created), Toast.LENGTH_SHORT).show();
-            Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_homeFragment);
-        }
-        else{
-            Toast.makeText(getActivity(), getString(R.string.register_failed), Toast.LENGTH_SHORT).show();
-        }*/
     }
 
 

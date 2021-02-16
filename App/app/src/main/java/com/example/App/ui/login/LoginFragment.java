@@ -1,5 +1,7 @@
 package com.example.App.ui.login;
 
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -33,6 +35,7 @@ public class LoginFragment extends Fragment {
     private TextView tv_ToCreate;
     private Button loginButton;
     private App app; //global variable
+    private TUser userValue;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -44,6 +47,44 @@ public class LoginFragment extends Fragment {
 
         root = inflater.inflate(R.layout.login_fragment, container, false);
         mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+
+        mViewModel.init();
+
+        mViewModel.getIsDoingLogin().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                /*if (aBoolean) {
+                    showProgressBar();
+                }
+                else {
+                    hideProgressBar();
+                }*/
+            }
+        });
+
+        mViewModel.getIsDoneLogin().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    Toast.makeText(getActivity(), getString(R.string.sign_in), Toast.LENGTH_SHORT).show();
+                    app.setUserSession(userValue);
+                    Navigation.findNavController(root).navigate(R.id.action_loginFragment_to_homeFragment);
+                }
+                else {
+                    //hideProgressBar();
+                    Toast.makeText(getActivity(),  getString(R.string.register_failed), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        mViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<TUser>() {
+            @Override
+            public void onChanged(TUser tUser) {
+                userValue = tUser;
+            }
+        });
+
+
 
         initializeUI();
         initializeListeners();
@@ -89,8 +130,8 @@ public class LoginFragment extends Fragment {
         if (Validator.argumentsEmpty(username, pass)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
-
-        if(app.loginUser(username,pass)){
+        mViewModel.login(username, pass);
+        /*if(app.loginUser(username,pass)){
             TUser u = app.getUser(username);
             app.setUserSession(u);
             Toast.makeText(getActivity(), getString(R.string.sign_in), Toast.LENGTH_SHORT).show();
@@ -98,7 +139,7 @@ public class LoginFragment extends Fragment {
         }
         else{
             Toast.makeText(getActivity(), getString(R.string.register_failed), Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
 }
