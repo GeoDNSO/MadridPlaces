@@ -44,7 +44,8 @@ public class SimpleRequest {
         return  call;
     }
 
-    public void createAndRunCall(Request request) {
+    //TODO Borrarlo cuando veamos que no vale para nada
+    /*public void createAndRunCall(Request request) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(250, TimeUnit.MILLISECONDS)
                 .build();
@@ -72,7 +73,7 @@ public class SimpleRequest {
         });
 
         while (!finished) ;
-    }
+    }*/
 
 
     public Request buildRequest(String postBodyString, String method, String route) {

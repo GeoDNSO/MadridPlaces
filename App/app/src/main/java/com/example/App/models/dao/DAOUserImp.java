@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.models.transfer.TUser;
+import com.example.App.utilities.AppConstants;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -27,7 +28,6 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
 
     private static DAOUserImp instance;
     //SI NECESITAIS PARAMETROS; CAMBIAD LA INTERFAZ
-    volatile String responseRegister = null;
     volatile String responseGetUser = null;
     volatile String responseLoginUser = null;
     volatile String responseModifyUser = null;
@@ -47,128 +47,38 @@ public class DAOUserImp implements CRUD<TUser>, DAOUser{
         return mSuccess;
     }
     @Override
-    public void registerObject(TUser u) {
-        JSONObject dataLogin = new JSONObject();
-        controller = false;
-        responseRegister = null;
-        try {
-            //Creando el JSON
-            dataLogin.put("nickname",u.getUsername());
-            dataLogin.put("name",u.getName());
-            dataLogin.put("password",u.getPassword());
-            dataLogin.put("surname",u.getSurname());
-            dataLogin.put("email",u.getEmail());
-            dataLogin.put("gender",u.getGender());
-            dataLogin.put("birth_date",u.getBirthDate());
+    public void registerObject(TUser user) {
 
-            String json = dataLogin.toString();
+        String postBodyString = user.jsonToString();
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_POST, "/registration/"
+        );
+        Call call = simpleRequest.createCall(request);
 
-            String postBodyString = json;
-            MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-            RequestBody body = RequestBody.create(postBodyString, mediaType);
-            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).build();
-            Request request = new Request.Builder()
-                    .post(body)
-                    .url("http://" + "10.0.2.2" + ":" + 5000 + "/registration/")
-                    .header("Accept", "application/json")
-                    .header("Content-Type", "application/json")
-                    .build();
-            Call call = client.newCall(request);
-            call.timeout();
-            //call.timeout();
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    e.printStackTrace();
+        //call.timeout();
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(false);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
                     controller = true;
-                    call.cancel();
+                    throw new IOException("Unexpected code " + response);
                 }
 
-                @Override
-                public void onResponse(Call call, final Response response) throws IOException {
+                mSuccess.postValue(simpleRequest.isSuccessful(response));
 
-                    if (!response.isSuccessful()) {
-                        controller = true;
-                        throw new IOException("Unexpected code " + response);
-                    } else {
-                        try {
-                            responseRegister = response.body().string();
-                            controller = true;
-                            JSONObject respuesta = null;
-                            try {
-                                respuesta = new JSONObject(responseRegister);
-                                boolean success = respuesta.get("exito").equals("true");
-                                mSuccess.postValue(success);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        } catch (IOException e) {
-                            controller = true;
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-
-            //while(!controller);
-            //JSONObject response = new JSONObject(responseRegister);
-            //boolean success = response.get("exito").equals("true");
-            //return success;
-        }
-        catch (JSONException e){
-            e.printStackTrace();
-        }
-
-        //return false;
+            }
+        });
     }
-
-    /*@Override
-    public boolean registerObject(TUser u) {
-
-        JSONObject dataLogin = new JSONObject();
-        controller = false;
-        responseRegister = null;
-        try {
-            //Creando el JSON
-            dataLogin.put("nickname",u.getUsername());
-            dataLogin.put("name",u.getName());
-            dataLogin.put("password",u.getPassword());
-            dataLogin.put("surname",u.getSurname());
-            dataLogin.put("email",u.getEmail());
-            dataLogin.put("gender",u.getGender());
-            dataLogin.put("birth_date",u.getBirthDate());
-
-            String json = dataLogin.toString();
-
-            String postBodyString = json;
-            MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-            RequestBody body = RequestBody.create(postBodyString, mediaType);
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .post(body)
-                    .url("http://" + "10.0.2.2" + ":" + 5000 + "/registration/")
-                    .header("Accept", "application/json")
-                    .header("Content-Type", "application/json")
-                    .build();
-            Call call = client.newCall(request);
-            //call.timeout();
-            Response respuesta = call.execute();
-
-            responseRegister = respuesta.body().string();
-
-            JSONObject response = new JSONObject(responseRegister);
-            boolean success = response.get("exito").equals("true");
-            return success;
-        }
-        catch (JSONException e){
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }*/
 
     public boolean login(String nickname, String password){
         JSONObject jsonUser = new JSONObject();
