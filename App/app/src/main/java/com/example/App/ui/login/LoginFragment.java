@@ -1,6 +1,5 @@
 package com.example.App.ui.login;
 
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -50,7 +49,7 @@ public class LoginFragment extends Fragment {
 
         mViewModel.init();
 
-        mViewModel.getIsDoingLogin().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mViewModel.getLoginInProcess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 /*if (aBoolean) {
@@ -62,7 +61,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        mViewModel.getIsDoneLogin().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mViewModel.getLoginSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
@@ -83,8 +82,6 @@ public class LoginFragment extends Fragment {
                 userValue = tUser;
             }
         });
-
-
 
         initializeUI();
         initializeListeners();
@@ -131,15 +128,6 @@ public class LoginFragment extends Fragment {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
         mViewModel.login(username, pass);
-        /*if(app.loginUser(username,pass)){
-            TUser u = app.getUser(username);
-            app.setUserSession(u);
-            Toast.makeText(getActivity(), getString(R.string.sign_in), Toast.LENGTH_SHORT).show();
-            Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeFragment);
-        }
-        else{
-            Toast.makeText(getActivity(), getString(R.string.register_failed), Toast.LENGTH_SHORT).show();
-        }*/
     }
 
 }

@@ -21,10 +21,7 @@ import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.Validator;
-
-import java.util.List;
 
 public class RegisterFragment extends Fragment {
 
@@ -56,7 +53,7 @@ public class RegisterFragment extends Fragment {
 
         mRegisterViewModel.init();
 
-        mRegisterViewModel.getIsDoingRegistration().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mRegisterViewModel.getRegisterInProcess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
@@ -157,7 +154,7 @@ public class RegisterFragment extends Fragment {
             et_Username.setError(getString(R.string.username_exists));
         }
 
-        mRegisterViewModel.registrar(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user");
+        mRegisterViewModel.registerUser(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user");
     }
 
 

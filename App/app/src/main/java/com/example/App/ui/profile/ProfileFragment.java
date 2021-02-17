@@ -1,5 +1,6 @@
 package com.example.App.ui.profile;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlertDialog;
@@ -57,6 +58,8 @@ public class ProfileFragment extends Fragment {
         app = App.getInstance(getActivity());
         app.setBottomMenuVisible(View.GONE);
 
+        mViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        mViewModel.init();
 
         deleteAccountButton = root.findViewById(R.id.deleteButton);
         ib_editProfile = root.findViewById(R.id.edit_button);
@@ -78,17 +81,70 @@ public class ProfileFragment extends Fragment {
 
         initializeUI();
         initializeListeners();
+        initializeObservers();
 
         return root;
     }
+
+    private void initializeObservers() {
+
+        mViewModel.getProfileActionInProgress().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                /*if (aBoolean) {
+                    showProgressBar();
+                }
+                else {
+                    hideProgressBar();
+                }*/
+            }
+        });
+
+        mViewModel.getDeleteProfileSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    Toast.makeText(getActivity(), "Se ha eliminado el perfil", Toast.LENGTH_SHORT).show();
+                    app.logout();
+                    Navigation.findNavController(root).navigate(R.id.homeFragment);
+                }
+                else {
+                    Toast.makeText(getActivity(), "Algo ha funcionado mal", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        mViewModel.getModifyProfileSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    Toast.makeText(getActivity(), "Se ha modificado el perfil", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(root).navigate(R.id.profileFragment);
+                    return ;
+                }
+                Toast.makeText(getActivity(), "Algo ha funcionado mal", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<TUser>() {
+            @Override
+            public void onChanged(TUser tUser) {
+                if(tUser == null)
+                    return;
+                app.setUserSession(tUser);
+                fillProfileFields();
+                //Toast.makeText(getActivity(), "Se ha modificado el perfil", Toast.LENGTH_SHORT).show();
+                //Navigation.findNavController(root).navigate(R.id.profileFragment);
+            }
+        });
+    }
+
 
     @Override
     public void onDestroyView(){
         app = App.getInstance(getActivity());
         app.setBottomMenuVisible(View.VISIBLE);
         super.onDestroyView();
-
-
     }
 
     private void initializeListeners() {
@@ -124,7 +180,12 @@ public class ProfileFragment extends Fragment {
         if(!app.isLogged()){
             return ;
         }
-        app = App.getInstance(getActivity());
+
+        //app = App.getInstance(getActivity());
+        fillProfileFields();
+    }
+    //Rellena los datos del usuario segun la informacion de la sesion
+    private void fillProfileFields(){
         SessionManager sm = app.getSessionManager();
 
         tv_Username.setText(sm.getUsername());
@@ -145,23 +206,17 @@ public class ProfileFragment extends Fragment {
         final AlertDialog.Builder deleteAccountDialog = new AlertDialog.Builder(root.getContext());
         deleteAccountDialog.setTitle(getString(R.string.profile_delete_account_title));
         deleteAccountDialog.setMessage(getString(R.string.profile_delete_account_message));
+
         app = App.getInstance(getActivity());
         SessionManager sm = app.getSessionManager();
         deleteAccountDialog.setPositiveButton(getString(R.string.alert_yes), (dialog, which) -> {
-            //Borrar cuenta desde DAO
-            if(app.deleteUser(sm.getUsername())){
-                Toast.makeText(getActivity(), "Se ha eliminado el perfil", Toast.LENGTH_SHORT).show();
-                app.logout();
-                Navigation.findNavController(v).navigate(R.id.homeFragment);
-            }
-            else{
-                Toast.makeText(getActivity(), "Algo ha funcionado mal", Toast.LENGTH_SHORT).show();
-            }
+            mViewModel.deleteUser(sm.getUsername()); //Llamar al viewmodel para borrar usuario
+
         });
-         deleteAccountDialog.setNegativeButton(getString(R.string.alert_no), (dialog, which) -> {
-             //Close
-         });
-         deleteAccountDialog.create().show();
+        deleteAccountDialog.setNegativeButton(getString(R.string.alert_no), (dialog, which) -> {
+            //Close
+        });
+        deleteAccountDialog.create().show();
     }
 
     private void editProfileAction(View v){
@@ -195,13 +250,18 @@ public class ProfileFragment extends Fragment {
         et_Password.setVisibility(View.GONE);
         tv_Password.setVisibility(View.VISIBLE);
 
+        //Conseguir los datos del usuario para despues modificarlos
         app = App.getInstance(getActivity());
         SessionManager sm = app.getSessionManager();
-        TUser u = app.getUser(sm.getUsername());
+        TUser u = sm.getSesionUser();
 
+        //Modificar datos del usuario según lo modificado
         u.setEmail(et_Email.getText().toString());
         u.setPassword(et_Password.getText().toString());
 
+        mViewModel.modifyUser(u);
+
+        /*
         if(app.modifyUser(u)){
             u = app.getUser(u.getUsername());
             app.setUserSession(u);
@@ -211,7 +271,7 @@ public class ProfileFragment extends Fragment {
         else{
             Toast.makeText(getActivity(), "Algo ha funcionado mal", Toast.LENGTH_SHORT).show();
         }
-
+        */
         deleteAccountButton.setVisibility(View.VISIBLE);
         confirmChangesButton.setVisibility(View.GONE);
         cancelChangesButton.setVisibility(View.GONE);

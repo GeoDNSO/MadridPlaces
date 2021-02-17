@@ -80,4 +80,22 @@ public class SessionManager {
     public String getRol(){
         return prefs.getString(AppConstants.ADMIN, "user");
     }
+
+    public String getCity() {
+        return prefs.getString(AppConstants.CITY, "");
+    }
+
+    public String getBirthDate() {
+        return prefs.getString(AppConstants.BIRTH_DATE, "");
+    }
+
+    public String getGender() {
+        return prefs.getString(AppConstants.GENDER, "");
+    }
+
+    public TUser getSesionUser(){
+        return new TUser(getUsername(), getPassword(), getFirstName(),
+                getSurname(), getEmail(), getGender(),
+                getBirthDate(), getCity(), getRol());
+    }
 }

@@ -22,6 +22,8 @@ public class SimpleRequest {
     private final String DIR_PROTOCOL = "http";
     private final String DIR = "10.0.2.2";
     private final int PORT = 5000;
+    private final int TTL_SECONDS = 3;
+    private final int TTL_MSECONDS = 3000;
 
     private volatile boolean finished;
     private volatile String response;
@@ -37,7 +39,7 @@ public class SimpleRequest {
 
     public Call createCall(Request request){
         OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(TTL_SECONDS, TimeUnit.SECONDS)
                 .build();
         Call call = client.newCall(request);
 
