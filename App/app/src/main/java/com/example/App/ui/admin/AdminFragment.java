@@ -1,5 +1,6 @@
 package com.example.App.ui.admin;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -17,7 +18,9 @@ import android.view.ViewGroup;
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.transfer.TUser;
+import com.example.App.ui.login.LoginViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdminFragment extends Fragment {
@@ -38,11 +41,34 @@ public class AdminFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.admin_fragment, container, false);
-        app = App.getInstance(getActivity());
+
         recyclerView = root.findViewById(R.id.recycle_view);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),1));
-        adapter = new UserListAdapter(getActivity(), app.getUsersList());
-        recyclerView.setAdapter(adapter);
+
+        mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
+
+        mViewModel.init();
+
+        mViewModel.getListUsers().observe(getViewLifecycleOwner(), new Observer<List<TUser>>() {
+            @Override
+            public void onChanged(List<TUser> tUsers) {
+                if (tUsers == null){
+                    tUsers = new ArrayList<>();
+                }
+                adapter = new UserListAdapter(getActivity(), tUsers);
+                recyclerView.setAdapter(adapter);
+            }
+        });
+
+        mViewModel.getListSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+
+            }
+        });
+
+//        adapter = new UserListAdapter(getActivity(), app.getUsersList());
+//        recyclerView.setAdapter(adapter);
 
         /*recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -59,6 +85,8 @@ public class AdminFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
         // TODO: Use the ViewModel
+
+        mViewModel.listUsers();
 
     }
 

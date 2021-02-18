@@ -8,10 +8,13 @@ import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -26,6 +29,7 @@ public class UserRepository {
     private MutableLiveData<Integer> mProfileSuccess = new MutableLiveData<>();
 
     private MutableLiveData<TUser> mUser = new MutableLiveData<>();
+    private MutableLiveData<List<TUser>> mListUsers = new MutableLiveData<>();
 
     public void registerUser(TUser user) {
 
@@ -219,17 +223,76 @@ public class UserRepository {
 
     }
 
+    public void listUsers() {
 
+        String postBodyString = "";
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/listUsers/");
+
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mProfileSuccess.postValue(AppConstants.ERROR_LIST_USERS);
+                mListUsers.postValue(null);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    mProfileSuccess.postValue(AppConstants.ERROR_LIST_USERS);
+                    throw new IOException("Unexpected code " + response);
+                }
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if (success){
+                    mListUsers.postValue(getListFromResponse(res));
+                    mProfileSuccess.postValue(AppConstants.LIST_USERS);//Importante que este despues del postValue de mUser
+                }
+                else{
+                    mListUsers.postValue(null);
+                    mProfileSuccess.postValue(AppConstants.ERROR_LIST_USERS);//Importante que este despues del postValue de mUser
+                }
+
+            }
+        });
+
+    }
+
+    private List<TUser> getListFromResponse(String response){
+        JSONObject jresponse = null;
+        try {
+            jresponse = new JSONObject(response);
+
+            //dentro de get("users") contiene una lista de nicknames ["poti", "aaa", "pepe"]
+            List<TUser> listUsers = new ArrayList<TUser>();
+            JSONArray arrayUsers = jresponse.getJSONArray("users");
+            for (int i = 0; i < arrayUsers.length(); i++) {
+                TUser tUser = jsonStringToUser(arrayUsers.getString(i));
+                listUsers.add(tUser);
+            }
+            return listUsers;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return  null;
+        }
+    }
 
     //Getter y Setters para LiveData
 
-    public MutableLiveData<Boolean> getmSuccess() {
-        return mSuccess;
-    }
+    public MutableLiveData<Boolean> getmSuccess() { return mSuccess; }
 
-    public MutableLiveData<Integer> getProfileSuccess() {
-        return mProfileSuccess;
-    }
+    public MutableLiveData<Integer> getProfileSuccess() { return mProfileSuccess; }
+
+    public MutableLiveData<List<TUser>> getListUsers() { return mListUsers; }
 
     public void setmSuccess(MutableLiveData<Boolean> mSuccess) {
         this.mSuccess = mSuccess;

@@ -120,7 +120,18 @@ def listUsers():
         usuarios = user.query.order_by(user.nickname).all()
         lista = []
         for usuario in usuarios:
-            lista.append(usuario.nickname)
+            u = {
+                "nickname":usuario.nickname,
+                "name":usuario.name,
+                "surname":usuario.surname,
+                "email":usuario.email,
+                "password":usuario.password,
+                "gender":usuario.gender,
+                "birth_date":usuario.birth_date.strftime("%Y-%m-%d"),
+                "city":usuario.city,
+                "rol":usuario.rol
+                }
+            lista.append(u)
     except Exception as e:
         print("Error leyendo usuarios:", repr(e))
         return jsonify(exito = "false")
