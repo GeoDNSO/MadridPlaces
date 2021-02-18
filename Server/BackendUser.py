@@ -32,7 +32,7 @@ class location(sqlAlchemy.Model):
     description = sqlAlchemy.Column(sqlAlchemy.String(255)) #A lo mejor es necesario cambiar la longitud
     direction = sqlAlchemy.Column(sqlAlchemy.String(255))
     coordinate_latitude = sqlAlchemy.Column(sqlAlchemy.Float())
-    coordinate_longitude = sqlAlchemy.Column(sqlAlchemy.Float())
+    coordinate_longitude = sqlAlchemy.Column(sqlAlchemy.Float()) 
     picture = sqlAlchemy.Column(sqlAlchemy.String(255)) #Aun no esta decidido de como mostrar una imagen, si por URL o por BD
     type_of_place = sqlAlchemy.Column(sqlAlchemy.String(255))
     city = sqlAlchemy.Column(sqlAlchemy.String(255), default="Madrid")
@@ -58,7 +58,8 @@ class visited(sqlAlchemy.Model):
     id_visited = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
     user = sqlAlchemy.Column(sqlAlchemy.String(255))
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
-    date_visited =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now())
+             =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now())
+
 #Funciones Usuario
 
 #Cifrado de Passwords
@@ -98,7 +99,7 @@ def login():
                     name=userQuery.name,
                     surname=userQuery.surname,
                     email=userQuery.email,
-                    password=userQuery.password,
+                    password=password,
                     gender=userQuery.gender,
                     birth_date=userQuery.birth_date.strftime("%Y-%m-%d"),
                     city=userQuery.city,
