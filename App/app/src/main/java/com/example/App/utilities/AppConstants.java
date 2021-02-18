@@ -31,6 +31,7 @@ public class AppConstants {
     public static final Integer ERROR_PROFILE = -1;
     public static final Integer DELETE_PROFILE = 1;
     public static final Integer MODIFY_PROFILE = 2;
+    public static final Integer LIST_USERS = 3;
 
 
 
