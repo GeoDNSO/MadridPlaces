@@ -12,19 +12,14 @@ public class ProfileViewModel extends ViewModel {
 
     UserRepository userRepository;
     private MutableLiveData<Boolean> mProfileActionInProgress = new MutableLiveData<>(); //true indica progress bar activo
-    private LiveData<Boolean> mDeleteProfileSuccess = new MutableLiveData<>();
-    private LiveData<Boolean> mModifyProfileSuccess = new MutableLiveData<>();
+    private LiveData<Integer> mActionProfileSuccess = new MutableLiveData<>();
     private LiveData<TUser> mUser = new MutableLiveData<>();
 
     public void init(){
         userRepository = new UserRepository();
 
-        mDeleteProfileSuccess = Transformations.switchMap(
-                userRepository.getmSuccess(),
-                success -> setProfileActionInProgress(success));
-
-        mModifyProfileSuccess = Transformations.switchMap(
-                userRepository.getmSuccess(),
+        mActionProfileSuccess = Transformations.switchMap(
+                userRepository.getProfileSuccess(),
                 success -> setProfileActionInProgress(success));
 
         mUser = Transformations.switchMap(
@@ -50,25 +45,23 @@ public class ProfileViewModel extends ViewModel {
         userRepository.modifyUser(u);
     }
 
-    //Se puede usar tanto para modificar como para actualizar
-    private LiveData<Boolean> setProfileActionInProgress(Boolean success) {
+    //Para delete
+    private LiveData<Integer> setProfileActionInProgress(Integer success) {
         mProfileActionInProgress.setValue(false); //progress bar visible
-        MutableLiveData<Boolean> mAux = new MutableLiveData<>();
+        MutableLiveData<Integer> mAux = new MutableLiveData<>();
         mAux.setValue(success);
         return mAux;
     }
 
-    public LiveData<Boolean> getDeleteProfileSuccess(){
-        return mDeleteProfileSuccess;
-    }
+
     public LiveData<Boolean> getProfileActionInProgress(){
         return mProfileActionInProgress;
     }
     public LiveData<TUser> getUser(){
         return mUser;
     }
-    public LiveData<Boolean> getModifyProfileSuccess(){
-        return mModifyProfileSuccess;
+    public LiveData<Integer> getActionProfileSuccess(){
+        return mActionProfileSuccess;
     }
 
 }

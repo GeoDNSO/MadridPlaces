@@ -24,6 +24,7 @@ import com.example.App.App;
 import com.example.App.R;
 import com.example.App.SessionManager;
 import com.example.App.models.transfer.TUser;
+import com.example.App.utilities.AppConstants;
 
 public class ProfileFragment extends Fragment {
 
@@ -100,13 +101,17 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        mViewModel.getDeleteProfileSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mViewModel.getActionProfileSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
+            public void onChanged(Integer aInteger) {
+                if (aInteger.equals(AppConstants.DELETE_PROFILE)) {
                     Toast.makeText(getActivity(), "Se ha eliminado el perfil", Toast.LENGTH_SHORT).show();
                     app.logout();
                     Navigation.findNavController(root).navigate(R.id.homeFragment);
+                }
+                else if(aInteger.equals(AppConstants.MODIFY_PROFILE)){
+                    Toast.makeText(getActivity(), "Se ha modificado el perfil", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(root).navigate(R.id.profileFragment);
                 }
                 else {
                     Toast.makeText(getActivity(), "Algo ha funcionado mal", Toast.LENGTH_SHORT).show();
@@ -114,27 +119,14 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        mViewModel.getModifyProfileSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    Toast.makeText(getActivity(), "Se ha modificado el perfil", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(root).navigate(R.id.profileFragment);
-                    return ;
-                }
-                Toast.makeText(getActivity(), "Algo ha funcionado mal", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         mViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<TUser>() {
             @Override
             public void onChanged(TUser tUser) {
-                if(tUser == null)
-                    return;
-                app.setUserSession(tUser);
-                fillProfileFields();
-                //Toast.makeText(getActivity(), "Se ha modificado el perfil", Toast.LENGTH_SHORT).show();
-                //Navigation.findNavController(root).navigate(R.id.profileFragment);
+                if(tUser != null){
+                    app.setUserSession(tUser);
+                    fillProfileFields();
+                }
+
             }
         });
     }

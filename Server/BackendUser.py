@@ -71,7 +71,7 @@ def login():
                     name=userQuery.name,
                     surname=userQuery.surname,
                     email=userQuery.email,
-                    password=userQuery.password,
+                    password=password,
                     gender=userQuery.gender,
                     birth_date=userQuery.birth_date.strftime("%Y-%m-%d"),
                     city=userQuery.city,
@@ -178,7 +178,17 @@ def modifyUser():
         print("Error modificando usuarios:", repr(e))
         return jsonify(exito = "false")
         
-    return jsonify(exito = "true") #A lo mejor es necesario devolver los datos del nuevo usuario
+    return jsonify(
+                   exito = "true",
+                   nickname=modifiedUser.nickname,
+                   name=modifiedUser.name,
+                   surname=modifiedUser.surname,
+                   email=modifiedUser.email,
+                   password=password,
+                   gender=modifiedUser.gender,
+                   birth_date=modifiedUser.birth_date.strftime("%Y-%m-%d"),
+                   city=modifiedUser.city,
+                   rol=modifiedUser.rol)
 
 #Perfil Usuario
 @app.route('/profileUser/', methods=['GET', 'POST'])

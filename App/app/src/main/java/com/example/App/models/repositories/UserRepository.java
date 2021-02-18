@@ -1,12 +1,13 @@
 package com.example.App.models.repositories;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,10 +15,7 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class UserRepository {
@@ -25,6 +23,7 @@ public class UserRepository {
 
 
     private MutableLiveData<Boolean> mSuccess = new MutableLiveData<>();
+    private MutableLiveData<Integer> mProfileSuccess = new MutableLiveData<>();
 
     private MutableLiveData<TUser> mUser = new MutableLiveData<>();
 
@@ -158,17 +157,24 @@ public class UserRepository {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(false);
+                mProfileSuccess.postValue(AppConstants.ERROR_PROFILE);
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(false);
+                    mProfileSuccess.postValue(AppConstants.ERROR_PROFILE);
                     throw new IOException("Unexpected code " + response);
                 }
-                mSuccess.postValue(simpleRequest.isSuccessful(response));
+                Boolean success = simpleRequest.isSuccessful(response);
+                if(success){
+                    mProfileSuccess.postValue(AppConstants.DELETE_PROFILE);
+                }
+                else{
+                    mProfileSuccess.postValue(AppConstants.ERROR_PROFILE);
+                }
+
             }
         });
     }
@@ -186,14 +192,14 @@ public class UserRepository {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(false);
+                mProfileSuccess.postValue(AppConstants.ERROR_PROFILE);
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(false);
+                    mProfileSuccess.postValue(AppConstants.ERROR_PROFILE);
                     throw new IOException("Unexpected code " + response);
                 }
                 String res = response.body().string();
@@ -201,11 +207,13 @@ public class UserRepository {
 
                 if (success){
                     mUser.postValue(jsonStringToUser(res));
+                    Log.d("Caca", res);
+                    mProfileSuccess.postValue(AppConstants.MODIFY_PROFILE);//Importante que este despues del postValue de mUser
                 }
                 else{
                     mUser.postValue(null);
+                    mProfileSuccess.postValue(AppConstants.ERROR_PROFILE);//Importante que este despues del postValue de mUser
                 }
-                mSuccess.postValue(success);//Importante que este despues del postValue de mUser
             }
         });
 
@@ -217,6 +225,10 @@ public class UserRepository {
 
     public MutableLiveData<Boolean> getmSuccess() {
         return mSuccess;
+    }
+
+    public MutableLiveData<Integer> getProfileSuccess() {
+        return mProfileSuccess;
     }
 
     public void setmSuccess(MutableLiveData<Boolean> mSuccess) {

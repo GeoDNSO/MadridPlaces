@@ -30,7 +30,6 @@ public class RegisterViewModel extends ViewModel {
         userRepository.registerUser(user);
     }
 
-    //TODO puede ser void??
     //funcion que se usa en el switchMap, asocia un liveData cuando cambia el valor de mSuccess en DAOUserImp
     private LiveData<Boolean> setRegisterInProcess(Boolean success) {
         mRegisterInProcess.setValue(false); //progress bar visible
