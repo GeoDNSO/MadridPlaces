@@ -25,4 +25,5 @@
     <color name="followersBg">#65DCE5</color>
     <color name="followingBg">#49BEFF</color>
 
+    <color name="start_rating">#FFD700</color>
 </resources>
