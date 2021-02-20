@@ -18,6 +18,8 @@ import com.example.App.models.transfer.TPlace;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.ViewHolder> {
@@ -76,7 +78,9 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         //Nombre del Lugar
         holder.tvPlaceName.setText(place.getName());
         //Rating del lugar
-        holder.tvRatingValue.setText(Float.toString(place.getRating()));
+        DecimalFormat df = new DecimalFormat("#.#");
+        df.setRoundingMode(RoundingMode.CEILING);
+        holder.tvRatingValue.setText(df.format(place.getRating()));
     }
 
     @Override

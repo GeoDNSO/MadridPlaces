@@ -1,5 +1,6 @@
 package com.example.App.ui.home;
 
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.LinearLayout;
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.SessionManager;
+import com.example.App.ui.places_list.PlacesList;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -52,6 +54,10 @@ public class HomeFragment extends Fragment {
         initializeListeners();
 
         viewAccToUser();
+
+        Fragment placeListFragment = new PlacesList();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.home_NestedScrollView, placeListFragment).commit();
 
         return root;
     }

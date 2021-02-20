@@ -51,13 +51,18 @@ public class PlacesList extends Fragment {
 
         initUI();
 
-        placeListAdapter = new PlaceListAdapter(getActivity(), placeList);
+        placeListManagement();
+
+        return root;
+    }
+
+    private void placeListManagement(){
+        placeListAdapter = new PlaceListAdapter(getActivity(), placeList); //getActivity = MainActivity.this
 
         //Set layout
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//getActivity() en vez de this
-
         recyclerView.setAdapter(placeListAdapter);
-        
+
         getData();
 
         //Empezar el efecto de shimmer
@@ -78,8 +83,6 @@ public class PlacesList extends Fragment {
                 }
             }
         });
-
-        return root;
     }
 
     //@TODO Ver video para enseñar a Jin lo de las peticiones por paginas...
@@ -111,6 +114,8 @@ public class PlacesList extends Fragment {
                 placeList.add(place);
             }
             placeListAdapter = new PlaceListAdapter(getActivity(), placeList);
+
+            recyclerView.setAdapter(placeListAdapter);
         }else{
             //Mostrar mensaje de error o trasladar mensaje de error a la vista
         }
