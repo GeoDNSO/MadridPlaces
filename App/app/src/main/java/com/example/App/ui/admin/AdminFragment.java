@@ -9,11 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
@@ -23,7 +26,7 @@ import com.example.App.ui.login.LoginViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminFragment extends Fragment {
+public class AdminFragment extends Fragment implements UserListAdapter.OnListListener {
 
 
     private View root;
@@ -32,6 +35,7 @@ public class AdminFragment extends Fragment {
     private List<TUser> listUser;
     private UserListAdapter adapter;
     private RecyclerView recyclerView;
+    private UserListAdapter.OnListListener onListListener;
 
     public static AdminFragment newInstance() {
         return new AdminFragment();
@@ -41,13 +45,17 @@ public class AdminFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.admin_fragment, container, false);
-
-        recyclerView = root.findViewById(R.id.recycle_view);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),1));
+        app = App.getInstance(getActivity());
+        app.setBottomMenuVisible(View.GONE);
 
         mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
 
         mViewModel.init();
+
+        recyclerView = root.findViewById(R.id.recycle_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),1));
+
+        this.onListListener = this; //TODO GUARRADA
 
         mViewModel.getListUsers().observe(getViewLifecycleOwner(), new Observer<List<TUser>>() {
             @Override
@@ -55,7 +63,8 @@ public class AdminFragment extends Fragment {
                 if (tUsers == null){
                     tUsers = new ArrayList<>();
                 }
-                adapter = new UserListAdapter(getActivity(), tUsers);
+                adapter = new UserListAdapter(getActivity(), tUsers, onListListener);
+                adapter.notifyDataSetChanged();
                 recyclerView.setAdapter(adapter);
             }
         });
@@ -84,10 +93,19 @@ public class AdminFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
-        // TODO: Use the ViewModel
-
         mViewModel.listUsers();
+    }
 
+    @Override
+    public void OnListClick(int position) {
+        Toast.makeText(getActivity(),"ASDAS", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroyView(){
+        app = App.getInstance(getActivity());
+        app.setBottomMenuVisible(View.VISIBLE);
+        super.onDestroyView();
     }
 
 }

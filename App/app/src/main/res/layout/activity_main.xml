@@ -6,13 +6,28 @@
     android:id="@+id/drawer_layout"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    tools:context=".MainActivity">
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity"
+    tools:openDrawer="start">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.App.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/Theme.App.PopupOverlay" />
+        
+    </com.google.android.material.appbar.AppBarLayout>
         <fragment
             android:id="@+id/app_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
@@ -25,17 +40,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.402"
-            app:navGraph="@navigation/app_navigation" />
+            app:navGraph="@navigation/app_navigation"
+            />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:background="?android:attr/windowBackground"
             android:id="@+id/app_navigation"
-            app:menu="@menu/bottom_navigation_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?android:attr/windowBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/bottom_navigation_menu" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -45,7 +66,10 @@
         app:headerLayout="@layout/drawer_header"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"/>
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+
+        />
 
 
 

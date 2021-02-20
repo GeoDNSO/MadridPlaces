@@ -6,6 +6,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.view.View;
@@ -24,12 +25,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Thread.sleep(300); //Para añadir un pequeño delay antes del splash screen
-        setTheme(R.style.Theme_App);
+        //setTheme(R.style.Theme_App);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         initializeUI();
-
 
         App app = App.getInstance(this);
         app.setMenu(drawerNavigationView.getMenu());
@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void initializeUI(){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         //Set Bottom Navigation
         bottomNavView = findViewById(R.id.app_navigation);
         appNavController = Navigation.findNavController(this, R.id.app_host_fragment);

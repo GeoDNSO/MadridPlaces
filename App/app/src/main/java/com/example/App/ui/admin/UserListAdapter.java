@@ -19,17 +19,19 @@ import java.util.List;
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyViewHolder> {
     private Context context;
     private List<TUser> listUser;
+    private OnListListener onListListener;
 
-    public UserListAdapter(Context context, List<TUser> listUser) {
+    public UserListAdapter(Context context, List<TUser> listUser, OnListListener onListListener) {
         this.context = context;
         this.listUser = listUser;
+        this.onListListener = onListListener;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_user_item_row, parent, false);
-        return new MyViewHolder(view);
+        return new MyViewHolder(view, onListListener);
     }
 
     @Override
@@ -46,18 +48,22 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
 
     @Override
     public int getItemCount() {
-        return listUser.size();
+        if(this.listUser != null) {
+            return listUser.size();
+        }
+        return 0;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView iv_imgProfile;
         TextView tv_nameProfile;
         TextView tv_entireNameProfile;
         TextView tv_emailProfile;
         TextView tv_birthdayProfile;
         TextView tv_genderProfile;
+        OnListListener onListListener;
 
-        public MyViewHolder(View itemView) {
+        public MyViewHolder(View itemView, OnListListener onListListener) {
             super(itemView);
             iv_imgProfile = (ImageView) itemView.findViewById(R.id.imageViewUser);
             tv_nameProfile = (TextView) itemView.findViewById(R.id.nameTextViewProfile);
@@ -65,10 +71,23 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
             tv_emailProfile = (TextView) itemView.findViewById(R.id.emailTextViewProfile);
             tv_birthdayProfile = (TextView) itemView.findViewById(R.id.birthdayTextViewProfile);
             tv_genderProfile = (TextView) itemView.findViewById(R.id.genderTextViewProfile);
+            this.onListListener = onListListener;
+
+            itemView.setOnClickListener(this); //this referencia a la interfaz que se implementa en el constructor
         }
+
+        @Override
+        public void onClick(View v) {
+            onListListener.OnListClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnListListener {
+        void OnListClick(int position);
     }
 
     public void setListUser(List<TUser> listUser){
         this.listUser = listUser;
+        notifyDataSetChanged();
     }
 }
