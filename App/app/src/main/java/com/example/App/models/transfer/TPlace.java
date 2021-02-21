@@ -1,8 +1,11 @@
 package com.example.App.models.transfer;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONObject;
 
-public class TPlace implements JSONSerializable{
+public class TPlace implements JSONSerializable, Parcelable {
 
     private String name;
     private String description;
@@ -23,8 +26,10 @@ public class TPlace implements JSONSerializable{
         this.image = image;
         this.rating = rating;
     }
-
-    public TPlace(String name, String description, String address, Float latitude, Float longitude, String image, String typeOfPlace, String city, String location, String affluence) {
+    //("lugar", "descripcion", "direccion", 3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid", "Localidad", "Afluencia", 4.0f)
+    public TPlace(String name, String description, String address, Float latitude,
+                  Float longitude, String image, String typeOfPlace, String city,
+                  String location, String affluence, float rating) {
         this.name = name;
         this.description = description;
         this.address = address;
@@ -35,6 +40,7 @@ public class TPlace implements JSONSerializable{
         this.city = city;
         this.location = location;
         this.affluence = affluence;
+        this.rating = rating;
     }
 
     public String getName() {
@@ -129,5 +135,39 @@ public class TPlace implements JSONSerializable{
     @Override
     public String jsonToString() {
         return null;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.description);
+        dest.writeString(this.address);
+        dest.writeFloat(this.latitude);
+        dest.writeFloat(this.longitude);
+        dest.writeString(this.image);
+        dest.writeString(this.typeOfPlace);
+        dest.writeString(this.city);
+        dest.writeString(this.location);
+        dest.writeString(this.affluence);
+        dest.writeFloat(this.rating);
+    }
+
+    public TPlace(Parcel in) {
+        this.name = in.readString();
+        this.description = in.readString();
+        this.address = in.readString();
+        this.latitude = in.readFloat();
+        this.longitude = in.readFloat();
+        this.image = in.readString();
+        this.typeOfPlace = in.readString();
+        this.city = in.readString();
+        this.location = in.readString();
+        this.affluence = in.readString();
+        this.rating = in.readFloat();
     }
 }

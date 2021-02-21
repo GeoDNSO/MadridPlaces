@@ -11,8 +11,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.App.R;
+import com.example.App.models.transfer.TPlace;
+import com.example.App.utilities.AppConstants;
 
 public class PlaceDetailFragment extends Fragment {
 
@@ -29,6 +32,10 @@ public class PlaceDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.place_detail_fragment, container, false);
+
+        TPlace place = (TPlace) getArguments().getParcelable(AppConstants.BUNDLE_PLACE_DETAILS);
+
+        Toast.makeText(getActivity(), "Listener del item: " + place.getName(), Toast.LENGTH_LONG).show();
 
         return root;
     }

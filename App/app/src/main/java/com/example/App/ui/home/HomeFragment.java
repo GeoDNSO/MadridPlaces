@@ -30,6 +30,7 @@ import com.example.App.SessionManager;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.places_list.PlaceListAdapter;
 import com.example.App.ui.places_list.PlacesList;
+import com.example.App.utilities.AppConstants;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -214,7 +215,15 @@ public class HomeFragment extends Fragment implements PlaceListAdapter.OnPlaceLi
     @Override
     public void onPlaceClick(int position) {
         //Enviar datos del objeto con posicion position de la lista al otro fragment
-        Toast.makeText(getActivity(), "Listener del item " + position, Toast.LENGTH_LONG).show();
-        Navigation.findNavController(root).navigate(R.id.placeDetailFragment);
+        //Toast.makeText(getActivity(), "Listener del item " + position, Toast.LENGTH_LONG).show();
+        Bundle bundle = new Bundle();
+        TPlace place = new TPlace("Lugar en Posicion "+position, "descripcion", "direccion",
+                3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid",
+                "Localidad", "Afluencia", 4.0f);
+
+        bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
+
+        //Le pasamos el bundle
+        Navigation.findNavController(root).navigate(R.id.placeDetailFragment, bundle);
     }
 }

@@ -2,6 +2,7 @@ package com.example.App.utilities;
 
 public class AppConstants {
 
+    public static final String BUNDLE_PLACE_DETAILS = "PLACE_DETAIL_BUNDLE";
 
     public static final String METHOD_POST = "POST";
     public static final String METHOD_PUT = "PUT";
