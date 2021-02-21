@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
@@ -36,7 +37,7 @@ import org.xmlpull.v1.XmlPullParser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements PlaceListAdapter.OnPlaceListener {
 
     private View root;
     private HomeViewModel mViewModel;
@@ -146,7 +147,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void placeListManagement(){
-        placeListAdapter = new PlaceListAdapter(getActivity(), placeList); //getActivity = MainActivity.this
+        placeListAdapter = new PlaceListAdapter(getActivity(), placeList, this); //getActivity = MainActivity.this
 
         //Set layout
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//getActivity() en vez de this
@@ -201,7 +202,7 @@ public class HomeFragment extends Fragment {
                 //Añadir lugar a la lista
                 placeList.add(place);
             }
-            placeListAdapter = new PlaceListAdapter(getActivity(), placeList);
+            placeListAdapter = new PlaceListAdapter(getActivity(), placeList, this);
 
             recyclerView.setAdapter(placeListAdapter);
         }else{
@@ -210,4 +211,10 @@ public class HomeFragment extends Fragment {
     }
 
 
+    @Override
+    public void onPlaceClick(int position) {
+        //Enviar datos del objeto con posicion position de la lista al otro fragment
+        Toast.makeText(getActivity(), "Listener del item " + position, Toast.LENGTH_LONG).show();
+        Navigation.findNavController(root).navigate(R.id.placeDetailFragment);
+    }
 }

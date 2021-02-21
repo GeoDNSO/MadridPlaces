@@ -24,12 +24,15 @@ import java.util.List;
 
 public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.ViewHolder> {
 
-    Activity activity;
-    List<TPlace> placeList;
+    private Activity activity;
+    private List<TPlace> placeList;
 
-    public PlaceListAdapter(Activity activity, List<TPlace> placeList){
+    private OnPlaceListener onPlaceListener;
+
+    public PlaceListAdapter(Activity activity, List<TPlace> placeList, OnPlaceListener onPlaceListener){
         this.activity = activity;
         this.placeList = placeList;
+        this.onPlaceListener = onPlaceListener;
     }
 
     @NonNull
@@ -39,7 +42,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.place_list_item_fragment, parent, false);
 
-        return new ViewHolder(view);
+        return new ViewHolder(view, onPlaceListener);
     }
 
     @Override
@@ -89,7 +92,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
     }
 
     //Clase correspondiente a la representacion de un lugar en la lista --> place_list_item
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView placeImage;
         TextView tvPlaceName;
@@ -97,7 +100,9 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         TextView tvRatingValue;
         ImageView starImage;
 
-        public ViewHolder(@NonNull View itemView) {
+        private OnPlaceListener onPlaceListener;
+
+        public ViewHolder(@NonNull View itemView, OnPlaceListener onPlaceListener){
             super(itemView);
 
             placeImage = itemView.findViewById(R.id.placePicture);
@@ -105,8 +110,19 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
             favImage = itemView.findViewById(R.id.favImage);
             tvRatingValue = itemView.findViewById(R.id.tvPlaceRating);
             starImage = itemView.findViewById(R.id.placeStarImage);
+
+            this.onPlaceListener = onPlaceListener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            onPlaceListener.onPlaceClick(getAdapterPosition());
         }
     }
 
+    public interface OnPlaceListener{
+        void onPlaceClick(int position);
+    }
 
 }

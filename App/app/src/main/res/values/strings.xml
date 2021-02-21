@@ -60,6 +60,7 @@
     <string name="star_icon_default_desc">Imagen de Valoración</string>
     <string name="place_default_desc">Descripción del Lugar</string>
     <string name="place_default_name">Nombre del Lugar</string>
+    <string name="place_details_comment_title">Comentarios</string>
 
 
 

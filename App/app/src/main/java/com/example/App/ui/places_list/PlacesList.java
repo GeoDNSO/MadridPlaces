@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
@@ -23,7 +25,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlacesList extends Fragment {
+public class PlacesList extends Fragment implements PlaceListAdapter.OnPlaceListener {
 
     private PlacesListViewModel mViewModel;
     private View root;
@@ -57,7 +59,7 @@ public class PlacesList extends Fragment {
     }
 
     private void placeListManagement(){
-        placeListAdapter = new PlaceListAdapter(getActivity(), placeList); //getActivity = MainActivity.this
+        placeListAdapter = new PlaceListAdapter(getActivity(), placeList, this); //getActivity = MainActivity.this
 
         //Set layout
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//getActivity() en vez de this
@@ -113,7 +115,7 @@ public class PlacesList extends Fragment {
                 //Añadir lugar a la lista
                 placeList.add(place);
             }
-            placeListAdapter = new PlaceListAdapter(getActivity(), placeList);
+            placeListAdapter = new PlaceListAdapter(getActivity(), placeList, this);
 
             recyclerView.setAdapter(placeListAdapter);
         }else{
@@ -136,4 +138,10 @@ public class PlacesList extends Fragment {
 
     }
 
+    @Override
+    public void onPlaceClick(int position) {
+        //Enviar datos del objeto con posicion position de la lista al otro fragment
+        Toast.makeText(getActivity(), "Listener del item " + position, Toast.LENGTH_LONG).show();
+        Navigation.findNavController(root).navigate(R.id.placeDetailFragment);
+    }
 }
