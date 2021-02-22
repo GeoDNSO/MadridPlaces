@@ -35,6 +35,8 @@ public class AppConstants {
     public static final Integer LIST_USERS = 3;
     public static final Integer ERROR_LIST_USERS = -3;
 
+    public static final Integer ERROR_LIST_PLACES = -4;
+    public static final Integer LIST_PLACES = 4;
 
 
 }
