@@ -1,26 +1,34 @@
 package com.example.App.ui.admin;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.transfer.TUser;
+import com.example.App.ui.DetailsProfileAdmin.DetailProfileFragment;
 import com.example.App.ui.login.LoginViewModel;
 
 import java.util.ArrayList;
@@ -45,6 +53,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.admin_fragment, container, false);
+        setHasOptionsMenu(true);
         app = App.getInstance(getActivity());
         app.setBottomMenuVisible(View.GONE);
 
@@ -98,7 +107,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
 
     @Override
     public void OnListClick(int position) {
-        Toast.makeText(getActivity(),"ASDAS", Toast.LENGTH_SHORT).show();
+        Navigation.findNavController(root).navigate(R.id.detail_Fragment);
     }
 
     @Override
@@ -108,4 +117,24 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         super.onDestroyView();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        inflater.inflate(R.menu.search_icon_menu, menu);
+
+        MenuItem searchIcon = menu.findItem(R.id.search_button);
+        SearchView searchView = (SearchView) searchIcon.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+    }
 }

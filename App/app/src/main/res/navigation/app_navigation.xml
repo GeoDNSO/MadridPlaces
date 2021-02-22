@@ -71,4 +71,8 @@
         android:name="com.example.App.ui.profile.ProfileFragment"
         android:label="@string/menu_profile_text"
         tools:layout="@layout/profile_fragment" />
+    <fragment
+        android:id="@+id/detailProfileFragment3"
+        android:name="com.example.App.ui.DetailsProfileAdmin.DetailProfileFragment"
+        android:label="DetailProfileFragment" />
 </navigation>

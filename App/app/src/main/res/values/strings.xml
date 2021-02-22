@@ -53,4 +53,7 @@
     <string name="alert_yes">Sí</string>
     <string name="alert_no">No</string>
 
+    <!--Strings relativos al perfil-->
+    <string name="profile_delete_account_admin">Borrar Cuenta</string>
+
 </resources>
