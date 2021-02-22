@@ -198,7 +198,7 @@ public class HomeFragment extends Fragment implements PlaceListAdapter.OnPlaceLi
             //Usar la respuesta del servidor para ir creando los lugares de la lista
             for(int i = 0; i < limit; ++i){
                 float rate = (float) Math.random()*6 + 1;
-                TPlace place = new TPlace("Lugar", "Desc", "IMAGEN DEFAULT", rate);
+                TPlace place = new TPlace("Lugar " + i*page, getString(R.string.lorem_ipsu), "IMAGEN DEFAULT", rate);
                 //getString(R.drawable.imagen_lugar_default);
                 //Añadir lugar a la lista
                 placeList.add(place);
@@ -217,7 +217,7 @@ public class HomeFragment extends Fragment implements PlaceListAdapter.OnPlaceLi
         //Enviar datos del objeto con posicion position de la lista al otro fragment
         //Toast.makeText(getActivity(), "Listener del item " + position, Toast.LENGTH_LONG).show();
         Bundle bundle = new Bundle();
-        TPlace place = new TPlace("Lugar en Posicion "+position, "descripcion", "direccion",
+        TPlace place = new TPlace("Lugar en Posicion "+position, getString(R.string.lorem_ipsu), "direccion",
                 3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid",
                 "Localidad", "Afluencia", 4.0f);
 

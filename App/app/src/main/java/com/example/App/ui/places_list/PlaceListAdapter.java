@@ -6,8 +6,10 @@ import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -96,7 +98,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
         ImageView placeImage;
         TextView tvPlaceName;
-        ImageView favImage;
+        ImageButton favImage;
         TextView tvRatingValue;
         ImageView starImage;
 
@@ -113,7 +115,24 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
             this.onPlaceListener = onPlaceListener;
             itemView.setOnClickListener(this);
+
+            favImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(itemView.getContext(), "fav listener", Toast.LENGTH_LONG).show();
+                }
+            });
+
+            favImage.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    //favImage.setColorFilter(R.color.colorFavRed);
+                    return false;
+                }
+            });
         }
+
+
 
         @Override
         public void onClick(View v) {

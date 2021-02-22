@@ -43,6 +43,18 @@ public class TPlace implements JSONSerializable, Parcelable {
         this.rating = rating;
     }
 
+    public static final Creator<TPlace> CREATOR = new Creator<TPlace>() {
+        @Override
+        public TPlace createFromParcel(Parcel in) {
+            return new TPlace(in);
+        }
+
+        @Override
+        public TPlace[] newArray(int size) {
+            return new TPlace[size];
+        }
+    };
+
     public String getName() {
         return name;
     }
