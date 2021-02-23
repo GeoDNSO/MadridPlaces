@@ -1,5 +1,6 @@
 package com.example.App.ui.comments;
 
+import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -7,19 +8,36 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.App.R;
+import com.example.App.models.transfer.TComment;
+import com.facebook.shimmer.ShimmerFrameLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommentsFragment extends Fragment {
 
     private View root;
     private CommentsViewModel mViewModel;
 
+    private NestedScrollView nestedScrollView;
+    private RecyclerView recyclerView;
+    private ProgressBar progressBar;
+    private ShimmerFrameLayout shimmerFrameLayout;
 
+    private List<TComment> commentsList = new ArrayList<>();
+    private CommentListAdapter commentListAdapter;
+
+    private int page = 1, limit = 3;
 
     public static CommentsFragment newInstance() {
         return new CommentsFragment();
@@ -29,8 +47,71 @@ public class CommentsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.comments_fragment, container, false);
+        
+        initUI();
+        
+        commentListManagement();
 
         return root;
+    }
+
+    private void initUI() {
+        recyclerView = root.findViewById(R.id.comments_RecyclerView);
+        progressBar = root.findViewById(R.id.comments_ProgressBar);
+        shimmerFrameLayout = root.findViewById(R.id.comment_ShimmerLayout);
+    }
+
+    private void commentListManagement() {
+
+        commentListAdapter = new CommentListAdapter(getActivity(), commentsList);
+        
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(commentListAdapter);
+        
+        getData();
+
+        //Empezar el efecto de shimmer
+        shimmerFrameLayout.startShimmer();
+        
+        //Listener del ScrollView
+
+    }
+
+    static int numComentario = 0;
+    private void getData() {
+
+        //NO recogemos mas datos al llegar a la pagina 5
+        if(page >= 5){
+            return ;
+        }
+        //Si la respuesta no es nula, es decir, recibimos mensaje del servidor
+        if(true) {
+            //Esconder la barra de carga
+            progressBar.setVisibility(View.GONE);
+            //Mostrar el recyclerView
+            recyclerView.setVisibility(View.VISIBLE);
+            //Parar el efecto shimmer
+            shimmerFrameLayout.stopShimmer();
+            //Esconder al frameLayout de shimmer
+            shimmerFrameLayout.setVisibility(View.GONE);
+
+            for(int i = 0; i < limit; ++i){
+                float rate = (float) Math.random()*5 + 1;
+                TComment comment = new TComment("/image", "Usuario" + i,
+                        "Comentario de Usuario "+ i + " " + getString(R.string.lorem_ipsu),
+                        "23/02/2021", rate);
+
+                commentsList.add(comment);
+            }
+
+            commentListAdapter = new CommentListAdapter(getActivity(), commentsList);
+            recyclerView.setAdapter(commentListAdapter);
+
+        }
+        else{
+            //Mostrar mensaje de error o trasladar mensaje de error a la vista
+        }
+
     }
 
     @Override
@@ -38,6 +119,7 @@ public class CommentsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(CommentsViewModel.class);
         // TODO: Use the ViewModel
+        Toast.makeText(getContext(), "Comment onActivityCreated", Toast.LENGTH_SHORT).show();
     }
 
 }

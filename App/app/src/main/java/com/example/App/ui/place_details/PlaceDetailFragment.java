@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.res.ColorStateList;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
+import com.example.App.ui.comments.CommentsFragment;
 import com.example.App.utilities.AppConstants;
 
 import java.math.RoundingMode;
@@ -74,6 +76,10 @@ public class PlaceDetailFragment extends Fragment {
         ActionBar actionBar = appCompatActivity.getSupportActionBar();
         actionBar.setTitle(place.getName());
 
+        //Prueba de carga de comentarios
+        Fragment childFragment = new CommentsFragment();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.comments_placeholder, childFragment).commit();
         return root;
     }
 

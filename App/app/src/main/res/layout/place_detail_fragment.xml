@@ -140,8 +140,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/place_details_send_rate_button" />
-
+<!--
         <RelativeLayout
+            android:id="@+id/relativeLayout_comment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp">
@@ -152,7 +153,12 @@
                 android:layout_width="match_parent" />
 
         </RelativeLayout>
-
+-->
+        <FrameLayout
+            android:id="@+id/comments_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </FrameLayout>
 
 
     </LinearLayout>

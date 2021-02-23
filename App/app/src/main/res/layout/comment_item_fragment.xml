@@ -43,6 +43,7 @@
         android:layout_marginStart="20dp">
 
         <RatingBar
+            android:id="@+id/comment_rating_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="?android:ratingBarStyleSmall"
@@ -61,7 +62,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/comment"
+        android:id="@+id/comment_textview"
         android:layout_width="367dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"

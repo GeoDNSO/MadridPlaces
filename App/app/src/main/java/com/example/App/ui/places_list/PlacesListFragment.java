@@ -25,7 +25,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlacesList extends Fragment implements PlaceListAdapter.OnPlaceListener {
+public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnPlaceListener {
 
     private PlacesListViewModel mViewModel;
     private View root;
@@ -41,8 +41,8 @@ public class PlacesList extends Fragment implements PlaceListAdapter.OnPlaceList
 
     private int page = 1, limit = 6;
 
-    public static PlacesList newInstance() {
-        return new PlacesList();
+    public static PlacesListFragment newInstance() {
+        return new PlacesListFragment();
     }
 
     @Override

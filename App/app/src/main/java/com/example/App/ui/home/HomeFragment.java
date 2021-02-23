@@ -1,7 +1,6 @@
 package com.example.App.ui.home;
 
 import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -13,27 +12,18 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.AttributeSet;
-import android.util.Xml;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.SessionManager;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.places_list.PlaceListAdapter;
-import com.example.App.ui.places_list.PlacesList;
 import com.example.App.utilities.AppConstants;
 import com.facebook.shimmer.ShimmerFrameLayout;
-
-import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
 import java.util.List;
