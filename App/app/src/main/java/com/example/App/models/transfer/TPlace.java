@@ -19,6 +19,8 @@ public class TPlace implements JSONSerializable, Parcelable {
     private String affluence;
     private float rating;
 
+    private boolean userFav;
+
     //Constructor simple para pruebas
     public TPlace(String name, String desc, String image, Float rating){
         this.name = name;
@@ -29,7 +31,7 @@ public class TPlace implements JSONSerializable, Parcelable {
     //("lugar", "descripcion", "direccion", 3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid", "Localidad", "Afluencia", 4.0f)
     public TPlace(String name, String description, String address, Float latitude,
                   Float longitude, String image, String typeOfPlace, String city,
-                  String location, String affluence, float rating) {
+                  String location, String affluence, float rating, boolean userFav) {
         this.name = name;
         this.description = description;
         this.address = address;
@@ -41,6 +43,7 @@ public class TPlace implements JSONSerializable, Parcelable {
         this.location = location;
         this.affluence = affluence;
         this.rating = rating;
+        this.userFav = userFav;
     }
 
     public static final Creator<TPlace> CREATOR = new Creator<TPlace>() {
@@ -138,6 +141,10 @@ public class TPlace implements JSONSerializable, Parcelable {
     public float getRating() { return rating;    }
 
     public void setRating(float rating) {  this.rating = rating; }
+
+    public boolean isUserFav() { return userFav;  }
+
+    public void setUserFav(boolean userFav) {  this.userFav = userFav;   }
 
     @Override
     public JSONObject toJSON() {

@@ -2,9 +2,12 @@ package com.example.App.ui.place_details;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.ImageViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -81,6 +84,20 @@ public class PlaceDetailFragment extends Fragment {
                 Toast.makeText(getActivity(), "Rating de " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
             }
         });
+
+        favIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                place.setUserFav(!place.isUserFav());
+
+                int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
+                if(place.isUserFav()){
+                    favTint = ContextCompat.getColor(getActivity(), R.color.colorFavRed);
+                }
+
+                ImageViewCompat.setImageTintList(favIcon, ColorStateList.valueOf(favTint));
+            }
+        });
     }
 
     private void fillFields() {
@@ -93,6 +110,13 @@ public class PlaceDetailFragment extends Fragment {
         DecimalFormat df = new DecimalFormat("#.#");
         df.setRoundingMode(RoundingMode.CEILING);
         tvPlaceRating.setText(df.format(place.getRating()));
+
+        int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
+        if(place.isUserFav()){
+            favTint = ContextCompat.getColor(getActivity(), R.color.colorFavRed);
+        }
+
+        ImageViewCompat.setImageTintList(favIcon, ColorStateList.valueOf(favTint));
     }
 
     private void initUI() {

@@ -17,20 +17,20 @@
             android:layout_height="45dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="15dp"
-            android:src="@drawable/ic_launcher_img"
             app:civ_border_color="@color/black"
-            app:civ_border_width="0.5dp" />
+            app:civ_border_width="0.5dp"
+            android:background="#E7E7E7"/>
 
         <TextView
             android:id="@+id/comment_username"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_gravity="center_vertical"
-            android:text="mitch.tabian"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:background="#E7E7E7"/>
 
 
     </LinearLayout>
@@ -50,24 +50,25 @@
 
         <TextView
             android:id="@+id/comment_time_posted"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_gravity="center_vertical"
-            android:text="23/02/2021"
             android:textColor="@color/grey"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:background="#E7E7E7"/>
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/comment"
         android:layout_width="367dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
         android:layout_marginStart="20dp"
-        android:text="@string/lorem_ipsu"
         android:textColor="@color/black"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:background="#E7E7E7"/>
 
 
 </LinearLayout>

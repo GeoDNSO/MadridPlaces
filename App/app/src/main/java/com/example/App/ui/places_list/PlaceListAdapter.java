@@ -1,6 +1,7 @@
 package com.example.App.ui.places_list;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.media.Image;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -86,6 +89,12 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         DecimalFormat df = new DecimalFormat("#.#");
         df.setRoundingMode(RoundingMode.CEILING);
         holder.tvRatingValue.setText(df.format(place.getRating()));
+
+        int favTint = ContextCompat.getColor(activity, R.color.grey);
+        if(place.isUserFav()){
+            favTint = ContextCompat.getColor(activity, R.color.colorFavRed);
+        }
+        ImageViewCompat.setImageTintList(holder.favImage, ColorStateList.valueOf(favTint));
     }
 
     @Override
@@ -98,7 +107,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
         ImageView placeImage;
         TextView tvPlaceName;
-        ImageButton favImage;
+        ImageView favImage;
         TextView tvRatingValue;
         ImageView starImage;
 
@@ -119,17 +128,20 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
             favImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), "fav listener", Toast.LENGTH_LONG).show();
+                    Toast.makeText(itemView.getContext(), "fav listener", Toast.LENGTH_SHORT).show();
+
+                    TPlace place = placeList.get(getAdapterPosition());
+                    place.setUserFav(!place.isUserFav());
+
+                    int favTint = ContextCompat.getColor(activity, R.color.grey);
+                    if(place.isUserFav()){
+                        favTint = ContextCompat.getColor(activity, R.color.colorFavRed);
+                    }
+
+                    ImageViewCompat.setImageTintList(favImage, ColorStateList.valueOf(favTint));
                 }
             });
 
-            favImage.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    //favImage.setColorFilter(R.color.colorFavRed);
-                    return false;
-                }
-            });
         }
 
 

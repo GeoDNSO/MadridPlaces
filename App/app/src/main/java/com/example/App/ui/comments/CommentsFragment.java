@@ -16,7 +16,10 @@ import com.example.App.R;
 
 public class CommentsFragment extends Fragment {
 
+    private View root;
     private CommentsViewModel mViewModel;
+
+
 
     public static CommentsFragment newInstance() {
         return new CommentsFragment();
@@ -25,7 +28,9 @@ public class CommentsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.comments_fragment, container, false);
+        root = inflater.inflate(R.layout.comments_fragment, container, false);
+
+        return root;
     }
 
     @Override
