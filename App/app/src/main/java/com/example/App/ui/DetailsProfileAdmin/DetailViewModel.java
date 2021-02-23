@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.App.models.repositories.UserRepository;
 import com.example.App.models.transfer.TUser;
 
-public class DetailProfileViewModel extends ViewModel {
+public class DetailViewModel extends ViewModel {
     UserRepository userRepository;
     private MutableLiveData<Boolean> mDetailProfileActionInProgress = new MutableLiveData<>(); //true indica progress bar activo
     private LiveData<Integer> mActionDetailProfileSuccess = new MutableLiveData<>();

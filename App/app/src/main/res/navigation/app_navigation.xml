@@ -72,7 +72,8 @@
         android:label="@string/menu_profile_text"
         tools:layout="@layout/profile_fragment" />
     <fragment
-        android:id="@+id/detailProfileFragment3"
-        android:name="com.example.App.ui.DetailsProfileAdmin.DetailProfileFragment"
-        android:label="DetailProfileFragment" />
+        android:id="@+id/detailFragment"
+        android:name="com.example.App.ui.DetailsProfileAdmin.DetailFragment"
+        android:label="@string/user_profile_list"
+        tools:layout="@layout/detail_fragment" />
 </navigation>

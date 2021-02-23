@@ -1,9 +1,12 @@
 package com.example.App.models.transfer;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class TUser implements JSONSerializable{
+public class TUser implements JSONSerializable, Parcelable {
     private String username;
     private String password;
     private String name;
@@ -25,6 +28,18 @@ public class TUser implements JSONSerializable{
         this.city = city;
         this.rol = rol;
     }
+
+    public static final Creator<TUser> CREATOR = new Creator<TUser>() {
+        @Override
+        public TUser createFromParcel(Parcel in) {
+            return new TUser(in);
+        }
+
+        @Override
+        public TUser[] newArray(int size) {
+            return new TUser[size];
+        }
+    };
 
     public String getUsername() {
         return username;
@@ -120,5 +135,36 @@ public class TUser implements JSONSerializable{
     @Override
     public String jsonToString() {
         return this.toJSON().toString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.username);
+        dest.writeString(this.password);
+        dest.writeString(this.name);
+        dest.writeString(this.surname);
+        dest.writeString(this.email);
+        dest.writeString(this.gender);
+        dest.writeString(this.birthDate);
+        dest.writeString(this.city);
+        dest.writeString(this.rol);
+    }
+
+    public TUser(Parcel in) {
+        this.username = in.readString();
+        this.password = in.readString();
+        this.name = in.readString();
+        this.surname = in.readString();
+        this.email = in.readString();
+        this.gender = in.readString();
+        this.birthDate = in.readString();
+        this.city = in.readString();
+        this.rol = in.readString();
+
     }
 }

@@ -15,8 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,13 +22,12 @@ import com.example.App.App;
 import com.example.App.R;
 import com.example.App.SessionManager;
 import com.example.App.models.transfer.TUser;
-import com.example.App.ui.profile.ProfileViewModel;
 import com.example.App.utilities.AppConstants;
 
-public class DetailProfileFragment extends Fragment{
+public class DetailFragment extends Fragment{
     private View root;
-    private ProfileViewModel mViewModel;
-
+    private DetailViewModel mViewModel;
+    private TUser user;
     private TextView tv_Username;
     private TextView tv_FullName;
     private TextView tv_Email;
@@ -42,18 +39,21 @@ public class DetailProfileFragment extends Fragment{
 
     private App app;
 
-    public static DetailProfileFragment newInstance() {
-        return new DetailProfileFragment();
+    public static DetailFragment newInstance() {
+        return new DetailFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.profile_fragment, container, false);
-        app = App.getInstance(getActivity());
+        root = inflater.inflate(R.layout.detail_fragment, container, false);
+
+        app = App.getInstance(getActivity()); //esto falla
         app.setBottomMenuVisible(View.GONE);
 
-        mViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        user = (TUser) getArguments().getParcelable(AppConstants.BUNDLE_PROFILE_LIST_DETAILS);
+
+        mViewModel = new ViewModelProvider(this).get(DetailViewModel.class);
         mViewModel.init();
 
         deleteAccountButton = root.findViewById(R.id.deleteButton2);
@@ -76,7 +76,7 @@ public class DetailProfileFragment extends Fragment{
 
     private void initializeObservers() {
 
-        mViewModel.getProfileActionInProgress().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mViewModel.getDetailProfileActionInProgress().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 /*if (aBoolean) {
@@ -88,7 +88,7 @@ public class DetailProfileFragment extends Fragment{
             }
         });
 
-        mViewModel.getActionProfileSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+        mViewModel.getActionDetailProfileSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer aInteger) {
                 if (aInteger.equals(AppConstants.DELETE_PROFILE)) {
@@ -129,17 +129,15 @@ public class DetailProfileFragment extends Fragment{
 
     //Rellena los datos del usuario segun la informacion de la sesion
     private void fillProfileFields(){
-        SessionManager sm = app.getSessionManager();
-
-        tv_Username.setText(sm.getUsername());
-        tv_FullName.setText((sm.getFirstName() + " " + sm.getSurname()));
-        tv_Email.setText(sm.getEmail());
+        tv_Username.setText(user.getUsername());
+        tv_FullName.setText((user.getName() + " " + user.getSurname()));
+        tv_Email.setText(user.getEmail());
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(DetailViewModel.class);
         // TODO: Use the ViewModel
     }
 

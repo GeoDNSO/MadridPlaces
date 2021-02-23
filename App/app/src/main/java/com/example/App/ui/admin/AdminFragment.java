@@ -1,10 +1,8 @@
 package com.example.App.ui.admin;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -21,15 +18,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.transfer.TUser;
-import com.example.App.ui.DetailsProfileAdmin.DetailProfileFragment;
-import com.example.App.ui.login.LoginViewModel;
+import com.example.App.utilities.AppConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +66,8 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
                 if (tUsers == null){
                     tUsers = new ArrayList<>();
                 }
-                adapter = new UserListAdapter(getActivity(), tUsers, onListListener);
+                listUser = tUsers;
+                adapter = new UserListAdapter(getActivity(), listUser, onListListener);
                 adapter.notifyDataSetChanged();
                 recyclerView.setAdapter(adapter);
             }
@@ -107,7 +102,14 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
 
     @Override
     public void OnListClick(int position) {
-        Navigation.findNavController(root).navigate(R.id.detail_Fragment);
+        Bundle bundle = new Bundle();
+
+        TUser user = listUser.get(position);
+
+        bundle.putParcelable(AppConstants.BUNDLE_PROFILE_LIST_DETAILS, user);
+
+        //Le pasamos el bundle
+        Navigation.findNavController(root).navigate(R.id.detailFragment, bundle);
     }
 
     @Override
