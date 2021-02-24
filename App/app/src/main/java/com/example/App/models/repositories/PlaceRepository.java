@@ -70,6 +70,36 @@ public class PlaceRepository extends Repository{
         });
     }
 
+    private List<TPlace> getListFromResponse(String res) {
+        JSONObject jresponse = null;
+        try {
+            jresponse = new JSONObject(res);
+
+            //dentro de get("users") contiene una lista de nicknames ["poti", "aaa", "pepe"]
+            List<TPlace> listPlaces = new ArrayList<TPlace>();
+            JSONArray arrayPlaces = jresponse.getJSONArray("places");
+            for (int i = 0; i < arrayPlaces.length(); i++) {
+                TPlace tPlace = jsonStringToPlace(arrayPlaces.getString(i));
+                listPlaces.add(tPlace);
+            }
+            return listPlaces;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return  null;
+        }
+    }
+
+    private TPlace jsonStringToPlace(String jsonString) {
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(jsonString);
+            return new TPlace(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public void closePlaces() {
 
     }
