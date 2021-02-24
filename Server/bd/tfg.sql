@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-02-2021 a las 20:31:02
+-- Tiempo de generación: 24-02-2021 a las 18:40:49
 -- Versión del servidor: 10.4.17-MariaDB
--- Versión de PHP: 7.4.14
+-- Versión de PHP: 8.0.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `tfg`
 --
-CREATE DATABASE IF NOT EXISTS `tfg` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS `tfg` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci;
 USE `tfg`;
 
 -- --------------------------------------------------------
@@ -4732,6 +4732,19 @@ INSERT INTO `location` (`name`, `description`, `coordinate_latitude`, `coordinat
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `location_images`
+--
+
+DROP TABLE IF EXISTS `location_images`;
+CREATE TABLE `location_images` (
+  `id_image` int(11) NOT NULL,
+  `location_name` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `image` blob NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `ratings`
 --
 
@@ -4802,9 +4815,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`nickname`, `name`, `surname`, `email`, `password`, `gender`, `birth_date`, `city`, `rol`) VALUES
-('aaa', 'aaa', 'aaa', 'aadadadfdgf', 'a', 'H', '2020-12-08', 'Madrid', 'user'),
-('admin', 'ADMIN', 'administrador', 'admin@ucm.es', '1234', 'H', '1998-11-20', 'Madrid', 'admin'),
-('Fpoti', 'poti', 'poti', 'poti@gmail.com', '1234', 'H', '1990-01-01', 'Madrid', 'user');
+('admin', 'admin', 'admin', 'admin@gmail.com', '$2b$12$fjwWcfqa3lrSMvhUcEoRM.lq5tHtHwS8cNs3LkMhaluKVA8Xn26CK', 'H', '1990-01-01', 'Madrid', 'admin');
 
 -- --------------------------------------------------------
 
@@ -4838,6 +4849,14 @@ ALTER TABLE `comments`
 ALTER TABLE `location`
   ADD PRIMARY KEY (`name`),
   ADD KEY `FK_location_type` (`type_of_place`) USING BTREE;
+
+--
+-- Indices de la tabla `location_images`
+--
+ALTER TABLE `location_images`
+  ADD PRIMARY KEY (`id_image`),
+  ADD UNIQUE KEY `Image_UNIQUE` (`image`) USING HASH,
+  ADD KEY `FK_location_images` (`location_name`);
 
 --
 -- Indices de la tabla `ratings`
@@ -4879,6 +4898,12 @@ ALTER TABLE `comments`
   MODIFY `id_comment` int(100) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `location_images`
+--
+ALTER TABLE `location_images`
+  MODIFY `id_image` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `ratings`
 --
 ALTER TABLE `ratings`
@@ -4912,6 +4937,12 @@ ALTER TABLE `comments`
 --
 ALTER TABLE `location`
   ADD CONSTRAINT `location_ibfk_1` FOREIGN KEY (`type_of_place`) REFERENCES `type_of_place` (`id_type`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `location_images`
+--
+ALTER TABLE `location_images`
+  ADD CONSTRAINT `location_images_ibfk_1` FOREIGN KEY (`location_name`) REFERENCES `location` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `ratings`
