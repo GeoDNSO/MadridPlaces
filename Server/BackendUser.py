@@ -58,7 +58,7 @@ class visited(sqlAlchemy.Model):
     id_visited = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
     user = sqlAlchemy.Column(sqlAlchemy.String(255))
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
-             =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now())
+    date_visited =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now())
 
 #Funciones Usuario
 
