@@ -1,5 +1,6 @@
 package com.example.App.ui.register;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -14,22 +15,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.dao.DAOUserImp;
-import com.example.App.transfer.TUser;
 import com.example.App.utilities.Validator;
 
 public class RegisterFragment extends Fragment {
 
     private View root;
-    private RegisterViewModel mViewModel;
+    private RegisterViewModel mRegisterViewModel;
     private App app;
 
     /*MVVM*/
@@ -40,6 +37,7 @@ public class RegisterFragment extends Fragment {
     private EditText et_Password, et_RepeatPassword;
     private Button registerButton;
     private TextView tv_ToLogin;
+    private ProgressBar progressBar;
 
 
     public static RegisterFragment newInstance() {
@@ -51,12 +49,48 @@ public class RegisterFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.register_fragment, container, false);
-        mViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
+        mRegisterViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
+
+        mRegisterViewModel.init();
+
+        mRegisterViewModel.getRegisterInProcess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    showProgressBar();
+                }
+                else {
+                    hideProgressBar();
+                }
+            }
+        });
+
+        mRegisterViewModel.getIsDoneRegistration().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    Toast.makeText(getActivity(), "Registrado con exito", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(root).navigate(R.id.action_registerFragment_to_homeFragment);
+                }
+                else {
+                    hideProgressBar();
+                    Toast.makeText(getActivity(), "Error al registrar", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         initializeUI();
         initializeListeners();
 
         return root;
+    }
+
+    private void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void initializeUI() {
@@ -68,20 +102,21 @@ public class RegisterFragment extends Fragment {
         et_RepeatPassword = (EditText) root.findViewById(R.id.register_repeat_password);
         registerButton = (Button) root.findViewById(R.id.button);
         tv_ToLogin = (TextView) root.findViewById(R.id.to_login);
+        progressBar = (ProgressBar) root.findViewById(R.id.progressBarRegister);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
+        //mRegisterViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
         // TODO: Use the ViewModel
     }
-
 
     private void initializeListeners() {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //root = v;
                 registerOnClickAction(v);
             }
         });
@@ -97,6 +132,7 @@ public class RegisterFragment extends Fragment {
 
     //Validate form
     private void registerOnClickAction(View v) {
+
         String username = et_Username.getText().toString();
         String name = et_Name.getText().toString();
         String email = et_Email.getText().toString();
@@ -118,17 +154,9 @@ public class RegisterFragment extends Fragment {
             et_Username.setError(getString(R.string.username_exists));
         }
 
-        //Si los campos son correctos mandamos la petición al servidor
-        app = App.getInstance(getActivity());
-
-        if(!errorsInForm() && app.registerUser(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user")){ //TODO true --> Llamar a APP para registrar y actuar en consecuencia si el registro ha salido bien o no
-            Toast.makeText(getActivity(), getString(R.string.account_created), Toast.LENGTH_SHORT).show();
-            Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_homeFragment);
-        }
-        else{
-            Toast.makeText(getActivity(), getString(R.string.register_failed), Toast.LENGTH_SHORT).show();
-        }
+        mRegisterViewModel.registerUser(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user");
     }
+
 
     private void resetErrors(){
         et_Username.setError(null);

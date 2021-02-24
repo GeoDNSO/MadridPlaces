@@ -3,12 +3,11 @@ package com.example.App;
 import android.content.Context;
 import android.view.Menu;
 
-import com.example.App.dao.DAOUserImp;
-import com.example.App.transfer.TUser;
+import com.example.App.models.dao.DAOUserImp;
+import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class App {
@@ -37,16 +36,16 @@ public class App {
         return app;
     }
 
-    public boolean registerUser(String username, String pass, String name, String surname, String email, String gender, String birthDate, String city, String rol){
+    /*public boolean registerUser(String username, String pass, String name, String surname, String email, String gender, String birthDate, String city, String rol){
         DAOUserImp daoUser = new DAOUserImp();
         TUser user = new TUser(username, pass, name, surname, email, gender, birthDate, city, rol);
         return daoUser.registerObject(user);
-    }
-
+    }*/
+/*
     public boolean loginUser(String username, String pass){
         boolean ok = d.login(username, pass);
         return ok;
-    }
+    }*/
 
     public boolean modifyUser(TUser user){
         boolean u = d.modifyObject(user);

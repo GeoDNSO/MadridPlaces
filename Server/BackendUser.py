@@ -58,7 +58,7 @@ class visited(sqlAlchemy.Model):
     id_visited = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
     user = sqlAlchemy.Column(sqlAlchemy.String(255))
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
-             =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now())
+    date_visited =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now())
 
 #Funciones Usuario
 
@@ -148,7 +148,18 @@ def listUsers():
         usuarios = user.query.order_by(user.nickname).all()
         lista = []
         for usuario in usuarios:
-            lista.append(usuario.nickname)
+            u = {
+                "nickname":usuario.nickname,
+                "name":usuario.name,
+                "surname":usuario.surname,
+                "email":usuario.email,
+                "password":usuario.password,
+                "gender":usuario.gender,
+                "birth_date":usuario.birth_date.strftime("%Y-%m-%d"),
+                "city":usuario.city,
+                "rol":usuario.rol
+                }
+            lista.append(u)
     except Exception as e:
         print("Error leyendo usuarios:", repr(e))
         return jsonify(exito = "false")
@@ -206,7 +217,17 @@ def modifyUser():
         print("Error modificando usuarios:", repr(e))
         return jsonify(exito = "false")
         
-    return jsonify(exito = "true") #A lo mejor es necesario devolver los datos del nuevo usuario
+    return jsonify(
+                   exito = "true",
+                   nickname=modifiedUser.nickname,
+                   name=modifiedUser.name,
+                   surname=modifiedUser.surname,
+                   email=modifiedUser.email,
+                   password=password,
+                   gender=modifiedUser.gender,
+                   birth_date=modifiedUser.birth_date.strftime("%Y-%m-%d"),
+                   city=modifiedUser.city,
+                   rol=modifiedUser.rol)
 
 #Perfil Usuario
 @app.route('/profileUser/', methods=['GET', 'POST'])
@@ -229,7 +250,11 @@ def profileUser():
                    rol=userQuery.rol)
 
 
+
+#############################################   Funciones Lugares   #############################################
+
 #Funciones Lugares
+
 @app.route('/location/newLocation', methods=['POST'])
 def newLocation():
     json_data = request.get_json()
@@ -330,6 +355,9 @@ def deleteLocation():
         print("Error borrando la fila :", repr(e))
         return jsonify(exito = "false")   
 
+
+
+#############################################   Funciones Comentarios   #############################################
 @app.route('/location/newComment', methods=['POST'])
 def newComment():
     json_data = request.get_json()

@@ -3,7 +3,7 @@ package com.example.App;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.App.transfer.TUser;
+import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
 
 public class SessionManager {
@@ -79,5 +79,23 @@ public class SessionManager {
 
     public String getRol(){
         return prefs.getString(AppConstants.ADMIN, "user");
+    }
+
+    public String getCity() {
+        return prefs.getString(AppConstants.CITY, "");
+    }
+
+    public String getBirthDate() {
+        return prefs.getString(AppConstants.BIRTH_DATE, "");
+    }
+
+    public String getGender() {
+        return prefs.getString(AppConstants.GENDER, "");
+    }
+
+    public TUser getSesionUser(){
+        return new TUser(getUsername(), getPassword(), getFirstName(),
+                getSurname(), getEmail(), getGender(),
+                getBirthDate(), getCity(), getRol());
     }
 }
