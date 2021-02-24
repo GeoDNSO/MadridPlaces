@@ -250,7 +250,10 @@ def profileUser():
                    rol=userQuery.rol)
 
 
+
 #############################################   Funciones Lugares   #############################################
+
+#Funciones Lugares
 
 @app.route('/location/newLocation', methods=['POST'])
 def newLocation():
@@ -355,7 +358,6 @@ def deleteLocation():
 
 
 #############################################   Funciones Comentarios   #############################################
-
 @app.route('/location/newComment', methods=['POST'])
 def newComment():
     json_data = request.get_json()
