@@ -23,7 +23,7 @@ class user(sqlAlchemy.Model):
     birth_date = sqlAlchemy.Column(sqlAlchemy.DateTime)
     city = sqlAlchemy.Column(sqlAlchemy.String(255), default="Madrid")
     rol = sqlAlchemy.Column(sqlAlchemy.String(255), default="user")
-
+    #picture = sqlAlchemy.Column(sqlAlchemy.BLOB())
 
 class location(sqlAlchemy.Model):
     __tablename__ = 'location'
@@ -260,6 +260,28 @@ def profileUser():
                    rol=userQuery.rol)
 
 
+def showUser(user): #Practicamente lo mismo que el profile, pero de algún otro usuario. Es una función auxiliar
+    userQuery = user.query.filter_by(nickname=user).first()
+    if userQuery is None:
+        return None
+    
+    return {exito : "true",
+                   nickname : userQuery.nickname,
+                   name : userQuery.name,
+                   surname : userQuery.surname,
+                   email : userQuery.email,
+                   password : userQuery.password,
+                   gender : userQuery.gender,
+                   birth_date : userQuery.birth_date.strftime("%Y-%m-%d"),
+                   city : userQuery.city,
+                   rol : userQuery.rol}
+
+#def showPicture(user):
+#    userQuery = user.query.filter_by(nickname=user).first()
+#    if userQuery is None:
+#        return None
+#    
+#    return userQuery.picture
 
 #############################################   Funciones Lugares   #############################################
 
@@ -460,7 +482,31 @@ def deleteComment():
         return jsonify(exito = "false")    
 
 
-#@app.route('/location/listComments', methods=['POST'])
+@app.route('/location/showComments', methods=['POST'])
+def showComments():
+    json_data = request.get_json()
+    location = json_data["location"]    
+    try:
+        cmQuery = comments.query.filter_by(location = location).all()
+        if cmQuery is None:
+            return jsonify(exito = "false")
+        lista = []
+        for comment in cmQuery:
+            rate = showRate(comment.user, location)
+            #picture = showPicture(comment.user)
+            cmDict = {"user" : comment.user,
+            #"picture" : picture,s
+            "comment" : comment.comment,
+            "rate" : rate,
+            "created" : comment.created
+            }
+            lista.append(cmDict)
+        return jsonify(exito = "false", listComments = lista)
+    except Exception as e:
+        print("Error leyendo comentarios:", repr(e))
+        #return jsonify(exito = "false")
+        return jsonify(exito = "false")
+
 def listComments(location): #A lo mejor no se necesita un URL 
     #json_data = request.get_json()
     #location = json_data["location"]
@@ -537,6 +583,15 @@ def modifyRate():
         
     return jsonify(exito = "true")
 
+def showRate(user, location):
+    try:
+        rtQuery = ratings.query.filter_by(location = location, user = user)
+        if rtQuery is None:
+            return -1
+        return rtQuery.rate
+    except Exception as e:
+        print("Error:", repr(e))
+        return jsonify(exito = "false")
 #@app.route('/location/averageRate', methods=['POST'])
 def averageRate(location): #A lo mejor no se necesita un URL 
     #json_data = request.get_json()
