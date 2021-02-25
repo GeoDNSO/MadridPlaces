@@ -93,7 +93,10 @@ public class PlaceRepository extends Repository{
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(jsonString);
-            return new TPlace(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"));
+            return new TPlace("name","name", "name", 1.0f,
+                    1.0f, "name", "name", "name",
+                    "name", "name", 1.0f, false);
+            //return new TPlace(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"));
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
