@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TComment;
+import com.example.App.utilities.TextViewExpandableUtil;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
 
@@ -67,7 +69,9 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
 
         //TODO cambiar por la imagen de los usuarios
-        Glide.with(activity).load(R.drawable.ic_launcher_img)
+
+        Glide.with(activity).load(R.drawable.imagen_lugar_default)
+                .circleCrop()
                 .placeholder(shimmerDrawable)
                 .into(holder.userImage);
 
@@ -86,7 +90,8 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private CircleImageView userImage;
+        //private CircleImageView userImage;
+        private ImageView userImage;
         private TextView tvUsername;
         private TextView tvComment;
         private TextView tvDate;
@@ -99,6 +104,8 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             tvComment = itemView.findViewById(R.id.comment_textview);
             tvDate = itemView.findViewById(R.id.comment_time_posted);
             ratingBar = itemView.findViewById(R.id.comment_rating_bar);
+
+            TextViewExpandableUtil.makeTextViewResizable(tvComment, 3, "...", true);
         }
 
         @Override

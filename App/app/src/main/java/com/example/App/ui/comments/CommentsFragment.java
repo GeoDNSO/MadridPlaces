@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,26 @@ public class CommentsFragment extends Fragment {
         return root;
     }
 
+    public void onScrollViewAtBottom(){
+       Log.i("HIJO", "foooooooo");
+        //Cuando alacance al ultimo item de la lista
+        //Incrementea el numero de la pagina
+
+        if(page >= 5){
+            progressBar.setVisibility(View.GONE);
+            return ;
+        }
+
+        page++;
+
+
+        //Mostrar progress bar
+        progressBar.setVisibility(View.VISIBLE);
+
+        //Pedimos más datos
+        getData();
+    }
+
     private void initUI() {
         recyclerView = root.findViewById(R.id.comments_RecyclerView);
         progressBar = root.findViewById(R.id.comments_ProgressBar);
@@ -97,8 +118,8 @@ public class CommentsFragment extends Fragment {
 
             for(int i = 0; i < limit; ++i){
                 float rate = (float) Math.random()*5 + 1;
-                TComment comment = new TComment("/image", "Usuario" + i,
-                        "Comentario de Usuario "+ i + " " + getString(R.string.lorem_ipsu),
+                TComment comment = new TComment("/image", "Usuario" + numComentario,
+                        "Comentario de Usuario "+ numComentario++ + " " + getString(R.string.lorem_ipsu),
                         "23/02/2021", rate);
 
                 commentsList.add(comment);
@@ -119,7 +140,6 @@ public class CommentsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(CommentsViewModel.class);
         // TODO: Use the ViewModel
-        Toast.makeText(getContext(), "Comment onActivityCreated", Toast.LENGTH_SHORT).show();
     }
 
 }

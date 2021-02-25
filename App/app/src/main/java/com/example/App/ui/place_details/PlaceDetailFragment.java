@@ -51,6 +51,8 @@ public class PlaceDetailFragment extends Fragment {
     private RatingBar ratingBar;
     private Button sendRateButton;
 
+    private Fragment childFragment;
+
 
     public static PlaceDetailFragment newInstance() {
         return new PlaceDetailFragment();
@@ -77,9 +79,10 @@ public class PlaceDetailFragment extends Fragment {
         actionBar.setTitle(place.getName());
 
         //Prueba de carga de comentarios
-        Fragment childFragment = new CommentsFragment();
+        childFragment = new CommentsFragment();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.comments_placeholder, childFragment).commit();
+
         return root;
     }
 
@@ -104,6 +107,17 @@ public class PlaceDetailFragment extends Fragment {
                 ImageViewCompat.setImageTintList(favIcon, ColorStateList.valueOf(favTint));
             }
         });
+
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+                if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
+                    ((CommentsFragment) childFragment).onScrollViewAtBottom();
+                }
+            }
+        });
+
     }
 
     private void fillFields() {

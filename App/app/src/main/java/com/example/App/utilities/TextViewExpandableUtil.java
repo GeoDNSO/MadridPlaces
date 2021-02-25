@@ -8,8 +8,13 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import com.example.App.R;
+
 //From https://stackoverflow.com/questions/19099296/set-text-view-ellipsize-and-add-view-more-at-end
 public class TextViewExpandableUtil {
+
+    public static String seeMore = "Ver más";
+    public static String seeLess = "Ver menos";
 
     public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
 
@@ -61,8 +66,6 @@ public class TextViewExpandableUtil {
         SpannableStringBuilder ssb = new SpannableStringBuilder(strSpanned);
 
         if (str.contains(spanableText)) {
-
-
             ssb.setSpan(new MySpannable(false){
                 @Override
                 public void onClick(View widget) {
@@ -70,12 +73,12 @@ public class TextViewExpandableUtil {
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, -1, "See Less", false);
+                        makeTextViewResizable(tv, -1, seeLess, false);
                     } else {
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, 3, ".. See More", true);
+                        makeTextViewResizable(tv, 3, seeMore, true);
                     }
                 }
             }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), 0);
