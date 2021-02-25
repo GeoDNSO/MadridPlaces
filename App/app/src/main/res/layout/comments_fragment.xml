@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Cambiar a nested scroll view si fuese necesario -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.comments.CommentsFragment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/comments_main_layout">
+
+
+    <RelativeLayout
+        android:id="@+id/relLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/grey_border_bottom">
+
+
+        <EditText
+            android:id="@+id/comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="40dp"
+            android:background="@null"
+            android:hint="Add a comment..."
+            android:padding="2dp"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/ivPostComment"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_baseline_send_24" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/relLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/relLayout3"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:padding="4dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/comments_RecyclerView"
+            android:visibility="gone"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/comment_item_fragment"/>
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/comments_ProgressBar"
+            android:visibility="gone"/>
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/comment_ShimmerLayout">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="4dp">
+
+                <include
+                    layout="@layout/comment_item_shimmer_fragment"/>
+
+                <include
+                    layout="@layout/comment_item_shimmer_fragment"/>
+
+                <include
+                    layout="@layout/comment_item_shimmer_fragment"/>
+
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

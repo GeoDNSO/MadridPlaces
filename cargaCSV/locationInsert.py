@@ -31,8 +31,6 @@ def insertarSQL(URL): #Inserta todos los lugares
 	for i in range(1, len(csv_data)):
 		prueba = csv_data.iloc[i, 0]
 		separate = re.split(r'\t', prueba)
-		separate[0] = separate[0].replace('&Aacute;lbora', 'Á')
-		separate[0] = separate[0].replace('&aacute;lbora', 'á')
 		separate[1] = re.sub('\u0301', '', separate[1])
 		separate[1] = re.sub('\u0303', '', separate[1])	
 		separate[0] = re.sub('\u014c', '', separate[0])				
@@ -50,7 +48,7 @@ def insertarSQL(URL): #Inserta todos los lugares
 			sql2 = "INSERT IGNORE INTO location (name, description, coordinate_latitude, coordinate_longitude, type_of_place, road_class, road_name, road_number, zipcode) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 			latitude = float(separate[2])
 			longitude = float(separate[3])
-			road_number = separate[7] if separate[7] != ' ' and separate[7] != '' else "0"
+			print(separate[7])
 			zipcode = int(separate[8])
 			val2 = (separate[0], separate[1],latitude,longitude,tipo[0], separate[5], separate[6], separate[7], zipcode)
 			cursor.execute(sql2, [separate[0], separate[1],latitude,longitude,tipo[0], separate[5], separate[6], separate[7], zipcode])

@@ -71,4 +71,14 @@
         android:name="com.example.App.ui.profile.ProfileFragment"
         android:label="@string/menu_profile_text"
         tools:layout="@layout/profile_fragment" />
+    <fragment
+        android:id="@+id/placeDetailFragment"
+        android:name="com.example.App.ui.place_details.PlaceDetailFragment"
+        android:label="Lugar"
+        tools:layout="@layout/place_detail_fragment" />
+    <fragment
+        android:id="@+id/placesList"
+        android:name="com.example.App.ui.places_list.PlacesListFragment"
+        android:label="places_list_fragment"
+        tools:layout="@layout/places_list_fragment" />
 </navigation>

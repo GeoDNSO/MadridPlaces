@@ -722,7 +722,9 @@ def top100Rated():
 
 
 
+
 @app.route('/prueba/imagen', methods=['GET'])
 def urlImagen():
     return jsonify(exito = "true", url = '/Users/GEOgang/Documents/GitHub/TFGTwitter/Fotos/prueba.jpg')
+
 app.run(host="0.0.0.0", port=5000, debug=True, threaded=True) #Host 0.0.0.0 permite a cualquier máquina interaccionar con el Flask

@@ -10,6 +10,7 @@ import androidx.navigation.ui.NavigationUI;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.App.utilities.TextViewExpandableUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -34,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
         App app = App.getInstance(this);
         app.setMenu(drawerNavigationView.getMenu());
         app.setBottomNavigationView(bottomNavView);
+
+        TextViewExpandableUtil.seeMore = getString(R.string.see_more);
+        TextViewExpandableUtil.seeLess = getString(R.string.see_less);
     }
 
 
