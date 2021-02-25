@@ -71,8 +71,6 @@ public class PlaceDetailFragment extends Fragment {
 
         listeners();
 
-        Toast.makeText(getActivity(), "Listener del item: " + place.getName(), Toast.LENGTH_SHORT).show();
-
         //Poner el nombre del lugar en la toolbar
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         ActionBar actionBar = appCompatActivity.getSupportActionBar();
