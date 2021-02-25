@@ -1,18 +1,17 @@
-#HEMOS MODIFICADO LAS PASS DONDE ANTES SE MOSTRABAN ""
-
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask import request
 from flask import jsonify
-
 import bcrypt #Para hashear las contraseñas, necesidad de instalar con pip install bcrypt
+
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/TFG'
 
 sqlAlchemy = SQLAlchemy(app)
 
-#Clases
+#############################################   Clases #############################################
 class user(sqlAlchemy.Model):
     __tablename__ = 'user'
     nickname = sqlAlchemy.Column(sqlAlchemy.String(255), primary_key = True)
@@ -29,14 +28,28 @@ class user(sqlAlchemy.Model):
 class location(sqlAlchemy.Model):
     __tablename__ = 'location'
     name = sqlAlchemy.Column(sqlAlchemy.String(255), primary_key = True)
-    description = sqlAlchemy.Column(sqlAlchemy.String(255)) #A lo mejor es necesario cambiar la longitud
-    direction = sqlAlchemy.Column(sqlAlchemy.String(255))
+    description = sqlAlchemy.Column(sqlAlchemy.String(1500)) #A lo mejor es necesario cambiar la longitud
     coordinate_latitude = sqlAlchemy.Column(sqlAlchemy.Float())
     coordinate_longitude = sqlAlchemy.Column(sqlAlchemy.Float()) 
-    picture = sqlAlchemy.Column(sqlAlchemy.String(255)) #Aun no esta decidido de como mostrar una imagen, si por URL o por BD
     type_of_place = sqlAlchemy.Column(sqlAlchemy.String(255))
     city = sqlAlchemy.Column(sqlAlchemy.String(255), default="Madrid")
+    road_class = sqlAlchemy.Column(sqlAlchemy.String(255))
+    road_name = sqlAlchemy.Column(sqlAlchemy.String(255))
+    road_number = sqlAlchemy.Column(sqlAlchemy.String(255))
+    zipcode = sqlAlchemy.Column(sqlAlchemy.Integer(11))
     affluence = sqlAlchemy.Column(sqlAlchemy.String(255))
+
+class tPlace(sqlAlchemy.Model):
+    __tablename__ = 'type_of_place'
+    id_type = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
+    category = sqlAlchemy.Column(sqlAlchemy.String(255))
+
+class location_images(sqlAlchemy.Model):
+    __tablename__ = 'location_images'
+    id_image = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
+    image = sqlAlchemy.Column(sqlAlchemy.BLOB())
+    location_name = sqlAlchemy.Column(sqlAlchemy.String(255))
+
 
 class comments(sqlAlchemy.Model):
     __tablename__ = 'comments'
@@ -60,9 +73,8 @@ class visited(sqlAlchemy.Model):
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
     date_visited =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now())
 
-#Funciones Usuario
 
-#Cifrado de Passwords
+#############################################   Cifrado de Passwords   #############################################
 
 def passwordCipher(password):#Servirá en el momento de crear una cuenta nueva o para modificar una contraseña
     #Generamos la salt aleatoria, con (rounds=16) lo ejecuta 16 veces para una mayor seguridad, pero realentiza el proceso
@@ -75,9 +87,7 @@ def passwordVerify(password, pwdCipher): #Comprueba si la contraseña es correct
     return True
 
 
-#app = Flask(__name__)
-#api = Api(app)
-#api.add_resource(user, '/login/')
+#############################################   Funciones de Usuario   #############################################
 
 
 #Login
@@ -253,21 +263,22 @@ def profileUser():
 
 #############################################   Funciones Lugares   #############################################
 
-#Funciones Lugares
-
-@app.route('/location/newLocation', methods=['POST'])
+@app.route('/location/newLocation', methods=['POST']) #No se usará
 def newLocation():
     json_data = request.get_json()
     name = json_data["name"]
     description = json_data["description"]
-    direction = json_data["direction"]
     coordinate_latitude = json_data["coordinate_latitude"]
     coordinate_longitude = json_data["coordinate_longitude"]
-    picture = json_data["picture"]
     type_of_place = json_data["type_of_place"]
-    affluence = json_data["affluence"]
-    createLocation = location(name = name, description = description, direction = direction, coordinate_latitude = coordinate_latitude, 
-        coordinate_longitude = coordinate_longitude, picture = picture, type_of_place = type_of_place, affluence = affluence)
+    road_class = json_data["road_class"]
+    road_name = json_data["road_name"]
+    road_number = json_data["road_number"]
+    zipcode = json_data["zipcode"]
+    #affluence = json_data["affluence"]
+    createLocation = location(name = name, description = description, coordinate_latitude = coordinate_latitude, 
+        coordinate_longitude = coordinate_longitude, type_of_place = type_of_place, road_class = road_class, road_name = road_name,
+        road_number = road_number, zipcode = zipcode)
     
     try:
         sqlAlchemy.session.add(createLocation)
@@ -276,38 +287,44 @@ def newLocation():
                    exito = "true",
                    name=createLocation.name,
                    description=createLocation.description,
-                   direction=createLocation.direction,
                    coordinate_latitude=createLocation.coordinate_latitude,
                    coordinate_longitude=createLocation.coordinate_longitude,
-                   picture=createLocation.picture,
                    type_of_place=createLocation.type_of_place,
                    city=createLocation.city,
+                   road_class=createLocation.road_class,
+                   road_name=createLocation.road_name,
+                   road_number=createLocation.road_number,
+                   zipcode=createLocation.zipcode,
                    affluence=createLocation.affluence)
     except Exception as e:
         print("Error insertando la nueva fila :", repr(e))
         return jsonify(exito = "false")
 
-@app.route('/location/modifyLocation', methods=['POST'])
+@app.route('/location/modifyLocation', methods=['POST']) #No se usará
 def modifyLocation():
 
     json_data = request.get_json()
     name = json_data["name"]
     description = json_data["description"]
-    direction = json_data["direction"]
     coordinate_latitude = json_data["coordinate_latitude"]
     coordinate_longitude = json_data["coordinate_longitude"]
-    picture = json_data["picture"]
+    road_class = json_data["road_class"]
+    road_name = json_data["road_name"]
+    road_number = json_data["road_number"]
+    zipcode = json_data["zipcode"]
     type_of_place = json_data["type_of_place"]
     affluence = json_data["affluence"]
     try:
         modifiedLocation = location.query.filter_by(name=name).first()
         modifiedLocation.name = name
         modifiedLocation.description = description
-        modifiedLocation.direction = direction
         modifiedLocation.coordinate_latitude = coordinate_latitude
         modifiedLocation.coordinate_longitude = coordinate_longitude
-        modifiedLocation.picture = picture
         modifiedLocation.type_of_place = type_of_place
+        modifiedLocation.road_class = road_class
+        modifiedLocation.road_name = road_name
+        modifiedLocation.road_number = road_number
+        modifiedLocation.zipcode = zipcode
         modifiedLocation.affluence = affluence
         sqlAlchemy.session.commit()
     except Exception as e:
@@ -329,10 +346,12 @@ def readLocation():
                 exito = "true",
                 name = lcQuery.name,
                 description=lcQuery.description,
-                direction=lcQuery.direction,
                 coordinate_latitude=lcQuery.coordinate_latitude,
                 coordinate_longitude=lcQuery.coordinate_longitude,
-                picture=lcQuery.picture,
+                road_class=lcQuery.road_class,
+                road_name=lcQuery.road_name,
+                road_number=lcQuery.road_number,
+                zipcode=lcQuery.zipcode,
                 type_of_place=lcQuery.type_of_place,
                 city=lcQuery.city,
                 affluence=lcQuery.affluence)
@@ -340,7 +359,7 @@ def readLocation():
     print("failure")
     return jsonify(exito = "false")    
 
-@app.route('/location/deleteLocation', methods=['DELETE'])
+@app.route('/location/deleteLocation', methods=['DELETE']) #No se usará
 def deleteLocation():
     json_data = request.get_json()
     name = json_data["name"]    
@@ -355,6 +374,36 @@ def deleteLocation():
         print("Error borrando la fila :", repr(e))
         return jsonify(exito = "false")   
 
+@app.route('/location/listLocations', methods=['GET', 'POST'])
+def listLocations():
+    json_data = request.get_json()
+    page = json_data["page"] #Mostrar de X en X     
+    quant = json_data["quant"]
+    places = location.query.paginate(per_page=quant, page=page)
+    if (places is not None):
+        all_items = places.items
+        lista = []
+        for place in all_items:
+            obj = {"name" : place.name,
+            "description":place.description,
+            "coordinate_latitude":place.coordinate_latitude,
+            "coordinate_longitude":place.coordinate_longitude,
+            "type_of_place":place.type_of_place,
+            "city":place.city,
+            "road_class":place.road_class,
+            "road_name":place.road_name,
+            "road_number":place.road_number,
+            "zipcode":place.zipcode,
+            "affluence":place.affluence}
+            lista.append(obj)
+
+        print("success")
+        return jsonify(
+                exito = "true",
+                list = lista) #Raro --------------------> Probar a ver
+
+    print("failure")
+    return jsonify(exito = "false")   
 
 
 #############################################   Funciones Comentarios   #############################################
@@ -429,6 +478,7 @@ def listComments(location): #A lo mejor no se necesita un URL
     #return jsonify(exito = "true", comments = lista)  
     return lista 
 
+#############################################   Funciones Valoraciones   #############################################
 
 @app.route('/location/newRate', methods=['POST'])
 def newRate():
@@ -507,6 +557,8 @@ def averageRate(location): #A lo mejor no se necesita un URL
     #return jsonify(exito = "true", avgRate = result)   
     return round(result, 2)
 
+#############################################   Funciones de Lugares Visitados   #############################################
+
 @app.route('/location/newLocationVisited', methods=['POST'])
 def newLocationVisited():    
     json_data = request.get_json()
@@ -565,7 +617,8 @@ def deleteHistory():
         print("Error eliminando el historial: ", repr(e))
         return jsonify(exito = "false")  
 
-@app.route('/location/stats', methods=['POST'])
+
+@app.route('/location/stats', methods=['POST']) #Devuelve el listado de comentarios, los datos del lugar y su valoracion
 def stats():
     json_data = request.get_json()
     name = json_data["name"] 
@@ -577,12 +630,14 @@ def stats():
                 exito = "true",
                 name = stQuery.name,
                 description=stQuery.description,
-                direction=stQuery.direction,
                 coordinate_latitude=stQuery.coordinate_latitude,
                 coordinate_longitude=stQuery.coordinate_longitude,
-                picture=stQuery.picture,
                 type_of_place=stQuery.type_of_place,
                 city=stQuery.city,
+                road_class=stQuery.road_class,
+                road_name=stQuery.road_name,
+                road_number=stQuery.road_number,
+                zipcode=stQuery.zipcode,
                 affluence=stQuery.affluence,
                 rate = avgRate,
                 appComments = comments)
@@ -591,7 +646,7 @@ def stats():
         print("Error mostrando las estadisticas: ", repr(e))
         return jsonify(exito = "false")  
 
-@app.route('/location/top100Rated', methods=['GET'])
+@app.route('/location/top100Rated', methods=['GET']) #Devuelve los 100 lugares mejores valorados en una lista de sus nombres y valoraciones
 def top100Rated():
     try:
         rtQuery = ratings.query.order_by(ratings.location).all()
@@ -601,7 +656,7 @@ def top100Rated():
             if(topDict.get(location) is None): #Crea un diccionario siendo la clave el lugar y el valor su valoración media
                 topDict[location] = averageRate(location)
         sortedTop = dict(sorted(topDict.items(), key=lambda item: item[1],reverse=True)) #Ordena el diccionario en base a sus valores
-        while(len(sortedTop) > 100): #Elimina los utlimos pares hasta que haya al menos 100 
+        while(len(sortedTop) > 100): #Elimina los ultimos pares hasta que haya al menos 100 
             sortedTop.popitem()
         print(sortedTop)
         return jsonify(exito = "true", TOP100 = sortedTop)  
@@ -609,4 +664,4 @@ def top100Rated():
         print("Error mostrando el TOP 100 de los lugares ", repr(e))
         return jsonify(exito = "false")  
 
-app.run(host="0.0.0.0", port=5000, debug=True, threaded=True)
+app.run(host="0.0.0.0", port=5000, debug=True, threaded=True) #Host 0.0.0.0 permite a cualquier máquina interaccionar con el Flask
