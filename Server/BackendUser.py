@@ -36,7 +36,7 @@ class location(sqlAlchemy.Model):
     road_class = sqlAlchemy.Column(sqlAlchemy.String(255))
     road_name = sqlAlchemy.Column(sqlAlchemy.String(255))
     road_number = sqlAlchemy.Column(sqlAlchemy.String(255))
-    zipcode = sqlAlchemy.Column(sqlAlchemy.Integer(11))
+    zipcode = sqlAlchemy.Column(sqlAlchemy.Integer())
     affluence = sqlAlchemy.Column(sqlAlchemy.String(255))
 
 class tPlace(sqlAlchemy.Model):
