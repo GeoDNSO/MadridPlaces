@@ -1,15 +1,20 @@
 package com.example.App.ui.places_list;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -84,6 +89,12 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         DecimalFormat df = new DecimalFormat("#.#");
         df.setRoundingMode(RoundingMode.CEILING);
         holder.tvRatingValue.setText(df.format(place.getRating()));
+
+        int favTint = ContextCompat.getColor(activity, R.color.grey);
+        if(place.isUserFav()){
+            favTint = ContextCompat.getColor(activity, R.color.colorFavRed);
+        }
+        ImageViewCompat.setImageTintList(holder.favImage, ColorStateList.valueOf(favTint));
     }
 
     @Override
@@ -113,7 +124,27 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
             this.onPlaceListener = onPlaceListener;
             itemView.setOnClickListener(this);
+
+            favImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(itemView.getContext(), "fav listener", Toast.LENGTH_SHORT).show();
+
+                    TPlace place = placeList.get(getAdapterPosition());
+                    place.setUserFav(!place.isUserFav());
+
+                    int favTint = ContextCompat.getColor(activity, R.color.grey);
+                    if(place.isUserFav()){
+                        favTint = ContextCompat.getColor(activity, R.color.colorFavRed);
+                    }
+
+                    ImageViewCompat.setImageTintList(favImage, ColorStateList.valueOf(favTint));
+                }
+            });
+
         }
+
+
 
         @Override
         public void onClick(View v) {
