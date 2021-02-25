@@ -155,7 +155,8 @@ def registration():
 @app.route('/listUsers/', methods=['GET', 'POST'])
 def listUsers():
     try:
-        usuarios = user.query.order_by(user.nickname.desc()).all()
+        #usuarios = user.query.order_by(user.nickname.desc()).all()
+        usuarios = user.query.order_by(user.nickname).all()
         lista = []
         for usuario in usuarios:
             u = {
