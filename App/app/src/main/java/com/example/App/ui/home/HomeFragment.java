@@ -190,7 +190,7 @@ public class HomeFragment extends Fragment implements PlaceListAdapter.OnPlaceLi
             for(int i = 0; i < limit; ++i){
                 float rate = (float) Math.random()*5 + 1;
                 //TPlace place = new TPlace("Lugar " + numLugar++, getString(R.string.lorem_ipsu), "IMAGEN DEFAULT", rate);
-                TPlace place = new TPlace("Lugar " + numLugar++, getString(R.string.lorem_ipsu), "direccion",
+                TPlace place = new TPlace("Lugar Pos " + numLugar++, getString(R.string.lorem_ipsu), "direccion",
                         3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid",
                         "Localidad", "Afluencia", rate, false);
                 //getString(R.drawable.imagen_lugar_default);

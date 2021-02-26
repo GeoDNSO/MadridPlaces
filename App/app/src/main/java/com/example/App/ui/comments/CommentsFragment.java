@@ -15,14 +15,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.example.App.R;
 import com.example.App.models.transfer.TComment;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +41,10 @@ public class CommentsFragment extends Fragment {
     private ShimmerFrameLayout shimmerFrameLayout;
 
     private ImageView ivPostComment;
-    private EditText etComment;
+    private TextInputLayout etComment;
+
+    private RatingBar ratingBar;
+    private Button sendRateButton;
 
     private List<TComment> commentsList = new ArrayList<>();
     private CommentListAdapter commentListAdapter;
@@ -65,16 +71,25 @@ public class CommentsFragment extends Fragment {
 
     private void listeners() {
 
+        sendRateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Rating de " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         ivPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isEmpty(etComment)){
+                //if(isEmpty(etComment)){
+                if(isEmpty(etComment.getEditText())){
                     Toast.makeText(getActivity(), "El texto de comentario está vacío", Toast.LENGTH_SHORT).show();
+                    return ;
                 }
                 TComment comment = new TComment("/img", "Usuario NUEVO",
-                        etComment.getText().toString(), "25/02/2021", 2.0f);
+                        etComment.getEditText().getText().toString(), "25/02/2021", ratingBar.getRating());
 
-                commentsList.add(comment);
+                commentsList.add(0, comment); //Añadir al principio el comentario
                 commentListAdapter = new CommentListAdapter(getActivity(), commentsList);
                 recyclerView.setAdapter(commentListAdapter);
             }
@@ -113,6 +128,9 @@ public class CommentsFragment extends Fragment {
 
         ivPostComment = root.findViewById(R.id.ivPostComment);
         etComment = root.findViewById(R.id.etComment);
+
+        ratingBar = root.findViewById(R.id.placeDetailsRatingBar);
+        sendRateButton = root.findViewById(R.id.placeDetailSendRating);
     }
 
     private void commentListManagement() {

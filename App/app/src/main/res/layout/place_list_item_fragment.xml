@@ -34,7 +34,10 @@
             android:text="@string/place_default_name"
             android:textSize="24sp"
             tools:layout_editor_absoluteX="3dp"
-            tools:layout_editor_absoluteY="4dp" />
+            tools:layout_editor_absoluteY="4dp"
+            android:maxLength="8"
+            android:singleLine="true"
+            android:ellipsize="end"/>
 
         <ImageView
             android:id="@+id/favImage"

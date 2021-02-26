@@ -48,9 +48,7 @@
                     android:gravity="center_vertical"
 
                     android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="20sp"
-                    android:autoSizeMaxTextSize="24sp"
-                    android:autoSizeStepGranularity="1sp"
+
 
 
                     />
@@ -75,6 +73,7 @@
                     android:src="@drawable/love_icon_24dp"
                     tools:layout_editor_absoluteX="232dp"
                     tools:layout_editor_absoluteY="4dp"
+                    android:clickable="true"
                     app:tint="@color/grey"
                     />
 
@@ -114,31 +113,6 @@
             android:gravity="center_horizontal"
             android:text="@string/lorem_ipsu" />
 
-
-        <TextView
-            android:id="@+id/placeDetailsCommentTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginStart="10dp"
-            android:text="@string/place_details_comment_title"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
-
-        <RatingBar
-            android:id="@+id/placeDetailsRatingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:numStars="5" />
-
-        <Button
-            android:id="@+id/placeDetailSendRating"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/place_details_send_rate_button" />
 
         <FrameLayout
             android:id="@+id/comments_placeholder"

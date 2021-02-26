@@ -28,6 +28,7 @@ import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.comments.CommentsFragment;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.TextViewExpandableUtil;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -47,9 +48,6 @@ public class PlaceDetailFragment extends Fragment {
     private ImageView favIcon;
     private TextView tvPlaceDescription;
     private TextView tvPlaceRating;
-
-    private RatingBar ratingBar;
-    private Button sendRateButton;
 
     private Fragment childFragment;
 
@@ -85,12 +83,6 @@ public class PlaceDetailFragment extends Fragment {
     }
 
     private void listeners() {
-        sendRateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Rating de " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
-            }
-        });
 
         favIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,8 +137,9 @@ public class PlaceDetailFragment extends Fragment {
         favIcon = root.findViewById(R.id.favDetailsImage);
         tvPlaceDescription = root.findViewById(R.id.placeDetailsDescription);
         tvPlaceRating = root.findViewById(R.id.tvPlaceDetailsRating);
-        ratingBar = root.findViewById(R.id.placeDetailsRatingBar);
-        sendRateButton = root.findViewById(R.id.placeDetailSendRating);
+
+        TextViewExpandableUtil.makeTextViewResizable(tvPlaceDescription,
+                TextViewExpandableUtil.linesLimitAtPlaceDesc, "...", true);
     }
 
     @Override
