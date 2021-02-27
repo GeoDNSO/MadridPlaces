@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.DetailsProfileAdmin.DetailFragment">
+    tools:context=".ui.details_profile_admin.DetailFragment">
 
     <RelativeLayout
         android:id="@+id/rellay2"
