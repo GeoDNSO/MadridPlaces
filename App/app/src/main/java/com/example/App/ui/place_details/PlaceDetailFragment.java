@@ -140,6 +140,7 @@ public class PlaceDetailFragment extends Fragment {
         favIcon = root.findViewById(R.id.favDetailsImage);
         tvPlaceDescription = root.findViewById(R.id.placeDetailsDescription);
         tvPlaceRating = root.findViewById(R.id.tvPlaceDetailsRating);
+
     }
 
     @Override

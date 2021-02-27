@@ -16,6 +16,7 @@ public class TextViewExpandableUtil {
     public static String seeMore = "Ver más";
     public static String seeLess = "Ver menos";
     public static int linesLimitAtPlaceDesc = 3;
+
     public static int linesLimitAtComments = 3;
 
     public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {

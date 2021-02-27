@@ -402,6 +402,8 @@ def listLocations():
     json_data = request.get_json()
     page = json_data["page"] #Mostrar de X en X     
     quant = json_data["quant"]
+    avgRate = averageRate(place.name)
+
     places = location.query.paginate(per_page=quant, page=page)
     if (places is not None):
         all_items = places.items
@@ -417,13 +419,14 @@ def listLocations():
             "road_name":place.road_name,
             "road_number":place.road_number,
             "zipcode":place.zipcode,
-            "affluence":place.affluence}
+            "affluence":place.affluence,
+            "rate" : avgRate}
             lista.append(obj)
 
         print("success")
         return jsonify(
                 exito = "true",
-                list = lista) #Raro --------------------> Probar a ver
+                list = lista)
 
     print("failure")
     return jsonify(exito = "false")   
@@ -483,7 +486,7 @@ def deleteComment():
         return jsonify(exito = "false")    
 
 
-@app.route('/location/showComments', methods=['POST'])
+@app.route('/location/showComments', methods=['POST']) #USAR DANI
 def showComments():
     json_data = request.get_json()
     location = json_data["location"]    
