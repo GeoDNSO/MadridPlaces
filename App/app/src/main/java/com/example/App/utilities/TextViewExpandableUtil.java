@@ -15,6 +15,8 @@ public class TextViewExpandableUtil {
 
     public static String seeMore = "Ver más";
     public static String seeLess = "Ver menos";
+    public static int linesLimitAtPlaceDesc = 5;
+    public static int linesLimitAtComments = 3;
 
     public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
 
@@ -46,7 +48,10 @@ public class TextViewExpandableUtil {
                     tv.setText(
                             addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
                                     viewMore), TextView.BufferType.SPANNABLE);
-                } else {
+                }else if(tv.getLineCount() < maxLine){
+                    //No se hace nada
+                }
+                else {
                     int lineEndIndex = tv.getLayout().getLineEnd(tv.getLayout().getLineCount() - 1);
                     String text = tv.getText().subSequence(0, lineEndIndex) + " " + expandText;
                     tv.setText(text);
