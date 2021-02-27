@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Comparator;
+
 public class TUser implements JSONSerializable, Parcelable {
     private String username;
     private String password;
@@ -167,4 +169,33 @@ public class TUser implements JSONSerializable, Parcelable {
         this.rol = in.readString();
 
     }
+
+    public static Comparator<TUser> comparatorUsernameAZusers = new Comparator<TUser>() {
+        @Override
+        public int compare(TUser u1, TUser u2) {
+            return u1.getUsername().compareTo(u2.getUsername());
+        }
+    };
+
+    public static Comparator<TUser> comparatorUsernameZAusers = new Comparator<TUser>() {
+        @Override
+        public int compare(TUser u1, TUser u2) {
+            return u2.getUsername().compareTo(u1.getUsername());
+        }
+    };
+
+    public static Comparator<TUser> comparatorRealnameAZusers = new Comparator<TUser>() {
+        @Override
+        public int compare(TUser u1, TUser u2) {
+            return u1.getName().compareTo(u2.getName());
+        }
+    };
+
+    public static Comparator<TUser> comparatorRealnameZAusers = new Comparator<TUser>() {
+        @Override
+        public int compare(TUser u1, TUser u2) {
+            return u2.getName().compareTo(u1.getName());
+        }
+    };
+
 }

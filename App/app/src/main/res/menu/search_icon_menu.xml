@@ -5,7 +5,14 @@
         android:id="@+id/search_button"
         android:icon="@drawable/ic_baseline_search_24"
         android:title="Search"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         app:actionViewClass="android.widget.SearchView">
     </item>
+
+    <item
+        android:id="@+id/sortListUsers"
+        android:icon="@drawable/ic_baseline_sort_by_alpha_24"
+        android:title="Sort"
+        app:showAsAction="always" />
+
 </menu>

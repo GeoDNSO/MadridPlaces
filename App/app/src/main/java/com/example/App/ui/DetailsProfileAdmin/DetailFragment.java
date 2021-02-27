@@ -149,7 +149,12 @@ public class DetailFragment extends Fragment{
         app = App.getInstance(getActivity());
         SessionManager sm = app.getSessionManager();
         deleteAccountDialog.setPositiveButton(getString(R.string.alert_yes), (dialog, which) -> {
-            mViewModel.deleteUser(sm.getUsername()); //Llamar al viewmodel para borrar usuario
+            if(user.getUsername().equals(sm.getUsername())){
+                Toast.makeText(getActivity(), "Para borrar tu cuenta navega a tu perfil.", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                mViewModel.deleteUser(user.getUsername()); //Llamar al viewmodel para borrar usuario
+            }
         });
         deleteAccountDialog.setNegativeButton(getString(R.string.alert_no), (dialog, which) -> {
             //Close
