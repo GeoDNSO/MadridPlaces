@@ -70,6 +70,50 @@ public class PlaceRepository extends Repository{
         });
     }
 
+    public void closePlaces() {
+
+    }
+
+    public void valoratedPlaces() {
+
+    }
+
+    public void twitterPlaces() {
+
+    }
+
+    public void valoratePlace() {
+
+    }
+
+    public void commentPlace() {
+
+    }
+
+    public void historyOfPlaces() {
+
+    }
+
+
+    /*private List<TPlace> getListFromResponse(String response){
+        JSONObject jresponse = null;
+        try {
+            jresponse = new JSONObject(response);
+
+            //dentro de get("places") contiene una lista de nicknames ["poti", "aaa", "pepe"]
+            List<TUser> listUsers = new ArrayList<TUser>();
+            JSONArray arrayUsers = jresponse.getJSONArray("users");
+            for (int i = 0; i < arrayUsers.length(); i++) {
+                TUser tUser = jsonStringToUser(arrayUsers.getString(i));
+                listUsers.add(tUser);
+            }
+            return listUsers;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return  null;
+        }
+    }*/
+
     private List<TPlace> getListFromResponse(String res) {
         JSONObject jresponse = null;
         try {
@@ -102,47 +146,4 @@ public class PlaceRepository extends Repository{
             return null;
         }
     }
-
-    public void closePlaces() {
-
-    }
-
-    public void valoratedPlaces() {
-
-    }
-
-    public void twitterPlaces() {
-
-    }
-
-    public void valoratePlace() {
-
-    }
-
-    public void commentPlace() {
-
-    }
-
-    public void historyOfPlaces() {
-
-    }
-
-    /*private List<TPlace> getListFromResponse(String response){
-        JSONObject jresponse = null;
-        try {
-            jresponse = new JSONObject(response);
-
-            //dentro de get("places") contiene una lista de nicknames ["poti", "aaa", "pepe"]
-            List<TUser> listUsers = new ArrayList<TUser>();
-            JSONArray arrayUsers = jresponse.getJSONArray("users");
-            for (int i = 0; i < arrayUsers.length(); i++) {
-                TUser tUser = jsonStringToUser(arrayUsers.getString(i));
-                listUsers.add(tUser);
-            }
-            return listUsers;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return  null;
-        }
-    }*/
 }

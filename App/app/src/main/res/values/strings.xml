@@ -53,6 +53,18 @@
     <string name="alert_yes">Sí</string>
     <string name="alert_no">No</string>
 
+    <!--Strings relativos a la lista de perfil-->
+    <string name="profile_delete_account_admin">Borrar Cuenta</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="user_profile_list">Perfil Usuario</string>
+
+
+    <!--Strings relativos al side bar right-->
+    <string name="sort_ascending_username">Nombre de usuario A - Z</string>
+    <string name="sort_descending_username">Nombre de usuario Z - A</string>
+
+    <string name="sort_ascending_name">Nombre real A - Z</string>
+    <string name="sort_descending_name">Nombre real Z - A</string>
 
     <!-- Otro -->
     <string name="image_default_desc">Imagen del Lugar</string>
@@ -70,6 +82,5 @@
     <string name="place_details_rate_title">Valora este lugar</string>
     <string name="write_comment">Escribe una valoración del lugar</string>
     <string name="number">5</string>
-
 
 </resources>

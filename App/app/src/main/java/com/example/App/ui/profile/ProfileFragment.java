@@ -131,7 +131,6 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-
     @Override
     public void onDestroyView(){
         app = App.getInstance(getActivity());
