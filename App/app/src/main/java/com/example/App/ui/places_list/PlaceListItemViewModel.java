@@ -1,4 +1,4 @@
-package com.example.App.ui.place_list_item;
+package com.example.App.ui.places_list;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

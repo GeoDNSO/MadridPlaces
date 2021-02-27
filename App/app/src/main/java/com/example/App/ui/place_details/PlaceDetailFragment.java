@@ -127,6 +127,9 @@ public class PlaceDetailFragment extends Fragment {
         }
 
         ImageViewCompat.setImageTintList(favIcon, ColorStateList.valueOf(favTint));
+
+        TextViewExpandableUtil.makeTextViewResizable(tvPlaceDescription,
+        TextViewExpandableUtil.linesLimitAtPlaceDesc, "Ver más", true);
     }
 
     private void initUI() {
@@ -137,9 +140,6 @@ public class PlaceDetailFragment extends Fragment {
         favIcon = root.findViewById(R.id.favDetailsImage);
         tvPlaceDescription = root.findViewById(R.id.placeDetailsDescription);
         tvPlaceRating = root.findViewById(R.id.tvPlaceDetailsRating);
-
-        TextViewExpandableUtil.makeTextViewResizable(tvPlaceDescription,
-                TextViewExpandableUtil.linesLimitAtPlaceDesc, "...", true);
     }
 
     @Override
