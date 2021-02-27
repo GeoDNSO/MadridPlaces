@@ -20,7 +20,8 @@ def limpiezaTemplos(dataTemplos):
     latitud = separate[24] if separate[24] != '' else '0'
     longitud = separate[25] if separate[25] != '' else '0'
     tipo = separate[29] if separate[29] != '' else "Sin especificar"
-    return [nombre, descripcion, latitud, longitud, tipo, clase_vial, nombre_vial, numero_vial, codigo_postal]
+    url = separate[8] #Únicamente existe una foto por cada templo
+    return [nombre, descripcion, latitud, longitud, tipo, clase_vial, nombre_vial, numero_vial, codigo_postal, url]
 
 def limpiezaMuseos(dataMuseos):
     separate = re.split(r';', dataMuseos)
