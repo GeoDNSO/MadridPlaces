@@ -58,11 +58,27 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="user_profile_list">Perfil Usuario</string>
 
+
     <!--Strings relativos al side bar right-->
     <string name="sort_ascending_username">Nombre de usuario A - Z</string>
     <string name="sort_descending_username">Nombre de usuario Z - A</string>
 
     <string name="sort_ascending_name">Nombre real A - Z</string>
     <string name="sort_descending_name">Nombre real Z - A</string>
+
+    <!-- Otro -->
+    <string name="image_default_desc">Imagen del Lugar</string>
+    <string name="love_icon_default_desc">Imagen de Favorito</string>
+    <string name="star_icon_default_desc">Imagen de Valoración</string>
+    <string name="place_default_desc">Descripción del Lugar</string>
+    <string name="place_default_name">Nombre del Lugar</string>
+    <string name="place_details_comment_title">Comentarios</string>
+    <string name="place_details_send_rate_button">Enviar Valoración</string>
+
+    <string name="see_more">Ver más</string>
+    <string name="see_less">Ver menos</string>
+
+    <string name="lorem_ipsu">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</string>
+
 
 </resources>

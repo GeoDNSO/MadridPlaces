@@ -23,8 +23,6 @@ import okhttp3.Response;
 
 public class UserRepository {
 
-
-
     private MutableLiveData<Boolean> mSuccess = new MutableLiveData<>();
     private MutableLiveData<Integer> mProfileSuccess = new MutableLiveData<>();
 

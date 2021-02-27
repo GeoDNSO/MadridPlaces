@@ -2,6 +2,7 @@ package com.example.App.utilities;
 
 public class AppConstants {
 
+    public static final String BUNDLE_PLACE_DETAILS = "PLACE_DETAIL_BUNDLE";
 
     public static final String METHOD_POST = "POST";
     public static final String METHOD_PUT = "PUT";
@@ -34,6 +35,8 @@ public class AppConstants {
     public static final Integer LIST_USERS = 3;
     public static final Integer ERROR_LIST_USERS = -3;
 
+    public static final Integer ERROR_LIST_PLACES = -4;
+    public static final Integer LIST_PLACES = 4;
 
     public static final String BUNDLE_PROFILE_LIST_DETAILS = "DETAILS_LIST_PROFILE_BUNDLE";
 }
