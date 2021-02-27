@@ -4,17 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.profile.ProfileFragment">
+    tools:context=".ui.DetailsProfileAdmin.DetailFragment">
 
     <RelativeLayout
-        android:id="@+id/rellay1"
+        android:id="@+id/rellay2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/profile_grad"
         android:paddingBottom="20dp">
 
         <RelativeLayout
-            android:id="@+id/imgUser"
+            android:id="@+id/imgUser2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -34,23 +34,22 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/tv_full_name"
+            android:id="@+id/tv_full_name2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/imgUser"
+            android:layout_below="@+id/imgUser2"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15sp"
             android:fontFamily="sans-serif-light"
-            android:text="Pepe Martínez"
+            android:text="Admin Lista"
             android:textColor="@color/white"
             android:textSize="32sp" />
 
-
         <TextView
-            android:id="@+id/tv_address"
+            android:id="@+id/tv_address2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_full_name"
+            android:layout_below="@+id/tv_full_name2"
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif"
             android:text="Madrid, España"
@@ -58,25 +57,13 @@
             android:textColor="@color/address"
             android:textSize="14sp" />
 
-        <ImageButton
-            android:id="@+id/edit_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp"
-            android:adjustViewBounds="true"
-            android:background="@null"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_baseline_edit_24" />
-
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/linlay1"
+        android:id="@+id/linlay2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rellay1"
+        android:layout_below="@id/rellay2"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -96,11 +83,11 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_n_comments"
+                    android:id="@+id/tv_n_comments2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:text="453"
+                    android:text="500"
                     android:textColor="@color/white"
                     android:textSize="25sp" />
 
@@ -134,11 +121,11 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_visited_places"
+                    android:id="@+id/tv_visited_places2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:text="873"
+                    android:text="600"
                     android:textColor="@color/white"
                     android:textSize="25sp" />
 
@@ -161,7 +148,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/linlay1"
+        android:layout_below="@+id/linlay2"
         android:layout_marginTop="0dp">
 
         <ScrollView
@@ -193,7 +180,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_username"
+                        android:id="@+id/tv_username2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
@@ -223,24 +210,13 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/tv_email"
+                        android:id="@+id/tv_email2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
                         android:text="user@gmail.com"
                         android:textColor="#000000"
                         android:textSize="18sp" />
-
-                    <EditText
-                        android:id="@+id/tv_email_editable"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-light"
-                        android:text="user@gmail.com"
-                        android:textColor="#000000"
-                        android:visibility="gone"
-                        android:textSize="18sp"
-                        android:background="@null"/>
 
                     <View
                         android:layout_width="match_parent"
@@ -256,62 +232,13 @@
                     android:layout_marginTop="15dp"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/app_user_pass"
-                        android:textColor="@color/headings"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:id="@+id/profile_password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:inputType="textPassword"
-                        android:text="aaaaaaaa" />
-
-                    <EditText
-                        android:id="@+id/profile_password_editable"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:visibility="gone"
-                        android:inputType="textPassword"
-                        android:text="aaaaaaaa"
-                        android:background="@null"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:orientation="vertical">
-
-
                     <Button
-                        android:id="@+id/deleteButton"
+                        android:id="@+id/deleteButton2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/app_delete_account"
+                        android:text="@string/profile_delete_account_admin"
                         app:backgroundTint="#B8B8B8" />
 
-                    <Button
-                        android:id="@+id/bt_acepptChanges"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Confirmar Cambios"
-                        android:visibility="gone"
-                        app:backgroundTint="#00BCD4" />
-
-                    <Button
-                        android:id="@+id/bt_cancelChanges"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Cancelar"
-                        android:visibility="gone"
-                        app:backgroundTint="#F44336" />
 
                 </LinearLayout>
 

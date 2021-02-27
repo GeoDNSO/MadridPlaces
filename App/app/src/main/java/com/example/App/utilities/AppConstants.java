@@ -38,5 +38,5 @@ public class AppConstants {
     public static final Integer ERROR_LIST_PLACES = -4;
     public static final Integer LIST_PLACES = 4;
 
-
+    public static final String BUNDLE_PROFILE_LIST_DETAILS = "DETAILS_LIST_PROFILE_BUNDLE";
 }
