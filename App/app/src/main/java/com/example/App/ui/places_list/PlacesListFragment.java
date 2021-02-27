@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
+import com.example.App.utilities.AppConstants;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
@@ -89,10 +90,11 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
 
     //@TODO Ver video para enseñar a Jin lo de las peticiones por paginas...
     //Simula llamada al servidor
+    static int numLugar = 0;
     private void getData() {
 
         //NO recogemos mas datos al llegar a la pagina 5
-        if(page == 5){
+        if(page >= 5){
             return ;
         }
         //Si la respuesta no es nula, es decir, recibimos mensaje del servidor
@@ -109,9 +111,13 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
 
             //Usar la respuesta del servidor para ir creando los lugares de la lista
             for(int i = 0; i < limit; ++i){
-                float rate = (float) Math.random()*6 + 1;
-                TPlace place = new TPlace("Lugar", "Desc", "IMAGEN DEFAULT", rate);
+                float rate = (float) Math.random()*5 + 1;
+                //TPlace place = new TPlace("Lugar " + numLugar++, getString(R.string.lorem_ipsu), "IMAGEN DEFAULT", rate);
+                TPlace place = new TPlace("Lugar Pos " + numLugar++, getString(R.string.lorem_ipsu), "direccion",
+                        3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid",
+                        "Localidad", "Afluencia", rate, false);
                 //getString(R.drawable.imagen_lugar_default);
+
                 //Añadir lugar a la lista
                 placeList.add(place);
             }
@@ -141,7 +147,18 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
     @Override
     public void onPlaceClick(int position) {
         //Enviar datos del objeto con posicion position de la lista al otro fragment
-        Toast.makeText(getActivity(), "Listener del item " + position, Toast.LENGTH_LONG).show();
-        Navigation.findNavController(root).navigate(R.id.placeDetailFragment);
+        //Toast.makeText(getActivity(), "Listener del item " + position, Toast.LENGTH_LONG).show();
+        Bundle bundle = new Bundle();
+        /*
+        TPlace place = new TPlace("Lugar en Posicion "+position, getString(R.string.lorem_ipsu), "direccion",
+                3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid",
+                "Localidad", "Afluencia", 4.0f, false);
+        */
+        TPlace place = placeList.get(position);
+
+        bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
+
+        //Le pasamos el bundle
+        Navigation.findNavController(root).navigate(R.id.placeDetailFragment, bundle);
     }
 }

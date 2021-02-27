@@ -81,6 +81,8 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         holder.tvDate.setText(comment.getDate());
         holder.ratingBar.setRating(comment.getRating());
 
+        TextViewExpandableUtil.makeTextViewResizable(holder.tvComment, 3, "...", true);
+
     }
 
     @Override
@@ -105,7 +107,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             tvDate = itemView.findViewById(R.id.comment_time_posted);
             ratingBar = itemView.findViewById(R.id.comment_rating_bar);
 
-            TextViewExpandableUtil.makeTextViewResizable(tvComment, 3, "...", true);
+            //TextViewExpandableUtil.makeTextViewResizable(tvComment, 3, "...", true);
         }
 
         @Override
