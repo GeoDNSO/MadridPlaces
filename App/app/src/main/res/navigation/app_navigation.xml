@@ -74,6 +74,7 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.example.App.ui.details_profile_admin.DetailFragment"
+
         android:label="@string/user_profile_list"
         tools:layout="@layout/detail_fragment" />
     <fragment

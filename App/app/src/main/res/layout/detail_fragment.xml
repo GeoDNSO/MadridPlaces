@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.details_profile_admin.DetailFragment">
 
+
     <RelativeLayout
         android:id="@+id/rellay2"
         android:layout_width="match_parent"
