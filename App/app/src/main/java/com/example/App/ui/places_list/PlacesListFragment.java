@@ -1,6 +1,7 @@
 package com.example.App.ui.places_list;
 
 import androidx.core.widget.NestedScrollView;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -40,7 +41,7 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
     private List<TPlace> placeList = new ArrayList<>();
     private PlaceListAdapter placeListAdapter;
 
-    private int page = 1, limit = 6;
+    private int page = 0, limit = 6, quantum = 6;
 
     public static PlacesListFragment newInstance() {
         return new PlacesListFragment();
@@ -52,7 +53,44 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
 
         root = inflater.inflate(R.layout.places_list_fragment, container, false);
 
+        mViewModel = new ViewModelProvider(this).get(PlacesListViewModel.class);
+        mViewModel.init();
+
         initUI();
+
+        mViewModel.getPlacesList().observe(getViewLifecycleOwner(), new Observer<List<TPlace>>() {
+            @Override
+            public void onChanged(List<TPlace> tPlaces) {
+                placeList = tPlaces;
+                placeListAdapter = new PlaceListAdapter(getActivity(), placeList, PlacesListFragment.this);
+
+                recyclerView.setAdapter(placeListAdapter);
+            }
+        });
+
+        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                //Mostrar el recyclerView
+                recyclerView.setVisibility(View.VISIBLE);
+                //Parar el efecto shimmer
+                shimmerFrameLayout.stopShimmer();
+                //Esconder al frameLayout de shimmer
+                shimmerFrameLayout.setVisibility(View.GONE);
+            }
+        });
+
+        mViewModel.getProgressBar().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+                else {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        });
 
         placeListManagement();
 
@@ -66,7 +104,9 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//getActivity() en vez de this
         recyclerView.setAdapter(placeListAdapter);
 
-        getData();
+        //getData();
+
+        mViewModel.listPlaces(page, quantum);
 
         //Empezar el efecto de shimmer
         shimmerFrameLayout.startShimmer();
@@ -82,7 +122,7 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
                     progressBar.setVisibility(View.VISIBLE);
 
                     //Pedimos más datos
-                    getData();
+                    mViewModel.appendPlaces(page, quantum);
                 }
             }
         });
@@ -93,34 +133,11 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
     static int numLugar = 0;
     private void getData() {
 
-        //NO recogemos mas datos al llegar a la pagina 5
-        if(page >= 5){
-            return ;
-        }
         //Si la respuesta no es nula, es decir, recibimos mensaje del servidor
         if(true){
 
-            //Esconder la barra de carga
-            progressBar.setVisibility(View.GONE);
-            //Mostrar el recyclerView
-            recyclerView.setVisibility(View.VISIBLE);
-            //Parar el efecto shimmer
-            shimmerFrameLayout.stopShimmer();
-            //Esconder al frameLayout de shimmer
-            shimmerFrameLayout.setVisibility(View.GONE);
 
-            //Usar la respuesta del servidor para ir creando los lugares de la lista
-            for(int i = 0; i < limit; ++i){
-                float rate = (float) Math.random()*5 + 1;
-                //TPlace place = new TPlace("Lugar " + numLugar++, getString(R.string.lorem_ipsu), "IMAGEN DEFAULT", rate);
-                TPlace place = new TPlace("Lugar Pos " + numLugar++, getString(R.string.lorem_ipsu), "direccion",
-                        3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid",
-                        "Localidad", "Afluencia", rate, false);
-                //getString(R.drawable.imagen_lugar_default);
 
-                //Añadir lugar a la lista
-                placeList.add(place);
-            }
             placeListAdapter = new PlaceListAdapter(getActivity(), placeList, this);
 
             recyclerView.setAdapter(placeListAdapter);
@@ -132,7 +149,7 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(PlacesListViewModel.class);
+        //mViewModel = new ViewModelProvider(this).get(PlacesListViewModel.class);
         // TODO: Use the ViewModel
     }
 
