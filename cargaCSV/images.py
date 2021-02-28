@@ -20,15 +20,13 @@ def convertToBinaryData(filename):
 	photo=data.content
 	return photo
 
-def selectPrueba(location_name):
+def selectPrueba():
 	
-	cursor.execute("SELECT image FROM location_images WHERE location_name LIKE %s", [location_name])
+	cursor.execute("SELECT name, road_class, road_name, road_number, category, id_type FROM location Join type_of_place on location.type_of_place = type_of_place.id_type")
 	allImage = cursor.fetchall()
-	count = 0
-	for i in allImage:
-		with open(str(count)+'.jpg', 'wb') as f:
-			f.write(i[0])
-		count += 1
+	for obj in allImage:
+		if(obj[5] >= 6 and obj[5] < 15):
+			print(obj[0] + " " + obj[4] + " " + obj[1] + " " + obj[2] + " " + obj[3] )
 
 def find_urls(inp,url,driver,iterate):
     driver.get(url)
@@ -48,12 +46,27 @@ def find_urls(inp,url,driver,iterate):
 
 def selectLugar():
 	lista = []
-	cursor.execute("SELECT name FROM location")
+	cursor.execute("SELECT name, road_class, road_name, road_number, category, id_type FROM location Join type_of_place on location.type_of_place = type_of_place.id_type")
 	allNames = cursor.fetchall()
-	for name in allNames:
-		lista.append(name)
+	for obj in allNames:
+		if(obj[5] < 6 or obj[5] >= 15):
+			lista.append({"locationName" : obj[0], "search" : obj[0] + " " + obj[4] + " " + obj[1] + " " + obj[2] + " " + obj[3]})
 	return lista
 
+def main():
+	lista = selectLugar()
+	driver = webdriver.Chrome()
+	count = 0
+	for name in lista:
+
+	    if(count < 15):
+	    	inp = name["search"]
+	    	url = 'https://www.google.com/search?q='+str(inp)+'&source=lnms&tbm=isch&sa=X&ved=2ahUKEwie44_AnqLpAhUhBWMBHUFGD90Q_AUoAXoECBUQAw&biw=1920&bih=947'
+	    	find_urls(name["locationName"],url,driver,5)
+	    	count += 1
+	    else:
+	    	time.sleep(20)
+	    	count = 0
 #Conexión a la BD
 
 mydb = MySQLdb.connect(host='localhost',
@@ -62,18 +75,4 @@ mydb = MySQLdb.connect(host='localhost',
     db='tfg')
 cursor = mydb.cursor()
 
-selectPrueba("Enjabonarte")
-lista = selectLugar()
-driver = webdriver.Chrome()
-count = 0
-for name in lista:
-
-    if(count < 15):
-    	inp = name
-    	url = 'https://www.google.com/search?q='+str(inp)+'&source=lnms&tbm=isch&sa=X&ved=2ahUKEwie44_AnqLpAhUhBWMBHUFGD90Q_AUoAXoECBUQAw&biw=1920&bih=947'
-    	find_urls(inp,url,driver,4)
-    	count += 1
-    	print(count)
-    else:
-    	time.sleep(20)
-    	count = 0
+main()
