@@ -64,7 +64,7 @@ public class PlaceDetailFragment extends Fragment {
         initUI();
 
         place = (TPlace) getArguments().getParcelable(AppConstants.BUNDLE_PLACE_DETAILS);
-        
+
         fillFields();
 
         listeners();
@@ -113,7 +113,9 @@ public class PlaceDetailFragment extends Fragment {
     private void fillFields() {
         //TODO CAMBIAR EN EL FUTURO
         //placeImage.setLoQueSea(place.getImage());
-        placeImage.setImageResource(R.drawable.imagen_lugar_default);
+        new DownloadImageTask((placeImage))
+                .execute("http://image10.bizrate-images.com/resize?sq=60&uid=2216744464");
+
         tvPlaceName.setText(place.getName());
         tvPlaceDescription.setText(place.getName() + "desc :" + place.getDescription());
 

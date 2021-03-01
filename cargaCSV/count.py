@@ -1,3 +1,5 @@
+#Script para ver cuántos lugares hay en total, y cuántas han sido descartadas
+
 import os, sys
 import pandas as pd
 import numpy as np

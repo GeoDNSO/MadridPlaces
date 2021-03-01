@@ -1,3 +1,4 @@
+#Script para insertar las categorías y los lugares en la BD
 import os, sys
 import pandas as pd
 import numpy as np
@@ -33,7 +34,7 @@ def insertarSQL(URL): #Inserta todos los lugares
 		separate = re.split(r'\t', prueba)
 		separate[0] = separate[0].replace('&Aacute;lbora', 'Á')
 		separate[0] = separate[0].replace('&aacute;lbora', 'á')
-		separate[1] = re.sub('\u0301', '', separate[1])
+		separate[1] = re.sub('\u0301', '', separate[1]) #Descartar manualmente caracteres raros
 		separate[1] = re.sub('\u0303', '', separate[1])	
 		separate[0] = re.sub('\u014c', '', separate[0])				
 		separate[1] = re.sub('\u014c', '', separate[1])			

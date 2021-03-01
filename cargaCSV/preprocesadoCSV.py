@@ -1,3 +1,4 @@
+#Script para el preprocesado de todos los datos recogidos en el portal de https://datos.madrid.es
 import os, sys
 import pandas as pd
 import numpy as np
