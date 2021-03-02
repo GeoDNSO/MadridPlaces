@@ -6,7 +6,7 @@ import modules
 def showRate(user, location):
     try:
         rtQuery = modules.ratings.query.filter_by(location = location, user = user).all()
-        if len(rtQuery) is 0:
+        if len(rtQuery) == 0:
             return -1
         return rtQuery[0].rate
     except Exception as e:
@@ -23,7 +23,10 @@ def averageRate(location): #A lo mejor no se necesita un URL
         for rate in rtQuery:
             cant = cant + 1
             total = total + rate.rate
-        result = total / cant
+        if(cant > 0):
+            result = total / cant
+        else:
+            result = 0
     except Exception as e:
         print("Error leyendo comentarios:", repr(e))
         #return jsonify(exito = "false")

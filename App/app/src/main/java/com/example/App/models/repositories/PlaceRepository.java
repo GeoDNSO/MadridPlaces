@@ -50,12 +50,18 @@ public class PlaceRepository extends Repository{
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
                 mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
+                Log.d("CCC", "FAILURE GORDO");
                 mPlacesList.postValue(null);
                 call.cancel();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 if (!response.isSuccessful()) {
                     mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
                     throw new IOException("Unexpected code " + response);
@@ -68,6 +74,7 @@ public class PlaceRepository extends Repository{
                     mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
                 }
                 else{
+                    Log.d("BBB", "not success");
                     mPlacesList.postValue(null);
                     mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
                 }
@@ -96,6 +103,11 @@ public class PlaceRepository extends Repository{
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 if (!response.isSuccessful()) {
                     mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
                     throw new IOException("Unexpected code " + response);
@@ -188,7 +200,7 @@ public class PlaceRepository extends Repository{
             jresponse = new JSONObject(res);
 
             List<TPlace> listPlaces = new ArrayList<>();
-            JSONArray arrayPlaces = jresponse.getJSONArray("places");
+            JSONArray arrayPlaces = jresponse.getJSONArray("list");
             for (int i = 0; i < arrayPlaces.length(); i++) {
                 TPlace tPlace = jsonStringToPlace(arrayPlaces.getString(i));
                 listPlaces.add(tPlace);
@@ -207,14 +219,14 @@ public class PlaceRepository extends Repository{
             return new TPlace(
                     jsonObject.getString("name"),
                     jsonObject.getString("description"),
-                    jsonObject.getString("nickname"),
+                    jsonObject.getString("road_name"),
                     jsonObject.getDouble("coordinate_latitude"),
                     jsonObject.getDouble("coordinate_longitude"),
-                    jsonObject.getString("nickname"),
-                    jsonObject.getString("nickname"),
-                    jsonObject.getString("nickname"),
-                    jsonObject.getString("nickname"),
-                    jsonObject.getString("nickname"),
+                    jsonObject.getString("zipcode"),
+                    jsonObject.getString("type_of_place"),
+                    jsonObject.getString("city"),
+                    jsonObject.getString("name"),
+                    jsonObject.getString("affluence"),
                     jsonObject.getDouble("rate"),
                     false);
             //return new TPlace(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"));
