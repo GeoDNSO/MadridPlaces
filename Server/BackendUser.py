@@ -402,14 +402,14 @@ def listLocations():
     json_data = request.get_json()
     page = json_data["page"] #Mostrar de X en X     
     quant = json_data["quant"]
-    avgRate = averageRate(place.name)
 
     places = location.query.paginate(per_page=quant, page=page)
     if (places is not None):
         all_items = places.items
         lista = []
         for place in all_items:
-            obj = {"name" : place.name,
+        	avgRate = averageRate(place.name)
+        	obj = {"name" : place.name,
             "description":place.description,
             "coordinate_latitude":place.coordinate_latitude,
             "coordinate_longitude":place.coordinate_longitude,
@@ -420,8 +420,8 @@ def listLocations():
             "road_number":place.road_number,
             "zipcode":place.zipcode,
             "affluence":place.affluence,
-            "rate" : avgRate}
-            lista.append(obj)
+            "rate" : avgRate }
+        	lista.append(obj)
 
         print("success")
         return jsonify(

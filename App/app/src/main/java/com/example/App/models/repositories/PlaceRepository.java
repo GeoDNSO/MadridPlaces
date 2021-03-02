@@ -82,7 +82,7 @@ public class PlaceRepository extends Repository{
         String postBodyString = pageAndQuantToSTring(page, quantity);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/location/listLocations/");
+                AppConstants.METHOD_POST, "/location/listLocations");
         Call call = simpleRequest.createCall(request);
 
         call.enqueue(new Callback() {
