@@ -11,17 +11,17 @@ from xml.etree import ElementTree
 
 def limpiezaTemplos(dataTemplos):
     separate = re.split(r';', dataTemplos)
-    nombre = separate[1]
-    descripcion = separate[2] if separate[2] != '' else "Sin especificar"
+    nombre = separate[1].replace('"', '')
+    descripcion = separate[2].replace('"', '') if separate[2] != '' else "Sin especificar"
     #direccion = separate[10] + " " + separate[9] +  " " + separate[12] + ', ' + separate[17] +  " " + separate[19]
-    clase_vial = separate[10] if separate[10] != '' else "Sin especificar"
-    nombre_vial = separate[9] if separate[9] != '' else "Sin especificar"
-    numero_vial = separate[12] if separate[12] != '' and separate[12] != 's/n' else '0'
-    codigo_postal = separate[19] if separate[19] != '' and separate[19] != '0' else '00000'
-    latitud = separate[24] if separate[24] != '' else '0'
-    longitud = separate[25] if separate[25] != '' else '0'
-    tipo = separate[29] if separate[29] != '' else "Sin especificar"
-    url = separate[8] #Únicamente existe una foto por cada templo
+    clase_vial = separate[10].replace('"', '') if separate[10] != '' else "Sin especificar"
+    nombre_vial = separate[9].replace('"', '') if separate[9] != '' else "Sin especificar"
+    numero_vial = separate[12].replace('"', '') if separate[12] != '' and separate[12] != 's/n' else '0'
+    codigo_postal = separate[19].replace('"', '') if separate[19] != '' and separate[19] != '0' else '00000'
+    latitud = separate[24].replace('"', '') if separate[24] != '' else '0'
+    longitud = separate[25].replace('"', '') if separate[25] != '' else '0'
+    tipo = separate[29].replace('"', '') if separate[29] != '' else "Sin especificar"
+    url = separate[8].replace('"', '') #Únicamente existe una foto por cada templo
     return [nombre, descripcion, latitud, longitud, tipo, clase_vial, nombre_vial, numero_vial, codigo_postal, url]
 
 def limpiezaMuseos(dataMuseos):

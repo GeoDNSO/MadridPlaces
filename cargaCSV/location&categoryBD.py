@@ -46,9 +46,7 @@ def insertarSQL(URL): #Inserta todos los lugares
 		separate[1] = re.sub('\x93', '', separate[1])
 		separate[1] = re.sub('\x94', '', separate[1])	
 		separate[1] = re.sub('\x85', '', separate[1])
-
 		if(len(separate) == 9 and (separate[2] != '' or separate[3] != '') and separate[2].count('.') == 1):
-			
 			if(separate[4] == "entidadesYorganismos"):
 				separate[4] = "Museo" 
 
@@ -82,7 +80,7 @@ insertarSQL("clubsprocesados")
 insertarSQL("informacionTurismoProcesados")
 insertarSQL("tiendasProcesados")
 insertarSQL("restaurantesProcesados")
-insertarSQL("alojamientosprocesados")
+insertarSQL("alojamientosprocesados")	
 insertarSQL("MonumentosProcesados")
 insertarSQL("MuseosProcesados")
 insertarSQL("TemplosProcesados")
