@@ -43,7 +43,7 @@ public class TPlace implements JSONSerializable, Parcelable {
         this.location = location;
         this.affluence = affluence;
         this.rating = rating;
-        this.userFav = userFav;
+        this.userFav = userFav; //Cambiar en la BD
     }
 
     public static final Creator<TPlace> CREATOR = new Creator<TPlace>() {

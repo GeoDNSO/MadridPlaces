@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,7 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
     private List<TPlace> placeList = new ArrayList<>();
     private PlaceListAdapter placeListAdapter;
 
-    private int page = 0, limit = 6, quantum = 6;
+    private int page = 1, limit = 3, quantum = 3;
 
     public static PlacesListFragment newInstance() {
         return new PlacesListFragment();
@@ -61,6 +62,12 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
         mViewModel.getPlacesList().observe(getViewLifecycleOwner(), new Observer<List<TPlace>>() {
             @Override
             public void onChanged(List<TPlace> tPlaces) {
+                if(tPlaces == null){
+                    Log.d("AAAAAAA", "tPLaces nulo");
+                }
+                else{
+                    Log.d("BBBBBB", String.valueOf(tPlaces));
+                }
                 placeList = tPlaces;
                 placeListAdapter = new PlaceListAdapter(getActivity(), placeList, PlacesListFragment.this);
 
@@ -71,6 +78,7 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
         mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
+
                 //Mostrar el recyclerView
                 recyclerView.setVisibility(View.VISIBLE);
                 //Parar el efecto shimmer
@@ -98,6 +106,9 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
     }
 
     private void placeListManagement(){
+        if(placeList == null){
+            placeList = new ArrayList<>();
+        }
         placeListAdapter = new PlaceListAdapter(getActivity(), placeList, this); //getActivity = MainActivity.this
 
         //Set layout

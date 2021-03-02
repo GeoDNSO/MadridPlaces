@@ -129,36 +129,42 @@ def listLocations():
     json_data = request.get_json()
     page = json_data["page"] #Mostrar de X en X     
     quant = json_data["quant"]
-
+    print(page)
+    print(quant)
     places = modules.location.query.paginate(per_page=quant, page=page)
-    if (places is not None):
-        all_items = places.items
-        lista = []
-        for place in all_items:
-            imageList = LocationFunct.listImages(place.name)
-            avgRate = RateFunct.averageRate(place.name)
-            obj = {"name" : place.name,
-            "description":place.description,
-            "coordinate_latitude":place.coordinate_latitude,
-            "coordinate_longitude":place.coordinate_longitude,
-            "type_of_place":place.type_of_place,
-            "city":place.city,
-            "road_class":place.road_class,
-            "road_name":place.road_name,
-            "road_number":place.road_number,
-            "zipcode":place.zipcode,
-            "affluence":place.affluence,
-            "imageList" : imageList,
-            "rate" : avgRate }
-            lista.append(obj)
+    try:
+	    if(places is not None):
+	        all_items = places.items
+	        lista = []
+	        for place in all_items:
+	            imageList = LocationFunct.listImages(place.name)
+	            avgRate = RateFunct.averageRate(place.name)
+	            obj = {"name" : place.name,
+	            "description":place.description,
+	            "coordinate_latitude":place.coordinate_latitude,
+	            "coordinate_longitude":place.coordinate_longitude,
+	            "type_of_place":place.type_of_place,
+	            "city":place.city,
+	            "road_class":place.road_class,
+	            "road_name":place.road_name,
+	            "road_number":place.road_number,
+	            "zipcode":place.zipcode,
+	            "affluence":place.affluence,
+	            "imageList" : imageList,
+	            "rate" : avgRate }
+	            lista.append(obj)
 
-        print("success")
-        return jsonify(
-                exito = "true",
-                list = lista)
+	        print("success")
+	        print(lista)
+	        return jsonify(
+	                exito = "true",
+	                list = lista)
 
-    print("failure")
-    return jsonify(exito = "false")   
+	    print("failure")
+	    return jsonify(exito = "false")   
+    except Exception as e:
+        print("Error: ", repr(e))
+        return jsonify(exito = "false") 
 
 
 @locationClass.route('/location/stats', methods=['POST']) #Devuelve el listado de comentarios, los datos del lugar y su valoracion
