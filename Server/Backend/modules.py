@@ -42,7 +42,7 @@ class tPlace(sqlAlchemy.Model):
 class location_images(sqlAlchemy.Model):
     __tablename__ = 'location_images'
     id_image = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
-    image = sqlAlchemy.Column(sqlAlchemy.BLOB())
+    image = sqlAlchemy.Column(sqlAlchemy.String(1000))
     location_name = sqlAlchemy.Column(sqlAlchemy.String(255))
 
 

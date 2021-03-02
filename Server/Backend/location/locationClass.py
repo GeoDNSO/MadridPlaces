@@ -7,6 +7,7 @@ import modules
 #Funciones auxiliares que no usan rutas
 import comments.commentFunct as CommentFunct
 import rates.rateFunct as RateFunct
+import location.locationFunct as LocationFunct
 
 locationClass = Blueprint("locationClass", __name__)
 
@@ -134,8 +135,9 @@ def listLocations():
         all_items = places.items
         lista = []
         for place in all_items:
-        	avgRate = RateFunct.averageRate(place.name)
-        	obj = {"name" : place.name,
+            imageList = LocationFunct.listImages(place.name)
+            avgRate = RateFunct.averageRate(place.name)
+            obj = {"name" : place.name,
             "description":place.description,
             "coordinate_latitude":place.coordinate_latitude,
             "coordinate_longitude":place.coordinate_longitude,
@@ -146,8 +148,9 @@ def listLocations():
             "road_number":place.road_number,
             "zipcode":place.zipcode,
             "affluence":place.affluence,
+            "imageList" : imageList,
             "rate" : avgRate }
-        	lista.append(obj)
+            lista.append(obj)
 
         print("success")
         return jsonify(
@@ -184,4 +187,18 @@ def stats():
 
     except Exception as e:
         print("Error mostrando las estadisticas: ", repr(e))
+        return jsonify(exito = "false")  
+
+@locationClass.route('/location/readImages', methods=['POST'])
+def readImages():
+    json_data = request.get_json()
+    name = json_data["name"]
+    try:
+        stQuery = modules.location_images.query.filter_by(location_name=name).all()
+        lista = []
+        for imagen in stQuery:
+            lista.append({"image" : imagen.image})
+        return jsonify(exito = "true", list = lista) 
+    except Exception as e:
+        print("Error mostrando las imágenes: ", repr(e))
         return jsonify(exito = "false")  
