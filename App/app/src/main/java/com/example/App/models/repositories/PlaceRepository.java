@@ -216,17 +216,20 @@ public class PlaceRepository extends Repository{
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(jsonString);
+            List<String> jsonImagesList = jsonArrayImagesToStringList(jsonObject.getJSONArray("imageList"));
             return new TPlace(
                     jsonObject.getString("name"),
                     jsonObject.getString("description"),
-                    jsonObject.getString("road_name"),
                     jsonObject.getDouble("coordinate_latitude"),
                     jsonObject.getDouble("coordinate_longitude"),
-                    jsonObject.getString("zipcode"),
+                    jsonImagesList,
                     jsonObject.getString("type_of_place"),
                     jsonObject.getString("city"),
-                    jsonObject.getString("name"),
-                    jsonObject.getString("affluence"),
+                    jsonObject.getString("road_class"),
+                    jsonObject.getString("road_name"),
+                    jsonObject.getString("road_number"),
+                    jsonObject.getString("zipcode"),
+                    jsonObject.getString("afluence"),
                     jsonObject.getDouble("rate"),
                     false);
             //return new TPlace(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"));
@@ -234,5 +237,19 @@ public class PlaceRepository extends Repository{
             e.printStackTrace();
             return null;
         }
+    }
+
+    private List<String> jsonArrayImagesToStringList(JSONArray imageList) {
+        ArrayList<String> lista = new ArrayList<>();
+
+        for (int i=0;i<imageList.length();i++){
+            try {
+                lista.add(imageList.getString(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.d("ERROR", "jsonArrayImagesToStringList: Error al procesar array");
+            }
+        }
+        return lista;
     }
 }
