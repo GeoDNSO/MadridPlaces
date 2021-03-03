@@ -10,28 +10,28 @@ public class TPlace implements JSONSerializable, Parcelable {
     private String name;
     private String description;
     private String address;
-    private Float latitude;
-    private Float longitude;
+    private double latitude;
+    private double longitude;
     private String image;
     private String typeOfPlace;
     private String city;
     private String location;
     private String affluence;
-    private float rating;
+    private double rating;
 
     private boolean userFav;
 
     //Constructor simple para pruebas
-    public TPlace(String name, String desc, String image, Float rating){
+    public TPlace(String name, String desc, String image, double rating){
         this.name = name;
         this.description = desc;
         this.image = image;
         this.rating = rating;
     }
     //("lugar", "descripcion", "direccion", 3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid", "Localidad", "Afluencia", 4.0f)
-    public TPlace(String name, String description, String address, Float latitude,
-                  Float longitude, String image, String typeOfPlace, String city,
-                  String location, String affluence, float rating, boolean userFav) {
+    public TPlace(String name, String description, String address, double latitude,
+                  double longitude, String image, String typeOfPlace, String city,
+                  String location, String affluence, double rating, boolean userFav) {
         this.name = name;
         this.description = description;
         this.address = address;
@@ -43,7 +43,7 @@ public class TPlace implements JSONSerializable, Parcelable {
         this.location = location;
         this.affluence = affluence;
         this.rating = rating;
-        this.userFav = userFav;
+        this.userFav = userFav; //Cambiar en la BD
     }
 
     public static final Creator<TPlace> CREATOR = new Creator<TPlace>() {
@@ -82,19 +82,19 @@ public class TPlace implements JSONSerializable, Parcelable {
         this.address = address;
     }
 
-    public Float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Float latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public Float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Float longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
@@ -138,9 +138,9 @@ public class TPlace implements JSONSerializable, Parcelable {
         this.affluence = affluence;
     }
 
-    public float getRating() { return rating;    }
+    public double getRating() { return rating;    }
 
-    public void setRating(float rating) {  this.rating = rating; }
+    public void setRating(double rating) {  this.rating = rating; }
 
     public boolean isUserFav() { return userFav;  }
 
@@ -166,27 +166,27 @@ public class TPlace implements JSONSerializable, Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.description);
         dest.writeString(this.address);
-        dest.writeFloat(this.latitude);
-        dest.writeFloat(this.longitude);
+        dest.writeDouble(this.latitude);
+        dest.writeDouble(this.longitude);
         dest.writeString(this.image);
         dest.writeString(this.typeOfPlace);
         dest.writeString(this.city);
         dest.writeString(this.location);
         dest.writeString(this.affluence);
-        dest.writeFloat(this.rating);
+        dest.writeDouble(this.rating);
     }
 
     public TPlace(Parcel in) {
         this.name = in.readString();
         this.description = in.readString();
         this.address = in.readString();
-        this.latitude = in.readFloat();
-        this.longitude = in.readFloat();
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
         this.image = in.readString();
         this.typeOfPlace = in.readString();
         this.city = in.readString();
         this.location = in.readString();
         this.affluence = in.readString();
-        this.rating = in.readFloat();
+        this.rating = in.readDouble();
     }
 }

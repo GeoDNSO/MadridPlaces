@@ -40,6 +40,7 @@ public class CommentsFragment extends Fragment {
     private ProgressBar progressBar;
     private ShimmerFrameLayout shimmerFrameLayout;
 
+
     private TextInputLayout etComment;
 
     private RatingBar ratingBar;
@@ -77,8 +78,11 @@ public class CommentsFragment extends Fragment {
             }
         });
 
+
         //TODO PASAR AL BOTON
         /*
+
+
         ivPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,8 +99,8 @@ public class CommentsFragment extends Fragment {
                 recyclerView.setAdapter(commentListAdapter);
             }
         });
-        */
 
+        */
 
     }
 

@@ -15,7 +15,8 @@ public class TextViewExpandableUtil {
 
     public static String seeMore = "Ver más";
     public static String seeLess = "Ver menos";
-    public static int linesLimitAtPlaceDesc = 5;
+
+    public static int linesLimitAtPlaceDesc = 3;
     public static int linesLimitAtComments = 3;
 
     public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
@@ -83,7 +84,7 @@ public class TextViewExpandableUtil {
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, 3, seeMore, true);
+                        makeTextViewResizable(tv, linesLimitAtPlaceDesc, seeMore, true);
                     }
                 }
             }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), 0);

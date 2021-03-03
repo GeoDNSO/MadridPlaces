@@ -25,6 +25,7 @@ import com.facebook.shimmer.ShimmerDrawable;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.ViewHolder> {
@@ -38,6 +39,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         this.activity = activity;
         this.placeList = placeList;
         this.onPlaceListener = onPlaceListener;
+        //this.placeList = new ArrayList<>();
     }
 
     @NonNull

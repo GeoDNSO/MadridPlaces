@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment{
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.replace(R.id.place_list_container, placeListFragment).commit();
         }
-
+      
         return root;
     }
 
