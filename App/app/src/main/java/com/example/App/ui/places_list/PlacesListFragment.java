@@ -112,7 +112,7 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
         placeListAdapter = new PlaceListAdapter(getActivity(), placeList, this); //getActivity = MainActivity.this
 
         //Set layout
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//getActivity() en vez de this
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(placeListAdapter);
 
         //getData();
@@ -146,9 +146,6 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
 
         //Si la respuesta no es nula, es decir, recibimos mensaje del servidor
         if(true){
-
-
-
             placeListAdapter = new PlaceListAdapter(getActivity(), placeList, this);
 
             recyclerView.setAdapter(placeListAdapter);

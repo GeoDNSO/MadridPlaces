@@ -1,8 +1,11 @@
 package com.example.App;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
         TextViewExpandableUtil.seeMore = getString(R.string.see_more);
         TextViewExpandableUtil.seeLess = getString(R.string.see_less);
+
+        app.askLocationPermission();
     }
 
 
@@ -70,6 +75,28 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         NavigationUI.setupWithNavController(drawerNavigationView, appNavController);
         NavigationUI.setupWithNavController(rightSideNavView, appNavController);
         NavigationUI.setupActionBarWithNavController(this, appNavController, drawerLayout);
+
+
+        appNavControllerDestinationListener();
+
+    }
+
+    private void appNavControllerDestinationListener() {
+        appNavController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+            @Override
+            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+                int dest_id = destination.getId();
+                if( dest_id == R.id.loginFragment || dest_id == R.id.registerFragment ||
+                        dest_id == R.id.profileFragment || dest_id == R.id.adminFragment ||
+                        dest_id == R.id.detailFragment){
+
+                    bottomNavView.setVisibility(View.GONE);
+                }
+                else{
+                    bottomNavView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     //Para la flecha de arriba

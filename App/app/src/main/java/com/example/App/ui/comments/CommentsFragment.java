@@ -40,7 +40,7 @@ public class CommentsFragment extends Fragment {
     private ProgressBar progressBar;
     private ShimmerFrameLayout shimmerFrameLayout;
 
-    private ImageView ivPostComment;
+
     private TextInputLayout etComment;
 
     private RatingBar ratingBar;
@@ -78,6 +78,11 @@ public class CommentsFragment extends Fragment {
             }
         });
 
+
+        //TODO PASAR AL BOTON
+        /*
+
+
         ivPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,6 +99,8 @@ public class CommentsFragment extends Fragment {
                 recyclerView.setAdapter(commentListAdapter);
             }
         });
+
+        */
 
     }
 
@@ -126,7 +133,6 @@ public class CommentsFragment extends Fragment {
         progressBar = root.findViewById(R.id.comments_ProgressBar);
         shimmerFrameLayout = root.findViewById(R.id.comment_ShimmerLayout);
 
-        ivPostComment = root.findViewById(R.id.ivPostComment);
         etComment = root.findViewById(R.id.etComment);
 
         ratingBar = root.findViewById(R.id.placeDetailsRatingBar);

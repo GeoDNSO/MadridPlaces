@@ -48,9 +48,6 @@ public class DetailFragment extends Fragment{
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.detail_fragment, container, false);
 
-        app = App.getInstance(getActivity()); //esto falla
-        app.setBottomMenuVisible(View.GONE);
-
         user = (TUser) getArguments().getParcelable(AppConstants.BUNDLE_PROFILE_LIST_DETAILS);
 
         mViewModel = new ViewModelProvider(this).get(DetailViewModel.class);
@@ -110,13 +107,6 @@ public class DetailFragment extends Fragment{
                 }
             }
         });
-    }
-
-    @Override
-    public void onDestroyView(){
-        app = App.getInstance(getActivity());
-        app.setBottomMenuVisible(View.VISIBLE);
-        super.onDestroyView();
     }
 
     private void initializeListeners() {

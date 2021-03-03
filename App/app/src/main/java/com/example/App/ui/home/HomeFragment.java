@@ -17,8 +17,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
@@ -69,8 +73,7 @@ public class HomeFragment extends Fragment{
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.replace(R.id.place_list_container, placeListFragment).commit();
         }
-
-
+      
         return root;
     }
 

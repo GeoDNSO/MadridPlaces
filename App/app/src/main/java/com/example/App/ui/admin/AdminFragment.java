@@ -59,8 +59,6 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.admin_fragment, container, false);
         setHasOptionsMenu(true);
-        app = App.getInstance(getActivity());
-        app.setBottomMenuVisible(View.GONE);
 
         mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
         mViewModel.init();
@@ -116,8 +114,6 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
 
     @Override
     public void onDestroyView(){
-        app = App.getInstance(getActivity());
-        app.setBottomMenuVisible(View.VISIBLE);
         ((MainActivity)getActivity()).setDrawerLock();
         super.onDestroyView();
     }

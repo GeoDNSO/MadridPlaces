@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:id="@+id/placePicture"
+        android:layout_width="320dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="40dp"
+        android:contentDescription="@string/image_default_desc"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/imagen_lugar_default" />
+
+    <TextView
+        android:id="@+id/tvPlaceName"
+        android:layout_width="250dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="12dp"
+        android:ellipsize="end"
+        android:maxLength="8"
+        android:singleLine="true"
+        android:text="@string/place_default_name"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.285"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/placePicture" />
+
+    <ImageView
+        android:id="@+id/favImage"
+        android:layout_width="37dp"
+        android:layout_height="33dp"
+        android:background="?android:selectableItemBackgroundBorderless"
+        android:contentDescription="@string/love_icon_default_desc"
+        android:src="@drawable/love_icon_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/placePicture"
+        app:layout_constraintEnd_toEndOf="@+id/placePicture"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/placePicture"
+        app:layout_constraintTop_toTopOf="@+id/placePicture"
+        app:layout_constraintVertical_bias="1.0"
+        app:tint="@color/grey" />
+
+    <TextView
+        android:id="@+id/tvPlaceRating"
+        android:layout_width="17dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:text="5"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/tvPlaceName"
+        app:layout_constraintTop_toBottomOf="@+id/placePicture" />
+
+    <ImageView
+        android:id="@+id/placeStarImage"
+        android:layout_width="24dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="8dp"
+        android:contentDescription="@string/star_icon_default_desc"
+        android:src="@drawable/ic_baseline_star_rate_24"
+        app:layout_constraintBottom_toBottomOf="@+id/tvPlaceRating"
+        app:layout_constraintStart_toEndOf="@+id/tvPlaceRating"
+        app:layout_constraintTop_toTopOf="@+id/tvPlaceRating"
+        app:layout_constraintVertical_bias="0.0"
+        app:tint="@color/start_rating" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="179dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/history_date_border"
+        android:text="Visitado el 22/02/2021"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/placePicture"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/placePicture"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
