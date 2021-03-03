@@ -24,15 +24,18 @@ def newRate():
         rtQuery = modules.ratings.query.filter_by(user = user, location = location).first()
         if(rtQuery is None):
             modules.sqlAlchemy.session.add(createRate)
-            modules.sqlAlchemy.session.commit()
-            return jsonify(
-                    exito = "true",
-                    id_rate = createRate.id_rate,
-                    user=createRate.user,
-                    location=createRate.location,
-                    rate=createRate.rate)
-        print("El usuario no puede valorar dos veces")
-        return jsonify(exito = "false")
+        else:
+        	rtQuery.rate = createRate.rate
+
+        modules.sqlAlchemy.session.commit()
+        
+        return jsonify(
+                exito = "true",
+                id_rate = createRate.id_rate,
+                user=createRate.user,
+                location=createRate.location,
+                rate=createRate.rate)
+
     except Exception as e:
         print("Error insertando la nueva fila :", repr(e))
         return jsonify(exito = "false")
