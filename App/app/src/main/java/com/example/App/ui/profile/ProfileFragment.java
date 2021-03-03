@@ -56,8 +56,6 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.profile_fragment, container, false);
-        app = App.getInstance(getActivity());
-        app.setBottomMenuVisible(View.GONE);
 
         mViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
         mViewModel.init();
@@ -129,13 +127,6 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-    }
-
-    @Override
-    public void onDestroyView(){
-        app = App.getInstance(getActivity());
-        app.setBottomMenuVisible(View.VISIBLE);
-        super.onDestroyView();
     }
 
     private void initializeListeners() {

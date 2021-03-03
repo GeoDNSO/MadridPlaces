@@ -49,8 +49,8 @@ public class RegisterFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.register_fragment, container, false);
-        mRegisterViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
 
+        mRegisterViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
         mRegisterViewModel.init();
 
         mRegisterViewModel.getRegisterInProcess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
@@ -84,6 +84,8 @@ public class RegisterFragment extends Fragment {
 
         return root;
     }
+
+
 
     private void hideProgressBar() {
         progressBar.setVisibility(View.GONE);
@@ -127,6 +129,8 @@ public class RegisterFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_loginFragment);
             }
         });
+
+
     }
 
 

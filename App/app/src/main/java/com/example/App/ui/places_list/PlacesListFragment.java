@@ -63,7 +63,7 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
         placeListAdapter = new PlaceListAdapter(getActivity(), placeList, this); //getActivity = MainActivity.this
 
         //Set layout
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//getActivity() en vez de this
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(placeListAdapter);
 
         getData();
