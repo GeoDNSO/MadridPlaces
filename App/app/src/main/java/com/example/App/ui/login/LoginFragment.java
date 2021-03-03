@@ -45,8 +45,9 @@ public class LoginFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.login_fragment, container, false);
-        mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
+
+        mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         mViewModel.init();
 
         mViewModel.getLoginInProcess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
@@ -89,12 +90,15 @@ public class LoginFragment extends Fragment {
         return root;
     }
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         // TODO: Use the ViewModel
     }
+
+
 
     private void initializeListeners(){
         loginButton.setOnClickListener(new View.OnClickListener() {

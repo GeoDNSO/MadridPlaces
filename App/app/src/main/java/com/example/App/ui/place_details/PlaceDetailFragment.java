@@ -143,6 +143,10 @@ public class PlaceDetailFragment extends Fragment {
         tvPlaceDescription = root.findViewById(R.id.placeDetailsDescription);
         tvPlaceRating = root.findViewById(R.id.tvPlaceDetailsRating);
 
+//TODO: peligro
+        TextViewExpandableUtil.makeTextViewResizable(tvPlaceDescription,
+                TextViewExpandableUtil.linesLimitAtPlaceDesc, "...", true);
+
     }
 
     @Override
