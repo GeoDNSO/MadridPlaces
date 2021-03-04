@@ -58,7 +58,7 @@ public class PlaceRepository extends Repository{
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -104,7 +104,7 @@ public class PlaceRepository extends Repository{
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -174,26 +174,6 @@ public class PlaceRepository extends Repository{
 
     }
 
-
-    /*private List<TPlace> getListFromResponse(String response){
-        JSONObject jresponse = null;
-        try {
-            jresponse = new JSONObject(response);
-
-            //dentro de get("places") contiene una lista de nicknames ["poti", "aaa", "pepe"]
-            List<TUser> listUsers = new ArrayList<TUser>();
-            JSONArray arrayUsers = jresponse.getJSONArray("users");
-            for (int i = 0; i < arrayUsers.length(); i++) {
-                TUser tUser = jsonStringToUser(arrayUsers.getString(i));
-                listUsers.add(tUser);
-            }
-            return listUsers;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return  null;
-        }
-    }*/
-
     private List<TPlace> getListFromResponse(String res) {
         JSONObject jresponse = null;
         try {
@@ -229,7 +209,7 @@ public class PlaceRepository extends Repository{
                     jsonObject.getString("road_name"),
                     jsonObject.getString("road_number"),
                     jsonObject.getString("zipcode"),
-                    jsonObject.getString("afluence"),
+                    jsonObject.getString("affluence"),
                     jsonObject.getDouble("rate"),
                     false);
             //return new TPlace(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"));
@@ -239,17 +219,25 @@ public class PlaceRepository extends Repository{
         }
     }
 
-    private List<String> jsonArrayImagesToStringList(JSONArray imageList) {
+    private List<String> jsonArrayImagesToStringList(JSONArray jsonImageList) {
         ArrayList<String> lista = new ArrayList<>();
 
-        for (int i=0;i<imageList.length();i++){
+    
+        for (int i=0;i<jsonImageList.length();i++){
             try {
-                lista.add(imageList.getString(i));
+                String imageURL = jsonImageList.getJSONObject(i).getString("image");
+                String imageURLCorrected = jsonUrlCorrector(imageURL);
+                lista.add(imageURLCorrected);
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.d("ERROR", "jsonArrayImagesToStringList: Error al procesar array");
             }
         }
         return lista;
+    }
+
+    private String jsonUrlCorrector(String json_data) {
+        json_data = json_data.replace("\\", "");
+        return json_data;
     }
 }

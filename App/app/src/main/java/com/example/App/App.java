@@ -7,12 +7,16 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
 import android.view.Menu;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.example.App.models.dao.DAOUserImp;
+import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -24,6 +28,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class App {
 
@@ -144,6 +153,32 @@ public class App {
 
     public boolean isAdmin() {
         return (sessionManager.getRol().equals(AppConstants.USER_ROL_ADMIN));
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return (activeNetworkInfo != null && activeNetworkInfo.isConnected());
+    }
+
+    public static boolean isServerReachable(){
+        Callable<Boolean> task = ()->{
+            return SimpleRequest.isHostReachable();
+        };
+
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        Future<Boolean> future = executorService.submit(task);
+
+        boolean reachable = false;
+        try {
+            reachable = future.get().booleanValue();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return reachable;
     }
 
 }

@@ -5,15 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="240dp"
     android:orientation="vertical"
-    android:background="@drawable/ripple_efect"
-    tools:context=".ui.place_list_item.PlaceListItem">
+    android:background="@drawable/ripple_efect">
 
 
     <ImageView
         android:id="@+id/placePicture"
         android:layout_width="320dp"
         android:layout_height="200dp"
-        android:layout_marginLeft="45dp"
+        android:layout_marginLeft="35dp"
         android:layout_marginRight="45dp"
         android:contentDescription="@string/image_default_desc"
         android:scaleType="fitXY"

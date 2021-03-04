@@ -1,9 +1,11 @@
 package com.example.App.ui.places_list;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.utilities.AppConstants;
@@ -34,6 +38,7 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
     private View root;
 
     //UI Elements
+    private SwipeRefreshLayout swipeRefreshLayout;
     private NestedScrollView nestedScrollView;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
@@ -57,17 +62,27 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
         mViewModel = new ViewModelProvider(this).get(PlacesListViewModel.class);
         mViewModel.init();
 
+        page = 1;
+
         initUI();
+        initListener();
+        initObservers();
+
+        placeListManagement();
+
+        return root;
+    }
+
+    private void initObservers() {
 
         mViewModel.getPlacesList().observe(getViewLifecycleOwner(), new Observer<List<TPlace>>() {
             @Override
             public void onChanged(List<TPlace> tPlaces) {
                 if(tPlaces == null){
-                    Log.d("AAAAAAA", "tPLaces nulo");
+                    Log.d("ERROR_NULO", "tPLaces nulo");
+                    return;
                 }
-                else{
-                    Log.d("BBBBBB", String.valueOf(tPlaces));
-                }
+
                 placeList = tPlaces;
                 placeListAdapter = new PlaceListAdapter(getActivity(), placeList, PlacesListFragment.this);
 
@@ -85,6 +100,8 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
                 shimmerFrameLayout.stopShimmer();
                 //Esconder al frameLayout de shimmer
                 shimmerFrameLayout.setVisibility(View.GONE);
+
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -99,10 +116,45 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
                 }
             }
         });
+    }
 
-        placeListManagement();
+    private void initListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(!App.isServerReachable()){
+                    Toast.makeText(getActivity(), getString(R.string.no_internet), Toast.LENGTH_LONG).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                    return ;
+                }
 
-        return root;
+                //Reseteamos la pagina para ver cambios y borramos la lista...
+                page = 1;
+                placeList.clear();
+
+                mViewModel.listPlaces(page, quantum);
+            }
+        });
+
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
+                    //Cuando alacance al ultimo item de la lista
+                    //Incrementea el numero de la pagina
+                    page++;
+                    //Mostrar progress bar
+                    progressBar.setVisibility(View.VISIBLE);
+
+                    shimmerFrameLayout.startShimmer();
+
+                    shimmerFrameLayout.setVisibility(View.VISIBLE);
+
+                    //Pedimos más datos
+                    mViewModel.appendPlaces(page, quantum);
+                }
+            }
+        });
     }
 
     private void placeListManagement(){
@@ -115,44 +167,13 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(placeListAdapter);
 
-        //getData();
-
         mViewModel.listPlaces(page, quantum);
 
         //Empezar el efecto de shimmer
         shimmerFrameLayout.startShimmer();
 
-        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
-                    //Cuando alacance al ultimo item de la lista
-                    //Incrementea el numero de la pagina
-                    page++;
-                    //Mostrar progress bar
-                    progressBar.setVisibility(View.VISIBLE);
-
-                    //Pedimos más datos
-                    mViewModel.appendPlaces(page, quantum);
-                }
-            }
-        });
     }
 
-    //@TODO Ver video para enseñar a Jin lo de las peticiones por paginas...
-    //Simula llamada al servidor
-    static int numLugar = 0;
-    private void getData() {
-
-        //Si la respuesta no es nula, es decir, recibimos mensaje del servidor
-        if(true){
-            placeListAdapter = new PlaceListAdapter(getActivity(), placeList, this);
-
-            recyclerView.setAdapter(placeListAdapter);
-        }else{
-            //Mostrar mensaje de error o trasladar mensaje de error a la vista
-        }
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -166,7 +187,7 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
         recyclerView = root.findViewById(R.id.PlaceList_RecyclerView);
         progressBar = root.findViewById(R.id.placeList_ProgressBar);
         shimmerFrameLayout = root.findViewById(R.id.placeList_ShimmerLayout);
-
+        swipeRefreshLayout = root.findViewById(R.id.placesList_SwipeRefreshLayout);
     }
 
     @Override
@@ -174,11 +195,7 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
         //Enviar datos del objeto con posicion position de la lista al otro fragment
         //Toast.makeText(getActivity(), "Listener del item " + position, Toast.LENGTH_LONG).show();
         Bundle bundle = new Bundle();
-        /*
-        TPlace place = new TPlace("Lugar en Posicion "+position, getString(R.string.lorem_ipsu), "direccion",
-                3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid",
-                "Localidad", "Afluencia", 4.0f, false);
-        */
+
         TPlace place = placeList.get(position);
 
         bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
@@ -186,4 +203,5 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
         //Le pasamos el bundle
         Navigation.findNavController(root).navigate(R.id.placeDetailFragment, bundle);
     }
+
 }

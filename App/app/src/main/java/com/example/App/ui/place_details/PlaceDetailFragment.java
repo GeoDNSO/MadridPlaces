@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +25,13 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.comments.CommentsFragment;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.TextViewExpandableUtil;
+import com.squareup.picasso.Picasso;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -111,11 +114,17 @@ public class PlaceDetailFragment extends Fragment {
     }
 
     private void fillFields() {
-        //TODO CAMBIAR EN EL FUTURO
-        //placeImage.setLoQueSea(place.getImage());
-       // new DownloadImageTask((placeImage))
-        //        .execute("http://image10.bizrate-images.com/resize?sq=60&uid=2216744464");
-        placeImage.setImageResource(R.drawable.imagen_lugar_default);
+
+        Log.i("URL_PLACE", place.getImagesList().get(0));
+
+        try{
+            Glide.with(this.getActivity()).load(place.getImagesList().get(0))
+                    .into(placeImage);
+        }catch (Exception e){
+            Log.e("ERROR_CARGA_IMAGEN", "PlaceDetailFragment: Fallo de carga de imagen debido a cierre de socket" +
+                    ", fallo de conexión, timeout, etc... )");
+        }
+
         tvPlaceName.setText(place.getName());
         tvPlaceDescription.setText(place.getName() + "desc :" + place.getDescription());
 

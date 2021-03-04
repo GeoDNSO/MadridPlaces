@@ -10,7 +10,7 @@
         android:id="@+id/placePictureShimmer"
         android:layout_width="320dp"
         android:layout_height="200dp"
-        android:layout_marginLeft="45dp"
+        android:layout_marginLeft="35dp"
         android:layout_marginRight="45dp"
         android:background="#E7E7E7"
         android:contentDescription="@string/image_default_desc"
