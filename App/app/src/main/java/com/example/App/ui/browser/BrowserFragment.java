@@ -10,13 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.App.R;
 import com.example.App.ui.admin.UserListAdapter;
@@ -35,7 +38,8 @@ public class BrowserFragment extends Fragment {
     private View root;
     private List<String> listTypesPlaces;
     private ChipGroup chipGroupView;
-    private Chip chipView;
+    private Button buttonBrowserView;
+    private List<String> listTypePlaces;
 
 
     public static BrowserFragment newInstance() {
@@ -50,12 +54,25 @@ public class BrowserFragment extends Fragment {
         setHasOptionsMenu(true);
 
         initUI();
+        initializeListeners();
 
         listTypesPlaces = mViewModel.getTypesOfPlaces();
 
         for(String typePlace : listTypesPlaces) {
+            listTypePlaces = new ArrayList<>();
             Chip chip = (Chip) LayoutInflater.from(getContext()).inflate(R.layout.type_place_list_fragment,null);
             chip.setText(typePlace);
+            chip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(chip.isChecked()){
+                        listTypePlaces.add(chip.getText().toString());
+                    }
+                    else {
+                        listTypePlaces.remove(chip.getText().toString());
+                    }
+                }
+            });
             chipGroupView.addView(chip);
         }
         return root;
@@ -94,8 +111,17 @@ public class BrowserFragment extends Fragment {
         });
     }
 
+    private void initializeListeners() {
+        buttonBrowserView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), listTypePlaces.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void initUI(){
         chipGroupView = root.findViewById(R.id.type_of_place_list);
-        chipView = root.findViewById(R.id.type_of_place_item);
+        buttonBrowserView = root.findViewById(R.id.browser_button);
     }
 }
