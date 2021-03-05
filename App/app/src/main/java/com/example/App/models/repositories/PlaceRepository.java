@@ -229,7 +229,7 @@ public class PlaceRepository extends Repository{
                     jsonObject.getString("road_name"),
                     jsonObject.getString("road_number"),
                     jsonObject.getString("zipcode"),
-                    jsonObject.getString("afluence"),
+                    jsonObject.getString("affluence"),
                     jsonObject.getDouble("rate"),
                     false);
             //return new TPlace(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"));
