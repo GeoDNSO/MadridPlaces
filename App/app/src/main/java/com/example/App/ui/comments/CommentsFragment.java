@@ -1,6 +1,7 @@
 package com.example.App.ui.comments;
 
 import androidx.core.widget.NestedScrollView;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -24,6 +25,10 @@ import android.widget.Toast;
 
 import com.example.App.R;
 import com.example.App.models.transfer.TComment;
+import com.example.App.models.transfer.TPlace;
+import com.example.App.ui.places_list.PlaceListAdapter;
+import com.example.App.ui.places_list.PlacesListFragment;
+import com.example.App.ui.places_list.PlacesListViewModel;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -41,7 +46,7 @@ public class CommentsFragment extends Fragment {
     private ShimmerFrameLayout shimmerFrameLayout;
 
 
-    private TextInputLayout etComment;
+    private TextInputLayout etComment; //Será usado para newComment
 
     private RatingBar ratingBar;
     private Button sendRateButton;
@@ -49,7 +54,7 @@ public class CommentsFragment extends Fragment {
     private List<TComment> commentsList = new ArrayList<>();
     private CommentListAdapter commentListAdapter;
 
-    private int page = 1, limit = 3;
+    private int page = 1, quant = 5, limit = 3; //Aun no implementado paginado en comentarios
 
     public static CommentsFragment newInstance() {
         return new CommentsFragment();
@@ -59,11 +64,50 @@ public class CommentsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.comments_fragment, container, false);
-        
+        mViewModel = new ViewModelProvider(this).get(CommentsViewModel.class);
+        mViewModel.init();
+
         initUI();
 
         listeners();
-        
+
+
+        mViewModel.getmCommentsList().observe(getViewLifecycleOwner(), new Observer<List<TComment>>() {
+            @Override
+            public void onChanged(List<TComment> tComments) {
+                commentsList = tComments;
+                commentListAdapter = new CommentListAdapter(getActivity(), commentsList);
+
+                recyclerView.setAdapter(commentListAdapter);
+            }
+        });
+
+        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+
+                //Mostrar el recyclerView
+                recyclerView.setVisibility(View.VISIBLE);
+                //Parar el efecto shimmer
+                shimmerFrameLayout.stopShimmer();
+                //Esconder al frameLayout de shimmer
+                shimmerFrameLayout.setVisibility(View.GONE);
+            }
+        });
+
+        mViewModel.getProgressBar().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+                else {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
         commentListManagement();
 
         return root;
@@ -140,14 +184,16 @@ public class CommentsFragment extends Fragment {
     }
 
     private void commentListManagement() {
-
+        if(commentsList == null){
+            commentsList = new ArrayList<>();
+        }
         commentListAdapter = new CommentListAdapter(getActivity(), commentsList);
         
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(commentListAdapter);
         
-        getData();
-
+        //getData();
+        mViewModel.showComments("Zubi"); //TODO CAMBIAR
         //Empezar el efecto de shimmer
         shimmerFrameLayout.startShimmer();
     }
@@ -171,7 +217,7 @@ public class CommentsFragment extends Fragment {
             shimmerFrameLayout.setVisibility(View.GONE);
 
             for(int i = 0; i < limit; ++i){
-                float rate = (float) Math.random()*5 + 1;
+                Double rate = (Double) Math.random()*5 + 1;
                 TComment comment = new TComment("/image", "Usuario" + numComentario,
                         "Comentario de Usuario "+ numComentario++ + " " + getString(R.string.lorem_ipsu),
                         "23/02/2021", rate);

@@ -79,7 +79,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         holder.tvComment.setText(comment.getContent());
         holder.tvUsername.setText(comment.getUsername());
         holder.tvDate.setText(comment.getDate());
-        holder.ratingBar.setRating(comment.getRating());
+        holder.ratingBar.setRating(4); // TODO comment.getRating() Es en double y es necesario float
 
         TextViewExpandableUtil.makeTextViewResizable(holder.tvComment, 3, "...", true);
 
