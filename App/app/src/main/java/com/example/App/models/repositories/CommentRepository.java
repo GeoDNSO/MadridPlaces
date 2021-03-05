@@ -32,9 +32,9 @@ public class CommentRepository extends Repository {
         return mCommentList;
     }
 
-    public void listComments(String placeName) {
+    public void listComments(String placeName, int page, int quant) {
 
-        String postBodyString = placeNameToString(placeName);
+        String postBodyString = dataToString(placeName, page, quant);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/showComments");
@@ -71,11 +71,13 @@ public class CommentRepository extends Repository {
         });
     }
 
-    private String placeNameToString(String placeName) {
+    private String dataToString(String placeName, int page, int quant) {
         JSONObject jsonName = new JSONObject();
         String infoString;
         try {
             jsonName.put("location", placeName);
+            jsonName.put("page", page);
+            jsonName.put("quant", quant);
         } catch (JSONException e) {
             e.printStackTrace();
             infoString = "error";

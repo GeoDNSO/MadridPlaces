@@ -129,8 +129,6 @@ def listLocations():
     json_data = request.get_json()
     page = json_data["page"] #Mostrar de X en X     
     quant = json_data["quant"]
-    print(page)
-    print(quant)
     places = modules.location.query.paginate(per_page=quant, page=page)
     try:
 	    if(places is not None):

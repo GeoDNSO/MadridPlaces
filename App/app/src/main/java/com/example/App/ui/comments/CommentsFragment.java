@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommentsFragment extends Fragment {
-
+    private String placeName;
     private View root;
     private CommentsViewModel mViewModel;
 
@@ -56,8 +56,12 @@ public class CommentsFragment extends Fragment {
 
     private int page = 1, quant = 5, limit = 3; //Aun no implementado paginado en comentarios
 
-    public static CommentsFragment newInstance() {
-        return new CommentsFragment();
+    public CommentsFragment(String placeName) {
+        this.placeName = placeName;
+    }
+
+    public static CommentsFragment newInstance(String placeName) {
+        return new CommentsFragment(placeName);
     }
 
     @Override
@@ -76,8 +80,9 @@ public class CommentsFragment extends Fragment {
             @Override
             public void onChanged(List<TComment> tComments) {
                 commentsList = tComments;
-                commentListAdapter = new CommentListAdapter(getActivity(), commentsList);
-
+                if(tComments != null) {
+                    commentListAdapter = new CommentListAdapter(getActivity(), commentsList);
+                }
                 recyclerView.setAdapter(commentListAdapter);
             }
         });
@@ -153,11 +158,11 @@ public class CommentsFragment extends Fragment {
     }
 
     public void onScrollViewAtBottom(){
-       Log.i("HIJO", "foooooooo");
+
         //Cuando alacance al ultimo item de la lista
         //Incrementea el numero de la pagina
 
-        if(page >= 5){
+        if(page >= 5){ //Lo más probable es que esto se cambie
             progressBar.setVisibility(View.GONE);
             return ;
         }
@@ -169,7 +174,8 @@ public class CommentsFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         //Pedimos más datos
-        getData();
+        //getData();
+        mViewModel.showComments(placeName, page, quant);
     }
 
     private void initUI() {
@@ -193,7 +199,7 @@ public class CommentsFragment extends Fragment {
         recyclerView.setAdapter(commentListAdapter);
         
         //getData();
-        mViewModel.showComments("Zubi"); //TODO CAMBIAR
+        mViewModel.showComments(placeName, page, quant);
         //Empezar el efecto de shimmer
         shimmerFrameLayout.startShimmer();
     }

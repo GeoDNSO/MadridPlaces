@@ -67,13 +67,15 @@ def deleteComment():
 @commentsClass.route('/location/showComments', methods=['POST']) #USAR DANI
 def showComments():
     json_data = request.get_json()
-    location = json_data["location"]    
+    location = json_data["location"]  
+    page = json_data["page"] #Mostrar de X en X     
+    quant = json_data["quant"]  
     try:
-        cmQuery = modules.comments.query.filter_by(location = location).all()
+        cmQuery = modules.comments.query.filter_by(location = location).paginate(per_page=quant, page=page)
         if cmQuery is None:
             return jsonify(exito = "false")
         lista = []
-        for comment in cmQuery:
+        for comment in cmQuery.items:
             rate = RateFunct.showRate(comment.user, location)
             #picture = showPicture(comment.user)
             cmDict = {"user" : comment.user,

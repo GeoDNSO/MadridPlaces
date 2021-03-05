@@ -27,9 +27,9 @@ public class CommentsViewModel extends ViewModelParent {
     }
 
     // TODO: Por ahora, no esta paginado los comentarios
-    public void showComments(String placeName){
+    public void showComments(String placeName, int page, int quant){
         mProgressBar.postValue(true);
-        commentRepository.listComments(placeName);
+        commentRepository.listComments(placeName, page, quant);
     }
 
     private LiveData<List<TComment>> setAndGetCommentsList(List<TComment> comments) {
