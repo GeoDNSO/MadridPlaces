@@ -68,11 +68,11 @@ public class HomeFragment extends Fragment{
 
         //Para no estar todo el rato recargando lugares
         // ,es decir, generando nuevos lugares cada dez que volvemos al fragmento home
-        if(placeListFragment == null){
+        /*if(placeListFragment == null){
             placeListFragment = new PlacesListFragment();
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.replace(R.id.place_list_container, placeListFragment).commit();
-        }
+        }*/
       
         return root;
     }

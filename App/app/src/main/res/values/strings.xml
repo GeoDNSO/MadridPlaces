@@ -82,5 +82,9 @@
     <string name="place_details_rate_title">Valora este lugar</string>
     <string name="write_comment">Escribe una valoración del lugar</string>
     <string name="number">5</string>
+    <string name="typeOfPlace">Tipo de lugar</string>
+    <string name="typeOfPlaces">Tipo de lugares</string>
+    <string name="search">Buscar</string>
+
 
 </resources>

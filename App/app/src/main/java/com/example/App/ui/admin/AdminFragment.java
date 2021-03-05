@@ -121,7 +121,6 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.search_icon_menu, menu);
-        //inflater.inflate(R.menu.right_navigation_sort_menu, menu);
 
         MenuItem azIcon = menu.findItem(R.id.sortListUsers);
         azIcon.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
