@@ -118,12 +118,12 @@ public class CommentRepository extends Repository {
         });
     }
 
-    public void newComment (String userName, String content, String placeName) { //Función que realiza la creación de un comentario sin valoración
+    public void newComment (String userName, String content, String placeName, float rate) { //Función que realiza la creación de un comentario sin valoración
 
-        String postBodyString = commentToString(userName, content, placeName);
+        String postBodyString = commentToString(userName, content, placeName, rate);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/location/newComment");
+                AppConstants.METHOD_POST, "/location/newComment&Rate");
         Call call = simpleRequest.createCall(request);
 
         call.enqueue(new Callback() {
@@ -148,10 +148,12 @@ public class CommentRepository extends Repository {
                 List<TComment> listaAux = mCommentList.getValue();
                 if (success){
                     if (listaAux.isEmpty()){
-                        mCommentList.postValue(getListFromResponse(res));
+                        List<TComment> nuevaLista = new ArrayList<>();
+                        nuevaLista.add(jsonStringToComment(res));
+                        mCommentList.postValue(nuevaLista);
                     }
                     else{
-                        listaAux.add(jsonStringToCommentNoRate(res));
+                        listaAux.add(jsonStringToComment(res));
                         mCommentList.postValue(listaAux);
                     }
                     mSuccess.postValue(AppConstants.NEW_COMMENT);//Importante que este despues del postValue de mUser
@@ -164,13 +166,15 @@ public class CommentRepository extends Repository {
         });
     }
 
-    private String commentToString(String userName, String content, String placeName){
+    private String commentToString(String userName, String content, String placeName, float rate){
+        double rateDouble = rate;
         JSONObject jsonName = new JSONObject();
         String infoString;
         try {
             jsonName.put("location", placeName);
             jsonName.put("user", userName);
             jsonName.put("comment", content);
+            jsonName.put("rate", rateDouble);
         } catch (JSONException e) {
             e.printStackTrace();
             infoString = "error";

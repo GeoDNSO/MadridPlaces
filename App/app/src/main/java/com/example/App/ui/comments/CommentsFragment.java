@@ -130,15 +130,16 @@ public class CommentsFragment extends Fragment {
                 //TODO Tres casos: comentario sin valoración, con valoración o con las dos cosas
                 if(app.isLogged()) { //Tienes que estar logueado
 
-                    if (!etComment.getEditText().getText().toString().equals("") && ratingBar.getRating() == 0) {
-                        mViewModel.newComment(app.getUsername(), etComment.getEditText().getText().toString(), placeName);
+                    if (!etComment.getEditText().getText().toString().equals("") && ratingBar.getRating() != 0) {
+                        mViewModel.newComment(app.getUsername(), etComment.getEditText().getText().toString(), placeName, ratingBar.getRating());
                         //Toast.makeText(getActivity(), "Comentario Creado", Toast.LENGTH_SHORT).show();
 
                     } else if (etComment.getEditText().getText().toString().equals("") && ratingBar.getRating() != 0) {
-                        //Rate
+                        //Función únicamente para meter un rate
                         Toast.makeText(getActivity(), "Rating de " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
 
                     } else {
+                        //No se puede hacer nada
                         Toast.makeText(getActivity(), "Rating de " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -184,19 +185,8 @@ public class CommentsFragment extends Fragment {
         //Cuando alacance al ultimo item de la lista
         //Incrementea el numero de la pagina
 
-        if(page >= 5){ //Lo más probable es que esto se cambie
-            progressBar.setVisibility(View.GONE);
-            return ;
-        }
-
         page++;
 
-
-        //Mostrar progress bar
-        progressBar.setVisibility(View.VISIBLE);
-
-        //Pedimos más datos
-        //getData();
         mViewModel.appendComments(placeName, page, quant);
     }
 
@@ -245,7 +235,7 @@ public class CommentsFragment extends Fragment {
             shimmerFrameLayout.setVisibility(View.GONE);
 
             for(int i = 0; i < limit; ++i){
-                Double rate = (Double) Math.random()*5 + 1;
+                double rate = (double) Math.random()*5 + 1;
                 TComment comment = new TComment("/image", "Usuario" + numComentario,
                         "Comentario de Usuario "+ numComentario++ + " " + getString(R.string.lorem_ipsu),
                         "23/02/2021", rate);

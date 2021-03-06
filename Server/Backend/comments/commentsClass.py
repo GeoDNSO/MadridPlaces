@@ -39,7 +39,7 @@ def newCommentYRate():
     location = json_data["location"]
     comment = json_data["comment"]
     rate = json_data["rate"]
-
+    print("rate = " + str(rate))
     createComment = modules.comments(user = user, location = location, comment = comment)
     createRate = modules.ratings(user = user, location = location, rate = rate)
     try:
@@ -51,7 +51,7 @@ def newCommentYRate():
         if(rtQuery is None):
             modules.sqlAlchemy.session.add(createRate) #Si no, se crea
         else:
-            rtQuery.rate = createRate.rate #Si existe, devuelve su valor
+            rtQuery.rate = rate #Si existe, devuelve su valor
 
         modules.sqlAlchemy.session.commit()
 
@@ -62,7 +62,7 @@ def newCommentYRate():
                    location=createComment.location,
                    comment=createComment.comment,
                    created=createComment.created.strftime('%Y-%m-%d %H:%M:%S'),
-                   rate=createRate.rate)
+                   rate=rate)
     except Exception as e:
         print("Error insertando la nueva fila :", repr(e))
         return jsonify(exito = "false")   
@@ -106,6 +106,12 @@ def showComments():
     page = json_data["page"] #Mostrar de X en X     
     quant = json_data["quant"]  
     try:
+        tam = modules.comments.query.filter_by(location=location).count()
+        comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
+        #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
+        if(comp >= quant):
+            return jsonify(exito = "true", listComments = [])
+
         cmQuery = modules.comments.query.filter_by(location = location).paginate(per_page=quant, page=page)
         if cmQuery is None:
             return jsonify(exito = "false")
@@ -119,6 +125,7 @@ def showComments():
             "rate" : rate,
             "created" : comment.created
             }
+            print(rate)
             lista.append(cmDict)
         return jsonify(exito = "true", listComments = lista)
     except Exception as e:
