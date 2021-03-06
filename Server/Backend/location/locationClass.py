@@ -129,11 +129,15 @@ def listLocations():
     json_data = request.get_json()
     page = json_data["page"] #Mostrar de X en X     
     quant = json_data["quant"]
-    print(page)
-    print(quant)
-    places = modules.location.query.paginate(per_page=quant, page=page)
     try:
-	    if(places is not None):
+        tam = modules.location.query.count()
+        comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
+        #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
+        if(comp >= quant):
+            return jsonify(exito = "true", list = [])
+
+        places = modules.location.query.paginate(per_page=quant, page=page)
+        if(places is not None):
 	        all_items = places.items
 	        lista = []
 	        for place in all_items:
@@ -155,13 +159,12 @@ def listLocations():
 	            lista.append(obj)
 
 	        print("success")
-	        print(lista)
 	        return jsonify(
 	                exito = "true",
 	                list = lista)
 
-	    print("failure")
-	    return jsonify(exito = "false")   
+        print("failure")
+        return jsonify(exito = "false")   
     except Exception as e:
         print("Error: ", repr(e))
         return jsonify(exito = "false") 

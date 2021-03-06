@@ -11,9 +11,9 @@ public class TComment implements JSONSerializable, Parcelable {
     private String username;
     private String content;
     private String date;
-    private float rating;
+    private double rating;
 
-    public TComment(String imageProfileUser, String username, String content, String date, float rating) {
+    public TComment(String imageProfileUser, String username, String content, String date, double rating) {
         this.imageProfileUser = imageProfileUser;
         this.username = username;
         this.content = content;
@@ -65,11 +65,11 @@ public class TComment implements JSONSerializable, Parcelable {
         this.date = date;
     }
 
-    public float getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(float rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -84,7 +84,7 @@ public class TComment implements JSONSerializable, Parcelable {
         dest.writeString(this.username);
         dest.writeString(this.content);
         dest.writeString(this.date);
-        dest.writeFloat(this.rating);
+        dest.writeDouble(this.rating);
     }
 
     public TComment(Parcel in) {
@@ -92,7 +92,7 @@ public class TComment implements JSONSerializable, Parcelable {
         this.username = in.readString();
         this.content = in.readString();
         this.date = in.readString();
-        this.rating = in.readFloat();
+        this.rating = in.readDouble();
     }
 
     @Override

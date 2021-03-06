@@ -75,7 +75,7 @@ public class PlaceDetailFragment extends Fragment {
         actionBar.setTitle(place.getName());
 
         //Prueba de carga de comentarios
-        childFragment = new CommentsFragment();
+        childFragment = new CommentsFragment(place.getName());
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.comments_placeholder, childFragment).commit();
 
