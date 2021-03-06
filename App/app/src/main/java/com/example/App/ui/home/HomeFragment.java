@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -39,9 +40,10 @@ public class HomeFragment extends Fragment{
     private View root;
     private HomeViewModel mViewModel;
 
-    private Button btn_register;
-    private Button btn_login;
+    //private Button btn_register;
+    //private Button btn_login;
     private Button btn_logout;
+
 
     private App app; //global variable
 
@@ -81,14 +83,14 @@ public class HomeFragment extends Fragment{
     private void viewAccToUser() {
 
         if (app.isLogged()) {
-            btn_register.setVisibility(View.GONE);
-            btn_login.setVisibility(View.GONE);
+            //btn_register.setVisibility(View.GONE);
+            //btn_login.setVisibility(View.GONE);
             btn_logout.setVisibility(View.VISIBLE);
             app.menuOptions(app.isLogged(), app.isAdmin());
         }
         else {
-            btn_register.setVisibility(View.VISIBLE);
-            btn_login.setVisibility(View.VISIBLE);
+            //btn_register.setVisibility(View.VISIBLE);
+            //btn_login.setVisibility(View.VISIBLE);
             btn_logout.setVisibility(View.GONE);
         }
     }
@@ -103,7 +105,7 @@ public class HomeFragment extends Fragment{
     }
 
     private void initializeListeners() {
-        btn_register.setOnClickListener(new View.OnClickListener() {
+        /*btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_registerFragment);
@@ -115,7 +117,7 @@ public class HomeFragment extends Fragment{
             public void onClick(View v) {
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_loginFragment);
             }
-        });
+        });*/
 
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,11 +126,12 @@ public class HomeFragment extends Fragment{
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_loginFragment);
             }
         });
+
     }
 
     private void initializeUI() {
-        btn_register = root.findViewById(R.id.home_register_button);
-        btn_login = root.findViewById(R.id.home_login_button);
+        //btn_register = root.findViewById(R.id.home_register_button);
+        //btn_login = root.findViewById(R.id.home_login_button);
         btn_logout = root.findViewById(R.id.home_logout_button);
     }
 }

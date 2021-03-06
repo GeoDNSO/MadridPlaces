@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -63,13 +64,6 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
         mViewModel.init();
 
-        ((MainActivity)getActivity()).setDrawerUnlock();
-
-        recyclerView = root.findViewById(R.id.recycle_view);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),1));
-
-        this.onListListener = this; //TODO GUARRADA
-
         mViewModel.getListUsers().observe(getViewLifecycleOwner(), new Observer<List<TUser>>() {
             @Override
             public void onChanged(List<TUser> tUsers) {
@@ -90,7 +84,22 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
             }
         });
 
+        adminManagement();
+
         return root;
+    }
+
+    private void adminManagement() {
+        ((MainActivity)getActivity()).setDrawerUnlock();
+        recyclerView = root.findViewById(R.id.recycle_view);
+        this.onListListener = this;
+        if (listUser == null){
+            listUser = new ArrayList<>();
+        }
+        adapter = new UserListAdapter(getActivity(), listUser, onListListener);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
     }
 
     @Override

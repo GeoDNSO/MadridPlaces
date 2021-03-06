@@ -54,6 +54,11 @@ public class App {
         sessionManager.logout();
         menu.findItem(R.id.profileFragment).setVisible(false);
         menu.findItem(R.id.adminFragment).setVisible(false);
+
+        menu.findItem(R.id.loginFragment).setVisible(true);
+        menu.findItem(R.id.registerFragment).setVisible(true);
+        menu.findItem(R.id.logOut).setVisible(false);
+
     }
 
     public void setUserSession(TUser user) {
@@ -63,6 +68,11 @@ public class App {
         //Opciones del menu
 
         menu.findItem(R.id.profileFragment).setVisible(true);
+
+        menu.findItem(R.id.loginFragment).setVisible(false);
+        menu.findItem(R.id.registerFragment).setVisible(false);
+        menu.findItem(R.id.logOut).setVisible(true);
+
         if (user.getRol().equals(AppConstants.USER_ROL_ADMIN)) {
             menu.findItem(R.id.adminFragment).setVisible(true);
         }
@@ -71,6 +81,10 @@ public class App {
     public void menuOptions(boolean logged, boolean admin) {
         if (logged) {
             menu.findItem(R.id.profileFragment).setVisible(true);
+            menu.findItem(R.id.loginFragment).setVisible(false);
+            menu.findItem(R.id.registerFragment).setVisible(false);
+            menu.findItem(R.id.logOut).setVisible(true);
+
         }
         if (admin) {
             menu.findItem(R.id.adminFragment).setVisible(true);

@@ -159,11 +159,11 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initializeUI() {
+        app = App.getInstance(getActivity());
         if(!app.isLogged()){
             return ;
         }
 
-        //app = App.getInstance(getActivity());
         fillProfileFields();
     }
     //Rellena los datos del usuario segun la informacion de la sesion

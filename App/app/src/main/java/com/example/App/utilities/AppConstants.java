@@ -39,4 +39,8 @@ public class AppConstants {
     public static final Integer LIST_PLACES = 4;
 
     public static final String BUNDLE_PROFILE_LIST_DETAILS = "DETAILS_LIST_PROFILE_BUNDLE";
+
+    public static final String BROWSER_LIST_TYPE_PLACES = "TYPE_PLACES_BROWSER_LIST";
+    public static final String BROWSER_SEARCH_PLACE_NAME = "SEARCH_PLACE_NAME_BROWSER";
+
 }

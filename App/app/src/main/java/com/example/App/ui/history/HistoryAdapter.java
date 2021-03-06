@@ -1,15 +1,13 @@
-package com.example.App.ui.places_list;
+package com.example.App.ui.history;
 
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
-import com.example.App.models.transfer.TUser;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
 
@@ -31,36 +28,33 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.ViewHolder> implements Filterable {
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
 
     private Activity activity;
-    private List<TPlace> placeList;
-    private List<TPlace> placeListComplete;
+    private List<TPlace> historyPlaceList;
+    private List<TPlace> historyPlaceListComplete;
 
-    private OnPlaceListener onPlaceListener;
+    private OnHistoryListListener onHistoryListener;
 
-    public PlaceListAdapter(Activity activity, List<TPlace> placeList, OnPlaceListener onPlaceListener){
+    public HistoryAdapter(Activity activity, List<TPlace> historyPlaceList, HistoryAdapter.OnHistoryListListener onHistoryListener){
         this.activity = activity;
-        this.placeList = placeList;
-        this.onPlaceListener = onPlaceListener;
+        this.historyPlaceList = historyPlaceList;
+        this.onHistoryListener = onHistoryListener;
         //this.placeList = new ArrayList<>();
-        placeListComplete = new ArrayList<>(placeList);
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
+    public HistoryAdapter.HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.place_list_item_fragment, parent, false);
+                .inflate(R.layout.history_place_item, parent, false);
 
-        return new ViewHolder(view, onPlaceListener);
+        return new HistoryAdapter.HistoryViewHolder(view, onHistoryListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-        TPlace place = placeList.get(position);
+    public void onBindViewHolder(@NonNull HistoryAdapter.HistoryViewHolder holder, int position) {
+        TPlace place = historyPlaceList.get(position);
 
         //Efecto shimmer
         Shimmer shimmer = new Shimmer.ColorHighlightBuilder()
@@ -106,64 +100,28 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
     @Override
     public int getItemCount() {
-        return placeList.size();
+        return historyPlaceList.size();
     }
 
-    @Override
-    public Filter getFilter() {
-        return listPlacesFilter;
-    }
-
-    private Filter listPlacesFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<TPlace> filterList = new ArrayList<>();
-
-            if (constraint == null || constraint.length() == 0) {
-                filterList.addAll(placeListComplete); //Como no se filtra, se llena la lista de forma en la que al principio aparece
-            } else {
-                String inputFilter = constraint.toString().toLowerCase().trim();
-
-                for (TPlace place : placeListComplete) {
-                    if (place.getName().toLowerCase().contains(inputFilter)) {
-                        filterList.add(place);
-                    }
-                }
-            }
-            FilterResults encounteredResults = new FilterResults();
-            encounteredResults.values = filterList;
-
-            return encounteredResults;
-        }
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            placeList.clear();
-            placeList.addAll((List) results.values);
-            notifyDataSetChanged();
-        }
-    };
-
-    //Clase correspondiente a la representacion de un lugar en la lista --> place_list_item
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
+    public class HistoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView placeImage;
         TextView tvPlaceName;
         ImageView favImage;
         TextView tvRatingValue;
+        TextView tvVisited;
         ImageView starImage;
+        OnHistoryListListener onHistoryListener;
 
-        private OnPlaceListener onPlaceListener;
-
-        public ViewHolder(@NonNull View itemView, OnPlaceListener onPlaceListener){
+        public HistoryViewHolder(@NonNull View itemView, OnHistoryListListener onHistoryListener) {
             super(itemView);
+            placeImage = itemView.findViewById(R.id.historyPlacePicture);
+            tvPlaceName = itemView.findViewById(R.id.tvHistoryPlaceName);
+            favImage = itemView.findViewById(R.id.historyFavImage);
+            tvRatingValue = itemView.findViewById(R.id.tvHistoryPlaceRating);
+            starImage = itemView.findViewById(R.id.historyPlaceStarImage);
+            tvVisited = itemView.findViewById(R.id.historyTextViewVisited);
 
-            placeImage = itemView.findViewById(R.id.placePicture);
-            tvPlaceName = itemView.findViewById(R.id.tvPlaceName);
-            favImage = itemView.findViewById(R.id.favImage);
-            tvRatingValue = itemView.findViewById(R.id.tvPlaceRating);
-            starImage = itemView.findViewById(R.id.placeStarImage);
-
-            this.onPlaceListener = onPlaceListener;
+            this.onHistoryListener = onHistoryListener;
             itemView.setOnClickListener(this);
 
             favImage.setOnClickListener(new View.OnClickListener() {
@@ -171,7 +129,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
                 public void onClick(View v) {
                     Toast.makeText(itemView.getContext(), "fav listener", Toast.LENGTH_SHORT).show();
 
-                    TPlace place = placeList.get(getAdapterPosition());
+                    TPlace place = historyPlaceList.get(getAdapterPosition());
                     place.setUserFav(!place.isUserFav());
 
                     int favTint = ContextCompat.getColor(activity, R.color.grey);
@@ -182,19 +140,15 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
                     ImageViewCompat.setImageTintList(favImage, ColorStateList.valueOf(favTint));
                 }
             });
-
         }
-
-
 
         @Override
         public void onClick(View v) {
-            onPlaceListener.onPlaceClick(getAdapterPosition());
+            onHistoryListener.OnHistoryListClick(getAdapterPosition());
         }
     }
 
-    public interface OnPlaceListener{
-        void onPlaceClick(int position);
+    public interface OnHistoryListListener {
+        void OnHistoryListClick(int position);
     }
-
 }
