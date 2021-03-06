@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TComment;
 import com.example.App.utilities.TextViewExpandableUtil;
+import com.example.App.utilities.ViewListenerUtilities;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
 
@@ -81,7 +82,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         holder.tvDate.setText(comment.getDate());
         holder.ratingBar.setRating(comment.getRating());
 
-        TextViewExpandableUtil.makeTextViewResizable(holder.tvComment, 3, "...", true);
+        ViewListenerUtilities.makeTextViewExpandable(holder.tvComment, true);
 
     }
 
@@ -106,13 +107,11 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             tvComment = itemView.findViewById(R.id.comment_textview);
             tvDate = itemView.findViewById(R.id.comment_time_posted);
             ratingBar = itemView.findViewById(R.id.comment_rating_bar);
-
-            //TextViewExpandableUtil.makeTextViewResizable(tvComment, 3, "...", true);
         }
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(itemView.getContext(), "comment listener", Toast.LENGTH_SHORT).show();
+
         }
     }
 }

@@ -60,6 +60,8 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
         TPlace place = placeList.get(position);
 
+
+
         //Efecto shimmer
         Shimmer shimmer = new Shimmer.ColorHighlightBuilder()
                 .setBaseColor(Color.parseColor("#F3F3F3"))
@@ -74,6 +76,31 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
         shimmerDrawable.setShimmer(shimmer);
 
+        //Nombre del Lugar
+        int maxLength = 17;
+        int tvLength = place.getName().length();
+        String finalTitle = place.getName();
+
+        if(tvLength >= maxLength){
+            String dots = "...";
+            String s = place.getName();
+            finalTitle = s.substring(0, maxLength-dots.length()) + dots;
+        }
+        holder.tvPlaceName.setText(finalTitle);
+
+
+
+        //Rating del lugar
+        DecimalFormat df = new DecimalFormat("#.#");
+        df.setRoundingMode(RoundingMode.CEILING);
+        holder.tvRatingValue.setText(df.format(place.getRating()));
+
+        int favTint = ContextCompat.getColor(activity, R.color.grey);
+        if(place.isUserFav()){
+            favTint = ContextCompat.getColor(activity, R.color.colorFavRed);
+        }
+        ImageViewCompat.setImageTintList(holder.favImage, ColorStateList.valueOf(favTint));
+
 
         try{
             Glide.with(activity).load(place.getImagesList().get(0))
@@ -85,19 +112,6 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         }
 
 
-
-        //Nombre del Lugar
-        holder.tvPlaceName.setText(place.getName());
-        //Rating del lugar
-        DecimalFormat df = new DecimalFormat("#.#");
-        df.setRoundingMode(RoundingMode.CEILING);
-        holder.tvRatingValue.setText(df.format(place.getRating()));
-
-        int favTint = ContextCompat.getColor(activity, R.color.grey);
-        if(place.isUserFav()){
-            favTint = ContextCompat.getColor(activity, R.color.colorFavRed);
-        }
-        ImageViewCompat.setImageTintList(holder.favImage, ColorStateList.valueOf(favTint));
     }
 
     @Override

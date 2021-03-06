@@ -15,23 +15,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.comments.CommentsFragment;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.TextViewExpandableUtil;
-import com.squareup.picasso.Picasso;
+import com.example.App.utilities.ViewListenerUtilities;
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
+import com.smarteist.autoimageslider.SliderAnimations;
+import com.smarteist.autoimageslider.SliderView;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -45,7 +43,11 @@ public class PlaceDetailFragment extends Fragment {
     private TPlace place;
 
     private NestedScrollView nestedScrollView;
-    private ImageView placeImage;
+
+    private SliderView sliderView;
+    private SliderAdp sliderAdp;
+
+    private boolean isDescCollapsed;
     private TextView tvPlaceName;
     private ImageView ivMapIcon;
     private ImageView favIcon;
@@ -82,6 +84,14 @@ public class PlaceDetailFragment extends Fragment {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.comments_placeholder, childFragment).commit();
 
+
+        //Gestion del Slider View
+        sliderAdp = new SliderAdp(place, getActivity());
+        sliderView.setSliderAdapter(sliderAdp);
+        sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
+        sliderView.setSliderTransformAnimation(SliderAnimations.DEPTHTRANSFORMATION);
+        sliderView.startAutoCycle();
+
         return root;
     }
 
@@ -115,8 +125,7 @@ public class PlaceDetailFragment extends Fragment {
 
     private void fillFields() {
 
-        Log.i("URL_PLACE", place.getImagesList().get(0));
-
+        /*
         try{
             Glide.with(this.getActivity()).load(place.getImagesList().get(0))
                     .into(placeImage);
@@ -124,6 +133,7 @@ public class PlaceDetailFragment extends Fragment {
             Log.e("ERROR_CARGA_IMAGEN", "PlaceDetailFragment: Fallo de carga de imagen debido a cierre de socket" +
                     ", fallo de conexión, timeout, etc... )");
         }
+        */
 
         tvPlaceName.setText(place.getName());
         tvPlaceDescription.setText(place.getName() + "desc :" + place.getDescription());
@@ -139,23 +149,24 @@ public class PlaceDetailFragment extends Fragment {
 
         ImageViewCompat.setImageTintList(favIcon, ColorStateList.valueOf(favTint));
 
-        TextViewExpandableUtil.makeTextViewResizable(tvPlaceDescription,
-        TextViewExpandableUtil.linesLimitAtPlaceDesc, "Ver más", true);
+        ViewListenerUtilities.makeTextViewExpandable(tvPlaceDescription, true);
+
     }
+
+
 
     private void initUI() {
         nestedScrollView = root.findViewById(R.id.placeDetail_ScrollView);
-        placeImage = root.findViewById(R.id.placeDetailsPicture);
+        //placeImage = root.findViewById(R.id.placeDetailsPicture);
         tvPlaceName = root.findViewById(R.id.tvPlaceDetailsName);
         ivMapIcon = root.findViewById(R.id.placeDetailsMapIcon);
         favIcon = root.findViewById(R.id.favDetailsImage);
         tvPlaceDescription = root.findViewById(R.id.placeDetailsDescription);
         tvPlaceRating = root.findViewById(R.id.tvPlaceDetailsRating);
 
-//TODO: peligro
-        TextViewExpandableUtil.makeTextViewResizable(tvPlaceDescription,
-                TextViewExpandableUtil.linesLimitAtPlaceDesc, "...", true);
+        sliderView = root.findViewById(R.id.placeDetail_slide_view);
 
+        isDescCollapsed = true;
     }
 
     @Override

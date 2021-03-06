@@ -34,7 +34,7 @@
             android:textSize="24sp"
             tools:layout_editor_absoluteX="3dp"
             tools:layout_editor_absoluteY="4dp"
-            android:maxLength="8"
+            android:maxLength="17"
             android:singleLine="true"
             android:ellipsize="end"/>
 
@@ -42,14 +42,14 @@
             android:id="@+id/favImage"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
-            android:layout_marginStart="20dp"
-            android:layout_toEndOf="@id/tvPlaceName"
+            android:layout_marginEnd="6dp"
+            android:layout_toStartOf="@+id/tvPlaceRating"
+            android:background="?android:selectableItemBackgroundBorderless"
             android:contentDescription="@string/love_icon_default_desc"
             android:src="@drawable/love_icon_24dp"
-            tools:layout_editor_absoluteX="232dp"
-            tools:layout_editor_absoluteY="4dp"
             app:tint="@color/grey"
-            android:background="?android:selectableItemBackgroundBorderless" />
+            tools:layout_editor_absoluteX="232dp"
+            tools:layout_editor_absoluteY="4dp" />
 
         <TextView
             android:id="@+id/tvPlaceRating"

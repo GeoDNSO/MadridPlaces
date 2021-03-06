@@ -5,6 +5,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
@@ -25,12 +26,17 @@ import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
+import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.utilities.AppConstants;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnPlaceListener {
 
@@ -119,20 +125,36 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
     }
 
     private void initListener() {
+        Activity activity = getActivity();
+        String s = getString(R.string.no_internet);
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(!App.isServerReachable()){
-                    Toast.makeText(getActivity(), getString(R.string.no_internet), Toast.LENGTH_LONG).show();
-                    swipeRefreshLayout.setRefreshing(false);
-                    return ;
-                }
 
-                //Reseteamos la pagina para ver cambios y borramos la lista...
-                page = 1;
-                placeList.clear();
+                Runnable task = ()->{
+                    boolean hostReachable =  SimpleRequest.isHostReachable();
 
-                mViewModel.listPlaces(page, quantum);
+                    if(!hostReachable){
+                        swipeRefreshLayout.setRefreshing(false);
+                        Log.i("IN_SER", "Server no alcanzable");
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(activity, s, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        return ; //IMP
+                    }
+                    //Reseteamos la pagina para ver cambios y borramos la lista...
+                    page = 1;
+                    placeList.clear();
+                    mViewModel.listPlaces(page, quantum);
+                };
+
+                ExecutorService executorService = Executors.newFixedThreadPool(1);
+                executorService.submit(task);
+
             }
         });
 
