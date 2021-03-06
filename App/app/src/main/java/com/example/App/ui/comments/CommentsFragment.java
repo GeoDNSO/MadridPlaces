@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
+import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.transfer.TComment;
 import com.example.App.models.transfer.TPlace;
@@ -39,6 +40,8 @@ public class CommentsFragment extends Fragment {
     private String placeName;
     private View root;
     private CommentsViewModel mViewModel;
+
+    private App app; //global variable
 
     private NestedScrollView nestedScrollView;
     private RecyclerView recyclerView;
@@ -68,12 +71,13 @@ public class CommentsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.comments_fragment, container, false);
+
+        app = App.getInstance(getActivity()); //para coger el nombre del usuario
+
         mViewModel = new ViewModelProvider(this).get(CommentsViewModel.class);
         mViewModel.init();
 
         initUI();
-
-        listeners();
 
 
         mViewModel.getmCommentsList().observe(getViewLifecycleOwner(), new Observer<List<TComment>>() {
@@ -112,7 +116,7 @@ public class CommentsFragment extends Fragment {
             }
         });
 
-
+        listeners();
         commentListManagement();
 
         return root;
@@ -123,7 +127,25 @@ public class CommentsFragment extends Fragment {
         sendRateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Rating de " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
+                //TODO Tres casos: comentario sin valoración, con valoración o con las dos cosas
+                if(app.isLogged()) { //Tienes que estar logueado
+
+                    if (!etComment.getEditText().getText().toString().equals("") && ratingBar.getRating() == 0) {
+                        mViewModel.newComment(app.getUsername(), etComment.getEditText().getText().toString(), placeName);
+                        //Toast.makeText(getActivity(), "Comentario Creado", Toast.LENGTH_SHORT).show();
+
+                    } else if (etComment.getEditText().getText().toString().equals("") && ratingBar.getRating() != 0) {
+                        //Rate
+                        Toast.makeText(getActivity(), "Rating de " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Toast.makeText(getActivity(), "Rating de " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                else{
+                    Toast.makeText(getActivity(), "Necesitas tener iniciada la sesión", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -175,7 +197,7 @@ public class CommentsFragment extends Fragment {
 
         //Pedimos más datos
         //getData();
-        mViewModel.showComments(placeName, page, quant);
+        mViewModel.appendComments(placeName, page, quant);
     }
 
     private void initUI() {

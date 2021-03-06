@@ -32,6 +32,41 @@ def newComment():
         print("Error insertando la nueva fila :", repr(e))
         return jsonify(exito = "false")    
 
+@commentsClass.route('/location/newComment&Rate', methods=['POST'])
+def newCommentYRate():
+    json_data = request.get_json()
+    user = json_data["user"]
+    location = json_data["location"]
+    comment = json_data["comment"]
+    rate = json_data["rate"]
+
+    createComment = modules.comments(user = user, location = location, comment = comment)
+    createRate = modules.ratings(user = user, location = location, rate = rate)
+    try:
+
+        modules.sqlAlchemy.session.add(createComment)
+        modules.sqlAlchemy.session.commit()
+
+        rtQuery = modules.ratings.query.filter_by(user = user, location = location).first() #Comprueba si ya existe una valoración
+        if(rtQuery is None):
+            modules.sqlAlchemy.session.add(createRate) #Si no, se crea
+        else:
+            rtQuery.rate = createRate.rate #Si existe, devuelve su valor
+
+        modules.sqlAlchemy.session.commit()
+
+        return jsonify(
+                   exito = "true",
+                   id_comment = createComment.id_comment,
+                   user=createComment.user,
+                   location=createComment.location,
+                   comment=createComment.comment,
+                   created=createComment.created.strftime('%Y-%m-%d %H:%M:%S'),
+                   rate=createRate.rate)
+    except Exception as e:
+        print("Error insertando la nueva fila :", repr(e))
+        return jsonify(exito = "false")   
+
 @commentsClass.route('/location/modifyComment', methods=['POST'])
 def modifyComment():
     json_data = request.get_json()
