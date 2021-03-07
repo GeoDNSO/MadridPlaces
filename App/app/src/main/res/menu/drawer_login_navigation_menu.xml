@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <!--El id de los items debe coincidir con el id de los fragment del navigation -->
-
-    <!--<item
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
         android:id="@+id/profileFragment"
         android:icon="@drawable/ic_baseline_info_24"
         android:title="@string/menu_profile_text"
-        android:visible="false" />
+        />
 
     <item
         android:id="@+id/settingsFragment"
@@ -30,24 +26,11 @@
     <item android:title="Opciones de cuenta">
         <menu>
             <item
-                android:id="@+id/loginFragment"
-                android:icon="@drawable/ic_baseline_admin_user_24"
-                android:title="@string/login_button_text"
-                />
-            <item
-                android:id="@+id/registerFragment"
-                android:icon="@drawable/ic_baseline_admin_user_24"
-                android:title="@string/register_button_text"
-                />
-            <item
                 android:id="@+id/logOut"
                 android:icon="@drawable/ic_baseline_admin_user_24"
                 android:title="@string/app_logout"
-                android:visible="false"
                 />
 
         </menu>
-    </item>-->
-
-    
+    </item>
 </menu>
