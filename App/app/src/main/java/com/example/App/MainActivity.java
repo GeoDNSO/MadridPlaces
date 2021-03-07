@@ -3,6 +3,7 @@ package com.example.App;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -13,9 +14,12 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.App.utilities.TextViewExpandableUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     private DrawerLayout drawerLayout;
     private NavigationView drawerNavigationView;
     private NavigationView rightSideNavView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         //Drawer Navigation
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerNavigationView = findViewById(R.id.drawer_navigation_view);
+
         //drawerNavController = Navigation.findNavController(this, R.id.bottom_host_fragment);
 
         //SideRight Navigation
@@ -88,10 +94,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
             @Override
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
                 int dest_id = destination.getId();
-                if( dest_id == R.id.loginFragment || dest_id == R.id.registerFragment ||
+                if(dest_id == R.id.loginFragment || dest_id == R.id.registerFragment ||
                         dest_id == R.id.profileFragment || dest_id == R.id.adminFragment ||
                         dest_id == R.id.detailFragment){
-
                     bottomNavView.setVisibility(View.GONE);
                 }
                 else{
@@ -99,6 +104,27 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        App app = App.getInstance(this);
+        drawerNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.logOut:
+                        app.logout();
+                        return true;
+                    default:
+                        NavigationUI.onNavDestinationSelected(item, appNavController);
+                        //This is for closing the drawer after acting on it
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                        return true;
+                }
+            }
+        });
+        return true;
     }
 
     //Para la flecha de arriba

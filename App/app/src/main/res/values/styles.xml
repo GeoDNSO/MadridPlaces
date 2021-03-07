@@ -12,4 +12,10 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="ChipStyle" parent="Widget.MaterialComponents.Chip.Filter">
+        <item name="chipBackgroundColor">@color/chip_colors</item>
+        <item name="android:textColor">@color/chip_text_colors</item>
+        <item name="checkedIcon">@null</item>
+    </style>
 </resources>

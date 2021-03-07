@@ -23,6 +23,7 @@ public class TPlace implements JSONSerializable, Parcelable {
     private String affluence;
     private double rating;
     private boolean userFav;
+    private String timeVisited;
 
     //("lugar", "descripcion", "direccion", 3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid", "Localidad", "Afluencia", 4.0f)
 
@@ -197,6 +198,14 @@ public class TPlace implements JSONSerializable, Parcelable {
 
     public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
+    }
+
+    public String getTimeVisited() {
+        return timeVisited;
+    }
+
+    public void setTimeVisited(String timeVisited) {
+        this.timeVisited = timeVisited;
     }
 
     @Override

@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
+import com.example.App.models.transfer.TUser;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
 import com.squareup.picasso.Picasso;
@@ -31,10 +34,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.ViewHolder> {
+public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.ViewHolder> implements Filterable {
 
     private Activity activity;
     private List<TPlace> placeList;
+    private List<TPlace> placeListComplete;
 
     private OnPlaceListener onPlaceListener;
 
@@ -43,6 +47,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         this.placeList = placeList;
         this.onPlaceListener = onPlaceListener;
         //this.placeList = new ArrayList<>();
+        placeListComplete = new ArrayList<>(placeList);
     }
 
     @NonNull
@@ -118,6 +123,40 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
     public int getItemCount() {
         return placeList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return listPlacesFilter;
+    }
+
+    private Filter listPlacesFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<TPlace> filterList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filterList.addAll(placeListComplete); //Como no se filtra, se llena la lista de forma en la que al principio aparece
+            } else {
+                String inputFilter = constraint.toString().toLowerCase().trim();
+
+                for (TPlace place : placeListComplete) {
+                    if (place.getName().toLowerCase().contains(inputFilter)) {
+                        filterList.add(place);
+                    }
+                }
+            }
+            FilterResults encounteredResults = new FilterResults();
+            encounteredResults.values = filterList;
+
+            return encounteredResults;
+        }
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            placeList.clear();
+            placeList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
     //Clase correspondiente a la representacion de un lugar en la lista --> place_list_item
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

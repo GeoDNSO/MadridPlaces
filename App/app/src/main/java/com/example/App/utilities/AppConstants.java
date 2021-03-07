@@ -43,4 +43,8 @@ public class AppConstants {
     public static final Integer ERROR_NEW_COMMENT = -6;
     public static final Integer NEW_COMMENT = 6;
     public static final String BUNDLE_PROFILE_LIST_DETAILS = "DETAILS_LIST_PROFILE_BUNDLE";
+
+    public static final String BROWSER_LIST_TYPE_PLACES = "TYPE_PLACES_BROWSER_LIST";
+    public static final String BROWSER_SEARCH_PLACE_NAME = "SEARCH_PLACE_NAME_BROWSER";
+
 }

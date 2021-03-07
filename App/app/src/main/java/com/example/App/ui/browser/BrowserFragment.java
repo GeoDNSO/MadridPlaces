@@ -1,22 +1,53 @@
 package com.example.App.ui.browser;
 
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.App.R;
+import com.example.App.models.transfer.TUser;
+import com.example.App.ui.admin.UserListAdapter;
+import com.example.App.ui.places_list.PlaceListAdapter;
+import com.example.App.ui.places_list.PlacesListFragment;
+import com.example.App.utilities.AppConstants;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
+import com.google.android.material.chip.ChipGroup;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BrowserFragment extends Fragment {
 
     private BrowserViewModel mViewModel;
+    private Fragment placeListFragment;
+    private View root;
+    private List<String> listTypesPlaces;
+    private PlaceListAdapter adapter;
+    private ChipGroup chipGroupView;
+    private Button buttonBrowserView;
+    private List<String> listTypePlaces;
+
 
     public static BrowserFragment newInstance() {
         return new BrowserFragment();
@@ -26,9 +57,41 @@ public class BrowserFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(BrowserViewModel.class);
-        View root = inflater.inflate(R.layout.browser_fragment, container, false);
+        root = inflater.inflate(R.layout.browser_fragment, container, false);
+        setHasOptionsMenu(true);
 
-        //TODO :Use the ViewModel to obtain Data/Implement observers
+        initUI();
+        initializeListeners();
+
+        listTypesPlaces = mViewModel.getTypesOfPlaces();
+
+        for(String typePlace : listTypesPlaces) {
+            listTypePlaces = new ArrayList<>();
+            Chip chip = (Chip) LayoutInflater.from(getContext()).inflate(R.layout.type_place_list_fragment,null);
+            chip.setText(typePlace);
+            chip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(chip.isChecked()){
+                        listTypePlaces.add(chip.getText().toString());
+                        /*adapter.getFilter().filter(chip.getText().toString());
+                        adapter.notifyDataSetChanged();*/
+                    }
+                    else {
+                        //listTypePlaces.remove(chip.getText().toString());
+                    }
+                }
+            });
+            chipGroupView.addView(chip);
+        }
+
+        //Para no estar todo el rato recargando lugares
+        // ,es decir, generando nuevos lugares cada dez que volvemos al fragmento home
+        if(placeListFragment == null){
+            placeListFragment = new PlacesListFragment();
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.replace(R.id.place_list_container, placeListFragment).commit();
+        }
 
         return root;
     }
@@ -40,4 +103,47 @@ public class BrowserFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search_icon_menu, menu);
+
+        //Ocultar el boton de AZ
+        MenuItem azIcon = menu.findItem(R.id.sortListUsers);
+        azIcon.setVisible(false);
+
+        //Boton de busqueda
+        MenuItem searchIcon = menu.findItem(R.id.search_button);
+        SearchView searchView = (SearchView) searchIcon.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(getActivity(), listTypePlaces.toString(), Toast.LENGTH_SHORT).show();
+                adapter.getFilter().filter(query);
+                adapter.notifyDataSetChanged();
+                //recyclerView.setAdapter(adapter);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+    }
+
+    private void initializeListeners() {
+        buttonBrowserView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), listTypePlaces.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void initUI(){
+        chipGroupView = root.findViewById(R.id.type_of_place_list);
+        buttonBrowserView = root.findViewById(R.id.browser_button);
+    }
 }
