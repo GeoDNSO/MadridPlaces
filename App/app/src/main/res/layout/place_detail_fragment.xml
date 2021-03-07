@@ -20,15 +20,6 @@
             android:layout_height="300dp"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/placeDetailsPicture"
-                android:layout_width="320dp"
-                android:layout_height="200dp"
-                android:layout_marginLeft="45dp"
-                android:layout_marginRight="45dp"
-                android:contentDescription="@string/image_default_desc"
-                android:scaleType="fitXY"
-                tools:src="@drawable/imagen_lugar_default" />
 
             <TextView
                 android:id="@+id/tvPlaceDetailsName"
@@ -36,11 +27,26 @@
                 android:layout_height="wrap_content"
                 android:text="@string/place_default_name"
                 android:gravity="center"
-                android:layout_marginLeft="45dp"
-                android:layout_marginRight="45dp"
-                android:textSize="20sp"
+                android:layout_marginLeft="2dp"
+                android:textSize="25sp"
+                android:textColor="@color/black" />
 
-                />
+            <com.smarteist.autoimageslider.SliderView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="fitXY"
+                android:id="@+id/placeDetail_slide_view"
+                app:sliderScrollTimeInSec="2"
+                app:sliderStartAutoCycle="true"
+                app:sliderAutoCycleDirection="back_and_forth"
+                app:sliderIndicatorPadding="4dp"
+                app:sliderIndicatorRadius="1.5dp"
+                app:sliderIndicatorSelectedColor="#636363"
+                app:sliderIndicatorUnselectedColor="#FFFFFF"
+                app:sliderAnimationDuration="1000"
+                app:sliderIndicatorOrientation="horizontal"
+                app:sliderIndicatorGravity="center_horizontal|bottom"/>
+
 
             <LinearLayout
                 android:layout_width="333dp"
@@ -96,7 +102,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
             android:gravity="center_horizontal"
-            android:text="@string/lorem_ipsu" />
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:text="@string/lorem_ipsu"
+            android:background="@drawable/ripple_efect"/>
 
         <FrameLayout
             android:id="@+id/comments_placeholder"

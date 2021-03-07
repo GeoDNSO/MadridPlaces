@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.media.Image;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,7 @@ import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
+import com.squareup.picasso.Picasso;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -57,6 +60,8 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
         TPlace place = placeList.get(position);
 
+
+
         //Efecto shimmer
         Shimmer shimmer = new Shimmer.ColorHighlightBuilder()
                 .setBaseColor(Color.parseColor("#F3F3F3"))
@@ -71,22 +76,20 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
         shimmerDrawable.setShimmer(shimmer);
 
-
-        //Imagen del Lugar
-        //load sirve para multitud de recursos: enlaces, drawables, bitmaps, etc...
-        //@TODO decidir como se obtendran las imagenes para poder seleccionar un metodo...
-        /*
-        Glide.with(activity).load(place.getImage())
-                .placeholder(shimmerDrawable)
-                .into(holder.placeImage);
-        */
-
-        Glide.with(activity).load(R.drawable.imagen_lugar_default)
-                .placeholder(shimmerDrawable)
-                .into(holder.placeImage);
-
         //Nombre del Lugar
-        holder.tvPlaceName.setText(place.getName());
+        int maxLength = 17;
+        int tvLength = place.getName().length();
+        String finalTitle = place.getName();
+
+        if(tvLength >= maxLength){
+            String dots = "...";
+            String s = place.getName();
+            finalTitle = s.substring(0, maxLength-dots.length()) + dots;
+        }
+        holder.tvPlaceName.setText(finalTitle);
+
+
+
         //Rating del lugar
         DecimalFormat df = new DecimalFormat("#.#");
         df.setRoundingMode(RoundingMode.CEILING);
@@ -97,6 +100,18 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
             favTint = ContextCompat.getColor(activity, R.color.colorFavRed);
         }
         ImageViewCompat.setImageTintList(holder.favImage, ColorStateList.valueOf(favTint));
+
+
+        try{
+            Glide.with(activity).load(place.getImagesList().get(0))
+                    .placeholder(shimmerDrawable)
+                    .into(holder.placeImage);
+        }catch (Exception e){
+            Log.e("ERROR_CARGA_IMAGEN", "PlaceListAdapter: Fallo de carga de imagen debido a cierre de socket" +
+                    ", fallo de conexión, timeout, etc... )");
+        }
+
+
     }
 
     @Override

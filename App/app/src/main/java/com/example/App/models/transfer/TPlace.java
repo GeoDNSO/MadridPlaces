@@ -42,8 +42,44 @@ public class TPlace implements JSONSerializable, Parcelable {
         this.zipcode = zipcode;
         this.affluence = affluence;
         this.rating = rating;
-        this.userFav = userFav; //Cambiar en la BD
+        this.userFav = userFav;
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.description);
+        dest.writeDouble(this.latitude);
+        dest.writeDouble(this.longitude);
+        dest.writeList(this.imagesList);
+        dest.writeString(this.typeOfPlace);
+        dest.writeString(this.city);
+        dest.writeString(this.road_class);
+        dest.writeString(this.road_name);
+        dest.writeString(this.road_number);
+        dest.writeString(this.zipcode);
+        dest.writeString(this.affluence);
+        dest.writeDouble(this.rating);
+        dest.writeByte((byte) (this.userFav ? 1 : 0));     //if myBoolean == true, byte == 1
+    }
+
+    public TPlace(Parcel in) {
+        this.name = in.readString();
+        this.description = in.readString();
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
+        in.readList(this.imagesList, List.class.getClassLoader());
+        this.typeOfPlace = in.readString();
+        this.city = in.readString();
+        this.road_class = in.readString();
+        this.road_name = in.readString();
+        this.road_number = in.readString();
+        this.zipcode = in.readString();
+        this.affluence = in.readString();
+        this.rating = in.readDouble();
+        this.userFav = (in.readByte() != 0);     //myBoolean == true if byte != 0
+    }
+
     public static final Creator<TPlace> CREATOR = new Creator<TPlace>() {
         @Override
         public TPlace createFromParcel(Parcel in) {
@@ -55,6 +91,13 @@ public class TPlace implements JSONSerializable, Parcelable {
             return new TPlace[size];
         }
     };
+
+    /**
+     * Devuelve la dirección completa del lugar
+     * */
+    public String getAddress(){
+        return this.road_class + " " +  this.road_name + " " + road_number +", "+ this.zipcode;
+    }
 
     public String getName() {
         return name;
@@ -173,40 +216,5 @@ public class TPlace implements JSONSerializable, Parcelable {
 
     public String getRoad_class() {
         return road_class;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.name);
-        dest.writeString(this.description);
-        dest.writeDouble(this.latitude);
-        dest.writeDouble(this.longitude);
-        dest.writeList(this.imagesList);
-        dest.writeString(this.typeOfPlace);
-        dest.writeString(this.city);
-        dest.writeString(this.road_class);
-        dest.writeString(this.road_name);
-        dest.writeString(this.road_number);
-        dest.writeString(this.zipcode);
-        dest.writeString(this.affluence);
-        dest.writeDouble(this.rating);
-        //dest.writeBoolean(this.userFav); //TODO: emmm dani
-    }
-
-    public TPlace(Parcel in) {
-        this.name = in.readString();
-        this.description = in.readString();
-        this.latitude = in.readDouble();
-        this.longitude = in.readDouble();
-        in.readList(this.imagesList, List.class.getClassLoader());
-        this.typeOfPlace = in.readString();
-        this.city = in.readString();
-        this.road_class = in.readString();
-        this.road_name = in.readString();
-        this.road_number = in.readString();
-        this.zipcode = in.readString();
-        this.affluence = in.readString();
-        this.rating = in.readDouble();
-        //this.userFav = in.readBoolean(); //TODO: DANI???????? EMMMM
     }
 }

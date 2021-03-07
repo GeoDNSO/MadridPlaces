@@ -1,15 +1,24 @@
 package com.example.App.models.dao;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.example.App.utilities.AppConstants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -19,11 +28,12 @@ import okhttp3.Response;
 public class SimpleRequest {
 
 
-    private final String DIR_PROTOCOL = "http";
-    private final String DIR = "10.0.2.2";
-    private final int PORT = 5000;
-    private final int TTL_SECONDS = 3;
-    private final int TTL_MSECONDS = 3000;
+    private static final String DIR_PROTOCOL = "http";
+    private static final String IP_ADDRESS = "10.0.2.2";
+    private static final int PORT = 5000;
+    private static final int TTL_SECONDS = 3;
+    private static final int TTL_MSECONDS = 3000;
+    private static final String SERVER_URL = DIR_PROTOCOL + "://" + IP_ADDRESS + ":" + PORT;
 
     private volatile boolean finished;
     private volatile String response;
@@ -46,37 +56,6 @@ public class SimpleRequest {
         return  call;
     }
 
-    //TODO Borrarlo cuando veamos que no vale para nada
-    /*public void createAndRunCall(Request request) {
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(250, TimeUnit.MILLISECONDS)
-                .build();
-        Call call = client.newCall(request);
-
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-                finished = true;
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(Call call, final Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    finished = true;
-                    throw new IOException("Unexpected code " + response);
-                } else {
-                    //HABIA UN TRY CATCH
-                    SimpleRequest.this.response = response.body().string();
-                    finished = true;
-                }
-            }
-        });
-
-        while (!finished) ;
-    }*/
-
 
     public Request buildRequest(String postBodyString, String method, String route) {
 
@@ -88,20 +67,65 @@ public class SimpleRequest {
         if(method.equals(AppConstants.METHOD_GET)){
             request = new Request.Builder()
                     .get()
-                    .url(DIR_PROTOCOL + "://" + DIR + ":" + PORT + route)//Ej http://10.0.0.2:5000/login
+                    .url(SERVER_URL + route)//Ej http://10.0.0.2:5000/login
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
                     .build();
         }else{
             request = new Request.Builder()
                     .method(method, body)
-                    .url(DIR_PROTOCOL + "://" + DIR + ":" + PORT + route)//Ej http://10.0.0.2:5000/login
+                    .url(SERVER_URL + route)//Ej http://10.0.0.2:5000/login
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
                     .build();
         }
 
         return request;
+    }
+
+
+    //https://stackoverflow.com/questions/25805580/how-to-quickly-check-if-url-server-is-available
+    public static boolean isServerReachable(Context context) {
+        ConnectivityManager connMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = connMan.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnected()) {
+            try {
+                URL urlServer = new URL(SERVER_URL);
+                HttpURLConnection urlConn = (HttpURLConnection) urlServer.openConnection();
+                urlConn.setConnectTimeout(3000); //<- 3Seconds Timeout
+                urlConn.connect();
+                if (urlConn.getResponseCode() == 200) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (MalformedURLException e1) {
+                return false;
+            } catch (IOException e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isHostReachable(){
+        boolean exists = false;
+
+        try {
+            SocketAddress sockaddr = new InetSocketAddress(IP_ADDRESS, PORT);
+
+            // Create an unbound socket
+            Socket sock = new Socket();
+
+            // This method will block no more than timeoutMs.
+            // If the timeout occurs, SocketTimeoutException is thrown.
+            int timeoutMs = 2000;   // 2 seconds
+            sock.connect(sockaddr, timeoutMs);
+            exists = true;
+        } catch(IOException e) {
+            // Handle exception
+        }
+        return exists;
     }
 
     //isSuccessful esta sobrecargado...
