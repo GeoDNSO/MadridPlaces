@@ -89,7 +89,8 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
                     return;
                 }
 
-                placeList = tPlaces;
+                placeList = tPlaces; //TODO Aquí hay un bug que hay que arreglar
+
                 placeListAdapter = new PlaceListAdapter(getActivity(), placeList, PlacesListFragment.this);
 
                 recyclerView.setAdapter(placeListAdapter);

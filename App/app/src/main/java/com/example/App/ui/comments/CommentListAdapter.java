@@ -3,6 +3,7 @@ package com.example.App.ui.comments;
 import android.app.Activity;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     public void onBindViewHolder(@NonNull CommentListAdapter.ViewHolder holder, int position) {
 
         TComment comment = commentList.get(position);
-
+        Log.d("AAAAAAAAA", "value: " + position);
         //Efecto shimmer
         Shimmer shimmer = new Shimmer.ColorHighlightBuilder()
                 .setBaseColor(Color.parseColor("#F3F3F3"))
@@ -80,7 +81,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         holder.tvComment.setText(comment.getContent());
         holder.tvUsername.setText(comment.getUsername());
         holder.tvDate.setText(comment.getDate());
-        holder.ratingBar.setRating(comment.getRating());
+        holder.ratingBar.setRating((float) comment.getRating()); // TODO comment.getRating() Es en double y es necesario float
 
         ViewListenerUtilities.makeTextViewExpandable(holder.tvComment, true);
 

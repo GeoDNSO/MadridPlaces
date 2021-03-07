@@ -32,6 +32,41 @@ def newComment():
         print("Error insertando la nueva fila :", repr(e))
         return jsonify(exito = "false")    
 
+@commentsClass.route('/location/newComment&Rate', methods=['POST'])
+def newCommentYRate():
+    json_data = request.get_json()
+    user = json_data["user"]
+    location = json_data["location"]
+    comment = json_data["comment"]
+    rate = json_data["rate"]
+    print("rate = " + str(rate))
+    createComment = modules.comments(user = user, location = location, comment = comment)
+    createRate = modules.ratings(user = user, location = location, rate = rate)
+    try:
+
+        modules.sqlAlchemy.session.add(createComment)
+        modules.sqlAlchemy.session.commit()
+
+        rtQuery = modules.ratings.query.filter_by(user = user, location = location).first() #Comprueba si ya existe una valoración
+        if(rtQuery is None):
+            modules.sqlAlchemy.session.add(createRate) #Si no, se crea
+        else:
+            rtQuery.rate = rate #Si existe, devuelve su valor
+
+        modules.sqlAlchemy.session.commit()
+
+        return jsonify(
+                   exito = "true",
+                   id_comment = createComment.id_comment,
+                   user=createComment.user,
+                   location=createComment.location,
+                   comment=createComment.comment,
+                   created=createComment.created.strftime('%Y-%m-%d %H:%M:%S'),
+                   rate=rate)
+    except Exception as e:
+        print("Error insertando la nueva fila :", repr(e))
+        return jsonify(exito = "false")   
+
 @commentsClass.route('/location/modifyComment', methods=['POST'])
 def modifyComment():
     json_data = request.get_json()
@@ -67,13 +102,21 @@ def deleteComment():
 @commentsClass.route('/location/showComments', methods=['POST']) #USAR DANI
 def showComments():
     json_data = request.get_json()
-    location = json_data["location"]    
+    location = json_data["location"]  
+    page = json_data["page"] #Mostrar de X en X     
+    quant = json_data["quant"]  
     try:
-        cmQuery = modules.comments.query.filter_by(location = location).all()
+        tam = modules.comments.query.filter_by(location=location).count()
+        comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
+        #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
+        if(comp >= quant):
+            return jsonify(exito = "true", listComments = [])
+
+        cmQuery = modules.comments.query.filter_by(location = location).paginate(per_page=quant, page=page)
         if cmQuery is None:
             return jsonify(exito = "false")
         lista = []
-        for comment in cmQuery:
+        for comment in cmQuery.items:
             rate = RateFunct.showRate(comment.user, location)
             #picture = showPicture(comment.user)
             cmDict = {"user" : comment.user,
@@ -82,6 +125,7 @@ def showComments():
             "rate" : rate,
             "created" : comment.created
             }
+            print(rate)
             lista.append(cmDict)
         return jsonify(exito = "true", listComments = lista)
     except Exception as e:
