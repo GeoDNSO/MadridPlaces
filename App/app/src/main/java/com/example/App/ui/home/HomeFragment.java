@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.App.App;
 import com.example.App.R;
+import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.places_list.PlaceListAdapter;
 import com.example.App.ui.places_list.PlacesListFragment;
@@ -34,6 +36,11 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class HomeFragment extends Fragment{
 
@@ -68,13 +75,12 @@ public class HomeFragment extends Fragment{
 
         viewAccToUser();
 
-        //Para no estar todo el rato recargando lugares
-        // ,es decir, generando nuevos lugares cada dez que volvemos al fragmento home
-        if(placeListFragment == null){
-            placeListFragment = new PlacesListFragment();
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.replace(R.id.place_list_container, placeListFragment).commit();
-        }
+        actionOnServerAvailable();
+
+        placeListFragment = new PlacesListFragment();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.place_list_container, placeListFragment).commit();
+
       
         return root;
     }
@@ -133,5 +139,15 @@ public class HomeFragment extends Fragment{
         //btn_register = root.findViewById(R.id.home_register_button);
         //btn_login = root.findViewById(R.id.home_login_button);
         btn_logout = root.findViewById(R.id.home_logout_button);
+    }
+
+    private void actionOnServerAvailable(){
+
+       if(App.isServerReachable()){
+
+       }
+       else{
+
+       }
     }
 }

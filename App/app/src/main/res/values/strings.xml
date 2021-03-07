@@ -85,6 +85,6 @@
     <string name="typeOfPlace">Tipo de lugar</string>
     <string name="typeOfPlaces">Tipo de lugares</string>
     <string name="search">Buscar</string>
-
+    <string name="no_internet">No se pudieron obtener datos, inténtelo más tarde</string>
 
 </resources>

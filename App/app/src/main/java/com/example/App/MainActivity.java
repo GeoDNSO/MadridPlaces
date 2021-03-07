@@ -12,6 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.widget.Toolbar;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.example.App.utilities.TextViewExpandableUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity implements MainActivityInterface{
 
