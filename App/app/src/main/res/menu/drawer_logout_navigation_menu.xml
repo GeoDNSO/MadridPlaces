@@ -1,25 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <!--El id de los items debe coincidir con el id de los fragment del navigation -->
-
-    <!--<item
-        android:id="@+id/profileFragment"
-        android:icon="@drawable/ic_baseline_info_24"
-        android:title="@string/menu_profile_text"
-        android:visible="false" />
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/menu_settings_text" />
-
     <item
         android:id="@+id/aboutUsFragment"
         android:icon="@drawable/ic_baseline_info_24"
         android:title="@string/menu_aboutus_text" />
-
     <item
         android:id="@+id/adminFragment"
         android:icon="@drawable/ic_baseline_admin_user_24"
@@ -39,15 +27,6 @@
                 android:icon="@drawable/ic_baseline_admin_user_24"
                 android:title="@string/register_button_text"
                 />
-            <item
-                android:id="@+id/logOut"
-                android:icon="@drawable/ic_baseline_admin_user_24"
-                android:title="@string/app_logout"
-                android:visible="false"
-                />
-
         </menu>
-    </item>-->
-
-    
+    </item>
 </menu>

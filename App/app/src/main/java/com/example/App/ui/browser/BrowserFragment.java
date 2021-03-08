@@ -119,8 +119,8 @@ public class BrowserFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Toast.makeText(getActivity(), listTypePlaces.toString(), Toast.LENGTH_SHORT).show();
-                adapter.getFilter().filter(query);
-                adapter.notifyDataSetChanged();
+                //adapter.getFilter().filter(query);
+                //adapter.notifyDataSetChanged();
                 //recyclerView.setAdapter(adapter);
                 return false;
             }

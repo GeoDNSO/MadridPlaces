@@ -11,6 +11,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -24,6 +26,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,6 +46,9 @@ public class App {
     private Context context;
     private Menu menu;
     private BottomNavigationView bottomNavigationView;
+    private NavigationView drawerNavigationView;
+
+    private MainActivity activity;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
 
@@ -61,43 +67,53 @@ public class App {
 
     public void logout() {
         sessionManager.logout();
-        menu.findItem(R.id.profileFragment).setVisible(false);
+        Toast.makeText(getActivity(), "Se ha cerrado la sesión", Toast.LENGTH_SHORT).show();
+        /*menu.findItem(R.id.profileFragment).setVisible(false);
         menu.findItem(R.id.adminFragment).setVisible(false);
 
         menu.findItem(R.id.loginFragment).setVisible(true);
         menu.findItem(R.id.registerFragment).setVisible(true);
-        menu.findItem(R.id.logOut).setVisible(false);
+        menu.findItem(R.id.logOut).setVisible(false);*/
 
     }
 
     public void setUserSession(TUser user) {
         sessionManager.setLogged(true);
         sessionManager.setUserInfo(user);
-
         //Opciones del menu
 
-        menu.findItem(R.id.profileFragment).setVisible(true);
+        /*menu.findItem(R.id.profileFragment).setVisible(true);
 
         menu.findItem(R.id.loginFragment).setVisible(false);
         menu.findItem(R.id.registerFragment).setVisible(false);
-        menu.findItem(R.id.logOut).setVisible(true);
+        menu.findItem(R.id.logOut).setVisible(true);*/
+
+        activity.inflateMenu();
 
         if (user.getRol().equals(AppConstants.USER_ROL_ADMIN)) {
-            menu.findItem(R.id.adminFragment).setVisible(true);
+            MenuItem item = menu.findItem(R.id.adminFragment);
+            if(item != null) {
+                item.setVisible(true);
+            }
         }
     }
 
     public void menuOptions(boolean logged, boolean admin) {
         if (logged) {
-            menu.findItem(R.id.profileFragment).setVisible(true);
-            menu.findItem(R.id.loginFragment).setVisible(false);
-            menu.findItem(R.id.registerFragment).setVisible(false);
-            menu.findItem(R.id.logOut).setVisible(true);
+            //drawerNavigationView.getMenu().clear();
+            //drawerNavigationView.inflateMenu(R.menu.drawer_login_navigation_menu);
+            if (admin) {
+                MenuItem item = menu.findItem(R.id.adminFragment);
+                if(item != null) {
+                    item.setVisible(true);
+                }
+            }
+        } else
+        {
+            //drawerNavigationView.getMenu().clear();
+            //drawerNavigationView.inflateMenu(R.menu.drawer_logout_navigation_menu);
+        }
 
-        }
-        if (admin) {
-            menu.findItem(R.id.adminFragment).setVisible(true);
-        }
     }
 
 
@@ -193,6 +209,14 @@ public class App {
             e.printStackTrace();
         }
         return reachable;
+    }
+
+    public MainActivity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(MainActivity activity) {
+        this.activity = activity;
     }
 
 

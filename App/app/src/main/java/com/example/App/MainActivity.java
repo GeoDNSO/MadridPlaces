@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.example.App.utilities.TextViewExpandableUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity implements MainActivityInterface{
 
@@ -48,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         App app = App.getInstance(this);
         app.setMenu(drawerNavigationView.getMenu());
         app.setBottomNavigationView(bottomNavView);
+        app.setActivity(this);
 
         TextViewExpandableUtil.seeMore = getString(R.string.see_more);
         TextViewExpandableUtil.seeLess = getString(R.string.see_less);
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         //Drawer Navigation
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerNavigationView = findViewById(R.id.drawer_navigation_view);
-
+        inflateMenu();
         //drawerNavController = Navigation.findNavController(this, R.id.bottom_host_fragment);
 
         //SideRight Navigation
@@ -117,16 +117,35 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                         app.logout();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         drawerNavigationView.refreshDrawableState();
+
+                        inflateMenu();
+
                         return true;
                     default:
+                        inflateMenu();
+
                         NavigationUI.onNavDestinationSelected(item, appNavController);
                         //This is for closing the drawer after acting on it
                         drawerLayout.closeDrawer(GravityCompat.START);
+
                         return true;
                 }
             }
         });
         return true;
+    }
+
+    public void inflateMenu(){
+        App app = App.getInstance(this);
+        if(app.isLogged()){
+            drawerNavigationView.getMenu().clear();
+            drawerNavigationView.inflateMenu(R.menu.drawer_login_navigation_menu);
+        } else
+        {
+            drawerNavigationView.getMenu().clear();
+            drawerNavigationView.inflateMenu(R.menu.drawer_logout_navigation_menu);
+        }
+        app.setMenu(drawerNavigationView.getMenu());
     }
 
     //Para la flecha de arriba
