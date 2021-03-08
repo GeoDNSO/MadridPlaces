@@ -115,6 +115,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                 switch (item.getItemId()) {
                     case R.id.logOut:
                         app.logout();
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                        drawerNavigationView.refreshDrawableState();
                         return true;
                     default:
                         NavigationUI.onNavDestinationSelected(item, appNavController);
