@@ -9,7 +9,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -17,10 +16,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import com.example.App.models.dao.DAOUserImp;
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.TextViewExpandableUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -48,13 +47,17 @@ public class App {
     private BottomNavigationView bottomNavigationView;
     private NavigationView drawerNavigationView;
 
-    private MainActivity activity;
+    private MainActivity mainActivity;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     private App(Context context) {
         this.context = context;
         sessionManager = new SessionManager(context);
+
+        //Param configuration
+        TextViewExpandableUtil.seeMore = context.getString(R.string.see_more);
+        TextViewExpandableUtil.seeLess = context.getString(R.string.see_less);
     }
 
     public static App getInstance(Context ctx) {
@@ -67,14 +70,7 @@ public class App {
 
     public void logout() {
         sessionManager.logout();
-        Toast.makeText(getActivity(), "Se ha cerrado la sesión", Toast.LENGTH_SHORT).show();
-        /*menu.findItem(R.id.profileFragment).setVisible(false);
-        menu.findItem(R.id.adminFragment).setVisible(false);
-
-        menu.findItem(R.id.loginFragment).setVisible(true);
-        menu.findItem(R.id.registerFragment).setVisible(true);
-        menu.findItem(R.id.logOut).setVisible(false);*/
-
+        Toast.makeText(getMainActivity(), "Se ha cerrado la sesión", Toast.LENGTH_SHORT).show();
     }
 
     public void setUserSession(TUser user) {
@@ -82,13 +78,7 @@ public class App {
         sessionManager.setUserInfo(user);
         //Opciones del menu
 
-        /*menu.findItem(R.id.profileFragment).setVisible(true);
-
-        menu.findItem(R.id.loginFragment).setVisible(false);
-        menu.findItem(R.id.registerFragment).setVisible(false);
-        menu.findItem(R.id.logOut).setVisible(true);*/
-
-        activity.inflateMenu();
+        mainActivity.inflateMenu();
 
         if (user.getRol().equals(AppConstants.USER_ROL_ADMIN)) {
             MenuItem item = menu.findItem(R.id.adminFragment);
@@ -211,12 +201,12 @@ public class App {
         return reachable;
     }
 
-    public MainActivity getActivity() {
-        return activity;
+    public MainActivity getMainActivity() {
+        return mainActivity;
     }
 
-    public void setActivity(MainActivity activity) {
-        this.activity = activity;
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
 

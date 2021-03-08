@@ -12,16 +12,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.widget.Toolbar;
 
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import com.example.App.utilities.TextViewExpandableUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -47,11 +42,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         App app = App.getInstance(this);
         app.setMenu(drawerNavigationView.getMenu());
         app.setBottomNavigationView(bottomNavView);
-        app.setActivity(this);
-
-        TextViewExpandableUtil.seeMore = getString(R.string.see_more);
-        TextViewExpandableUtil.seeLess = getString(R.string.see_less);
-
+        app.setMainActivity(this);
         app.askLocationPermission();
     }
 
@@ -86,9 +77,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
 
         appNavControllerDestinationListener();
-
     }
 
+    //Listener para controlar en que vista se verá el menú inferior de la aplicación
     private void appNavControllerDestinationListener() {
         appNavController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
@@ -117,15 +108,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                         app.logout();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         drawerNavigationView.refreshDrawableState();
-
                         inflateMenu();
 
                         return true;
                     default:
                         inflateMenu();
-
                         NavigationUI.onNavDestinationSelected(item, appNavController);
-                        //This is for closing the drawer after acting on it
                         drawerLayout.closeDrawer(GravityCompat.START);
 
                         return true;
@@ -135,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         return true;
     }
 
+    //Construye el menu del drawerLayout según la sesión del usuario
     public void inflateMenu(){
         App app = App.getInstance(this);
         if(app.isLogged()){
@@ -151,11 +140,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     //Para la flecha de arriba
     @Override
     public boolean onSupportNavigateUp() {
-        /*
-        NavController navController = Navigation.findNavController(this, R.id.bottom_host_fragment);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-        * */
         return NavigationUI.navigateUp(appNavController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
