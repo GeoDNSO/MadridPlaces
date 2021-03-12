@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerNavigationView = findViewById(R.id.drawer_navigation_view);
         inflateMenu();
-        //drawerNavController = Navigation.findNavController(this, R.id.bottom_host_fragment);
 
         //SideRight Navigation
         rightSideNavView = (NavigationView) findViewById(R.id.right_side_navigation_view);
