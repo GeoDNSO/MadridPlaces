@@ -216,11 +216,9 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
     @Override
     public void onPlaceClick(int position) {
         //Enviar datos del objeto con posicion position de la lista al otro fragment
-        //Toast.makeText(getActivity(), "Listener del item " + position, Toast.LENGTH_LONG).show();
-        Bundle bundle = new Bundle();
-
         TPlace place = placeList.get(position);
 
+        Bundle bundle = new Bundle();
         bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
 
         //Le pasamos el bundle
