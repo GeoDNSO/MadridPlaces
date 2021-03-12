@@ -64,7 +64,6 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
                              @Nullable Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.places_list_fragment, container, false);
-
         mViewModel = new ViewModelProvider(this).get(PlacesListViewModel.class);
         mViewModel.init();
 

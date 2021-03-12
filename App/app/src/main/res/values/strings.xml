@@ -87,4 +87,10 @@
     <string name="search">Buscar</string>
     <string name="no_internet">No se pudieron obtener datos, inténtelo más tarde</string>
 
+
+    <string name="tab_nearest">Cercanos</string>
+    <string name="tab_rating">Mejor Valorados</string>
+    <string name="tab_twitter">Populares</string>
+    <string name="tab_category">Categorías</string>
+
 </resources>
