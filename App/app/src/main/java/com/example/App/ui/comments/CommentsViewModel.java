@@ -39,6 +39,14 @@ public class CommentsViewModel extends ViewModelParent {
         mProgressBar.postValue(true);
         commentRepository.newComment(userName, content, placeName, rate);
     }
+    public void newRate(String user, String placeName , float rate){
+        mProgressBar.postValue(true);
+        commentRepository.newRate(user,placeName, rate);
+    }
+    public void deleteRate(int id_comment){
+        mProgressBar.postValue(true);
+        commentRepository.deleteRate(id_comment);
+    }
     private LiveData<List<TComment>> setAndGetCommentsList(List<TComment> comments) {
         MutableLiveData<List<TComment>> mAux = new MutableLiveData<>();
         mAux.setValue(comments);

@@ -136,11 +136,12 @@ public class CommentsFragment extends Fragment {
 
                     } else if (etComment.getEditText().getText().toString().equals("") && ratingBar.getRating() != 0) {
                         //Función únicamente para meter un rate
+                        mViewModel.newRate(app.getUsername(), placeName, ratingBar.getRating());
                         Toast.makeText(getActivity(), "Rating de " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
 
                     } else {
-                        //No se puede hacer nada
-                        Toast.makeText(getActivity(), "Rating de " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
+                        //No se hace nada
+                        Toast.makeText(getActivity(), "Selecciona una valoración", Toast.LENGTH_SHORT).show();
                     }
                 }
 

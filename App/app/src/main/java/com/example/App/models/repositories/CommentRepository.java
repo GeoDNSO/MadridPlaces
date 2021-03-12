@@ -117,8 +117,8 @@ public class CommentRepository extends Repository {
             }
         });
     }
-
-    public void newComment (String userName, String content, String placeName, float rate) { //Función que realiza la creación de un comentario sin valoración
+    //Para modificar el comentario, tambien se puede usar esta funcion
+    public void newComment (String userName, String content, String placeName, float rate) { //Función que realiza la creación de un comentario con valoración
 
         String postBodyString = commentToString(userName, content, placeName, rate);
         SimpleRequest simpleRequest = new SimpleRequest();
@@ -146,14 +146,16 @@ public class CommentRepository extends Repository {
                 boolean success = simpleRequest.isSuccessful(res);
 
                 List<TComment> listaAux = mCommentList.getValue();
+                TComment newComment = jsonStringToComment(res);
                 if (success){
                     if (listaAux.isEmpty()){
                         List<TComment> nuevaLista = new ArrayList<>();
-                        nuevaLista.add(jsonStringToComment(res));
+                        nuevaLista.add(newComment);
                         mCommentList.postValue(nuevaLista);
                     }
                     else{
-                        listaAux.add(jsonStringToComment(res));
+                        searchAndDeleteList(listaAux,newComment); //Si existe, modifica el comentario
+                        listaAux.add(0,newComment);
                         mCommentList.postValue(listaAux);
                     }
                     mSuccess.postValue(AppConstants.NEW_COMMENT);//Importante que este despues del postValue de mUser
@@ -164,6 +166,109 @@ public class CommentRepository extends Repository {
                 }
             }
         });
+    }
+
+    public void deleteRate (int id_comment) {
+
+        //TODO Únicamente creo la valoracion en la BD, no lo muestro en la APP, me da miedo crear un Tcomment con el comment vacío
+        String postBodyString = deleteToString(id_comment);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_DELETE, "/location/deleteComment");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_LIST_COMMENTS);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    mSuccess.postValue(AppConstants.ERROR_NEW_COMMENT);
+                    throw new IOException("Unexpected code " + response);
+                }
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+                List<TComment> listaAux = mCommentList.getValue();
+                TComment newComment = jsonStringToComment(res);
+                if (success){
+                    searchAndDeleteList(listaAux,newComment);
+                    mSuccess.postValue(AppConstants.NEW_COMMENT);//Importante que este despues del postValue de mUser
+                }
+                else{
+                    mCommentList.postValue(null);
+                    mSuccess.postValue(AppConstants.ERROR_NEW_COMMENT);//Importante que este despues del postValue de mUser
+                }
+            }
+        });
+    }
+    public void newRate (String user, String placeName, float rate) {
+
+        //TODO Únicamente creo la valoracion en la BD, no lo muestro en la APP, me da miedo crear un Tcomment con el comment vacío
+        String postBodyString = rateToString(user, placeName, rate);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/location/newRate");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_LIST_COMMENTS);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    mSuccess.postValue(AppConstants.ERROR_NEW_COMMENT);
+                    throw new IOException("Unexpected code " + response);
+                }
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+                if (success){
+                    mSuccess.postValue(AppConstants.NEW_COMMENT);//Importante que este despues del postValue de mUser
+                }
+                else{
+                    mCommentList.postValue(null);
+                    mSuccess.postValue(AppConstants.ERROR_NEW_COMMENT);//Importante que este despues del postValue de mUser
+                }
+            }
+        });
+    }
+    private String deleteToString(int id_comment) {
+        JSONObject jsonName = new JSONObject();
+        String infoString;
+        try {
+            jsonName.put("id_comment", id_comment);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = jsonName.toString();
+        return infoString;
+    }
+    private String rateToString(String user, String placeName, float rate) {
+        double rateDouble = rate;
+        JSONObject jsonName = new JSONObject();
+        String infoString;
+        try {
+            jsonName.put("user", user);
+            jsonName.put("location", placeName);
+            jsonName.put("rate", rateDouble);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = jsonName.toString();
+        return infoString;
     }
 
     private String commentToString(String userName, String content, String placeName, float rate){
@@ -214,21 +319,6 @@ public class CommentRepository extends Repository {
             return null;
         }
     }
-    private TComment jsonStringToCommentNoRate(String jsonString) {
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(jsonString);
-            return new TComment(
-                    "Imagen Perfil",
-                    jsonObject.getString("user"),
-                    jsonObject.getString("comment"),
-                    jsonObject.getString("created"),
-                    0.0);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     private TComment jsonStringToComment(String jsonString) {
         JSONObject jsonObject = null;
@@ -243,6 +333,22 @@ public class CommentRepository extends Repository {
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+    private void searchAndDeleteList(List<TComment> lista, TComment newComment){
+        boolean ok = false;
+
+        int i = 0;
+        
+        for (TComment comment : lista) {
+            if(comment.getUsername().equals(newComment.getUsername())){
+                ok = true;
+                break;
+            }
+            i++;
+        }
+        if(ok) { //Si no existe el comentario, se agrega
+            lista.remove(i);
         }
     }
 }

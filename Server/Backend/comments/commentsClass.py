@@ -9,28 +9,7 @@ import comments.commentFunct as CommentFunct
 import rates.rateFunct as RateFunct
 #############################################   Funciones Comentarios   #############################################
 
-commentsClass = Blueprint("commentsClass", __name__)
-
-@commentsClass.route('/location/newComment', methods=['POST'])
-def newComment():
-    json_data = request.get_json()
-    user = json_data["user"]
-    location = json_data["location"]
-    comment = json_data["comment"]
-    createComment = modules.comments(user = user, location = location, comment = comment)
-    try:
-        modules.sqlAlchemy.session.add(createComment)
-        modules.sqlAlchemy.session.commit()
-        return jsonify(
-                   exito = "true",
-                   id_comment = createComment.id_comment,
-                   user=createComment.user,
-                   location=createComment.location,
-                   comment=createComment.comment,
-                   created=createComment.created.strftime('%Y-%m-%d %H:%M:%S'))
-    except Exception as e:
-        print("Error insertando la nueva fila :", repr(e))
-        return jsonify(exito = "false")    
+commentsClass = Blueprint("commentsClass", __name__)  
 
 @commentsClass.route('/location/newComment&Rate', methods=['POST'])
 def newCommentYRate():
@@ -39,29 +18,37 @@ def newCommentYRate():
     location = json_data["location"]
     comment = json_data["comment"]
     rate = json_data["rate"]
-    print("rate = " + str(rate))
+
     createComment = modules.comments(user = user, location = location, comment = comment)
     createRate = modules.ratings(user = user, location = location, rate = rate)
     try:
+        ctQuery = modules.comments.query.filter_by(user = user, location = location).first()
+        print(ctQuery)
+        if(ctQuery is None):
+            print('2')
+            modules.sqlAlchemy.session.add(createComment)
+        else:
+            print('3')
+            ctQuery.comment = comment
 
-        modules.sqlAlchemy.session.add(createComment)
         modules.sqlAlchemy.session.commit()
 
         rtQuery = modules.ratings.query.filter_by(user = user, location = location).first() #Comprueba si ya existe una valoración
         if(rtQuery is None):
             modules.sqlAlchemy.session.add(createRate) #Si no, se crea
         else:
+            print('4')
             rtQuery.rate = rate #Si existe, devuelve su valor
 
         modules.sqlAlchemy.session.commit()
 
         return jsonify(
                    exito = "true",
-                   id_comment = createComment.id_comment,
+                   id_comment = createComment.id_comment if ctQuery is None else ctQuery.id_comment ,
                    user=createComment.user,
                    location=createComment.location,
                    comment=createComment.comment,
-                   created=createComment.created.strftime('%Y-%m-%d %H:%M:%S'),
+                   created=createComment.created.strftime('%Y-%m-%d %H:%M:%S') if ctQuery is None else ctQuery.created.strftime('%Y-%m-%d %H:%M:%S'),
                    rate=rate)
     except Exception as e:
         print("Error insertando la nueva fila :", repr(e))
@@ -112,7 +99,7 @@ def showComments():
         if(comp >= quant):
             return jsonify(exito = "true", listComments = [])
 
-        cmQuery = modules.comments.query.filter_by(location = location).paginate(per_page=quant, page=page)
+        cmQuery = modules.comments.query.filter_by(location = location).order_by(modules.comments.created.desc()).paginate(per_page=quant, page=page)
         if cmQuery is None:
             return jsonify(exito = "false")
         lista = []
@@ -125,7 +112,6 @@ def showComments():
             "rate" : rate,
             "created" : comment.created
             }
-            print(rate)
             lista.append(cmDict)
         return jsonify(exito = "true", listComments = lista)
     except Exception as e:
