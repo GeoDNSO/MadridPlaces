@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                 int dest_id = destination.getId();
                 if(dest_id == R.id.loginFragment || dest_id == R.id.registerFragment ||
                         dest_id == R.id.profileFragment || dest_id == R.id.adminFragment ||
-                        dest_id == R.id.detailFragment){
+                        dest_id == R.id.detailFragment || dest_id == R.id.addPlaceFragment){
                     bottomNavView.setVisibility(View.GONE);
                 }
                 else{

@@ -87,4 +87,8 @@
         android:name="com.example.App.ui.places_list.PlacesListFragment"
         android:label="places_list_fragment"
         tools:layout="@layout/places_list_fragment" />
+    <fragment
+        android:id="@+id/addPlaceFragment"
+        android:name="com.example.App.ui.add_place.AddPlaceFragment"
+        android:label="AddPlaceFragment" />
 </navigation>

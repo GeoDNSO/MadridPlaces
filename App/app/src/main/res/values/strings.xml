@@ -58,6 +58,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="user_profile_list">Perfil Usuario</string>
 
+    <!--Strings relativos al formulario de add lugares-->
+    <string name="add_place_name">Nombre del lugar</string>
+    <string name="add_place_description">Descripción del lugar</string>
+    <string name="add_place_type_of_place">Tipo/s de lugar</string>
 
     <!--Strings relativos al side bar right-->
     <string name="sort_ascending_username">Nombre de usuario A - Z</string>
@@ -84,6 +88,9 @@
     <string name="number">5</string>
     <string name="typeOfPlace">Tipo de lugar</string>
     <string name="typeOfPlaces">Tipo de lugares</string>
+    <string name="add_place">Añadir Lugar</string>
+    <string name="add_place_title">Añadir imagenes </string>
+
     <string name="search">Buscar</string>
     <string name="no_internet">No se pudieron obtener datos, inténtelo más tarde</string>
 

@@ -16,7 +16,7 @@ public class TPlace implements JSONSerializable, Parcelable {
     private List<String> imagesList;
     private String typeOfPlace;
     private String city;
-    private String road_class;
+    private String road_class;//junto al mapa, habria que saber si esta creandolo fuera de madrid para no permitirle crear el lugar o algo por el estilo
     private String road_name;
     private String road_number;
     private String zipcode;
