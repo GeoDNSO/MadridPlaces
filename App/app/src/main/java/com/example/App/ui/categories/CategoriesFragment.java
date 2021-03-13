@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.App.R;
 import com.example.App.models.transfer.TCategory;
+import com.example.App.ui.places_list.subclasses.CategoryPlacesFragment;
 import com.example.App.utilities.AppConstants;
 
 import java.util.ArrayList;
@@ -47,8 +48,6 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
                              @Nullable Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.categories_fragment, container, false);
-
-        Log.i("CAT_FRAG", "llega a oncreate");
 
         initCategories();
         getData();
@@ -107,9 +106,10 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         TCategory category = categoryList.get(position);
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, category);
+        bundle.putParcelable(AppConstants.BUNDLE_CATEGORY_TYPE, category);
 
+        //Navigation.findNavController(root).navi
         //Le pasamos el bundle
-        Navigation.findNavController(root).navigate(R.id.placesList, bundle);
+        Navigation.findNavController(root).navigate(R.id.categoryPlacesFragment, bundle);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.App.utilities;
 
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ViewListenerUtilities {
@@ -19,5 +20,14 @@ public class ViewListenerUtilities {
                 aisCollapsed = !aisCollapsed;
             }
         });
+    }
+
+    public static void setVisibility(ProgressBar progressBar, boolean isVisible){
+        if(isVisible){
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        else {
+            progressBar.setVisibility(View.GONE);
+        }
     }
 }

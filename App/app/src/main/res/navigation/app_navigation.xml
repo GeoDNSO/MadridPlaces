@@ -87,4 +87,9 @@
         android:name="com.example.App.ui.places_list.PlacesListFragment"
         android:label="places_list_fragment"
         tools:layout="@layout/places_list_fragment" />
+    <fragment
+        android:id="@+id/categoryPlacesFragment"
+        android:name="com.example.App.ui.places_list.subclasses.CategoryPlacesFragment"
+        android:label="place_list_by_category_fragment"
+        tools:layout="@layout/place_list_by_category_fragment" />
 </navigation>

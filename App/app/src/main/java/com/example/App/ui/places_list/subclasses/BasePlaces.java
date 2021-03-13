@@ -1,22 +1,7 @@
-package com.example.App.ui.places_list;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.widget.NestedScrollView;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+package com.example.App.ui.places_list.subclasses;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,39 +9,63 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.App.App;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.example.App.R;
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TPlace;
+import com.example.App.ui.places_list.PlaceListAdapter;
+import com.example.App.ui.places_list.PlacesListFragment;
+import com.example.App.ui.places_list.PlacesListViewModel;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ViewListenerUtilities;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
-public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnPlaceListener {
+public abstract class BasePlaces extends Fragment implements PlaceListAdapter.OnPlaceListener {
 
-    private PlacesListViewModel mViewModel;
-    private View root;
+    protected PlacesListViewModel mViewModel;
+    protected View root;
 
     //UI Elements
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private NestedScrollView nestedScrollView;
-    private RecyclerView recyclerView;
-    private ProgressBar progressBar;
-    private ShimmerFrameLayout shimmerFrameLayout;
+    protected SwipeRefreshLayout swipeRefreshLayout;
+    protected NestedScrollView nestedScrollView;
+    protected RecyclerView recyclerView;
+    protected ProgressBar progressBar;
+    protected ShimmerFrameLayout shimmerFrameLayout;
 
-    private List<TPlace> placeList;// = new ArrayList<>();
-    private PlaceListAdapter placeListAdapter;
+    protected List<TPlace> placeList = new ArrayList<>();
+    protected PlaceListAdapter placeListAdapter;
 
-    private int page = 1, limit = 3, quantum = 3;
+    protected int page = 1, limit = 3, quantum = 3;
+
+
+    //Funciones a implementar en los hijos según el tipo de lugares a mostrar
+    public abstract void appendPlaces();
+    public abstract void listPlaces();
 
     public static PlacesListFragment newInstance() {
         return new PlacesListFragment();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //mViewModel = new ViewModelProvider(this).get(PlacesListViewModel.class);
+        // TODO: Use the ViewModel
     }
 
     @Override
@@ -64,9 +73,6 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
                              @Nullable Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.places_list_fragment, container, false);
-
-        placeList = new ArrayList<>();
-
         mViewModel = new ViewModelProvider(this).get(PlacesListViewModel.class);
         mViewModel.init();
 
@@ -93,7 +99,7 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
 
                 placeList = tPlaces; //TODO Aquí hay un bug que hay que arreglar
 
-                placeListAdapter = new PlaceListAdapter(getActivity(), placeList, PlacesListFragment.this);
+                placeListAdapter = new PlaceListAdapter(getActivity(), placeList, BasePlaces.this);
 
                 recyclerView.setAdapter(placeListAdapter);
             }
@@ -114,17 +120,8 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
             }
         });
 
-        mViewModel.getProgressBar().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    progressBar.setVisibility(View.VISIBLE);
-                }
-                else {
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
-        });
+        mViewModel.getProgressBar().observe(getViewLifecycleOwner(), aBoolean ->
+                ViewListenerUtilities.setVisibility(progressBar, aBoolean));
     }
 
     private void initListener() {
@@ -176,7 +173,8 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
                     shimmerFrameLayout.setVisibility(View.VISIBLE);
 
                     //Pedimos más datos
-                    mViewModel.appendPlaces(page, quantum);
+                    //mViewModel.appendPlaces(page, quantum);
+                    appendPlaces();
                 }
             }
         });
@@ -187,25 +185,15 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
             placeList = new ArrayList<>();
         }
         placeListAdapter = new PlaceListAdapter(getActivity(), placeList, this); //getActivity = MainActivity.this
-
-        //Set layout
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(placeListAdapter);
 
-        mViewModel.listPlaces(page, quantum);
+        listPlaces();
 
         //Empezar el efecto de shimmer
         shimmerFrameLayout.startShimmer();
-
     }
 
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        //mViewModel = new ViewModelProvider(this).get(PlacesListViewModel.class);
-        // TODO: Use the ViewModel
-    }
 
     private void initUI(){
         nestedScrollView = root.findViewById(R.id.placesList_ScrollView);
@@ -226,5 +214,4 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
         //Le pasamos el bundle
         Navigation.findNavController(root).navigate(R.id.placeDetailFragment, bundle);
     }
-
 }

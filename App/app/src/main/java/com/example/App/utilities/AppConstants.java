@@ -52,6 +52,10 @@ public class AppConstants {
     public static final int PLACE_POPULAR = 3;
     public static final int PLACE_CATEGORIES = 4;
 
+    public static final String BUNDLE_CATEGORY_TYPE = "CATEGORIA";
 
-
+    public static String TAB_RATING = "W";
+    public static String TAB_NEAREST = "W";
+    public static String TAB_TWITTER = "W";
+    public static String TAB_CATEGORY = "W";
 }

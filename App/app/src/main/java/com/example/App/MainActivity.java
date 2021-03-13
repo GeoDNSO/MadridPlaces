@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.App.utilities.AppConstants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -39,11 +40,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
         initializeUI();
 
+        setGlobalVariables();
+
         App app = App.getInstance(this);
         app.setMenu(drawerNavigationView.getMenu());
         app.setBottomNavigationView(bottomNavView);
         app.setMainActivity(this);
         app.askLocationPermission();
+    }
+
+    private void setGlobalVariables() {
+        AppConstants.TAB_RATING = getString(R.string.tab_rating);
+        AppConstants.TAB_NEAREST = getString(R.string.tab_nearest);
+        AppConstants.TAB_TWITTER = getString(R.string.tab_twitter);
+        AppConstants.TAB_CATEGORY = getString(R.string.tab_category);
     }
 
 

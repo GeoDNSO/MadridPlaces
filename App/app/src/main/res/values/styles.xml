@@ -23,4 +23,9 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlActivated">#FFD700</item>
+        <item name="colorControlNormal">@color/grey</item>
+    </style>
 </resources>

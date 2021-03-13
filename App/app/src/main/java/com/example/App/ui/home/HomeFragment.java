@@ -18,6 +18,7 @@ import com.example.App.App;
 import com.example.App.R;
 import com.example.App.ui.categories.CategoriesFragment;
 import com.example.App.ui.places_list.PlacesListFragment;
+import com.example.App.ui.places_list.subclasses.PlaceFragmentFactory;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -80,9 +81,12 @@ public class HomeFragment extends Fragment{
     private void prepareViewPager() {
         HomeTabAdapter homeTabAdapter = new HomeTabAdapter(getChildFragmentManager());
 
+        PlaceFragmentFactory placeFragmentFactory = new PlaceFragmentFactory();
+
         for(int i = 0; i < tabTitlesList.size()-1; i++){
-                Fragment placeListFragment = new PlacesListFragment();
-                homeTabAdapter.addFragment(placeListFragment, tabTitlesList.get(i));
+            //Fragment placeListFragment = new PlacesListFragment();
+            Fragment placeListFragment = placeFragmentFactory.getInstance(tabTitlesList.get(i), null);
+            homeTabAdapter.addFragment(placeListFragment, tabTitlesList.get(i));
         }
         Fragment categoryFragment = new CategoriesFragment();
         int last = (tabTitlesList.size()-1);

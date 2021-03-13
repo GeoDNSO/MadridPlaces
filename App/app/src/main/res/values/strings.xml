@@ -92,5 +92,6 @@
     <string name="tab_rating">Mejor Valorados</string>
     <string name="tab_twitter">Populares</string>
     <string name="tab_category">Categorías</string>
+    <string name="place_address_example">Calle Puerto Lorem de Ipsu Norte</string>
 
 </resources>

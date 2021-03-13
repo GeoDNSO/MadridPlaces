@@ -13,6 +13,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,8 +66,6 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
         TPlace place = placeList.get(position);
 
-
-
         //Efecto shimmer
         Shimmer shimmer = new Shimmer.ColorHighlightBuilder()
                 .setBaseColor(Color.parseColor("#F3F3F3"))
@@ -82,7 +81,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         shimmerDrawable.setShimmer(shimmer);
 
         //Nombre del Lugar
-        int maxLength = 17;
+        int maxLength = 24;
         int tvLength = place.getName().length();
         String finalTitle = place.getName();
 
@@ -93,6 +92,11 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         }
         holder.tvPlaceName.setText(finalTitle);
 
+        //Otra informacion
+        holder.tvPlaceAddress.setText(place.getAddress());
+        holder.tvPlaceDistance.setText("500m");
+        holder.ratingBar.setRating((float)place.getRating());
+        holder.tvPlaceNumberOfRatings.setText("100 Valoraciones");
 
 
         //Rating del lugar
@@ -165,7 +169,11 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         TextView tvPlaceName;
         ImageView favImage;
         TextView tvRatingValue;
-        ImageView starImage;
+        TextView tvPlaceAddress;
+        TextView tvPlaceDistance;
+        RatingBar ratingBar;
+        TextView tvPlaceNumberOfRatings;
+
 
         private OnPlaceListener onPlaceListener;
 
@@ -176,7 +184,10 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
             tvPlaceName = itemView.findViewById(R.id.tvPlaceName);
             favImage = itemView.findViewById(R.id.favImage);
             tvRatingValue = itemView.findViewById(R.id.tvPlaceRating);
-            starImage = itemView.findViewById(R.id.placeStarImage);
+            tvPlaceAddress = itemView.findViewById(R.id.tvPlaceAddress);
+            tvPlaceDistance = itemView.findViewById(R.id.tvPlaceDistance);
+            ratingBar = itemView.findViewById(R.id.placeRatingBar);
+            tvPlaceNumberOfRatings = itemView.findViewById(R.id.tvPlaceNumberOfRatings);
 
             this.onPlaceListener = onPlaceListener;
             itemView.setOnClickListener(this);
