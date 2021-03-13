@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="horizontal">
@@ -15,23 +16,39 @@
             android:id="@+id/comment_profile_image"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="15dp"
-            android:src="@drawable/ic_launcher_img"/>
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_launcher_img"
+            app:layout_constraintBottom_toBottomOf="@+id/comment_username"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/comment_username"
+            app:layout_constraintVertical_bias="0.52" />
 
         <TextView
             android:id="@+id/comment_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
             android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
             android:text="mitch.tabian"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/comment_profile_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/comment_more_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_more_options"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <LinearLayout
