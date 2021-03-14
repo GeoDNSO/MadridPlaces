@@ -11,7 +11,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import android.widget.Toast;
 
 import com.example.App.R;
 import com.example.App.models.transfer.TCategory;
-import com.example.App.ui.places_list.subclasses.CategoryPlacesFragment;
 import com.example.App.utilities.AppConstants;
 
 import java.util.ArrayList;
@@ -29,6 +27,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
 
 
     private List<String> categoriesTitles;
+    private List<Integer> categoriesIcons;
     private List<TCategory> categoryList;
     private CategoriesAdapter categoriesAdapter;
 
@@ -74,7 +73,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     public void getData(){
         categoryList = new ArrayList<>();
         for(int i = 0; i < categoriesTitles.size(); ++i){
-            categoryList.add(new TCategory(categoriesTitles.get(i), R.drawable.ic_launcher_img));
+            categoryList.add(new TCategory(categoriesTitles.get(i), categoriesIcons.get(i)));
         }
     }
 
@@ -97,6 +96,26 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         categoriesTitles.add("Restaurantes");
         categoriesTitles.add("Templos, Iglesias Católicas");
         categoriesTitles.add("Tiendas");
+
+        categoriesIcons = new ArrayList<>();
+        categoriesIcons.add(R.drawable.ic_hotel);
+        categoriesIcons.add(R.drawable.ic_club);
+        categoriesIcons.add(R.drawable.ic_singular_place);
+        categoriesIcons.add(R.drawable.ic_memorial);
+        categoriesIcons.add(R.drawable.ic_ornament);
+        categoriesIcons.add(R.drawable.ic_abstract);
+        categoriesIcons.add(R.drawable.ic_statue);
+        categoriesIcons.add(R.drawable.ic_fountain);
+        categoriesIcons.add(R.drawable.ic_sculpture);
+        categoriesIcons.add(R.drawable.ic_monument);
+        categoriesIcons.add(R.drawable.ic_exhibition_museum);
+        categoriesIcons.add(R.drawable.ic_direccion_turismo);
+        categoriesIcons.add(R.drawable.ic_puente);
+        categoriesIcons.add(R.drawable.ic_puerta);
+        categoriesIcons.add(R.drawable.ic_fork_restaurant);
+        categoriesIcons.add(R.drawable.ic_church);
+        categoriesIcons.add(R.drawable.ic_shop);
+
     }
 
     @Override

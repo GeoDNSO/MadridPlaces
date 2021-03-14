@@ -36,7 +36,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommentsFragment extends Fragment {
+public class CommentsFragment extends Fragment implements CommentListAdapter.CommentObserver {
     private String placeName;
     private View root;
     private CommentsViewModel mViewModel;
@@ -85,7 +85,7 @@ public class CommentsFragment extends Fragment {
             public void onChanged(List<TComment> tComments) {
                 commentsList = tComments;
                 if(tComments != null) {
-                    commentListAdapter = new CommentListAdapter(getActivity(), commentsList);
+                    commentListAdapter = new CommentListAdapter(getActivity(), commentsList, CommentsFragment.this);
                 }
                 recyclerView.setAdapter(commentListAdapter);
             }
@@ -206,7 +206,7 @@ public class CommentsFragment extends Fragment {
         if(commentsList == null){
             commentsList = new ArrayList<>();
         }
-        commentListAdapter = new CommentListAdapter(getActivity(), commentsList);
+        commentListAdapter = new CommentListAdapter(getActivity(), commentsList, this);
         
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(commentListAdapter);
@@ -244,7 +244,7 @@ public class CommentsFragment extends Fragment {
                 commentsList.add(comment);
             }
 
-            commentListAdapter = new CommentListAdapter(getActivity(), commentsList);
+            commentListAdapter = new CommentListAdapter(getActivity(), commentsList, this);
             recyclerView.setAdapter(commentListAdapter);
 
         }
@@ -261,4 +261,8 @@ public class CommentsFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
+    @Override
+    public void onCommentDelete(int position) {
+        Toast.makeText(getActivity(), "Delete a Comentario Num " + position, Toast.LENGTH_SHORT).show();
+    }
 }
