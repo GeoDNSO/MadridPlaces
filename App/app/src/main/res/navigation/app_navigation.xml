@@ -92,4 +92,9 @@
         android:name="com.example.App.ui.places_list.subclasses.CategoryPlacesFragment"
         android:label="place_list_by_category_fragment"
         tools:layout="@layout/place_list_by_category_fragment" />
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.App.ui.map.MapFragment"
+        android:label="map_fragment"
+        tools:layout="@layout/map_fragment" />
 </navigation>

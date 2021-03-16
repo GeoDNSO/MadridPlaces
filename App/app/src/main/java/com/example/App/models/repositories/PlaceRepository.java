@@ -290,6 +290,8 @@ public class PlaceRepository extends Repository{
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(jsonString);
+            String a = jsonObject.getString("road_number");
+
             List<String> jsonImagesList = jsonArrayImagesToStringList(jsonObject.getJSONArray("imageList"));
             return new TPlace(
                     jsonObject.getString("name"),

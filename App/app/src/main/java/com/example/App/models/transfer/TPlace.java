@@ -40,6 +40,7 @@ public class TPlace implements JSONSerializable, Parcelable {
         this.city = city;
         this.road_class = road_class;
         this.road_name = road_name;
+        this.road_number = road_number;
         this.zipcode = zipcode;
         this.affluence = affluence;
         this.rating = rating;

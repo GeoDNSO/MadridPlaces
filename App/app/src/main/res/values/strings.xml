@@ -94,5 +94,7 @@
     <string name="tab_category">Categorías</string>
     <string name="place_address_example">Calle Puerto Lorem de Ipsu Norte</string>
     <string name="delete_comment">Borrar</string>
+    <string name="description">Descripción</string>
+    <string name="geolocation">Geolocalización</string>
 
 </resources>
