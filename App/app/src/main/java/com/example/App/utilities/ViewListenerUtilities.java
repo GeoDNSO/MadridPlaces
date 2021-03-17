@@ -7,9 +7,10 @@ import android.widget.TextView;
 public class ViewListenerUtilities {
 
 
-    public static void makeTextViewExpandable(TextView textView, Boolean isCollapsed){
+    public static void makeTextViewExpandable(TextView textView, Boolean isCollapsed) {
         textView.setOnClickListener(new View.OnClickListener() {
             private boolean aisCollapsed = isCollapsed;
+
             @Override
             public void onClick(View v) {
                 if (aisCollapsed) {
@@ -22,11 +23,10 @@ public class ViewListenerUtilities {
         });
     }
 
-    public static void setVisibility(ProgressBar progressBar, boolean isVisible){
-        if(isVisible){
+    public static void setVisibility(ProgressBar progressBar, boolean isVisible) {
+        if (isVisible) {
             progressBar.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             progressBar.setVisibility(View.GONE);
         }
     }

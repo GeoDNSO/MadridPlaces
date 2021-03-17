@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.models.transfer.TUser;
+import com.example.App.utilities.UserInterfaceUtils;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
 import com.squareup.picasso.Picasso;
@@ -66,19 +67,8 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
         TPlace place = placeList.get(position);
 
-        //Efecto shimmer
-        Shimmer shimmer = new Shimmer.ColorHighlightBuilder()
-                .setBaseColor(Color.parseColor("#F3F3F3"))
-                .setBaseAlpha(1)
-                .setHighlightColor(Color.parseColor("#E7E7E7"))
-                .setHighlightAlpha(1)
-                .setDropoff(50)
-                .build();
-
-        //Shimmer Drawable
         ShimmerDrawable shimmerDrawable = new ShimmerDrawable();
-
-        shimmerDrawable.setShimmer(shimmer);
+        shimmerDrawable.setShimmer(UserInterfaceUtils.defaultShimmer());
 
         //Nombre del Lugar
         int maxLength = 24;

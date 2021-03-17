@@ -69,7 +69,7 @@ public class PlaceDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.place_detail_fragment_prueba, container, false);
+        root = inflater.inflate(R.layout.place_detail_fragment, container, false);
         
         initUI();
 

@@ -173,7 +173,6 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                     shimmerFrameLayout.setVisibility(View.VISIBLE);
 
                     //Pedimos más datos
-                    //mViewModel.appendPlaces(page, quantum);
                     appendPlaces();
                 }
             }

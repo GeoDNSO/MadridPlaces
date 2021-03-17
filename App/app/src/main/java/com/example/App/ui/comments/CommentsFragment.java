@@ -30,6 +30,7 @@ import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.places_list.PlaceListAdapter;
 import com.example.App.ui.places_list.PlacesListFragment;
 import com.example.App.ui.places_list.PlacesListViewModel;
+import com.example.App.utilities.ViewListenerUtilities;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -107,12 +108,7 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
         mViewModel.getProgressBar().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    progressBar.setVisibility(View.VISIBLE);
-                }
-                else {
-                    progressBar.setVisibility(View.GONE);
-                }
+                ViewListenerUtilities.setVisibility(progressBar, aBoolean);
             }
         });
 
