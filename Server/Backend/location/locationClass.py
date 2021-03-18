@@ -1,13 +1,16 @@
 from flask import Blueprint
 from flask import request
 from flask import jsonify
+from pprint import pprint
 #Contiene las clases de la BD
 import modules
 
 #Funciones auxiliares que no usan rutas
-import comments.commentFunct as CommentFunct
-import rates.rateFunct as RateFunct
 import location.locationFunct as LocationFunct
+
+from geopy.distance import geodesic #Para calcular la proximidad de los lugares
+
+
 
 locationClass = Blueprint("locationClass", __name__)
 
@@ -25,32 +28,35 @@ def newLocation():
     road_name = json_data["road_name"]
     road_number = json_data["road_number"]
     zipcode = json_data["zipcode"]
-    affluence = json_data["affluence"]
+    listImg = json_data["imagesList"]
+    #affluence = json_data["affluence"]
     createLocation = modules.location(name = name, description = description, coordinate_latitude = coordinate_latitude, 
         coordinate_longitude = coordinate_longitude, type_of_place = type_of_place, road_class = road_class, road_name = road_name,
-        road_number = road_number, zipcode = zipcode, affluence = affluence)
+        road_number = road_number, zipcode = zipcode)
     
     try:
         modules.sqlAlchemy.session.add(createLocation)
         modules.sqlAlchemy.session.commit()
-        return jsonify(
-                   exito = "true",
-                   name=createLocation.name,
-                   description=createLocation.description,
-                   coordinate_latitude=createLocation.coordinate_latitude,
-                   coordinate_longitude=createLocation.coordinate_longitude,
-                   type_of_place=createLocation.type_of_place,
-                   city=createLocation.city,
-                   road_class=createLocation.road_class,
-                   road_name=createLocation.road_name,
-                   road_number=createLocation.road_number,
-                   zipcode=createLocation.zipcode,
-                   affluence=createLocation.affluence)
+        i = 0
+        #for decodedImg in listImg:
+        list = listImg.replace("[", "").replace("]", "").split(",")
+        for codedec in list:
+            image = LocationFunct.decode64Img(codedec, i) #image = imgTemp1.jpg
+            url = LocationFunct.uploadImg(image) # url = https://www.imgur.com/imgTemp1.jpg
+            
+            createLocationImage = modules.location_images(location_name = name, image=url)
+            modules.sqlAlchemy.session.add(createLocationImage)
+
+            LocationFunct.delImgTemp(image) #Elimina la imagen temporal almacenada
+            i = i + 1
+
+        modules.sqlAlchemy.session.commit()
+        return LocationFunct.jsonifiedPlace(createLocation)
     except Exception as e:
         print("Error insertando la nueva fila :", repr(e))
         return jsonify(exito = "false")
 
-@locationClass.route('/location/modifyLocation', methods=['POST']) #No se usará
+@locationClass.route('/location/modifyLocation', methods=['POST'])
 def modifyLocation():
 
     json_data = request.get_json()
@@ -83,7 +89,7 @@ def modifyLocation():
         
     return jsonify(exito = "true")
 
-@locationClass.route('/location/readLocation', methods=['GET', 'POST'])
+@locationClass.route('/location/readLocation', methods=['GET', 'POST']) #No se usa 
 def readLocation():
     json_data = request.get_json()
     name = json_data["name"]    
@@ -92,24 +98,12 @@ def readLocation():
 
     if (lcQuery is not None):
         print("success")
-        return jsonify(
-                exito = "true",
-                name = lcQuery.name,
-                description=lcQuery.description,
-                coordinate_latitude=lcQuery.coordinate_latitude,
-                coordinate_longitude=lcQuery.coordinate_longitude,
-                road_class=lcQuery.road_class,
-                road_name=lcQuery.road_name,
-                road_number=lcQuery.road_number,
-                zipcode=lcQuery.zipcode,
-                type_of_place=lcQuery.type_of_place,
-                city=lcQuery.city,
-                affluence=lcQuery.affluence)
+        return LocationFunct.jsonifiedPlace(lcQuery)
 
     print("failure")
     return jsonify(exito = "false")    
 
-@locationClass.route('/location/deleteLocation', methods=['DELETE']) #No se usará
+@locationClass.route('/location/deleteLocation', methods=['DELETE'])
 def deleteLocation():
     json_data = request.get_json()
     name = json_data["name"]    
@@ -141,21 +135,88 @@ def listLocations():
 	        all_items = places.items
 	        lista = []
 	        for place in all_items:
-	            imageList = LocationFunct.listImages(place.name)
-	            avgRate = RateFunct.averageRate(place.name)
-	            obj = {"name" : place.name,
-	            "description":place.description,
-	            "coordinate_latitude":place.coordinate_latitude,
-	            "coordinate_longitude":place.coordinate_longitude,
-	            "type_of_place":place.type_of_place,
-	            "city":place.city,
-	            "road_class":place.road_class,
-	            "road_name":place.road_name,
-	            "road_number":place.road_number,
-	            "zipcode":place.zipcode,
-	            "affluence":place.affluence,
-	            "imageList" : imageList,
-	            "rate" : avgRate }
+		        obj = LocationFunct.completeList(place)
+		        lista.append(obj)
+	        print("success")
+	        return jsonify(
+	                exito = "true",
+	                list = lista)
+
+        print("failure")
+        return jsonify(exito = "false")   
+    except Exception as e:
+        print("Error: ", repr(e))
+        return jsonify(exito = "false") 
+
+@locationClass.route('/location/readImages', methods=['POST']) #Devuelve una lista de URLs de las imagenes de un lugar específico
+def readImages():
+    json_data = request.get_json()
+    name = json_data["name"]
+    try:
+        stQuery = modules.location_images.query.filter_by(location_name=name).all()
+        lista = []
+        for imagen in stQuery:
+            lista.append({"image" : imagen.image})
+        return jsonify(exito = "true", list = lista) 
+    except Exception as e:
+        print("Error mostrando las imágenes: ", repr(e))
+        return jsonify(exito = "false")  
+
+def dts(e):#Funcion auxiliar para ordenar la lista por proximidad
+    return e['distance']
+
+@locationClass.route('/location/listByProximity', methods=['GET', 'POST']) #Devolver una lista de 30 lugares más próximos
+def listByProximity():
+    json_data = request.get_json()
+    userLatitude = json_data["latitude"]
+    userLongitude = json_data["longitude"]
+    radius = json_data["radius"] #No se sabe si el rango es estático o dinámico 
+    nPlaces = json_data["nPlaces"] #Número de lugares que se quiere mostrar 10, 20, 50, 100
+    try:
+        user_coords = (userLatitude, userLongitude)
+        places = modules.location.query.all()
+        lista = [] #Lista con los resultados paginados
+        if(places is not None):
+	        for place in places:
+	        	place_coords = (place.coordinate_latitude, place.coordinate_longitude)
+	        	distance = geodesic(user_coords, place_coords).meters #Distancia calcula entre el usuario y el lugar en METROS
+	        	if(distance <= radius): #Descartamos los lugares que no estén en el radio
+		            obj = LocationFunct.completeList(place)
+		            obj["distance"] = distance
+		            lista.append(obj)
+	        lista.sort(key=dts)
+	        print("success")
+	        return jsonify(
+	                exito = "true",
+	                list = lista[0:nPlaces])
+
+        return jsonify(exito = "false")   
+
+    except Exception as e:
+        print("Error: ", repr(e))
+        return jsonify(exito = "false") 
+
+@locationClass.route('/location/listByCategory', methods=['GET', 'POST'])
+def listByCategory():
+    json_data = request.get_json()
+    page = json_data["page"] #Mostrar de X en X     
+    quant = json_data["quant"]
+    category = json_data["category"]
+    try:
+        idCategory = LocationFunct.mapCategoryToInt(category) #Recoge el número asociado de la categoria
+        tam = modules.location.query.filter_by(type_of_place = idCategory).count()
+
+        comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
+        #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
+        if(comp >= quant):
+            return jsonify(exito = "true", list = [])
+
+        places = modules.location.query.filter_by(type_of_place = idCategory).paginate(per_page=quant, page=page)
+        if(places is not None):
+	        all_items = places.items
+	        lista = []
+	        for place in all_items:
+	            obj = LocationFunct.completeList(place)
 	            lista.append(obj)
 
 	        print("success")
@@ -169,45 +230,35 @@ def listLocations():
         print("Error: ", repr(e))
         return jsonify(exito = "false") 
 
-
-@locationClass.route('/location/stats', methods=['POST']) #Devuelve el listado de comentarios, los datos del lugar y su valoracion
-def stats():
+@locationClass.route('/location/listByCategoryAndProximity', methods=['GET', 'POST'])
+def listByCategoryAndProximity():
     json_data = request.get_json()
-    name = json_data["name"] 
+    category = json_data["category"]
+    userLatitude = json_data["latitude"]
+    userLongitude = json_data["longitude"]
+    radius = json_data["radius"] #Radio del usuario
+    nPlaces = json_data["nPlaces"] #Número de lugares que se quiere mostrar 10, 20, 50, 100, Todos
     try:
-        stQuery = modules.location.query.filter_by(name=name).first()
-        comments = CommentFunct.listComments(name)
-        avgRate = RateFunct.averageRate(name)
-        return jsonify(
-                exito = "true",
-                name = stQuery.name,
-                description=stQuery.description,
-                coordinate_latitude=stQuery.coordinate_latitude,
-                coordinate_longitude=stQuery.coordinate_longitude,
-                type_of_place=stQuery.type_of_place,
-                city=stQuery.city,
-                road_class=stQuery.road_class,
-                road_name=stQuery.road_name,
-                road_number=stQuery.road_number,
-                zipcode=stQuery.zipcode,
-                affluence=stQuery.affluence,
-                rate = avgRate,
-                appComments = comments)
+        idCategory = LocationFunct.mapCategoryToInt(category) #Recoge el número asociado de la categoria
+        places = modules.location.query.filter_by(type_of_place = idCategory)
+        if(places is not None):
+	        lista = []
+	        user_coords = (userLatitude, userLongitude)
+	        for place in places:
+	        	place_coords = (place.coordinate_latitude, place.coordinate_longitude)
+	        	distance = geodesic(user_coords, place_coords).meters #Distancia calcula entre el usuario y el lugar en METROS
+		        if(distance <= radius): #Descartamos los lugares que no estén en el radio
+		            obj = LocationFunct.completeList(place)
+		            obj["distance"] = distance
+		            lista.append(obj)
+	        lista.sort(key=dts)
+	        print("success")
+	        return jsonify(
+	                exito = "true",
+	                list = lista[0:nPlaces])
 
+        print("failure")
+        return jsonify(exito = "false")   
     except Exception as e:
-        print("Error mostrando las estadisticas: ", repr(e))
-        return jsonify(exito = "false")  
-
-@locationClass.route('/location/readImages', methods=['POST'])
-def readImages():
-    json_data = request.get_json()
-    name = json_data["name"]
-    try:
-        stQuery = modules.location_images.query.filter_by(location_name=name).all()
-        lista = []
-        for imagen in stQuery:
-            lista.append({"image" : imagen.image})
-        return jsonify(exito = "true", list = lista) 
-    except Exception as e:
-        print("Error mostrando las imágenes: ", repr(e))
-        return jsonify(exito = "false")  
+        print("Error: ", repr(e))
+        return jsonify(exito = "false") 

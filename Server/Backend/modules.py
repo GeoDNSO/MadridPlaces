@@ -67,3 +67,11 @@ class visited(sqlAlchemy.Model):
     user = sqlAlchemy.Column(sqlAlchemy.String(255))
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
     date_visited =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now())
+
+class tracking(sqlAlchemy.Model):
+    __tablename__ = 'tracking'
+    id_track = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
+    user = sqlAlchemy.Column(sqlAlchemy.String(255))
+    latitude = sqlAlchemy.Column(sqlAlchemy.Float())
+    longitude = sqlAlchemy.Column(sqlAlchemy.Float())
+    passed = sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now())

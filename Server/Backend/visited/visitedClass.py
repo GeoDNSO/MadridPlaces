@@ -65,3 +65,14 @@ def deleteHistory():
     except Exception as e:
         print("Error eliminando el historial: ", repr(e))
         return jsonify(exito = "false")  
+
+@visitedClass.route('/location/countPlaceVisited', methods=['POST']) #Devuelve un listado de lugares, las fechas y las veces que se visitaron
+def countPlaceVisited():
+    json_data = request.get_json()
+    user = json_data["user"]
+    try:
+        vtQuery = modules.visited.query.filter_by(user = user).count() #Los lugares repetidos se contarán también? Preguntar a Dani qué prefiere
+        return jsonify(exito = "true", nVisited = vtQuery) 
+    except Exception as e:
+        print("Error leyendo el historial:", repr(e))
+        return jsonify(exito = "false")

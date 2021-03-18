@@ -218,8 +218,13 @@ public class PlaceDetailFragment extends Fragment {
         modifyPlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                //NavigationView
-                return false;
+                Bundle bundle = new Bundle();
+
+                bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
+
+                //Le pasamos el bundle
+                Navigation.findNavController(root).navigate(R.id.modify_place_scroll_view, bundle);
+                return true;
             }
         });
         MenuItem deletePlace = menu.findItem(R.id.delete_place_menu_button);

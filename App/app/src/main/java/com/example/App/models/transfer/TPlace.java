@@ -220,6 +220,7 @@ public class TPlace implements JSONSerializable, Parcelable {
             infoJSON.put("coordinate_latitude", this.getLatitude());
             infoJSON.put("coordinate_longitude", this.getLongitude());
             infoJSON.put("type_of_place", this.getTypeOfPlace());
+            infoJSON.put("imagesList", this.getImagesList());
             infoJSON.put("city", this.getCity());
             infoJSON.put("road_class", this.getRoad_class());
             infoJSON.put("road_name", this.getRoad_name());
