@@ -24,16 +24,6 @@
         android:visible="false"
         />
 
-    <item android:title="Añadir Lugares">
-        <menu>
-            <item
-                android:id="@+id/addPlaceFragment"
-                android:icon="@drawable/ic_baseline_add_24"
-                android:title="@string/add_place"
-                />
-        </menu>
-    </item>
-
     <item android:title="Opciones de cuenta">
         <menu>
             <item

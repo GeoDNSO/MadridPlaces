@@ -13,7 +13,7 @@ locationClass = Blueprint("locationClass", __name__)
 
 #############################################   Funciones Lugares   #############################################
 
-@locationClass.route('/location/newLocation', methods=['POST']) #No se usará
+@locationClass.route('/location/newLocation', methods=['POST'])
 def newLocation():
     json_data = request.get_json()
     name = json_data["name"]
@@ -25,10 +25,10 @@ def newLocation():
     road_name = json_data["road_name"]
     road_number = json_data["road_number"]
     zipcode = json_data["zipcode"]
-    #affluence = json_data["affluence"]
+    affluence = json_data["affluence"]
     createLocation = modules.location(name = name, description = description, coordinate_latitude = coordinate_latitude, 
         coordinate_longitude = coordinate_longitude, type_of_place = type_of_place, road_class = road_class, road_name = road_name,
-        road_number = road_number, zipcode = zipcode)
+        road_number = road_number, zipcode = zipcode, affluence = affluence)
     
     try:
         modules.sqlAlchemy.session.add(createLocation)

@@ -13,7 +13,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="ChipStyle" parent="Widget.MaterialComponents.Chip.Filter">
+    <style name="ChipStyle" parent="Widget.MaterialComponents.Chip.Choice">
         <item name="chipBackgroundColor">@color/chip_colors</item>
         <item name="android:textColor">@color/chip_text_colors</item>
         <item name="checkedIcon">@null</item>

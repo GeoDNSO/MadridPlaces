@@ -25,7 +25,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class PlaceRepository extends Repository{
-
+    private MutableLiveData<Boolean> mAddPlace = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mHistoryPlacesList = new MutableLiveData<>();
     private MutableLiveData<TPlace> mPlace = new MutableLiveData<>();
@@ -34,6 +34,7 @@ public class PlaceRepository extends Repository{
 
     }
 
+    public LiveData<Boolean> getAddPlace(){ return mAddPlace; }
     public LiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
     public LiveData<List<TPlace>> getHistoryPlacesList(){ return mHistoryPlacesList; }
 
@@ -135,6 +136,84 @@ public class PlaceRepository extends Repository{
                 }
             }
         });
+    }
+
+    public void addPlace(TPlace place){
+        String postBodyString = place.jsonToString();
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_POST, "/location/newLocation"
+        );
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_ADD_PLACE);
+                mAddPlace.postValue(false);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+                mSuccess.postValue(AppConstants.ADD_PLACE);
+                mAddPlace.postValue(true);
+
+            }
+        });
+    }
+
+    public void deletePlace(String placeName){
+        JSONObject jsonPlace = new JSONObject();
+
+        try {
+            jsonPlace.put("name", placeName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String postBodyString = jsonPlace.toString();
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_DELETE, "/location/deleteLocation");
+
+        Call call = simpleRequest.createCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                    throw new IOException("Unexpected code " + response);
+                }
+                Boolean success = simpleRequest.isSuccessful(response);
+                if(success){
+                    mSuccess.postValue(AppConstants.DELETE_PLACE);
+                }
+                else{
+                    mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                }
+
+            }
+        });
+    }
+
+    public void addPlaceImages(String placeName, List<String> listImages){
+
     }
 
     private String pageAndQuantToSTring(int page, int quantity) {

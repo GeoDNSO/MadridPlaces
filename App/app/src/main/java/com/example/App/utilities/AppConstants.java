@@ -42,6 +42,13 @@ public class AppConstants {
     public static final Integer LIST_COMMENTS = 5;
     public static final Integer ERROR_NEW_COMMENT = -6;
     public static final Integer NEW_COMMENT = 6;
+
+    public static final Integer ERROR_ADD_PLACE = -7;
+    public static final Integer ADD_PLACE = 7;
+
+    public static final Integer ERROR_DETAIL_PLACE = -8;
+    public static final Integer DELETE_PLACE = 8;
+
     public static final Integer REQUEST_STORAGE = 1;
 
     public static final String BUNDLE_PROFILE_LIST_DETAILS = "DETAILS_LIST_PROFILE_BUNDLE";

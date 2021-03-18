@@ -6,27 +6,37 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.comments.CommentsFragment;
+import com.example.App.ui.profile.ProfileViewModel;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.TextViewExpandableUtil;
 import com.example.App.utilities.ViewListenerUtilities;
+import com.google.android.material.navigation.NavigationView;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -65,7 +75,11 @@ public class PlaceDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.place_detail_fragment, container, false);
-        
+        setHasOptionsMenu(true);
+
+        mViewModel = new ViewModelProvider(this).get(PlaceDetailViewModel.class);
+        mViewModel.init();
+
         initUI();
 
         place = (TPlace) getArguments().getParcelable(AppConstants.BUNDLE_PLACE_DETAILS);
@@ -73,6 +87,9 @@ public class PlaceDetailFragment extends Fragment {
         fillFields();
 
         listeners();
+
+        observers();
+
 
         //Poner el nombre del lugar en la toolbar
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
@@ -117,6 +134,22 @@ public class PlaceDetailFragment extends Fragment {
 
                 if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
                     ((CommentsFragment) childFragment).onScrollViewAtBottom();
+                }
+            }
+        });
+
+    }
+
+    private void observers(){
+        mViewModel.getPlaceDetailProfileSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer aInteger) {
+                if (aInteger.equals(AppConstants.DELETE_PLACE)) {
+                    Toast.makeText(getActivity(), "Se ha eliminado el lugar", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(root).navigate(R.id.homeFragment);
+                }
+                else {
+                    Toast.makeText(getActivity(), "Algo ha funcionado mal", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -174,6 +207,43 @@ public class PlaceDetailFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(PlaceDetailViewModel.class);
         // TODO: Use the ViewModel
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.option_for_place_navigation_menu, menu);
+
+        MenuItem modifyPlace = menu.findItem(R.id.modify_place_menu_button);
+
+        modifyPlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //NavigationView
+                return false;
+            }
+        });
+        MenuItem deletePlace = menu.findItem(R.id.delete_place_menu_button);
+        deletePlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                deleteDialog();
+                return true;
+            }
+        });
+    }
+
+    public void deleteDialog(){
+        final AlertDialog.Builder deletePlaceDialog = new AlertDialog.Builder(root.getContext());
+        deletePlaceDialog.setTitle(getString(R.string.profile_delete_place));
+        deletePlaceDialog.setMessage(getString(R.string.profile_delete_place_message));
+
+        deletePlaceDialog.setPositiveButton(getString(R.string.alert_yes), (dialog, which) -> {
+            mViewModel.deletePlace(place.getName()); //Llamar al viewmodel para borrar lugar
+        });
+        deletePlaceDialog.setNegativeButton(getString(R.string.alert_no), (dialog, which) -> {
+            //Close
+        });
+        deletePlaceDialog.show();
     }
 
 }

@@ -69,6 +69,7 @@ public class HomeFragment extends Fragment{
                              @Nullable Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.home_fragment, container, false);
+        setHasOptionsMenu(true);
         app = App.getInstance(getActivity());
 
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -152,5 +153,20 @@ public class HomeFragment extends Fragment{
        else{
 
        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.add_place_menu, menu);
+
+        MenuItem addPlace = menu.findItem(R.id.add_place_menu_item);
+
+        addPlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Navigation.findNavController(root).navigate(R.id.addPlaceFragment);
+                return false;
+            }
+        });
     }
 }
