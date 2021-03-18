@@ -20,8 +20,8 @@ def insertarTipos(URL): #Inserta todas las categorias que existen
 		prueba = csv_data.iloc[i, 0]
 		separate = re.split(r'\t', prueba)
 		sep = re.sub('[*0-9]', '', separate[4]) #Quitar algunos casos donde el tab no funciona bien
-		if(separate[4] == "entidadesYorganismos"):
-			separate[4] = "Museo" 
+		separate[4] = categorias(separate[4]) #Cambia los nombres de las categorias 
+
 		if(sep != "-." and separate[4] not in lastCategory):
 			cursor.execute("INSERT IGNORE INTO type_of_place (category) VALUES (%s)", [separate[4]])
 			lastCategory.append(separate[4])
@@ -47,8 +47,8 @@ def insertarSQL(URL): #Inserta todos los lugares
 		separate[1] = re.sub('\x94', '', separate[1])	
 		separate[1] = re.sub('\x85', '', separate[1])
 		if(len(separate) == 9 and (separate[2] != '' or separate[3] != '') and separate[2].count('.') == 1):
-			if(separate[4] == "entidadesYorganismos"):
-				separate[4] = "Museo" 
+
+			separate[4] = categorias(separate[4]) #Cambia los nombres de las categorias
 
 			cursor.execute( "SELECT * FROM type_of_place WHERE category LIKE %s", [separate[4]]) #Recoge la categoria de la tabla de tipos
 			tipo = cursor.fetchone()
@@ -61,6 +61,20 @@ def insertarSQL(URL): #Inserta todos los lugares
 			cursor.execute(sql2, [separate[0], separate[1],latitude,longitude,tipo[0], separate[5], separate[6], separate[7], zipcode])
 	#close the connection to the database.
 	mydb.commit()
+
+def categorias(categoria):
+	ret = ""
+	if(categoria == "entidadesYorganismos"):
+		ret = "Museos" 
+	elif(categoria == "OficinasTurismo"):
+		ret = "Oficinas de Turismo"
+	elif(categoria == "Escultura conceptual o abstracta" or categoria == "Grupo Escultórico" or categoria == "Estatua"or categoria == "Elemento conmemorativo, Lápida" or categoria == "Puente, construcción civil"or categoria == "Fuente, Estanque, Lámina de agua" or categoria == "Elemento de ornamentación" or categoria == "Edificación singular" or categoria == "Puerta, Arco triunfal" or categoria == "MonumentosEdificiosArtisticos"):
+		ret = "Monumentos"
+	elif(categoria == "TemplosIglesiasCatolicas"):
+		ret = "Templos"
+	else:
+		ret = categoria
+	return ret
 
 print("Comenzar a insertar lugares en la BD...")
 #########################################################   Inserción de Categorias   #########################################################
