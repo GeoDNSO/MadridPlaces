@@ -262,3 +262,16 @@ def listByCategoryAndProximity():
     except Exception as e:
         print("Error: ", repr(e))
         return jsonify(exito = "false") 
+
+@locationClass.route('/location/categories', methods=['GET'])
+def categories():
+    try:
+        categories = modules.tPlace.query.all()
+        lista = []
+        for c in categories:
+            lista.append(c.category)
+        return jsonify(exito = "true", list = lista)
+
+    except Exception as e:
+        print("Error: ", repr(e))
+        return jsonify(exito = "false") 
