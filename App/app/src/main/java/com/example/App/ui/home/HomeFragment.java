@@ -32,6 +32,7 @@ import com.example.App.MainActivity;
 import com.example.App.R;
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TPlace;
+import com.example.App.ui.LogoutObserver;
 import com.example.App.ui.places_list.PlaceListAdapter;
 import com.example.App.ui.places_list.PlacesListFragment;
 import com.example.App.utilities.AppConstants;
@@ -45,7 +46,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class HomeFragment extends Fragment{
+public class HomeFragment extends Fragment implements LogoutObserver {
 
     private View root;
     private HomeViewModel mViewModel;
@@ -56,6 +57,8 @@ public class HomeFragment extends Fragment{
 
 
     private App app; //global variable
+
+    private MenuItem addPlace;
 
     private Fragment placeListFragment;
 
@@ -80,6 +83,8 @@ public class HomeFragment extends Fragment{
         viewAccToUser();
 
         actionOnServerAvailable();
+
+        App.getInstance(getActivity()).addLogoutObserver(this);
 
         placeListFragment = new PlacesListFragment();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -159,7 +164,13 @@ public class HomeFragment extends Fragment{
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.add_place_menu, menu);
 
-        MenuItem addPlace = menu.findItem(R.id.add_place_menu_item);
+        addPlace = menu.findItem(R.id.add_place_menu_item);
+        if(App.getInstance(getActivity()).isLogged()){
+            addPlace.setVisible(true);
+        }
+        else {
+            addPlace.setVisible(false);
+        }
 
         addPlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -168,5 +179,10 @@ public class HomeFragment extends Fragment{
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onLogout() {
+        addPlace.setVisible(false);
     }
 }

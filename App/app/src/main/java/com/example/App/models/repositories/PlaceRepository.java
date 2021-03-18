@@ -162,9 +162,15 @@ public class PlaceRepository extends Repository{
                 if (!response.isSuccessful()) {
                     throw new IOException("Unexpected code " + response);
                 }
-                mSuccess.postValue(AppConstants.ADD_PLACE);
-                mAddPlace.postValue(true);
-
+                boolean sucess = simpleRequest.isSuccessful(response);
+                if(sucess){
+                    mSuccess.postValue(AppConstants.ADD_PLACE);
+                    mAddPlace.postValue(true);
+                }
+                else{
+                    mSuccess.postValue(AppConstants.ERROR_ADD_PLACE);
+                    mAddPlace.postValue(false);
+                }
             }
         });
     }

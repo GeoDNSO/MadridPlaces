@@ -29,8 +29,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
+import com.example.App.ui.LogoutObserver;
 import com.example.App.ui.comments.CommentsFragment;
 import com.example.App.ui.profile.ProfileViewModel;
 import com.example.App.utilities.AppConstants;
@@ -44,7 +46,7 @@ import com.smarteist.autoimageslider.SliderView;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
-public class PlaceDetailFragment extends Fragment {
+public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
 
     private View root;
@@ -63,6 +65,8 @@ public class PlaceDetailFragment extends Fragment {
     private ImageView favIcon;
     private TextView tvPlaceDescription;
     private TextView tvPlaceRating;
+    private MenuItem deletePlace;
+    private MenuItem modifyPlace;
 
     private Fragment childFragment;
 
@@ -90,6 +94,7 @@ public class PlaceDetailFragment extends Fragment {
 
         observers();
 
+        App.getInstance(getActivity()).addLogoutObserver(this);
 
         //Poner el nombre del lugar en la toolbar
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
@@ -213,7 +218,7 @@ public class PlaceDetailFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.option_for_place_navigation_menu, menu);
 
-        MenuItem modifyPlace = menu.findItem(R.id.modify_place_menu_button);
+        modifyPlace = menu.findItem(R.id.modify_place_menu_button);
 
         modifyPlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -227,7 +232,7 @@ public class PlaceDetailFragment extends Fragment {
                 return true;
             }
         });
-        MenuItem deletePlace = menu.findItem(R.id.delete_place_menu_button);
+        deletePlace = menu.findItem(R.id.delete_place_menu_button);
         deletePlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -235,6 +240,16 @@ public class PlaceDetailFragment extends Fragment {
                 return true;
             }
         });
+
+        if(App.getInstance(getActivity()).isLogged()){
+            modifyPlace.setVisible(true);
+            deletePlace.setVisible(true);
+        }
+        else {
+            modifyPlace.setVisible(false);
+            deletePlace.setVisible(false);
+
+        }
     }
 
     public void deleteDialog(){
@@ -251,4 +266,9 @@ public class PlaceDetailFragment extends Fragment {
         deletePlaceDialog.show();
     }
 
+    @Override
+    public void onLogout() {
+        modifyPlace.setVisible(false);
+        deletePlace.setVisible(false);
+    }
 }
