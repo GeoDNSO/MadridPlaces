@@ -228,7 +228,7 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
                 bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
 
                 //Le pasamos el bundle
-                Navigation.findNavController(root).navigate(R.id.modify_place_scroll_view, bundle);
+                Navigation.findNavController(root).navigate(R.id.modifyPlaceFragment, bundle);
                 return true;
             }
         });

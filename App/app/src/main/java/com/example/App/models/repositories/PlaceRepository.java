@@ -25,7 +25,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class PlaceRepository extends Repository{
-    private MutableLiveData<Boolean> mAddPlace = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mBooleanPlace = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mHistoryPlacesList = new MutableLiveData<>();
     private MutableLiveData<TPlace> mPlace = new MutableLiveData<>();
@@ -34,7 +34,7 @@ public class PlaceRepository extends Repository{
 
     }
 
-    public LiveData<Boolean> getAddPlace(){ return mAddPlace; }
+    public LiveData<Boolean> getBooleanPlace(){ return mBooleanPlace; }
     public LiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
     public LiveData<List<TPlace>> getHistoryPlacesList(){ return mHistoryPlacesList; }
 
@@ -152,7 +152,7 @@ public class PlaceRepository extends Repository{
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
                 mSuccess.postValue(AppConstants.ERROR_ADD_PLACE);
-                mAddPlace.postValue(false);
+                mBooleanPlace.postValue(false);
                 call.cancel();
             }
 
@@ -165,11 +165,48 @@ public class PlaceRepository extends Repository{
                 boolean sucess = simpleRequest.isSuccessful(response);
                 if(sucess){
                     mSuccess.postValue(AppConstants.ADD_PLACE);
-                    mAddPlace.postValue(true);
+                    mBooleanPlace.postValue(true);
                 }
                 else{
                     mSuccess.postValue(AppConstants.ERROR_ADD_PLACE);
-                    mAddPlace.postValue(false);
+                    mBooleanPlace.postValue(false);
+                }
+            }
+        });
+    }
+
+    public void modifyPlace(TPlace place){
+        String postBodyString = place.jsonToString();
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_POST, "/location/modifyLocation"
+        );
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_MODIFY_PLACE);
+                mBooleanPlace.postValue(false);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+                boolean sucess = simpleRequest.isSuccessful(response);
+                if(sucess){
+                    mSuccess.postValue(AppConstants.MODIFY_PLACE);
+                    mBooleanPlace.postValue(true);
+                }
+                else{
+                    mSuccess.postValue(AppConstants.ERROR_MODIFY_PLACE);
+                    mBooleanPlace.postValue(false);
                 }
             }
         });

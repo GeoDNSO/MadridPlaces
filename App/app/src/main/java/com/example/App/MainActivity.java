@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                 int dest_id = destination.getId();
                 if(dest_id == R.id.loginFragment || dest_id == R.id.registerFragment ||
                         dest_id == R.id.profileFragment || dest_id == R.id.adminFragment ||
-                        dest_id == R.id.detailFragment || dest_id == R.id.addPlaceFragment){
+                        dest_id == R.id.detailFragment || dest_id == R.id.addPlaceFragment || dest_id == R.id.modifyPlaceFragment){
                     bottomNavView.setVisibility(View.GONE);
                 }
                 else{

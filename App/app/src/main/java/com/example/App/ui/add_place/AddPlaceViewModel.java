@@ -29,7 +29,7 @@ public class AddPlaceViewModel extends ViewModelParent {
                 success -> setSuccess(success)
         );
         mAddPlaceSuccess = Transformations.switchMap(
-                placeRepository.getAddPlace(),
+                placeRepository.getBooleanPlace(),
                 success -> setAndGetAddPlace(success));
     }
 

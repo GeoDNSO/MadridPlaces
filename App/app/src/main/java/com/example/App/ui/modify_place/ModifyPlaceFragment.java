@@ -24,7 +24,9 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
@@ -79,8 +81,22 @@ public class ModifyPlaceFragment extends Fragment {
         setValues();
         initListeners();
 
+        listTypesPlaces = mViewModel.getTypesOfPlaces();
+
         addChips();
 
+        mViewModel.getmModifyPlaceSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    Toast.makeText(getActivity(), "Se ha modificado el lugar", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(root).navigate(R.id.homeFragment);
+                }
+                else {
+                    Toast.makeText(getActivity(),  "No se ha podido modificar el lugar", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         return root;
     }
@@ -213,7 +229,6 @@ public class ModifyPlaceFragment extends Fragment {
         if(uriList.size() > 0) {
             for (int i = 0; i < uriList.size(); ++i) {
                 imageStringBase64.add(bitmapToBase64(bitmapList.get(i)));
-                //imageUri.add(convertUriToPath(uriList.get(i)));
             }
         }
         String placeName = et_placeName.getText().toString();
@@ -222,6 +237,6 @@ public class ModifyPlaceFragment extends Fragment {
         if (Validator.argumentsEmpty(placeName, placeDescription, finalTypePlace)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
-        //mViewModel.modifyPlace(placeName, placeDescription, finalTypePlace, imageStringBase64);
+        mViewModel.modifyPlace(placeName, placeDescription, finalTypePlace, imageStringBase64, place);
     }
 }
