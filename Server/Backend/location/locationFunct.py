@@ -54,6 +54,7 @@ def listImages(location): #Devuelve una lista de imagenes de un lugar espefícic
 def jsonifiedPlace(createLocation):
     return jsonify(
                    exito = "true",
+                   imageList = listImages(createLocation.name)
                    name=createLocation.name,
                    description=createLocation.description,
                    coordinate_latitude=createLocation.coordinate_latitude,
