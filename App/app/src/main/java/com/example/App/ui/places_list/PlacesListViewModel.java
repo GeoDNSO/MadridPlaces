@@ -12,6 +12,7 @@ import java.util.List;
 public class PlacesListViewModel extends ViewModelParent {
     private PlaceRepository placeRepository;
     private LiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
+    private LiveData<List<TPlace>> mCategoriesPlacesList = new MutableLiveData<>();
 
     @Override
     public void init() {
@@ -25,7 +26,7 @@ public class PlacesListViewModel extends ViewModelParent {
                 placeRepository.getPlacesList(),
                 places -> setAndGetPlacesList(places));
 
-        mPlacesList = Transformations.switchMap(
+        mCategoriesPlacesList = Transformations.switchMap(
                 placeRepository.getCategoriesPlacesList(),
                 places -> setAndGetPlacesList(places));
 
@@ -70,4 +71,5 @@ public class PlacesListViewModel extends ViewModelParent {
     }
 
     public LiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
+    public LiveData<List<TPlace>> getCategoriesPlacesListPlacesList(){ return mCategoriesPlacesList; }
 }
