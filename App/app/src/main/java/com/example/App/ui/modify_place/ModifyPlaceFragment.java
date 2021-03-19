@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.add_place.AddPlaceViewModel;
@@ -38,6 +40,8 @@ import com.example.App.utilities.Validator;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
+
+import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -126,6 +130,13 @@ public class ModifyPlaceFragment extends Fragment {
             View view = layoutInflater.inflate(R.layout.image_item_fragment, linearLayout, false);
             ImageView imageView = view.findViewById(R.id.imageViewUser);
             //imageView.setImage(uriList.get(i));
+            try{
+                Glide.with(getActivity()).load(place.getImagesList().get(i))
+                        .into(imageView);
+            }catch (Exception e){
+                Log.e("ERR_SLIDER_ADAPTER", "ERROR_CARGA_IMAGEN_SLider_Adapter: Fallo de carga de imagen debido a cierre de socket" +
+                        ", fallo de conexión, timeout, etc... )");
+            }
             imageView.setPadding(10,0,10,0);
             linearLayout.addView(view);
         }
@@ -141,6 +152,12 @@ public class ModifyPlaceFragment extends Fragment {
         for(String typePlace : listTypesPlaces) {
             Chip chip = (Chip) LayoutInflater.from(getContext()).inflate(R.layout.type_place_list_fragment,null, false);
             chip.setText(typePlace);
+
+            if(typePlace.equals(place.getTypeOfPlace())){
+                chip.setChecked(true);
+                finalTypePlace = chip.getText().toString();
+            }
+
             chip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -222,7 +239,11 @@ public class ModifyPlaceFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addPlaceOnClickAction(v);
+                try {
+                    addPlaceOnClickAction(v);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 //Toast.makeText(getActivity(), finalTypePlace, Toast.LENGTH_SHORT).show();
             }
         });
@@ -236,7 +257,7 @@ public class ModifyPlaceFragment extends Fragment {
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
-    private void addPlaceOnClickAction(View v){
+    private void addPlaceOnClickAction(View v) throws JSONException {
         imageStringBase64 = new ArrayList<>();
         if(uriList.size() > 0) {
             for (int i = 0; i < uriList.size(); ++i) {
@@ -249,6 +270,13 @@ public class ModifyPlaceFragment extends Fragment {
         if (Validator.argumentsEmpty(placeName, placeDescription, finalTypePlace)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
-        mViewModel.modifyPlace(placeName, placeDescription, finalTypePlace, imageStringBase64, place);
+        else {
+            if(uriList.size() > 0) {
+                mViewModel.modifyPlace(placeName, placeDescription, finalTypePlace, imageStringBase64, place);
+            }
+            else{
+                mViewModel.modifyPlace(placeName, placeDescription, finalTypePlace, place);
+            }
+        }
     }
 }

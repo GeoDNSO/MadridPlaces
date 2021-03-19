@@ -242,6 +242,10 @@ public class TPlace implements JSONSerializable, Parcelable {
         return this.toJSON().toString();
     }
 
+    public JSONObject json() {
+        return this.toJSON();
+    }
+
     @Override
     public int describeContents() {
         return 0;
