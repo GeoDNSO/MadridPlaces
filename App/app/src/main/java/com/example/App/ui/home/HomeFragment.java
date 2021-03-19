@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +28,11 @@ import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.App.App;
+import com.example.App.MainActivity;
 import com.example.App.R;
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TPlace;
+import com.example.App.ui.LogoutObserver;
 import com.example.App.ui.places_list.PlaceListAdapter;
 import com.example.App.ui.places_list.PlacesListFragment;
 import com.example.App.utilities.AppConstants;
@@ -42,7 +46,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class HomeFragment extends Fragment{
+public class HomeFragment extends Fragment implements LogoutObserver {
 
     private View root;
     private HomeViewModel mViewModel;
@@ -53,6 +57,8 @@ public class HomeFragment extends Fragment{
 
 
     private App app; //global variable
+
+    private MenuItem addPlace;
 
     private Fragment placeListFragment;
 
@@ -66,6 +72,7 @@ public class HomeFragment extends Fragment{
                              @Nullable Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.home_fragment, container, false);
+        setHasOptionsMenu(true);
         app = App.getInstance(getActivity());
 
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -76,6 +83,8 @@ public class HomeFragment extends Fragment{
         viewAccToUser();
 
         actionOnServerAvailable();
+
+        App.getInstance(getActivity()).addLogoutObserver(this);
 
         placeListFragment = new PlacesListFragment();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -149,5 +158,31 @@ public class HomeFragment extends Fragment{
        else{
 
        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.add_place_menu, menu);
+
+        addPlace = menu.findItem(R.id.add_place_menu_item);
+        if(App.getInstance(getActivity()).isLogged()){
+            addPlace.setVisible(true);
+        }
+        else {
+            addPlace.setVisible(false);
+        }
+
+        addPlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Navigation.findNavController(root).navigate(R.id.addPlaceFragment);
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public void onLogout() {
+        addPlace.setVisible(false);
     }
 }

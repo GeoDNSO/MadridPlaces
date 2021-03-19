@@ -3,6 +3,7 @@ package com.example.App.models.transfer;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class TPlace implements JSONSerializable, Parcelable {
     private List<String> imagesList;
     private String typeOfPlace;
     private String city;
-    private String road_class;
+    private String road_class;//junto al mapa, habria que saber si esta creandolo fuera de madrid para no permitirle crear el lugar o algo por el estilo
     private String road_name;
     private String road_number;
     private String zipcode;
@@ -40,6 +41,7 @@ public class TPlace implements JSONSerializable, Parcelable {
         this.city = city;
         this.road_class = road_class;
         this.road_name = road_name;
+        this.road_number = road_number;
         this.zipcode = zipcode;
         this.affluence = affluence;
         this.rating = rating;
@@ -210,12 +212,31 @@ public class TPlace implements JSONSerializable, Parcelable {
 
     @Override
     public JSONObject toJSON() {
-        return null;
+        JSONObject infoJSON = new JSONObject();
+        //Creando el JSON
+        try {
+            infoJSON.put("name", this.getName());
+            infoJSON.put("description", this.getDescription());
+            infoJSON.put("coordinate_latitude", this.getLatitude());
+            infoJSON.put("coordinate_longitude", this.getLongitude());
+            infoJSON.put("type_of_place", this.getTypeOfPlace());
+            infoJSON.put("imagesList", this.getImagesList());
+            infoJSON.put("city", this.getCity());
+            infoJSON.put("road_class", this.getRoad_class());
+            infoJSON.put("road_name", this.getRoad_name());
+            infoJSON.put("road_number", this.getRoad_number());
+            infoJSON.put("zipcode", this.getZipcode());
+            infoJSON.put("affluence", this.getAffluence());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            infoJSON = null;
+        }
+        return infoJSON;
     }
 
     @Override
     public String jsonToString() {
-        return null;
+        return this.toJSON().toString();
     }
 
     @Override
