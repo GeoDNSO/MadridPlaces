@@ -16,6 +16,7 @@ public class ModifyPlaceViewModel extends ViewModelParent {
     private PlaceRepository placeRepository;
     List<String> mListTypesOfPlace;
     private LiveData<Boolean> mModifyPlaceSuccess = new MutableLiveData<>();
+    private LiveData<List<String>> mCategoriesSuccess = new MutableLiveData<>();
 
     public void init(){
         placeRepository = new PlaceRepository();
@@ -27,28 +28,15 @@ public class ModifyPlaceViewModel extends ViewModelParent {
         mModifyPlaceSuccess = Transformations.switchMap(
                 placeRepository.getBooleanPlace(),
                 success -> setAndGetModifyPlace(success));
+
+        mCategoriesSuccess = Transformations.switchMap(
+                placeRepository.getCategoriesList(),
+                success -> setAndGetCategoriesPlace(success));
     }
 
-    public List<String> getTypesOfPlaces(){
-        mListTypesOfPlace.add("Alojamientos");
-        mListTypesOfPlace.add("Clubs");
-        mListTypesOfPlace.add("Edificación singular");
-        mListTypesOfPlace.add("Elemento conmemorativo, Lápida");
-        mListTypesOfPlace.add("Elemento de ornamentación");
-        mListTypesOfPlace.add("Escultura conceptual o abstracta");
-        mListTypesOfPlace.add("Estatua");
-        mListTypesOfPlace.add("Fuente, Estanque, Lámina de agua");
-        mListTypesOfPlace.add("Grupo Escultórico");
-        mListTypesOfPlace.add("Monumentos, Edificios Artísticos");
-        mListTypesOfPlace.add("Museo");
-        mListTypesOfPlace.add("Oficinas Turismo");
-        mListTypesOfPlace.add("Puente, Construcción civil");
-        mListTypesOfPlace.add("Puerta, Arco triunfal");
-        mListTypesOfPlace.add("Restaurantes");
-        mListTypesOfPlace.add("Templos, Iglesias Católicas");
-        mListTypesOfPlace.add("Tiendas");
-
-        return mListTypesOfPlace;
+    public void getTypesOfPlaces(){
+        mProgressBar.setValue(true); //progress bar visible
+        placeRepository.getCategories();
     }
 
     public void modifyPlace(String placeName, String placeDescription, String typePlace, List<String> listImages, TPlace p){
@@ -66,6 +54,13 @@ public class ModifyPlaceViewModel extends ViewModelParent {
         return mAux;
     }
 
+    private LiveData<List<String>> setAndGetCategoriesPlace(List<String> categories){
+        mProgressBar.setValue(false); //progress bar visible
+        MutableLiveData<List<String>> mAux = new MutableLiveData<>();
+        mAux.setValue(categories);
+        return mAux;
+    }
+
     private LiveData<Integer> setSuccess(Integer success) {
         mProgressBar.setValue(false); //progress bar visible
         MutableLiveData<Integer> mAux = new MutableLiveData<>();
@@ -75,6 +70,9 @@ public class ModifyPlaceViewModel extends ViewModelParent {
 
     public LiveData<Boolean> getmModifyPlaceSuccess(){
         return mModifyPlaceSuccess;
+    }
+    public LiveData<List<String>> getmCategoriesSuccess(){
+        return mCategoriesSuccess;
     }
 
 }

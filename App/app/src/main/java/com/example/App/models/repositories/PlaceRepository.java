@@ -28,6 +28,7 @@ public class PlaceRepository extends Repository{
     private MutableLiveData<Boolean> mBooleanPlace = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mHistoryPlacesList = new MutableLiveData<>();
+    private MutableLiveData<List<String>> mCategoriesList = new MutableLiveData<>();
     private MutableLiveData<TPlace> mPlace = new MutableLiveData<>();
 
     public void getPlace() {
@@ -37,6 +38,8 @@ public class PlaceRepository extends Repository{
     public LiveData<Boolean> getBooleanPlace(){ return mBooleanPlace; }
     public LiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
     public LiveData<List<TPlace>> getHistoryPlacesList(){ return mHistoryPlacesList; }
+    public LiveData<List<String>> getCategoriesList(){ return mCategoriesList; }
+
 
     //lista lugares de quantity en quantity en función de page alfabeticamente
     // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
@@ -180,7 +183,7 @@ public class PlaceRepository extends Repository{
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(
                 postBodyString,
-                AppConstants.METHOD_POST, "/location/modifyLocation"
+                AppConstants.METHOD_PUT, "/location/modifyLocation"
         );
         Call call = simpleRequest.createCall(request);
 
@@ -251,6 +254,45 @@ public class PlaceRepository extends Repository{
                     mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
                 }
 
+            }
+        });
+    }
+
+    public void getCategories() {
+        String postBodyString = "";
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/location/categories");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_GET_CATEGORIES);
+                mCategoriesList.postValue(null);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    mSuccess.postValue(AppConstants.ERROR_GET_CATEGORIES);
+                    mCategoriesList.postValue(null);
+                    throw new IOException("Unexpected code " + response);
+                }
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if (success){
+                    mSuccess.postValue(AppConstants.GET_CATEGORIES);//Importante que este despues del postValue de mUser
+                    mCategoriesList.postValue(getCategoriesFromResponse(res));
+                }
+                else{
+                    mSuccess.postValue(AppConstants.ERROR_GET_CATEGORIES);//Importante que este despues del postValue de mUser
+                    mCategoriesList.postValue(null);
+                }
             }
         });
     }
@@ -402,6 +444,23 @@ public class PlaceRepository extends Repository{
                 listPlaces.add(tPlace);
             }
             return listPlaces;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return  null;
+        }
+    }
+
+    public List<String> getCategoriesFromResponse(String res){
+        JSONObject jresponse = null;
+        try {
+            jresponse = new JSONObject(res);
+
+            List<String> listCategories = new ArrayList<>();
+            JSONArray arrayCategories = jresponse.getJSONArray("list");
+            for (int i = 0; i < arrayCategories.length(); i++) {
+                listCategories.add(arrayCategories.getString(i));
+            }
+            return listCategories;
         } catch (JSONException e) {
             e.printStackTrace();
             return  null;

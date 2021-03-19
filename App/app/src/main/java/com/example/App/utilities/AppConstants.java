@@ -52,6 +52,9 @@ public class AppConstants {
     public static final Integer ERROR_MODIFY_PLACE = -9;
     public static final Integer MODIFY_PLACE = 9;
 
+    public static final Integer ERROR_GET_CATEGORIES = -10;
+    public static final Integer GET_CATEGORIES = 10;
+
     public static final Integer REQUEST_STORAGE = 1;
 
     public static final String BUNDLE_PROFILE_LIST_DETAILS = "DETAILS_LIST_PROFILE_BUNDLE";

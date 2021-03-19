@@ -56,7 +56,7 @@ def newLocation():
         print("Error insertando la nueva fila :", repr(e))
         return jsonify(exito = "false")
 
-@locationClass.route('/location/modifyLocation', methods=['POST'])
+@locationClass.route('/location/modifyLocation', methods=['PUT'])
 def modifyLocation():
 
     json_data = request.get_json()
@@ -263,7 +263,7 @@ def listByCategoryAndProximity():
         print("Error: ", repr(e))
         return jsonify(exito = "false") 
 
-@locationClass.route('/location/categories', methods=['GET'])
+@locationClass.route('/location/categories', methods=['POST'])
 def categories():
     try:
         categories = modules.tPlace.query.all()

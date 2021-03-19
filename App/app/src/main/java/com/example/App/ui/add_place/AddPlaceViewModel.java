@@ -19,6 +19,7 @@ public class AddPlaceViewModel extends ViewModelParent {
     private PlaceRepository placeRepository;
     List<String> mListTypesOfPlace;
     private LiveData<Boolean> mAddPlaceSuccess = new MutableLiveData<>();
+    private LiveData<List<String>> mCategoriesSuccess = new MutableLiveData<>();
 
     //observamos los objetos del repositorio, en este caso, el success devuelto por la llamada okhttp
     public void init(){
@@ -31,6 +32,10 @@ public class AddPlaceViewModel extends ViewModelParent {
         mAddPlaceSuccess = Transformations.switchMap(
                 placeRepository.getBooleanPlace(),
                 success -> setAndGetAddPlace(success));
+
+        mCategoriesSuccess = Transformations.switchMap(
+                placeRepository.getCategoriesList(),
+                success -> setAndGetCategoriesPlace(success));
     }
 
     private LiveData<Boolean> setAndGetAddPlace(Boolean success) {
@@ -46,26 +51,16 @@ public class AddPlaceViewModel extends ViewModelParent {
         return mAux;
     }
 
-    public List<String> getTypesOfPlaces(){
-        mListTypesOfPlace.add("Alojamientos");
-        mListTypesOfPlace.add("Clubs");
-        mListTypesOfPlace.add("Edificación singular");
-        mListTypesOfPlace.add("Elemento conmemorativo, Lápida");
-        mListTypesOfPlace.add("Elemento de ornamentación");
-        mListTypesOfPlace.add("Escultura conceptual o abstracta");
-        mListTypesOfPlace.add("Estatua");
-        mListTypesOfPlace.add("Fuente, Estanque, Lámina de agua");
-        mListTypesOfPlace.add("Grupo Escultórico");
-        mListTypesOfPlace.add("Monumentos, Edificios Artísticos");
-        mListTypesOfPlace.add("Museo");
-        mListTypesOfPlace.add("Oficinas Turismo");
-        mListTypesOfPlace.add("Puente, Construcción civil");
-        mListTypesOfPlace.add("Puerta, Arco triunfal");
-        mListTypesOfPlace.add("Restaurantes");
-        mListTypesOfPlace.add("Templos, Iglesias Católicas");
-        mListTypesOfPlace.add("Tiendas");
+    public void getTypesOfPlaces(){
+        mProgressBar.setValue(true); //progress bar visible
+        placeRepository.getCategories();
+    }
 
-        return mListTypesOfPlace;
+    private LiveData<List<String>> setAndGetCategoriesPlace(List<String> categories){
+        mProgressBar.setValue(false); //progress bar visible
+        MutableLiveData<List<String>> mAux = new MutableLiveData<>();
+        mAux.setValue(categories);
+        return mAux;
     }
 
     public void addPlace(String placeName, String placeDescription, String typePlace, List<String> listImages){
@@ -81,5 +76,8 @@ public class AddPlaceViewModel extends ViewModelParent {
 
     public LiveData<Boolean> getmAddPlaceSuccess(){
         return mAddPlaceSuccess;
+    }
+    public LiveData<List<String>> getmCategoriesSuccess(){
+        return mCategoriesSuccess;
     }
 }

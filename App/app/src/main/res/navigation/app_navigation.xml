@@ -94,6 +94,6 @@
     <fragment
         android:id="@+id/modifyPlaceFragment"
         android:name="com.example.App.ui.modify_place.ModifyPlaceFragment"
-        android:label="modify_place_fragment"
+        android:label="@string/modify_place"
         tools:layout="@layout/modify_place_fragment" />
 </navigation>

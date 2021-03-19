@@ -86,10 +86,6 @@ public class AddPlaceFragment extends Fragment {
 
         mViewModel.init();
 
-        listTypesPlaces = mViewModel.getTypesOfPlaces();
-
-        addChips();
-
         mViewModel.getmAddPlaceSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -102,6 +98,17 @@ public class AddPlaceFragment extends Fragment {
                 }
             }
         });
+
+        mViewModel.getmCategoriesSuccess().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> categoriesList) {
+                listTypesPlaces = new ArrayList<>();
+                listTypesPlaces = categoriesList;
+                addChips();
+            }
+        });
+
+
 
         return root;
     }
@@ -134,6 +141,12 @@ public class AddPlaceFragment extends Fragment {
                 //Toast.makeText(getActivity(), finalTypePlace, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mViewModel.getTypesOfPlaces();
     }
 
     private void addChips(){

@@ -81,10 +81,6 @@ public class ModifyPlaceFragment extends Fragment {
         setValues();
         initListeners();
 
-        listTypesPlaces = mViewModel.getTypesOfPlaces();
-
-        addChips();
-
         mViewModel.getmModifyPlaceSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -97,6 +93,16 @@ public class ModifyPlaceFragment extends Fragment {
                 }
             }
         });
+
+        mViewModel.getmCategoriesSuccess().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> categoriesList) {
+                listTypesPlaces = new ArrayList<>();
+                listTypesPlaces = categoriesList;
+                addChips();
+            }
+        });
+
 
         return root;
     }
@@ -123,6 +129,12 @@ public class ModifyPlaceFragment extends Fragment {
             imageView.setPadding(10,0,10,0);
             linearLayout.addView(view);
         }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mViewModel.getTypesOfPlaces();
     }
 
     private void addChips(){
