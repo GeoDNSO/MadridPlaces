@@ -29,6 +29,8 @@ import com.example.App.R;
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.UserInterfaceUtils;
+import com.example.App.utilities.ViewListenerUtilities;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
@@ -117,12 +119,7 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
         mViewModel.getProgressBar().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    progressBar.setVisibility(View.VISIBLE);
-                }
-                else {
-                    progressBar.setVisibility(View.GONE);
-                }
+                ViewListenerUtilities.setVisibility(progressBar, aBoolean);
             }
         });
     }

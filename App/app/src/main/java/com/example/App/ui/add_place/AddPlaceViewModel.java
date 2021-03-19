@@ -65,7 +65,7 @@ public class AddPlaceViewModel extends ViewModelParent {
 
     public void addPlace(String placeName, String placeDescription, String typePlace, List<String> listImages){
         mProgressBar.setValue(true); //progress bar visible
-        TPlace place = new TPlace(placeName, placeDescription, 0.0, 0.0, listImages, "3", "Madrid",
+        TPlace place = new TPlace(placeName, placeDescription, 0.0, 0.0, listImages, typePlace, "Madrid",
                 "", "", "10", "", "", 0.0, false);
         //TODO en type of place no devolvemos elnombre del lugar sino el numero asignado en la base de datos
         placeRepository.addPlace(place);

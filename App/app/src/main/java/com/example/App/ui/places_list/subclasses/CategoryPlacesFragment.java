@@ -36,9 +36,7 @@ public class CategoryPlacesFragment extends BasePlaces{
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View superView =  super.onCreateView(inflater, container, savedInstanceState);
 
-        Log.i("CAT_FRAGGG_PLACES", "LLEGA A ONCREATE VIEW PARA TITLE");
         TCategory tCategory = (TCategory) getArguments().getParcelable(AppConstants.BUNDLE_CATEGORY_TYPE);
         category = tCategory.getName();
 
@@ -47,16 +45,20 @@ public class CategoryPlacesFragment extends BasePlaces{
         ActionBar actionBar = appCompatActivity.getSupportActionBar();
         actionBar.setTitle(category);
 
+        //Primero es necesario instanciar el tipo de categoria de este fragmento para que la llamada a super
+        //no ejecute con valores nulos la llamada a la BD
+        View superView =  super.onCreateView(inflater, container, savedInstanceState);
+
         return superView;
     }
 
     @Override
     public void appendPlaces() {
-        super.mViewModel.appendPlaces(page, quantum);
+        super.mViewModel.appendPlaces(page, quantum, this.category);
     }
 
     @Override
     public void listPlaces() {
-        super.mViewModel.listPlaces(page, quantum);
+        super.mViewModel.listPlaces(page, quantum, this.category);
     }
 }

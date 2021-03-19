@@ -28,6 +28,7 @@ public class PlaceRepository extends Repository{
     private MutableLiveData<Boolean> mBooleanPlace = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mHistoryPlacesList = new MutableLiveData<>();
+    private MutableLiveData<List<TPlace>> mCategoriesPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<String>> mCategoriesList = new MutableLiveData<>();
     private MutableLiveData<TPlace> mPlace = new MutableLiveData<>();
 
@@ -39,6 +40,7 @@ public class PlaceRepository extends Repository{
     public LiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
     public LiveData<List<TPlace>> getHistoryPlacesList(){ return mHistoryPlacesList; }
     public LiveData<List<String>> getCategoriesList(){ return mCategoriesList; }
+    public MutableLiveData<List<TPlace>> getCategoriesPlacesList() { return mCategoriesPlacesList; }
 
 
     //lista lugares de quantity en quantity en función de page alfabeticamente
@@ -316,6 +318,22 @@ public class PlaceRepository extends Repository{
         return infoString;
     }
 
+    private String paramsToGetCategoriePlace(int page, int quantity, String category) {
+        JSONObject json = new JSONObject();
+        String infoString;
+        try {
+            json.put("page", page);
+            json.put("quant", quantity);
+            json.put("category", category);
+        }catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = json.toString();
+
+        return infoString;
+    }
+
     public void closePlaces() {
 
     }
@@ -426,6 +444,104 @@ public class PlaceRepository extends Repository{
                 }
                 else{
                     mHistoryPlacesList.postValue(null);
+                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
+                }
+            }
+        });
+    }
+
+    public void listPlacesCategories(int page, int quantity, String category) {
+
+        String postBodyString = paramsToGetCategoriePlace(page, quantity, category);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/location/listByCategory");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
+                Log.d("CCC", "FAILURE GORDO");
+                mCategoriesPlacesList.postValue(null);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (!response.isSuccessful()) {
+                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
+                    throw new IOException("Unexpected code " + response);
+                }
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if (success){
+                    mCategoriesPlacesList.postValue(getListFromResponse(res));
+                    Log.i("XX", "Categorias tiene valor");
+                    mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
+                }
+                else{
+                    mCategoriesPlacesList.postValue(null);
+                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
+                }
+            }
+        });
+    }
+
+    //lista lugares de quantity en quantity en función de page alfabeticamente añadiendo anteriores
+    // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
+    public void appendPlacesCategories(int page, int quantity, String category) {
+
+        String postBodyString = paramsToGetCategoriePlace(page, quantity, category);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/location/listByCategory");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
+                mCategoriesPlacesList.postValue(null);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (!response.isSuccessful()) {
+                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
+                    throw new IOException("Unexpected code " + response);
+                }
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                List<TPlace> listaAux = mPlacesList.getValue();
+                if (success){
+                    if (listaAux.isEmpty()){
+                        Log.d("Info", "La lista esta vacia inicialmente");
+                        mCategoriesPlacesList.postValue(getListFromResponse(res));
+                    }
+                    else{
+                        listaAux.addAll(getListFromResponse(res));
+                        mCategoriesPlacesList.postValue(listaAux);
+                    }
+                    mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
+                }
+                else{
+                    mCategoriesPlacesList.postValue(null);
                     mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
                 }
             }

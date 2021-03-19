@@ -25,6 +25,11 @@ public class PlacesListViewModel extends ViewModelParent {
                 placeRepository.getPlacesList(),
                 places -> setAndGetPlacesList(places));
 
+        mPlacesList = Transformations.switchMap(
+                placeRepository.getCategoriesPlacesList(),
+                places -> setAndGetPlacesList(places));
+
+
     }
 
     //Peticion de quant lugares de la pagina page al servidor
@@ -37,6 +42,18 @@ public class PlacesListViewModel extends ViewModelParent {
     public void appendPlaces(int page, int quant){
         mProgressBar.postValue(true);
         placeRepository.appendPlaces(page, quant);
+    }
+
+    //Peticion de quant lugares de la pagina page al servidor
+    public void listPlaces(int page, int quant, String category){
+        mProgressBar.postValue(true);
+        placeRepository.listPlacesCategories(page, quant, category);
+    }
+
+    //Peticion de quant lugares de la pagina page al servidor añadiendo anteriores
+    public void appendPlaces(int page, int quant, String category){
+        mProgressBar.postValue(true);
+        placeRepository.appendPlacesCategories(page, quant, category);
     }
 
     private LiveData<List<TPlace>> setAndGetPlacesList(List<TPlace> places) {

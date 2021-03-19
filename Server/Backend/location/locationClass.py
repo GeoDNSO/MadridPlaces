@@ -30,8 +30,9 @@ def newLocation():
     zipcode = json_data["zipcode"]
     listImg = json_data["imagesList"]
     #affluence = json_data["affluence"]
+    typeofplace = LocationFunct.mapCategoryToInt(type_of_place)
     createLocation = modules.location(name = name, description = description, coordinate_latitude = coordinate_latitude, 
-        coordinate_longitude = coordinate_longitude, type_of_place = type_of_place, road_class = road_class, road_name = road_name,
+        coordinate_longitude = coordinate_longitude, type_of_place = typeofplace, road_class = road_class, road_name = road_name,
         road_number = road_number, zipcode = zipcode)
     
     try:
@@ -218,7 +219,7 @@ def listByCategory():
 	        for place in all_items:
 	            obj = LocationFunct.completeList(place)
 	            lista.append(obj)
-
+            
 	        print("success")
 	        return jsonify(
 	                exito = "true",

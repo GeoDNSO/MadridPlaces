@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.viewpager.widget.ViewPager;
 
 import android.util.Log;
@@ -32,6 +33,7 @@ import com.example.App.ui.places_list.PlaceListAdapter;
 
 import com.example.App.ui.places_list.PlacesListFragment;
 import com.example.App.ui.places_list.subclasses.PlaceFragmentFactory;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;

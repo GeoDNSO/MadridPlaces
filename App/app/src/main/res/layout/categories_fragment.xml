@@ -7,14 +7,28 @@
     android:paddingBottom="?actionBarSize"
     tools:context=".ui.categories.CategoriesFragment">
 
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/category_RecyclerView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:nestedScrollingEnabled="false"
-            tools:listitem="@layout/category_item"/>
+            android:orientation="vertical">
+
+                <ProgressBar
+                    android:id="@+id/category_progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/category_RecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/category_item"/>
+
+
+
+        </LinearLayout>
+
 
 
 </androidx.core.widget.NestedScrollView>
