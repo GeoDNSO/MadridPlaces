@@ -26,7 +26,7 @@ class location(sqlAlchemy.Model):
     description = sqlAlchemy.Column(sqlAlchemy.String(1500)) #A lo mejor es necesario cambiar la longitud
     coordinate_latitude = sqlAlchemy.Column(sqlAlchemy.Float())
     coordinate_longitude = sqlAlchemy.Column(sqlAlchemy.Float()) 
-    type_of_place = sqlAlchemy.Column(sqlAlchemy.String(255))
+    type_of_place = sqlAlchemy.Column(sqlAlchemy.Integer())
     city = sqlAlchemy.Column(sqlAlchemy.String(255), default="Madrid")
     road_class = sqlAlchemy.Column(sqlAlchemy.String(255))
     road_name = sqlAlchemy.Column(sqlAlchemy.String(255))

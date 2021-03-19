@@ -58,7 +58,7 @@ def jsonifiedPlace(createLocation):
                    description=createLocation.description,
                    coordinate_latitude=createLocation.coordinate_latitude,
                    coordinate_longitude=createLocation.coordinate_longitude,
-                   type_of_place=createLocation.type_of_place,
+                   type_of_place=maptIntToCategory(createLocation.type_of_place),
                    city=createLocation.city,
                    road_class=createLocation.road_class,
                    road_name=createLocation.road_name,
@@ -74,7 +74,7 @@ def completeList(place):
     "description":place.description,
     "coordinate_latitude":place.coordinate_latitude,
     "coordinate_longitude":place.coordinate_longitude,
-    "type_of_place":place.type_of_place,
+    "type_of_place":maptIntToCategory(place.type_of_place),
     "city":place.city,
     "road_class":place.road_class,
     "road_name":place.road_name,
@@ -100,4 +100,18 @@ def mapCategoryToInt(category):
 
 	return idCategories[category]
 
+
+def maptIntToCategory(idCategory):
+  idCategories = {
+  1 : "Oficinas de Turismo",
+  2 : "Clubs",
+  3 :"Tiendas",
+  4 :"Restaurantes",
+  5 :"Alojamientos",
+  6 :"Monumentos",
+  7 :"Museos",
+  8 :"Templos"
+  }
+
+  return idCategories[category]
 
