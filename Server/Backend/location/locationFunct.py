@@ -113,5 +113,5 @@ def maptIntToCategory(idCategory):
   8 :"Templos"
   }
 
-  return idCategories[category]
+  return idCategories[idCategory]
 
