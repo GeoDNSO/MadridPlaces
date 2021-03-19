@@ -105,6 +105,22 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
             }
         });
 
+        mViewModel.getCategoriesPlacesListPlacesList().observe(getViewLifecycleOwner(), new Observer<List<TPlace>>() {
+            @Override
+            public void onChanged(List<TPlace> tPlaces) {
+                if(tPlaces == null){
+                    Log.d("ERROR_NULO", "tPLaces nulo");
+                    return;
+                }
+
+                placeList = tPlaces; //TODO Aquí hay un bug que hay que arreglar
+
+                placeListAdapter = new PlaceListAdapter(getActivity(), placeList, BasePlaces.this);
+
+                recyclerView.setAdapter(placeListAdapter);
+            }
+        });
+
         mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
