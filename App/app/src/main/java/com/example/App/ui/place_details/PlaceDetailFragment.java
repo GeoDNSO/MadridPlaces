@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +66,11 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
     private ImageView favIcon;
     private TextView tvPlaceDescription;
     private TextView tvPlaceRating;
+
+    private RatingBar ratingBar;
+    private TextView tvAddress;
+    private TextView tvNumberOfRatings;
+
     private MenuItem deletePlace;
     private MenuItem modifyPlace;
 
@@ -133,6 +139,17 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
             }
         });
 
+        ivMapIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
+
+                //Le pasamos el bundle
+                Navigation.findNavController(root).navigate(R.id.mapFragment, bundle);
+            }
+        });
+
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -163,18 +180,14 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
     private void fillFields() {
 
-        /*
-        try{
-            Glide.with(this.getActivity()).load(place.getImagesList().get(0))
-                    .into(placeImage);
-        }catch (Exception e){
-            Log.e("ERROR_CARGA_IMAGEN", "PlaceDetailFragment: Fallo de carga de imagen debido a cierre de socket" +
-                    ", fallo de conexión, timeout, etc... )");
-        }
-        */
-
         tvPlaceName.setText(place.getName());
         tvPlaceDescription.setText(place.getName() + "desc :" + place.getDescription());
+
+        tvAddress.setText(place.getAddress());
+
+        tvNumberOfRatings.setText(500 + " Calificaciones");
+
+        ratingBar.setRating((float) place.getRating());
 
         DecimalFormat df = new DecimalFormat("#.#");
         df.setRoundingMode(RoundingMode.CEILING);
@@ -201,6 +214,12 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         favIcon = root.findViewById(R.id.favDetailsImage);
         tvPlaceDescription = root.findViewById(R.id.placeDetailsDescription);
         tvPlaceRating = root.findViewById(R.id.tvPlaceDetailsRating);
+
+        tvNumberOfRatings = root.findViewById(R.id.tvPlaceDetailsNumberOfRatings);
+
+        tvAddress = root.findViewById(R.id.tvPlaceDetailAddress);
+        ratingBar = root.findViewById(R.id.placeDetailRatingBar);
+
 
         sliderView = root.findViewById(R.id.placeDetail_slide_view);
 

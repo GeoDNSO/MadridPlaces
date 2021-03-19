@@ -28,6 +28,7 @@ import com.example.App.ui.admin.AdminViewModel;
 import com.example.App.ui.places_list.PlaceListAdapter;
 import com.example.App.ui.places_list.PlacesListFragment;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ViewListenerUtilities;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
@@ -90,12 +91,7 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
         mViewModel.getProgressBar().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    progressBar.setVisibility(View.VISIBLE);
-                }
-                else {
-                    progressBar.setVisibility(View.GONE);
-                }
+                ViewListenerUtilities.setVisibility(progressBar, aBoolean);
             }
         });
 
@@ -169,16 +165,9 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
 
     @Override
     public void OnHistoryListClick(int position) {
-        //Enviar datos del objeto con posicion position de la lista al otro fragment
-        //Toast.makeText(getActivity(), "Listener del item " + position, Toast.LENGTH_LONG).show();
         Bundle bundle = new Bundle();
-        /*
-        TPlace place = new TPlace("Lugar en Posicion "+position, getString(R.string.lorem_ipsu), "direccion",
-                3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid",
-                "Localidad", "Afluencia", 4.0f, false);
-        */
-        TPlace place = historyplaceList.get(position);
 
+        TPlace place = historyplaceList.get(position);
         bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
 
         //Le pasamos el bundle

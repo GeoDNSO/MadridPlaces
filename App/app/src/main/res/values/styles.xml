@@ -18,4 +18,16 @@
         <item name="android:textColor">@color/chip_text_colors</item>
         <item name="checkedIcon">@null</item>
     </style>
+
+    <style name="SplashTheme" parent="Theme.App.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlActivated">#FFD700</item>
+        <item name="colorControlNormal">@color/grey</item>
+    </style>
+
+
 </resources>

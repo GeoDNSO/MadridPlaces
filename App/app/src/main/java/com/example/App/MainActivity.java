@@ -3,6 +3,7 @@ package com.example.App;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -12,12 +13,17 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.widget.Toolbar;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.PermissionsManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -34,17 +40,28 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Thread.sleep(300); //Para añadir un pequeño delay antes del splash screen
-        //setTheme(R.style.Theme_App);
+        setTheme(R.style.Theme_App);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         initializeUI();
+
+        setGlobalVariables();
 
         App app = App.getInstance(this);
         app.setMenu(drawerNavigationView.getMenu());
         app.setBottomNavigationView(bottomNavView);
         app.setMainActivity(this);
         app.askLocationPermission();
+
+    }
+
+
+    private void setGlobalVariables() {
+        AppConstants.TAB_RATING = getString(R.string.tab_rating);
+        AppConstants.TAB_NEAREST = getString(R.string.tab_nearest);
+        AppConstants.TAB_TWITTER = getString(R.string.tab_twitter);
+        AppConstants.TAB_CATEGORY = getString(R.string.tab_category);
     }
 
 
@@ -137,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         app.setMenu(drawerNavigationView.getMenu());
     }
 
+
     //Para la flecha de arriba
     @Override
     public boolean onSupportNavigateUp() {
@@ -172,6 +190,33 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     @Override
     public Menu sortNameMenuItem() {
         return rightSideNavView.getMenu();
+    }
+
+    //@TODO activar y desactivar el servicio de tracking
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        Log.i("SET", "LLEGA A ONREQUEST");
+        switch (requestCode) {
+            case PermissionsManager
+                    .GEOLOCATION_REQUEST_CODE:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission is granted. Continue the action or workflow
+                    // in your app.
+                    Log.i("SET", "Permiso garantizado");
+
+                }  else {
+                    // Explain to the user that the feature is unavailable because
+                    // the features requires a permission that the user has denied.
+                    // At the same time, respect the user's decision. Don't link to
+                    // system settings in an effort to convince the user to change
+                    // their decision.
+                    Log.i("SET", "SIN PERMISO");
+                }
+                return;
+        }
+        // Other 'case' lines to check for other
+        // permissions this app might request.
     }
 
 }

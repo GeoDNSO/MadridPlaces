@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
+import com.example.App.utilities.UserInterfaceUtils;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
 
@@ -56,20 +57,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     public void onBindViewHolder(@NonNull HistoryAdapter.HistoryViewHolder holder, int position) {
         TPlace place = historyPlaceList.get(position);
 
-        //Efecto shimmer
-        Shimmer shimmer = new Shimmer.ColorHighlightBuilder()
-                .setBaseColor(Color.parseColor("#F3F3F3"))
-                .setBaseAlpha(1)
-                .setHighlightColor(Color.parseColor("#E7E7E7"))
-                .setHighlightAlpha(1)
-                .setDropoff(50)
-                .build();
-
-        //Shimmer Drawable
+       //Shimmer Drawable
         ShimmerDrawable shimmerDrawable = new ShimmerDrawable();
-
-        shimmerDrawable.setShimmer(shimmer);
-
+        shimmerDrawable.setShimmer(UserInterfaceUtils.defaultShimmer());
 
         //Imagen del Lugar
         //load sirve para multitud de recursos: enlaces, drawables, bitmaps, etc...
@@ -87,9 +77,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         //Nombre del Lugar
         holder.tvPlaceName.setText(place.getName());
         //Rating del lugar
-        DecimalFormat df = new DecimalFormat("#.#");
-        df.setRoundingMode(RoundingMode.CEILING);
-        holder.tvRatingValue.setText(df.format(place.getRating()));
+        String validRating = UserInterfaceUtils.rating2UIString(place.getRating());
+        holder.tvRatingValue.setText(validRating);
 
         int favTint = ContextCompat.getColor(activity, R.color.grey);
         if(place.isUserFav()){

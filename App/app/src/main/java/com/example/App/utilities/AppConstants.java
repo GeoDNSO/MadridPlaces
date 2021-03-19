@@ -62,4 +62,15 @@ public class AppConstants {
     public static final String BROWSER_LIST_TYPE_PLACES = "TYPE_PLACES_BROWSER_LIST";
     public static final String BROWSER_SEARCH_PLACE_NAME = "SEARCH_PLACE_NAME_BROWSER";
 
+    public static final int PLACE_NEAREST = 1;
+    public static final int PLACE_RATING = 2;
+    public static final int PLACE_POPULAR = 3;
+    public static final int PLACE_CATEGORIES = 4;
+
+    public static final String BUNDLE_CATEGORY_TYPE = "CATEGORIA";
+
+    public static String TAB_RATING = "W";
+    public static String TAB_NEAREST = "W";
+    public static String TAB_TWITTER = "W";
+    public static String TAB_CATEGORY = "W";
 }

@@ -99,6 +99,9 @@ public class TPlace implements JSONSerializable, Parcelable {
      * Devuelve la dirección completa del lugar
      * */
     public String getAddress(){
+        if(road_number == null)
+            return this.road_class + " " +  this.road_name +", "+ this.zipcode;
+
         return this.road_class + " " +  this.road_name + " " + road_number +", "+ this.zipcode;
     }
 

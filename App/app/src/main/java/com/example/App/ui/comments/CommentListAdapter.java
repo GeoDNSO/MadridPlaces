@@ -5,10 +5,12 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,10 +34,12 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
     private Activity activity;
     private List<TComment> commentList;
+    private CommentObserver commentObserver;
 
-    public CommentListAdapter(Activity activity, List<TComment> commentList){
+    public CommentListAdapter(Activity activity, List<TComment> commentList, CommentObserver commentObserver){
         this.activity = activity;
         this.commentList = commentList;
+        this.commentObserver = commentObserver;
 
         Toast.makeText(activity, "Coments: " + commentList.size(), Toast.LENGTH_SHORT).show();
     }
@@ -85,6 +89,39 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
         ViewListenerUtilities.makeTextViewExpandable(holder.tvComment, true);
 
+
+        holder.ivOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createPopMenu(holder, position).show();
+            }
+        });
+
+    }
+
+    private PopupMenu createPopMenu(@NonNull CommentListAdapter.ViewHolder holder, int position){
+        PopupMenu popupMenu = new PopupMenu(activity.getApplicationContext(), holder.ivOptions);
+
+        popupMenu.inflate(R.menu.comment_item_menu);
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                switch (item.getItemId()){
+                    case R.id.delete_commentMenu:
+                        commentObserver.onCommentDelete(position);
+                        break;
+                    default:
+                        break;
+
+                }
+
+                return false;
+            }
+        });
+
+        return popupMenu;
     }
 
     @Override
@@ -100,6 +137,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         private TextView tvComment;
         private TextView tvDate;
         private RatingBar ratingBar;
+        private ImageView ivOptions;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -108,11 +146,18 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             tvComment = itemView.findViewById(R.id.comment_textview);
             tvDate = itemView.findViewById(R.id.comment_time_posted);
             ratingBar = itemView.findViewById(R.id.comment_rating_bar);
+            ivOptions = itemView.findViewById(R.id.comment_more_options);
+
+
         }
 
         @Override
         public void onClick(View v) {
 
         }
+    }
+
+    public interface CommentObserver{
+        public void onCommentDelete(int position);
     }
 }
