@@ -25,17 +25,21 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class PlaceRepository extends Repository{
-
+    private MutableLiveData<Boolean> mBooleanPlace = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mHistoryPlacesList = new MutableLiveData<>();
+    private MutableLiveData<List<String>> mCategoriesList = new MutableLiveData<>();
     private MutableLiveData<TPlace> mPlace = new MutableLiveData<>();
 
     public void getPlace() {
 
     }
 
+    public LiveData<Boolean> getBooleanPlace(){ return mBooleanPlace; }
     public LiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
     public LiveData<List<TPlace>> getHistoryPlacesList(){ return mHistoryPlacesList; }
+    public LiveData<List<String>> getCategoriesList(){ return mCategoriesList; }
+
 
     //lista lugares de quantity en quantity en función de page alfabeticamente
     // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
@@ -135,6 +139,166 @@ public class PlaceRepository extends Repository{
                 }
             }
         });
+    }
+
+    public void addPlace(TPlace place){
+        String postBodyString = place.jsonToString();
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_POST, "/location/newLocation"
+        );
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_ADD_PLACE);
+                mBooleanPlace.postValue(false);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+                boolean sucess = simpleRequest.isSuccessful(response);
+                if(sucess){
+                    mSuccess.postValue(AppConstants.ADD_PLACE);
+                    mBooleanPlace.postValue(true);
+                }
+                else{
+                    mSuccess.postValue(AppConstants.ERROR_ADD_PLACE);
+                    mBooleanPlace.postValue(false);
+                }
+            }
+        });
+    }
+
+    public void modifyPlace(TPlace place){
+        String postBodyString = place.jsonToString();
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_PUT, "/location/modifyLocation"
+        );
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_MODIFY_PLACE);
+                mBooleanPlace.postValue(false);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+                boolean sucess = simpleRequest.isSuccessful(response);
+                if(sucess){
+                    mSuccess.postValue(AppConstants.MODIFY_PLACE);
+                    mBooleanPlace.postValue(true);
+                }
+                else{
+                    mSuccess.postValue(AppConstants.ERROR_MODIFY_PLACE);
+                    mBooleanPlace.postValue(false);
+                }
+            }
+        });
+    }
+
+    public void deletePlace(String placeName){
+        JSONObject jsonPlace = new JSONObject();
+
+        try {
+            jsonPlace.put("name", placeName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String postBodyString = jsonPlace.toString();
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_DELETE, "/location/deleteLocation");
+
+        Call call = simpleRequest.createCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                    throw new IOException("Unexpected code " + response);
+                }
+                Boolean success = simpleRequest.isSuccessful(response);
+                if(success){
+                    mSuccess.postValue(AppConstants.DELETE_PLACE);
+                }
+                else{
+                    mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                }
+
+            }
+        });
+    }
+
+    public void getCategories() {
+        String postBodyString = "";
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/location/categories");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_GET_CATEGORIES);
+                mCategoriesList.postValue(null);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    mSuccess.postValue(AppConstants.ERROR_GET_CATEGORIES);
+                    mCategoriesList.postValue(null);
+                    throw new IOException("Unexpected code " + response);
+                }
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if (success){
+                    mSuccess.postValue(AppConstants.GET_CATEGORIES);//Importante que este despues del postValue de mUser
+                    mCategoriesList.postValue(getCategoriesFromResponse(res));
+                }
+                else{
+                    mSuccess.postValue(AppConstants.ERROR_GET_CATEGORIES);//Importante que este despues del postValue de mUser
+                    mCategoriesList.postValue(null);
+                }
+            }
+        });
+    }
+
+    public void addPlaceImages(String placeName, List<String> listImages){
+
     }
 
     private String pageAndQuantToSTring(int page, int quantity) {
@@ -280,6 +444,23 @@ public class PlaceRepository extends Repository{
                 listPlaces.add(tPlace);
             }
             return listPlaces;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return  null;
+        }
+    }
+
+    public List<String> getCategoriesFromResponse(String res){
+        JSONObject jresponse = null;
+        try {
+            jresponse = new JSONObject(res);
+
+            List<String> listCategories = new ArrayList<>();
+            JSONArray arrayCategories = jresponse.getJSONArray("list");
+            for (int i = 0; i < arrayCategories.length(); i++) {
+                listCategories.add(arrayCategories.getString(i));
+            }
+            return listCategories;
         } catch (JSONException e) {
             e.printStackTrace();
             return  null;

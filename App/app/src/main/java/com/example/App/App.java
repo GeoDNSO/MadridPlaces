@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TUser;
+import com.example.App.ui.LogoutObserver;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.TextViewExpandableUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -28,6 +29,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
@@ -41,7 +43,7 @@ public class App {
     private SessionManager sessionManager;
 
     private static App app;
-
+    private List<LogoutObserver> logoutObservers;
     private Context context;
     private Menu menu;
     private BottomNavigationView bottomNavigationView;
@@ -54,7 +56,7 @@ public class App {
     private App(Context context) {
         this.context = context;
         sessionManager = new SessionManager(context);
-
+        logoutObservers = new ArrayList<>();
         //Param configuration
         TextViewExpandableUtil.seeMore = context.getString(R.string.see_more);
         TextViewExpandableUtil.seeLess = context.getString(R.string.see_less);
@@ -70,7 +72,14 @@ public class App {
 
     public void logout() {
         sessionManager.logout();
+        for (int i = 0; i < logoutObservers.size(); ++i){
+            logoutObservers.get(i).onLogout();
+        }
         Toast.makeText(getMainActivity(), "Se ha cerrado la sesión", Toast.LENGTH_SHORT).show();
+    }
+
+    public void addLogoutObserver(LogoutObserver logoutObserver){
+        logoutObservers.add(logoutObserver);
     }
 
     public void setUserSession(TUser user) {

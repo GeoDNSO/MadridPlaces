@@ -58,6 +58,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="user_profile_list">Perfil Usuario</string>
 
+    <!--Strings relativos al formulario de add lugares-->
+    <string name="place_default_type_place">Tipo de lugar</string>
 
     <!--Strings relativos al side bar right-->
     <string name="sort_ascending_username">Nombre de usuario A - Z</string>
@@ -84,6 +86,16 @@
     <string name="number">5</string>
     <string name="typeOfPlace">Tipo de lugar</string>
     <string name="typeOfPlaces">Tipo de lugares</string>
+    <string name="add_place">Añadir Lugar</string>
+    <string name="add_place_title">Añadir imagenes </string>
+    <string name="add_place_coordinates">Pulsar el lugar donde se encuentra</string>
+
+    <string name="modify_place">Modificar Lugar</string>
+    <string name="modify_place_title">Cambiar imagenes </string>
+
+    <string name="profile_delete_place">Borrar Lugar</string>
+    <string name="profile_delete_place_message">¿Estás seguro de que quieres borrar la cuenta?</string>
+
     <string name="search">Buscar</string>
     <string name="no_internet">No se pudieron obtener datos, inténtelo más tarde</string>
 
@@ -96,5 +108,7 @@
     <string name="delete_comment">Borrar</string>
     <string name="description">Descripción</string>
     <string name="geolocation">Geolocalización</string>
+
+    <string name="delete_place">Borrar Lugar</string>
 
 </resources>

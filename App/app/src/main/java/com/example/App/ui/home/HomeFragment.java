@@ -11,12 +11,25 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.App.App;
+import com.example.App.MainActivity;
 import com.example.App.R;
+
 import com.example.App.ui.categories.CategoriesFragment;
+
+import com.example.App.models.dao.SimpleRequest;
+import com.example.App.models.transfer.TPlace;
+import com.example.App.ui.LogoutObserver;
+import com.example.App.ui.places_list.PlaceListAdapter;
+
 import com.example.App.ui.places_list.PlacesListFragment;
 import com.example.App.ui.places_list.subclasses.PlaceFragmentFactory;
 import com.google.android.material.tabs.TabLayout;
@@ -24,12 +37,14 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment{
+public class HomeFragment extends Fragment implements LogoutObserver {
 
     private View root;
     private HomeViewModel mViewModel;
 
     private App app; //global variable
+
+    private MenuItem addPlace;
 
     private Fragment placeListFragment;
 
@@ -48,6 +63,7 @@ public class HomeFragment extends Fragment{
                              @Nullable Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.home_fragment, container, false);
+        setHasOptionsMenu(true);
         app = App.getInstance(getActivity());
 
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -57,6 +73,7 @@ public class HomeFragment extends Fragment{
         initializeListeners();
         viewAccToUser();
         actionOnServerAvailable();
+
 
         //TabLayout
         tabTitlesList = new ArrayList<>();
@@ -68,6 +85,10 @@ public class HomeFragment extends Fragment{
         tabLayout.setupWithViewPager(viewPager);
 
         prepareViewPager();
+
+        
+
+        App.getInstance(getActivity()).addLogoutObserver(this);
 
         /*
         placeListFragment = new PlacesListFragment();
@@ -133,5 +154,31 @@ public class HomeFragment extends Fragment{
        else{
 
        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.add_place_menu, menu);
+
+        addPlace = menu.findItem(R.id.add_place_menu_item);
+        if(App.getInstance(getActivity()).isLogged()){
+            addPlace.setVisible(true);
+        }
+        else {
+            addPlace.setVisible(false);
+        }
+
+        addPlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Navigation.findNavController(root).navigate(R.id.addPlaceFragment);
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public void onLogout() {
+        addPlace.setVisible(false);
     }
 }
