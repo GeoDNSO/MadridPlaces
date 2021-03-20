@@ -74,8 +74,20 @@ def modifyLocation():
     affluence = json_data["affluence"]
     listImg = json_data["imagesList"]
     try:
-        imgQuery = modules.location_images.query.filter_by(location_name = oldName).delete()
+        i = 0
+        l = listImg.replace("[", "").replace("]", "").split(",")
+        listUrl = []
+        for img in l:
+            if("http" not in img):
+                image = LocationFunct.decode64Img(img, i) #image = imgTemp1.jpg
+                url = LocationFunct.uploadImg(image) # url = https://www.imgur.com/imgTemp1.jpg
+                listUrl.append(url)
+                LocationFunct.delImgTemp(image) #Elimina la imagen temporal almacenada
+                i = i + 1
+            else:
+                listUrl.append(img)
 
+        imgQuery = modules.location_images.query.filter_by(location_name = oldName).delete()
         modifiedLocation = modules.location.query.filter_by(name=oldName).first()
         modifiedLocation.name = name
         modifiedLocation.description = description
@@ -87,24 +99,13 @@ def modifyLocation():
         modifiedLocation.road_number = road_number
         modifiedLocation.zipcode = zipcode
         modifiedLocation.affluence = affluence
-        #modules.sqlAlchemy.session.commit()
-        i = 0
-        l = listImg.replace("[", "").replace("]", "").split(",")
-        for img in l:
-            if("http" not in img):
-                image = LocationFunct.decode64Img(img, i) #image = imgTemp1.jpg
-                url = LocationFunct.uploadImg(image) # url = https://www.imgur.com/imgTemp1.jpg
-                
-                createLocationImage = modules.location_images(location_name = name, image=url)
-                modules.sqlAlchemy.session.add(createLocationImage)
-
-                LocationFunct.delImgTemp(image) #Elimina la imagen temporal almacenada
-                i = i + 1
-            else:
-                createLocationImage = modules.location_images(location_name = name, image=img)
-                modules.sqlAlchemy.session.add(createLocationImage)
-        
         modules.sqlAlchemy.session.commit()
+
+        for url in listUrl:
+            createLocationImage = modules.location_images(location_name = name, image=url)
+            modules.sqlAlchemy.session.add(createLocationImage)
+        modules.sqlAlchemy.session.commit()
+
         lcQuery = modules.location.query.filter_by(name = name).first() 
     except Exception as e:
         print("Error modificando lugar:", repr(e))
