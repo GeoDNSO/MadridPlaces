@@ -100,16 +100,9 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         }
         ImageViewCompat.setImageTintList(holder.favImage, ColorStateList.valueOf(favTint));
 
-
-        try{
-            Glide.with(activity).load(place.getImagesList().get(0))
-                    .placeholder(shimmerDrawable)
-                    .into(holder.placeImage);
-        }catch (Exception e){
-            Log.e("ERROR_CARGA_IMAGEN", "PlaceListAdapter: Fallo de carga de imagen debido a cierre de socket" +
-                    ", fallo de conexión, timeout, etc... )");
-        }
-
+        //Cargar imagen en el viewholder / imageview
+        String url = place.getImagesList().get(0);
+        UserInterfaceUtils.loadImageWithShimmer(activity, url, shimmerDrawable, holder.placeImage);
 
     }
 

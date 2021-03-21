@@ -1,13 +1,40 @@
 package com.example.App.utilities;
 
+import android.app.Activity;
 import android.graphics.Color;
+import android.media.Image;
+import android.util.Log;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.facebook.shimmer.Shimmer;
+import com.facebook.shimmer.ShimmerDrawable;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public class UserInterfaceUtils {
+
+    public static void loadImageWithShimmer(Activity activity, String url, ShimmerDrawable shimmerDrawable, ImageView imageView){
+        try{
+            Glide.with(activity).load(url)
+                    .placeholder(shimmerDrawable)
+                    .into(imageView);
+        }catch (Exception e){
+            Log.e("ERROR_CARGA_IMAGEN", "PlaceListAdapter: Fallo de carga de imagen debido a cierre de socket" +
+                    ", fallo de conexión, timeout, etc... )");
+        }
+    }
+
+    public static void loadImage(Activity activity, String url, ImageView imageView){
+        try{
+            Glide.with(activity).load(url)
+                    .into(imageView);
+        }catch (Exception e){
+            Log.e("ERROR_CARGA_IMAGEN", "PlaceListAdapter: Fallo de carga de imagen debido a cierre de socket" +
+                    ", fallo de conexión, timeout, etc... )");
+        }
+    }
 
     public static Shimmer defaultShimmer(){
         //Efecto shimmer

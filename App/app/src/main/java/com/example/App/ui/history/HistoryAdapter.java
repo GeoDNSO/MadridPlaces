@@ -62,14 +62,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         shimmerDrawable.setShimmer(UserInterfaceUtils.defaultShimmer());
 
         //Imagen del Lugar
-        //load sirve para multitud de recursos: enlaces, drawables, bitmaps, etc...
-        //@TODO decidir como se obtendran las imagenes para poder seleccionar un metodo...
-        /*
-        Glide.with(activity).load(place.getImage())
-                .placeholder(shimmerDrawable)
-                .into(holder.placeImage);
-        */
-
         Glide.with(activity).load(R.drawable.imagen_lugar_default)
                 .placeholder(shimmerDrawable)
                 .into(holder.placeImage);
