@@ -9,6 +9,8 @@ import com.example.App.models.repositories.PlaceRepository;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.ViewModelParent;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,13 +41,21 @@ public class ModifyPlaceViewModel extends ViewModelParent {
         placeRepository.getCategories();
     }
 
-    public void modifyPlace(String placeName, String placeDescription, String typePlace, List<String> listImages, TPlace p){
+    public void modifyPlace(String placeName, String placeDescription, String typePlace, List<String> listImages, TPlace p) throws JSONException {
         mProgressBar.setValue(true); //progress bar visible
-        TPlace place = new TPlace(placeName, placeDescription, p.getLatitude(), p.getLongitude(), listImages, p.getTypeOfPlace(), p.getCity(),
+        TPlace place = new TPlace(placeName, placeDescription, p.getLatitude(), p.getLongitude(), listImages, typePlace, p.getCity(),
                 p.getRoad_class(), p.getRoad_name(), p.getRoad_number(), p.getZipcode(), p.getAffluence(), p.getRating(), p.isUserFav());
         //TODO en type of place no devolvemos elnombre del lugar sino el numero asignado en la base de datos
-        placeRepository.modifyPlace(place);
+        placeRepository.modifyPlace(place, p.getName());
 
+    }
+
+    public void modifyPlace(String placeName, String placeDescription, String typePlace, TPlace p) throws JSONException {
+        mProgressBar.setValue(true); //progress bar visible
+        TPlace place = new TPlace(placeName, placeDescription, p.getLatitude(), p.getLongitude(), p.getImagesList(), typePlace, p.getCity(),
+                p.getRoad_class(), p.getRoad_name(), p.getRoad_number(), p.getZipcode(), p.getAffluence(), p.getRating(), p.isUserFav());
+        //TODO en type of place no devolvemos elnombre del lugar sino el numero asignado en la base de datos
+        placeRepository.modifyPlace(place, p.getName());
     }
 
     private LiveData<Boolean> setAndGetModifyPlace(Boolean success) {

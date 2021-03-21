@@ -180,8 +180,10 @@ public class PlaceRepository extends Repository{
         });
     }
 
-    public void modifyPlace(TPlace place){
-        String postBodyString = place.jsonToString();
+    public void modifyPlace(TPlace place, String oldName) throws JSONException {
+        String postBodyString = place.json().put("oldName", oldName).toString();
+
+        Log.d ("aaa", postBodyString);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(
                 postBodyString,
@@ -528,7 +530,7 @@ public class PlaceRepository extends Repository{
                 String res = response.body().string();
                 boolean success = simpleRequest.isSuccessful(res);
 
-                List<TPlace> listaAux = mPlacesList.getValue();
+                List<TPlace> listaAux = mCategoriesPlacesList.getValue();
                 if (success){
                     if (listaAux.isEmpty()){
                         Log.d("Info", "La lista esta vacia inicialmente");

@@ -61,6 +61,7 @@ def newLocation():
 def modifyLocation():
 
     json_data = request.get_json()
+    oldName = json_data["oldName"]
     name = json_data["name"]
     description = json_data["description"]
     coordinate_latitude = json_data["coordinate_latitude"]
@@ -71,24 +72,46 @@ def modifyLocation():
     zipcode = json_data["zipcode"]
     type_of_place = json_data["type_of_place"]
     affluence = json_data["affluence"]
+    listImg = json_data["imagesList"]
     try:
-        modifiedLocation = modules.location.query.filter_by(name=name).first()
+        i = 0
+        l = listImg.replace("[", "").replace("]", "").split(",")
+        listUrl = []
+        for img in l:
+            if("http" not in img):
+                image = LocationFunct.decode64Img(img, i) #image = imgTemp1.jpg
+                url = LocationFunct.uploadImg(image) # url = https://www.imgur.com/imgTemp1.jpg
+                listUrl.append(url)
+                LocationFunct.delImgTemp(image) #Elimina la imagen temporal almacenada
+                i = i + 1
+            else:
+                listUrl.append(img)
+
+        imgQuery = modules.location_images.query.filter_by(location_name = oldName).delete()
+        modifiedLocation = modules.location.query.filter_by(name=oldName).first()
         modifiedLocation.name = name
         modifiedLocation.description = description
         modifiedLocation.coordinate_latitude = coordinate_latitude
         modifiedLocation.coordinate_longitude = coordinate_longitude
-        modifiedLocation.type_of_place = type_of_place
+        modifiedLocation.type_of_place = LocationFunct.mapCategoryToInt(type_of_place)
         modifiedLocation.road_class = road_class
         modifiedLocation.road_name = road_name
         modifiedLocation.road_number = road_number
         modifiedLocation.zipcode = zipcode
         modifiedLocation.affluence = affluence
         modules.sqlAlchemy.session.commit()
+
+        for url in listUrl:
+            createLocationImage = modules.location_images(location_name = name, image=url)
+            modules.sqlAlchemy.session.add(createLocationImage)
+        modules.sqlAlchemy.session.commit()
+
+        lcQuery = modules.location.query.filter_by(name = name).first() 
     except Exception as e:
         print("Error modificando lugar:", repr(e))
         return jsonify(exito = "false")
         
-    return jsonify(exito = "true")
+    return LocationFunct.jsonifiedPlace(lcQuery)
 
 @locationClass.route('/location/readLocation', methods=['GET', 'POST']) #No se usa 
 def readLocation():
