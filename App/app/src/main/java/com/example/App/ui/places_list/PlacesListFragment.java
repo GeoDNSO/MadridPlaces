@@ -1,12 +1,10 @@
 package com.example.App.ui.places_list;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,25 +22,21 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.utilities.AppConstants;
-import com.example.App.utilities.UserInterfaceUtils;
 import com.example.App.utilities.ViewListenerUtilities;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnPlaceListener {
 
-    private PlacesListViewModel mViewModel;
+    private PlaceListViewModel mViewModel;
     private View root;
 
     //UI Elements
@@ -69,7 +63,7 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
 
         placeList = new ArrayList<>();
 
-        mViewModel = new ViewModelProvider(this).get(PlacesListViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(PlaceListViewModel.class);
         mViewModel.init();
 
         page = 1;

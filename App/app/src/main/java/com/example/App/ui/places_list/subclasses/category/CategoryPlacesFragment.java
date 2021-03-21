@@ -1,7 +1,6 @@
-package com.example.App.ui.places_list.subclasses;
+package com.example.App.ui.places_list.subclasses.category;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.App.models.transfer.TCategory;
+import com.example.App.ui.places_list.subclasses.BasePlaces;
+import com.example.App.ui.places_list.subclasses.BaseViewModel;
 import com.example.App.utilities.AppConstants;
 
 import java.util.ArrayList;
 
-public class CategoryPlacesFragment extends BasePlaces{
+public class CategoryPlacesFragment extends BasePlaces {
 
     //Cambiar llamadas a viewmodel segun el tipo de lugares que se busque
     protected String category;
@@ -53,12 +55,17 @@ public class CategoryPlacesFragment extends BasePlaces{
     }
 
     @Override
-    public void appendPlaces() {
-        super.mViewModel.appendPlaces(page, quantum, this.category);
-    }
+    public void appendPlaces() { super.mViewModel.appendPlaces(page, quantum); }
 
     @Override
-    public void listPlaces() {
-        super.mViewModel.listPlaces(page, quantum, this.category);
+    public void listPlaces() { super.mViewModel.listPlaces(page, quantum);  }
+
+    @Override
+    public BaseViewModel getViewModelToParent() {
+        CategoryPlaceViewModel cvm = new ViewModelProvider(this).get(CategoryPlaceViewModel.class);
+        cvm.setCategory(category);
+        return cvm;
     }
+
+
 }

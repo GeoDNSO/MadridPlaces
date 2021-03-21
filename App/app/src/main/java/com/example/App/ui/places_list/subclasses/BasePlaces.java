@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +24,7 @@ import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.places_list.PlaceListAdapter;
 import com.example.App.ui.places_list.PlacesListFragment;
-import com.example.App.ui.places_list.PlacesListViewModel;
+import com.example.App.ui.places_list.PlaceListViewModel;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ViewListenerUtilities;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -37,7 +36,7 @@ import java.util.concurrent.Executors;
 
 public abstract class BasePlaces extends Fragment implements PlaceListAdapter.OnPlaceListener {
 
-    protected PlacesListViewModel mViewModel;
+    protected BaseViewModel mViewModel;
     protected View root;
 
     //UI Elements
@@ -56,6 +55,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
     //Funciones a implementar en los hijos según el tipo de lugares a mostrar
     public abstract void appendPlaces();
     public abstract void listPlaces();
+    public abstract BaseViewModel getViewModelToParent();
 
     public static PlacesListFragment newInstance() {
         return new PlacesListFragment();
@@ -73,7 +73,8 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                              @Nullable Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.places_list_fragment, container, false);
-        mViewModel = new ViewModelProvider(this).get(PlacesListViewModel.class);
+        //mViewModel = new ViewModelProvider(this).get(BaseViewModel.class);
+        mViewModel = getViewModelToParent();
         mViewModel.init();
 
         page = 1;
@@ -105,6 +106,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
             }
         });
 
+        /*
         mViewModel.getCategoriesPlacesListPlacesList().observe(getViewLifecycleOwner(), new Observer<List<TPlace>>() {
             @Override
             public void onChanged(List<TPlace> tPlaces) {
@@ -120,6 +122,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                 recyclerView.setAdapter(placeListAdapter);
             }
         });
+*/
 
         mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override

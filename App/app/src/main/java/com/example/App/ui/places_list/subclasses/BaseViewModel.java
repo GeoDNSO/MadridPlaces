@@ -1,18 +1,18 @@
-package com.example.App.ui.places_list;
+package com.example.App.ui.places_list.subclasses;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
+
 import com.example.App.models.repositories.PlaceRepository;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.ViewModelParent;
 
 import java.util.List;
 
-public class PlacesListViewModel extends ViewModelParent {
-    private PlaceRepository placeRepository;
-    private LiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
-    private LiveData<List<TPlace>> mCategoriesPlacesList = new MutableLiveData<>();
+public abstract class BaseViewModel extends ViewModelParent {
+    protected PlaceRepository placeRepository;
+    protected LiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
 
     @Override
     public void init() {
@@ -23,38 +23,41 @@ public class PlacesListViewModel extends ViewModelParent {
         );
 
         mPlacesList = Transformations.switchMap(
-                placeRepository.getPlacesList(),
+                getPlaceListToParent(),
                 places -> setAndGetPlacesList(places));
-
-        mCategoriesPlacesList = Transformations.switchMap(
-                placeRepository.getCategoriesPlacesList(),
-                places -> setAndGetPlacesList(places));
-
 
     }
+
+    protected abstract LiveData<List<TPlace>> getPlaceListToParent();
+
+    public abstract void listPlaceToParent(int page, int quant);
+
+    public abstract void appendPlaceToParent(int page, int quant);
+
+    /*
+    public LiveData<List<TPlace>> getPlaceListToParent(){
+        return placeRepository.getPlacesList();
+    }
+
+    public void listPlaceToParent(int page, int quant){
+        placeRepository.listPlaces(page, quant);
+    }
+
+    public void appendPlaceToParent(int page, int quant){
+        placeRepository.appendPlaces(page, quant);
+    }
+    */
 
     //Peticion de quant lugares de la pagina page al servidor
     public void listPlaces(int page, int quant){
         mProgressBar.postValue(true);
-        placeRepository.listPlaces(page, quant);
+        listPlaceToParent(page, quant);
     }
 
     //Peticion de quant lugares de la pagina page al servidor añadiendo anteriores
     public void appendPlaces(int page, int quant){
         mProgressBar.postValue(true);
-        placeRepository.appendPlaces(page, quant);
-    }
-
-    //Peticion de quant lugares de la pagina page al servidor
-    public void listPlaces(int page, int quant, String category){
-        mProgressBar.postValue(true);
-        placeRepository.listPlacesCategories(page, quant, category);
-    }
-
-    //Peticion de quant lugares de la pagina page al servidor añadiendo anteriores
-    public void appendPlaces(int page, int quant, String category){
-        mProgressBar.postValue(true);
-        placeRepository.appendPlacesCategories(page, quant, category);
+        appendPlaceToParent(page, quant);
     }
 
     private LiveData<List<TPlace>> setAndGetPlacesList(List<TPlace> places) {
@@ -71,5 +74,4 @@ public class PlacesListViewModel extends ViewModelParent {
     }
 
     public LiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
-    public LiveData<List<TPlace>> getCategoriesPlacesListPlacesList(){ return mCategoriesPlacesList; }
 }
