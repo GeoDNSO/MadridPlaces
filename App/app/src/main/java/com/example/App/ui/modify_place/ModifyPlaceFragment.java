@@ -202,23 +202,29 @@ public class ModifyPlaceFragment extends Fragment {
         if(requestCode == 0){
             if(resultCode == Activity.RESULT_OK){
                 uriList = new ArrayList<>();
+                bitmapList = new ArrayList<>();
                 removeImages();
                 if(data.getClipData() != null) {
                     numberOfImages = data.getClipData().getItemCount(); //devuelve el numero de imagenes seleccionadas
                     for (int i = 0; i < numberOfImages; ++i) {
-                        Uri uri = data.getClipData().getItemAt(i).getUri();
                         try {
+                            Uri uri = data.getClipData().getItemAt(i).getUri();
                             bitmapList.add(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri));
+                            uriList.add(uri);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
-                        uriList.add(uri);
                     }
                 }
                 else{
-                    Uri uri = data.getData();
-                    uriList.add(uri);
+                    try {
+                        Uri uri = data.getData();
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                        bitmapList.add(bitmap);
+                        uriList.add(uri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 showImages();
             }
