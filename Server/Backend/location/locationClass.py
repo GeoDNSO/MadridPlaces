@@ -75,7 +75,9 @@ def modifyLocation():
     listImg = json_data["imagesList"]
     try:
         i = 0
-        l = listImg.replace("[", "").replace("]", "").split(",")
+        print(listImg)
+        l = listImg.replace("[", "").replace("]", "").split(", ")
+        print(l)
         listUrl = []
         for img in l:
             if("http" not in img):
