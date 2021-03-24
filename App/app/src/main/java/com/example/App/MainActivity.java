@@ -26,6 +26,7 @@ import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.PermissionsManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.mapbox.mapboxsdk.Mapbox;
 
 public class MainActivity extends AppCompatActivity implements MainActivityInterface{
 
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         //Thread.sleep(300); //Para añadir un pequeño delay antes del splash screen
         setTheme(R.style.Theme_App);
         super.onCreate(savedInstanceState);
+        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activity_main);
 
         initializeUI();
