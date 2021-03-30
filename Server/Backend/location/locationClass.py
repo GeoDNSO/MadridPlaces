@@ -4,7 +4,7 @@ from flask import jsonify
 from pprint import pprint
 #Contiene las clases de la BD
 import modules
-
+from sqlalchemy import desc
 #Funciones auxiliares que no usan rutas
 import location.locationFunct as LocationFunct
 
@@ -282,6 +282,36 @@ def listByCategoryAndProximity():
 	        return jsonify(
 	                exito = "true",
 	                list = lista[0:nPlaces])
+
+        print("failure")
+        return jsonify(exito = "false")   
+    except Exception as e:
+        print("Error: ", repr(e))
+        return jsonify(exito = "false") 
+
+@locationClass.route('/location/listByTwitter', methods=['GET', 'POST'])
+def listByTwitter():
+    json_data = request.get_json()
+    page = json_data["page"] #Mostrar de X en X     
+    quant = json_data["quant"]
+    try:
+        tam = modules.twitter_ratings.query.count()
+        comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
+        #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
+        if(comp >= quant):
+            return jsonify(exito = "true", list = [])
+        rates = modules.twitter_ratings.query.order_by(modules.twitter_ratings.twitterRate.desc(),modules.twitter_ratings.location).paginate(per_page=quant, page=page)
+        if(rates is not None):
+            all_items = rates.items
+            lista = []
+            for rate in all_items:
+                place = modules.location.query.filter_by(name=rate.location).first()
+                obj = LocationFunct.listByTwitter(place, rate.twitterRate) #Diferente ya que coge la puntuacion de twitter
+                lista.append(obj)
+            print("success")
+            return jsonify(
+                    exito = "true",
+                    list = lista)
 
         print("failure")
         return jsonify(exito = "false")   

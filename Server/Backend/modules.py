@@ -75,3 +75,9 @@ class tracking(sqlAlchemy.Model):
     latitude = sqlAlchemy.Column(sqlAlchemy.Float())
     longitude = sqlAlchemy.Column(sqlAlchemy.Float())
     passed = sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now())
+
+class twitter_ratings(sqlAlchemy.Model):
+    __tablename__ = 'twitter_ratings'
+    id_twitterRate = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
+    location = sqlAlchemy.Column(sqlAlchemy.String(255))
+    twitterRate = sqlAlchemy.Column(sqlAlchemy.Integer())  

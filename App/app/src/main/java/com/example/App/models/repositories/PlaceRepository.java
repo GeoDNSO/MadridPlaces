@@ -27,6 +27,7 @@ import okhttp3.Response;
 public class PlaceRepository extends Repository{
     private MutableLiveData<Boolean> mBooleanPlace = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
+    private MutableLiveData<List<TPlace>> mTwitterPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mHistoryPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mCategoriesPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<String>> mCategoriesList = new MutableLiveData<>();
@@ -38,6 +39,7 @@ public class PlaceRepository extends Repository{
 
     public LiveData<Boolean> getBooleanPlace(){ return mBooleanPlace; }
     public LiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
+    public LiveData<List<TPlace>> getTwitterPlacesList(){ return mTwitterPlacesList; }
     public LiveData<List<TPlace>> getHistoryPlacesList(){ return mHistoryPlacesList; }
     public LiveData<List<String>> getCategoriesList(){ return mCategoriesList; }
     public MutableLiveData<List<TPlace>> getCategoriesPlacesList() { return mCategoriesPlacesList; }
@@ -544,6 +546,104 @@ public class PlaceRepository extends Repository{
                 }
                 else{
                     mCategoriesPlacesList.postValue(null);
+                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
+                }
+            }
+        });
+    }
+
+    public void listTwitterPlaces(int page, int quantity) {
+
+        String postBodyString = pageAndQuantToSTring(page, quantity);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/location/listByTwitter");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
+                Log.d("CCC", "FAILURE GORDO");
+                mTwitterPlacesList.postValue(null);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (!response.isSuccessful()) {
+                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
+                    throw new IOException("Unexpected code " + response);
+                }
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if (success){
+                    mTwitterPlacesList.postValue(getListFromResponse(res));
+                    mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
+                }
+                else{
+                    Log.d("BBB", "not success");
+                    mTwitterPlacesList.postValue(null);
+                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
+                }
+            }
+        });
+    }
+
+    //lista lugares de quantity en quantity en función de page alfabeticamente añadiendo anteriores
+    // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
+    public void appendTwitterPlaces(int page, int quantity) {
+
+        String postBodyString = pageAndQuantToSTring(page, quantity);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/location/listByTwitter");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
+                mTwitterPlacesList.postValue(null);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (!response.isSuccessful()) {
+                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
+                    throw new IOException("Unexpected code " + response);
+                }
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                List<TPlace> listaAux = mTwitterPlacesList.getValue();
+                if (success){
+                    if (listaAux.isEmpty()){
+                        Log.d("Info", "La lista esta vacia inicialmente");
+                        mTwitterPlacesList.postValue(getListFromResponse(res));
+                    }
+                    else{
+                        listaAux.addAll(getListFromResponse(res));
+                        mTwitterPlacesList.postValue(listaAux);
+                    }
+                    mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
+                }
+                else{
+                    mTwitterPlacesList.postValue(null);
                     mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
                 }
             }

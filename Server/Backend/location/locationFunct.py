@@ -5,6 +5,7 @@ import base64
 import modules
 import comments.commentFunct as CommentFunct
 import rates.rateFunct as RateFunct
+import twitter_ratings.twitter_ratingsFunct as TwitterRatingsFunct
 
 #Para imagenes
 import requests, json 
@@ -84,6 +85,25 @@ def completeList(place):
     "affluence":place.affluence,
     "imageList" : imageList,
     "rate" : avgRate,
+    "n_comments" : n_comments}
+    return obj
+
+def listByTwitter(place, twitterRate):
+    n_comments = TwitterRatingsFunct.numberOfTwitterComments(place.name)
+    imageList = listImages(place.name)
+    obj = {"name" : place.name,
+    "description":place.description,
+    "coordinate_latitude":place.coordinate_latitude,
+    "coordinate_longitude":place.coordinate_longitude,
+    "type_of_place":maptIntToCategory(place.type_of_place),
+    "city":place.city,
+    "road_class":place.road_class,
+    "road_name":place.road_name,
+    "road_number":place.road_number,
+    "zipcode":place.zipcode,
+    "affluence":place.affluence,
+    "imageList" : imageList,
+    "rate" : twitterRate,
     "n_comments" : n_comments}
     return obj
 

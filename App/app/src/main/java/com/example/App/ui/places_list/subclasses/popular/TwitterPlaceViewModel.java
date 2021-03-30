@@ -13,16 +13,16 @@ public class TwitterPlaceViewModel extends BaseViewModel {
 
     @Override
     protected LiveData<List<TPlace>> getPlaceListToParent() {
-        return placeRepository.getPlacesList();
+        return placeRepository.getTwitterPlacesList();
     }
 
     @Override
     public void listPlaceToParent(int page, int quant) {
-        placeRepository.listPlaces(page, quant);
+        placeRepository.listTwitterPlaces(page, quant);
     }
 
     @Override
     public void appendPlaceToParent(int page, int quant) {
-        placeRepository.appendPlaces(page, quant);
+        placeRepository.appendTwitterPlaces(page, quant);
     }
 }
