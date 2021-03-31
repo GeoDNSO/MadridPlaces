@@ -92,7 +92,7 @@ public class PlaceRepository extends Repository{
             //si no hubo problemas...
             List<TPlace> listaAux = placeList.getValue();
 
-            if (listaAux.isEmpty()){
+            if (listaAux == null){
                 Log.d("PlaceListCallback", "La lista estaba vacia inicialmente");
                 placeList.postValue(getListFromResponse(res));
             }
@@ -113,20 +113,6 @@ public class PlaceRepository extends Repository{
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listLocations");
         Call call = simpleRequest.createCall(request);
-
-        call.enqueue(new PlaceListCallBack(simpleRequest, mPlacesList));
-    }
-
-    //lista lugares de quantity en quantity en función de page alfabeticamente añadiendo anteriores
-    // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
-    public void appendPlaces(int page, int quantity) {
-
-        String postBodyString = pageAndQuantToSTring(page, quantity);
-        SimpleRequest simpleRequest = new SimpleRequest();
-        Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/location/listLocations");
-        Call call = simpleRequest.createCall(request);
-
 
         call.enqueue(new PlaceListCallBack(simpleRequest, mPlacesList));
     }
@@ -324,15 +310,6 @@ public class PlaceRepository extends Repository{
         call.enqueue(new PlaceListCallBack(simpleRequest, mHistoryPlacesList));
     }
 
-    public void appendHistoryPlaces(int page, int quantity) {
-
-        String postBodyString = pageAndQuantToSTring(page, quantity);
-        SimpleRequest simpleRequest = new SimpleRequest();
-        Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/location/listLocations");
-        Call call = simpleRequest.createCall(request);
-        call.enqueue(new PlaceListCallBack(simpleRequest, mPlacesList));
-    }
 
     public void listPlacesCategories(int page, int quantity, String category) {
 
@@ -344,19 +321,6 @@ public class PlaceRepository extends Repository{
 
         call.enqueue(new PlaceListCallBack(simpleRequest, mCategoriesPlacesList));
     }
-
-    //lista lugares de quantity en quantity en función de page alfabeticamente añadiendo anteriores
-    // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
-    public void appendPlacesCategories(int page, int quantity, String category) {
-
-        String postBodyString = paramsToGetCategoriePlace(page, quantity, category);
-        SimpleRequest simpleRequest = new SimpleRequest();
-        Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/location/listByCategory");
-        Call call = simpleRequest.createCall(request);
-        call.enqueue(new PlaceListCallBack(simpleRequest, mCategoriesPlacesList));
-    }
-
     public void listTwitterPlaces(int page, int quantity) {
 
         String postBodyString = pageAndQuantToSTring(page, quantity);
@@ -364,19 +328,6 @@ public class PlaceRepository extends Repository{
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listByTwitter");
         Call call = simpleRequest.createCall(request);
-        call.enqueue(new PlaceListCallBack(simpleRequest, mTwitterPlacesList));
-    }
-
-    //lista lugares de quantity en quantity en función de page alfabeticamente añadiendo anteriores
-    // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
-    public void appendTwitterPlaces(int page, int quantity) {
-
-        String postBodyString = pageAndQuantToSTring(page, quantity);
-        SimpleRequest simpleRequest = new SimpleRequest();
-        Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/location/listByTwitter");
-        Call call = simpleRequest.createCall(request);
-
         call.enqueue(new PlaceListCallBack(simpleRequest, mTwitterPlacesList));
     }
 

@@ -101,7 +101,14 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         ImageViewCompat.setImageTintList(holder.favImage, ColorStateList.valueOf(favTint));
 
         //Cargar imagen en el viewholder / imageview
-        String url = place.getImagesList().get(0);
+        String url = "";
+        if(place.getImagesList().isEmpty()) {
+            Log.i("PlaceListAdapter", "La lista de imagenes esta vacia");
+            url = "https://youimg1.tripcdn.com/target/10060j0000009zxuk4720.jpg?proc=source%2Ftrip";
+        }
+        else{
+            url = place.getImagesList().get(0);
+        }
         UserInterfaceUtils.loadImageWithShimmer(activity, url, shimmerDrawable, holder.placeImage);
 
     }

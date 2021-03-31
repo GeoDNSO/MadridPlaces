@@ -53,7 +53,6 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
 
     //Funciones a implementar en los hijos según el tipo de lugares a mostrar
-    public abstract void appendPlaces();
     public abstract void listPlaces();
     public abstract BaseViewModel getViewModelToParent();
 
@@ -192,7 +191,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                     shimmerFrameLayout.setVisibility(View.VISIBLE);
 
                     //Pedimos más datos
-                    appendPlaces();
+                    listPlaces();
                 }
             }
         });

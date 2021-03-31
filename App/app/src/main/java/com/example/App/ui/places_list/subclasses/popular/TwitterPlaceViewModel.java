@@ -20,9 +20,4 @@ public class TwitterPlaceViewModel extends BaseViewModel {
     public void listPlaceToParent(int page, int quant) {
         placeRepository.listTwitterPlaces(page, quant);
     }
-
-    @Override
-    public void appendPlaceToParent(int page, int quant) {
-        placeRepository.appendTwitterPlaces(page, quant);
-    }
 }

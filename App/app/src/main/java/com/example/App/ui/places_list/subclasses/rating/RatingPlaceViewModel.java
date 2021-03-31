@@ -17,9 +17,4 @@ public class RatingPlaceViewModel extends BaseViewModel {
     public void listPlaceToParent(int page, int quant) {
         placeRepository.listPlaces(page, quant);
     }
-
-    @Override
-    public void appendPlaceToParent(int page, int quant) {
-        placeRepository.appendPlaces(page, quant);
-    }
 }

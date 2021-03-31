@@ -39,24 +39,11 @@ public class PlaceListViewModel extends ViewModelParent {
         placeRepository.listPlaces(page, quant);
     }
 
-    //Peticion de quant lugares de la pagina page al servidor añadiendo anteriores
-    public void appendPlaces(int page, int quant){
-        mProgressBar.postValue(true);
-        placeRepository.appendPlaces(page, quant);
-    }
-
     //Peticion de quant lugares de la pagina page al servidor
     public void listPlaces(int page, int quant, String category){
         mProgressBar.postValue(true);
         placeRepository.listPlacesCategories(page, quant, category);
     }
-
-    //Peticion de quant lugares de la pagina page al servidor añadiendo anteriores
-    public void appendPlaces(int page, int quant, String category){
-        mProgressBar.postValue(true);
-        placeRepository.appendPlacesCategories(page, quant, category);
-    }
-
     private LiveData<List<TPlace>> setAndGetPlacesList(List<TPlace> places) {
         MutableLiveData<List<TPlace>> mAux = new MutableLiveData<>();
         mAux.setValue(places);

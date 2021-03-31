@@ -22,12 +22,6 @@ public class NearestPlacesFragment extends BasePlaces {
         super();
         placeList = new ArrayList<>();
     }
-
-    @Override
-    public void appendPlaces() {
-        super.mViewModel.appendPlaces(page, quantum);
-    }
-
     @Override
     public void listPlaces() {
         super.mViewModel.listPlaces(page, quantum);

@@ -167,7 +167,7 @@ public class PlacesListFragment extends Fragment implements PlaceListAdapter.OnP
                     shimmerFrameLayout.setVisibility(View.VISIBLE);
 
                     //Pedimos más datos
-                    mViewModel.appendPlaces(page, quantum);
+                    mViewModel.listPlaces(page, quantum);
                 }
             }
         });

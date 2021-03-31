@@ -128,7 +128,7 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
                     progressBar.setVisibility(View.VISIBLE);
 
                     //Pedimos más datos
-                    mViewModel.appendPlaces(page, quantum);
+                    mViewModel.historyListPlaces(page, quantum);
                 }
             }
         });

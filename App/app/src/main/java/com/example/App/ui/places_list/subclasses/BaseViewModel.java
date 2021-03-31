@@ -32,32 +32,11 @@ public abstract class BaseViewModel extends ViewModelParent {
 
     public abstract void listPlaceToParent(int page, int quant);
 
-    public abstract void appendPlaceToParent(int page, int quant);
-
-    /*
-    public LiveData<List<TPlace>> getPlaceListToParent(){
-        return placeRepository.getPlacesList();
-    }
-
-    public void listPlaceToParent(int page, int quant){
-        placeRepository.listPlaces(page, quant);
-    }
-
-    public void appendPlaceToParent(int page, int quant){
-        placeRepository.appendPlaces(page, quant);
-    }
-    */
 
     //Peticion de quant lugares de la pagina page al servidor
     public void listPlaces(int page, int quant){
         mProgressBar.postValue(true);
         listPlaceToParent(page, quant);
-    }
-
-    //Peticion de quant lugares de la pagina page al servidor añadiendo anteriores
-    public void appendPlaces(int page, int quant){
-        mProgressBar.postValue(true);
-        appendPlaceToParent(page, quant);
     }
 
     private LiveData<List<TPlace>> setAndGetPlacesList(List<TPlace> places) {
