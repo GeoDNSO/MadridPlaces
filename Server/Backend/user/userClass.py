@@ -50,7 +50,7 @@ def login():
                     rol=userQuery.rol,
                     profile_image=str(userQuery.profile_image)) #Se devuelve en binario
         else:
-          print("Contraseña incorrecta")
+          print("Contraseña incorrecta")  
     else:
       print("No existe el usuario")
     return jsonify(exito = "false")    
@@ -68,12 +68,8 @@ def registration():
     birth_date = json_data["birth_date"]
     profile_image = json_data["profile_image"]
     pwdCipher = passwordCipher(password)
-    if(profile_image == ""):
-      blobImage = ""
-    else:
-      blobImage = base64.b64decode(str(profile_image))
 
-    newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date)
+    newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date, profile_image=profile_image)
     
     try:
         modules.sqlAlchemy.session.add(newUser)

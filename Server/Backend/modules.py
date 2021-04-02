@@ -18,7 +18,7 @@ class user(sqlAlchemy.Model):
     birth_date = sqlAlchemy.Column(sqlAlchemy.DateTime)
     city = sqlAlchemy.Column(sqlAlchemy.String(255), default="Madrid")
     rol = sqlAlchemy.Column(sqlAlchemy.String(255), default="user")
-    profile_image = sqlAlchemy.Column(sqlAlchemy.BLOB(), nullable=True)
+    profile_image = sqlAlchemy.Column(sqlAlchemy.String(16000000), nullable=True)
     
 class location(sqlAlchemy.Model):
     __tablename__ = 'location'
