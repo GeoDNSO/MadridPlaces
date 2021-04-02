@@ -4,6 +4,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlertDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,20 +13,29 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.SessionManager;
 import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class ProfileFragment extends Fragment {
 
@@ -37,6 +48,7 @@ public class ProfileFragment extends Fragment {
     private TextView tv_Password;
     private EditText et_Email;
     private EditText et_Password;
+    private ImageView iv_profile_image;
 
     private TextView tv_Comments;
     private TextView tv_VisitedPlaces;
@@ -60,6 +72,15 @@ public class ProfileFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
         mViewModel.init();
 
+        init();
+        initializeUI();
+        initializeListeners();
+        initializeObservers();
+
+        return root;
+    }
+
+    private void init(){
         deleteAccountButton = root.findViewById(R.id.deleteButton);
         ib_editProfile = root.findViewById(R.id.edit_button);
         cancelChangesButton = root.findViewById(R.id.bt_cancelChanges);
@@ -69,20 +90,15 @@ public class ProfileFragment extends Fragment {
         tv_FullName = root.findViewById(R.id.tv_full_name);
         tv_Email = root.findViewById(R.id.tv_email);
         tv_Password = root.findViewById(R.id.profile_password);
+        iv_profile_image = root.findViewById(R.id.iv_imgUser);
 
         //editar perfil
         et_Email = root.findViewById(R.id.tv_email_editable);
         et_Password = root.findViewById(R.id.profile_password_editable);
 
         //Maybe used in the future
-        tv_Comments = root.findViewById(R.id.tv_n_comments);;
+        tv_Comments = root.findViewById(R.id.tv_n_comments);
         tv_VisitedPlaces  = root.findViewById(R.id.tv_visited_places);
-
-        initializeUI();
-        initializeListeners();
-        initializeObservers();
-
-        return root;
     }
 
     private void initializeObservers() {
@@ -174,6 +190,30 @@ public class ProfileFragment extends Fragment {
         tv_FullName.setText((sm.getFirstName() + " " + sm.getSurname()));
         tv_Password.setText(sm.getPassword());
         tv_Email.setText(sm.getEmail());
+
+        String image_profile = sm.getImageProfile();
+        if(image_profile == ""){
+            iv_profile_image.setImageResource(R.drawable.ic_username);
+        }
+        else {
+            byte[] decodedString = Base64.decode(image_profile, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            Glide.with(getActivity()).load(bitmap)
+                    .circleCrop()
+                    .into(iv_profile_image);
+        }
+    }
+
+    public Bitmap ConvertToImage(String image){
+        try{
+            InputStream stream = new ByteArrayInputStream(image.getBytes());
+            Bitmap bitmap = BitmapFactory.decodeStream(stream);
+            return bitmap;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

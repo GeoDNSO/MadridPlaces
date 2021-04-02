@@ -327,7 +327,11 @@ public class UserRepository {
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(jsonString);
-            return new TUser(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"), jsonObject.getString("profile_image"));
+            String image_profile = jsonObject.getString("profile_image");
+            if(image_profile.equals("null")){
+                image_profile = null;
+            }
+            return new TUser(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"), image_profile);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

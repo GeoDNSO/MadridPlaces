@@ -6,7 +6,13 @@ import androidx.lifecycle.ViewModelProvider;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -29,6 +35,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.utilities.Validator;
@@ -216,7 +223,10 @@ public class RegisterFragment extends Fragment {
     }
 
     public void showImages(){
-        ib_profileImage.setImageURI(uri);
+        Glide.with(getActivity()).load(bitmap)
+                .circleCrop()
+                .into(ib_profileImage);
+        //ib_profileImage.setImageURI(uri);
         ib_profileImage.setBackgroundColor(getResources().getColor(R.color.white));
     }
 
@@ -251,6 +261,27 @@ public class RegisterFragment extends Fragment {
         bitmap.compress(Bitmap.CompressFormat.PNG, 90, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    private Bitmap getRoundedCroppedImage(Bitmap bmp) {
+        int widthLight = bmp.getWidth();
+        int heightLight = bmp.getHeight();
+
+        Bitmap output = Bitmap.createBitmap(widthLight, heightLight, Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(output);
+        Paint paint = new Paint();
+        paint.setFlags(Paint.ANTI_ALIAS_FLAG);
+
+        RectF rectF = new RectF(new Rect(0, 0, widthLight, heightLight));
+
+        canvas.drawRoundRect(rectF, widthLight / 2 ,heightLight / 2,paint);
+
+        Paint paintImage = new Paint();
+        paintImage.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
+        canvas.drawBitmap(bmp, 0, 0, paintImage);
+
+        return output;
     }
 
 }
