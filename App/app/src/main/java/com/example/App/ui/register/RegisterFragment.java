@@ -167,7 +167,11 @@ public class RegisterFragment extends Fragment {
         String surname = et_Surname.getText().toString();
         String pass = et_Password.getText().toString();
         String pass2 = et_RepeatPassword.getText().toString();
-        String profile_image = bitmapToBase64(bitmap);
+        String profile_image = "";
+
+        if(bitmap != null){
+            profile_image = bitmapToBase64(bitmap);
+        }
 
         if (Validator.argumentsEmpty(username, name, email, surname, pass, pass2)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();

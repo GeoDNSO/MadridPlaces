@@ -73,7 +73,7 @@ def registration():
     else:
       blobImage = base64.b64decode(str(profile_image))
 
-    newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date, profile_image=blobImage)
+    newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date)
     
     try:
         modules.sqlAlchemy.session.add(newUser)
