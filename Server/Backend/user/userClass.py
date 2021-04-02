@@ -61,9 +61,9 @@ def registration():
     password = json_data["password"]
     gender = json_data["gender"]
     birth_date = json_data["birth_date"]
-
+    profile_image = json_data["profile_image"]
     pwdCipher = passwordCipher(password)
-    newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date)
+    newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date, profile_image=profile_image)
     
     try:
         modules.sqlAlchemy.session.add(newUser)
@@ -78,10 +78,11 @@ def registration():
                    gender=newUser.gender,
                    birth_date=newUser.birth_date.strftime("%Y-%m-%d"),
                    city=newUser.city,
-                   rol=newUser.rol)
+                   rol=newUser.rol,
+                   profile_image=profile_image)
 
     except Exception as e:
-        print("Error insertando la nueva fila :", repr(e))
+        print("Error registrando el nuevo usuario :", repr(e))
         return jsonify(exito = "false")
 
 #Lista de Usuarios
@@ -101,7 +102,8 @@ def listUsers():
                 "gender":usuario.gender,
                 "birth_date":usuario.birth_date.strftime("%Y-%m-%d"),
                 "city":usuario.city,
-                "rol":usuario.rol
+                "rol":usuario.rol,
+                "profile_image":profile_image
                 }
             lista.append(u)
     except Exception as e:
@@ -146,6 +148,7 @@ def modifyUser():
     password = json_data["password"]
     gender = json_data["gender"]
     birth_date = json_data["birth_date"]
+    profile_image = json_data["profile_image"]
     pwdCipher = passwordCipher(password)
     try:
         modifiedUser = modules.user.query.filter_by(nickname=nickname).first()
@@ -156,6 +159,7 @@ def modifyUser():
         modifiedUser.password = pwdCipher
         modifiedUser.gender = gender
         modifiedUser.birth_date = birth_date
+        modifiedUser.profile_image = profile_image
         modules.sqlAlchemy.session.commit()
     except Exception as e:
         print("Error modificando usuarios:", repr(e))
@@ -171,10 +175,11 @@ def modifyUser():
                    gender=modifiedUser.gender,
                    birth_date=modifiedUser.birth_date.strftime("%Y-%m-%d"),
                    city=modifiedUser.city,
-                   rol=modifiedUser.rol)
+                   rol=modifiedUser.rol,
+                   profile_image = modifiedUser.profile_image)
 
 #Perfil Usuario
-@userClass.route('/profileUser/', methods=['GET', 'POST'])
+@userClass.route('/profileUser/', methods=['GET', 'POST']) #No se usa
 def profileUser():
     json_data = request.get_json()
     nickname = json_data["nickname"]
@@ -191,4 +196,5 @@ def profileUser():
                    gender=userQuery.gender,
                    birth_date=userQuery.birth_date.strftime("%Y-%m-%d"),
                    city=userQuery.city,
-                   rol=userQuery.rol)
+                   rol=userQuery.rol,
+                   profile_image = modifiedUser.profile_image)
