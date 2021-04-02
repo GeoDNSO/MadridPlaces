@@ -102,7 +102,7 @@ def listUsers():
                 "birth_date":usuario.birth_date.strftime("%Y-%m-%d"),
                 "city":usuario.city,
                 "rol":usuario.rol,
-                "profile_image":profile_image
+                "profile_image": str(usuario.profile_image)
                 }
             lista.append(u)
     except Exception as e:
