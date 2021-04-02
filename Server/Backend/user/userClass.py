@@ -48,7 +48,7 @@ def login():
                     birth_date=userQuery.birth_date.strftime("%Y-%m-%d"),
                     city=userQuery.city,
                     rol=userQuery.rol,
-                    profile_image=userQuery.profile_image) #Se devuelve en binario
+                    profile_image=str(userQuery.profile_image)) #Se devuelve en binario
         else:
           print("Contraseña incorrecta")
     else:
@@ -175,7 +175,7 @@ def modifyUser():
                    birth_date=modifiedUser.birth_date.strftime("%Y-%m-%d"),
                    city=modifiedUser.city,
                    rol=modifiedUser.rol,
-                   profile_image = modifiedUser.profile_image)
+                   profile_image = str(modifiedUser.profile_image))
 
 #Perfil Usuario
 @userClass.route('/profileUser/', methods=['GET', 'POST']) #No se usa
@@ -196,4 +196,4 @@ def profileUser():
                    birth_date=userQuery.birth_date.strftime("%Y-%m-%d"),
                    city=userQuery.city,
                    rol=userQuery.rol,
-                   profile_image = modifiedUser.profile_image)
+                   profile_image = str(userQuery.profile_image))
