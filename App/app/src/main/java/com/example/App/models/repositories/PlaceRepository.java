@@ -106,9 +106,9 @@ public class PlaceRepository extends Repository{
 
     //lista lugares de quantity en quantity en función de page alfabeticamente
     // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
-    public void listPlaces(int page, int quantity) {
+    public void listPlaces(int page, int quantity, String nickname) {
 
-        String postBodyString = pageAndQuantToSTring(page, quantity);
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listLocations");
@@ -299,9 +299,9 @@ public class PlaceRepository extends Repository{
 
     }
 
-    public void historyListPlaces(int page, int quantity) {
+    public void historyListPlaces(int page, int quantity, String nickname) {
         //TODO devuelve la lista de lugares. Solo es necesario la lista visitada.
-        String postBodyString = pageAndQuantToSTring(page, quantity);
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listLocations");
@@ -311,9 +311,9 @@ public class PlaceRepository extends Repository{
     }
 
 
-    public void listPlacesCategories(int page, int quantity, String category) {
+    public void listPlacesCategories(int page, int quantity, String nickname, String category) {
 
-        String postBodyString = paramsToGetCategoriePlace(page, quantity, category);
+        String postBodyString = paramsToGetCategoriePlace(page, quantity, nickname, category);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listByCategory");
@@ -321,9 +321,9 @@ public class PlaceRepository extends Repository{
 
         call.enqueue(new PlaceListCallBack(simpleRequest, mCategoriesPlacesList));
     }
-    public void listTwitterPlaces(int page, int quantity) {
+    public void listTwitterPlaces(int page, int quantity, String nickname) {
 
-        String postBodyString = pageAndQuantToSTring(page, quantity);
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listByTwitter");
@@ -417,12 +417,13 @@ public class PlaceRepository extends Repository{
         return json_data;
     }
 
-    private String pageAndQuantToSTring(int page, int quantity) {
+    private String pageAndQuantToSTring(int page, int quantity, String nickname) {
         JSONObject jsonPageQuant = new JSONObject();
         String infoString;
         try {
             jsonPageQuant.put("page", page);
             jsonPageQuant.put("quant", quantity);
+            jsonPageQuant.put("user", nickname);
         }catch (JSONException e) {
             e.printStackTrace();
             infoString = "error";
@@ -432,12 +433,13 @@ public class PlaceRepository extends Repository{
         return infoString;
     }
 
-    private String paramsToGetCategoriePlace(int page, int quantity, String category) {
+    private String paramsToGetCategoriePlace(int page, int quantity, String nickname, String category) {
         JSONObject json = new JSONObject();
         String infoString;
         try {
             json.put("page", page);
             json.put("quant", quantity);
+            json.put("user", nickname);
             json.put("category", category);
         }catch (JSONException e) {
             e.printStackTrace();

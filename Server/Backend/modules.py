@@ -81,3 +81,9 @@ class twitter_ratings(sqlAlchemy.Model):
     id_twitterRate = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
     twitterRate = sqlAlchemy.Column(sqlAlchemy.Integer())  
+
+class favorites(sqlAlchemy.Model):
+    __tablename__ = 'location_favorites'
+    id_favorite = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
+    location = sqlAlchemy.Column(sqlAlchemy.String(255))
+    user = sqlAlchemy.Column(sqlAlchemy.String(255))

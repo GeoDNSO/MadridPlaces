@@ -10,23 +10,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.example.App.MainActivity;
+import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
-import com.example.App.ui.admin.AdminViewModel;
-import com.example.App.ui.places_list.PlaceListAdapter;
-import com.example.App.ui.places_list.PlacesListFragment;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ViewListenerUtilities;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -112,7 +106,7 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
 
         //getData();
 
-        mViewModel.historyListPlaces(page, quantum);
+        mViewModel.historyListPlaces(page, quantum, App.getInstance(getContext()).getUsername());
 
         //Empezar el efecto de shimmer
         shimmerFrameLayout.startShimmer();
@@ -128,7 +122,7 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
                     progressBar.setVisibility(View.VISIBLE);
 
                     //Pedimos más datos
-                    mViewModel.historyListPlaces(page, quantum);
+                    mViewModel.historyListPlaces(page, quantum, App.getInstance(getContext()).getUsername());
                 }
             }
         });

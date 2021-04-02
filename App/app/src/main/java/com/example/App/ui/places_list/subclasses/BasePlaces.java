@@ -1,16 +1,20 @@
 package com.example.App.ui.places_list.subclasses;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.ImageViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -19,12 +23,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.places_list.PlaceListAdapter;
-import com.example.App.ui.places_list.PlacesListFragment;
-import com.example.App.ui.places_list.PlaceListViewModel;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ViewListenerUtilities;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -55,10 +58,6 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
     //Funciones a implementar en los hijos según el tipo de lugares a mostrar
     public abstract void listPlaces();
     public abstract BaseViewModel getViewModelToParent();
-
-    public static PlacesListFragment newInstance() {
-        return new PlacesListFragment();
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -167,7 +166,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                     //Reseteamos la pagina para ver cambios y borramos la lista...
                     page = 1;
                     placeList.clear();
-                    mViewModel.listPlaces(page, quantum);
+                    mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername());
                 };
 
                 ExecutorService executorService = Executors.newFixedThreadPool(1);
@@ -230,5 +229,19 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
         //Le pasamos el bundle
         Navigation.findNavController(root).navigate(R.id.placeDetailFragment, bundle);
+    }
+    @Override
+    public void ovFavClick(int position, ImageView favImage) {
+        Toast.makeText(getActivity(), "fav listener", Toast.LENGTH_SHORT).show();
+
+        TPlace place = placeList.get(position);
+        place.setUserFav(!place.isUserFav());
+
+        int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
+        if(place.isUserFav()){
+            favTint = ContextCompat.getColor(getActivity(), R.color.colorFavRed);
+        }
+
+        ImageViewCompat.setImageTintList(favImage, ColorStateList.valueOf(favTint));
     }
 }

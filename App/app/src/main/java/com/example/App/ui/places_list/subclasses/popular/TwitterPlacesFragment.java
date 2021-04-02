@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.App.App;
 import com.example.App.ui.places_list.subclasses.BasePlaces;
 import com.example.App.ui.places_list.subclasses.BaseViewModel;
 import com.example.App.ui.places_list.subclasses.category.CategoryPlaceViewModel;
@@ -24,7 +25,7 @@ public class TwitterPlacesFragment extends BasePlaces{
     }
     @Override
     public void listPlaces() {
-        super.mViewModel.listPlaces(page, quantum);
+        super.mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername());
     }
 
     @Override

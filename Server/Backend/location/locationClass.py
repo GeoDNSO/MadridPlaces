@@ -149,6 +149,7 @@ def listLocations():
     json_data = request.get_json()
     page = json_data["page"] #Mostrar de X en X     
     quant = json_data["quant"]
+    user = json_data["user"]
     try:
         tam = modules.location.query.count()
         comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
@@ -161,7 +162,7 @@ def listLocations():
 	        all_items = places.items
 	        lista = []
 	        for place in all_items:
-		        obj = LocationFunct.completeList(place)
+		        obj = LocationFunct.completeList(place, user)
 		        lista.append(obj)
 	        print("success")
 	        return jsonify(
@@ -198,6 +199,7 @@ def listByProximity():
     userLongitude = json_data["longitude"]
     radius = json_data["radius"] #No se sabe si el rango es estático o dinámico 
     nPlaces = json_data["nPlaces"] #Número de lugares que se quiere mostrar 10, 20, 50, 100
+    user = json_data["user"]
     try:
         user_coords = (userLatitude, userLongitude)
         places = modules.location.query.all()
@@ -207,7 +209,7 @@ def listByProximity():
 	        	place_coords = (place.coordinate_latitude, place.coordinate_longitude)
 	        	distance = geodesic(user_coords, place_coords).meters #Distancia calcula entre el usuario y el lugar en METROS
 	        	if(distance <= radius): #Descartamos los lugares que no estén en el radio
-		            obj = LocationFunct.completeList(place)
+		            obj = LocationFunct.completeList(place, user)
 		            obj["distance"] = distance
 		            lista.append(obj)
 	        lista.sort(key=dts)
@@ -228,6 +230,7 @@ def listByCategory():
     page = json_data["page"] #Mostrar de X en X     
     quant = json_data["quant"]
     category = json_data["category"]
+    user = json_data["user"]
     try:
         idCategory = LocationFunct.mapCategoryToInt(category) #Recoge el número asociado de la categoria
         tam = modules.location.query.filter_by(type_of_place = idCategory).count()
@@ -242,7 +245,7 @@ def listByCategory():
 	        all_items = places.items
 	        lista = []
 	        for place in all_items:
-	            obj = LocationFunct.completeList(place)
+	            obj = LocationFunct.completeList(place, user)
 	            lista.append(obj)
             
 	        print("success")
@@ -264,6 +267,7 @@ def listByCategoryAndProximity():
     userLongitude = json_data["longitude"]
     radius = json_data["radius"] #Radio del usuario
     nPlaces = json_data["nPlaces"] #Número de lugares que se quiere mostrar 10, 20, 50, 100, Todos
+    user = json_data["user"]
     try:
         idCategory = LocationFunct.mapCategoryToInt(category) #Recoge el número asociado de la categoria
         places = modules.location.query.filter_by(type_of_place = idCategory)
@@ -274,7 +278,7 @@ def listByCategoryAndProximity():
 	        	place_coords = (place.coordinate_latitude, place.coordinate_longitude)
 	        	distance = geodesic(user_coords, place_coords).meters #Distancia calcula entre el usuario y el lugar en METROS
 		        if(distance <= radius): #Descartamos los lugares que no estén en el radio
-		            obj = LocationFunct.completeList(place)
+		            obj = LocationFunct.completeList(place, user)
 		            obj["distance"] = distance
 		            lista.append(obj)
 	        lista.sort(key=dts)
@@ -294,6 +298,7 @@ def listByTwitter():
     json_data = request.get_json()
     page = json_data["page"] #Mostrar de X en X     
     quant = json_data["quant"]
+    user = json_data["user"]
     try:
         tam = modules.twitter_ratings.query.count()
         comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
@@ -306,7 +311,7 @@ def listByTwitter():
             lista = []
             for rate in all_items:
                 place = modules.location.query.filter_by(name=rate.location).first()
-                obj = LocationFunct.listByTwitter(place, rate.twitterRate) #Diferente ya que coge la puntuacion de twitter
+                obj = LocationFunct.listByTwitter(place, user, rate.twitterRate) #Diferente ya que coge la puntuacion de twitter
                 lista.append(obj)
             print("success")
             return jsonify(

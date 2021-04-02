@@ -185,17 +185,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
             favImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), "fav listener", Toast.LENGTH_SHORT).show();
-
-                    TPlace place = placeList.get(getAdapterPosition());
-                    place.setUserFav(!place.isUserFav());
-
-                    int favTint = ContextCompat.getColor(activity, R.color.grey);
-                    if(place.isUserFav()){
-                        favTint = ContextCompat.getColor(activity, R.color.colorFavRed);
-                    }
-
-                    ImageViewCompat.setImageTintList(favImage, ColorStateList.valueOf(favTint));
+                    onPlaceListener.ovFavClick(getAdapterPosition(), favImage);
                 }
             });
 
@@ -211,6 +201,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
     public interface OnPlaceListener{
         void onPlaceClick(int position);
+        void ovFavClick(int position, ImageView favImage);
     }
 
 }

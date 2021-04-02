@@ -5,9 +5,6 @@ from flask import jsonify
 import modules
 import base64
 import bcrypt #Para hashear las contraseñas, necesidad de instalar con pip install bcrypt
-import PIL.Image as Image
-import io
-import os
 import location.locationFunct as LocationFunct
 userClass = Blueprint("userClass", __name__)
 
@@ -69,7 +66,10 @@ def registration():
     profile_image = json_data["profile_image"]
     pwdCipher = passwordCipher(password)
 
-    newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date, profile_image=profile_image)
+    if(profile_image == ""):
+      newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date)
+    else:
+      newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date, profile_image=profile_image)
     
     try:
         modules.sqlAlchemy.session.add(newUser)

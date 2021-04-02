@@ -31,9 +31,9 @@ public class HistoryViewModel extends ViewModelParent {
     }
 
     //Peticion de quant lugares de la pagina page al servidor
-    public void historyListPlaces(int page, int quant){
+    public void historyListPlaces(int page, int quant, String nickname){
         mProgressBar.postValue(true);
-        historyPlaceRepository.historyListPlaces(page, quant);
+        historyPlaceRepository.historyListPlaces(page, quant, nickname);
     }
 
     private LiveData<List<TPlace>> setAndGetHistoryPlacesList(List<TPlace> historyPlaces) {

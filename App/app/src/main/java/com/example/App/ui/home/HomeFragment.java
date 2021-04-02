@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.viewpager.widget.ViewPager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 
 import android.view.Menu;
@@ -21,19 +20,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.App.App;
-import com.example.App.MainActivity;
 import com.example.App.R;
 
 import com.example.App.ui.categories.CategoriesFragment;
 
-import com.example.App.models.dao.SimpleRequest;
-import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.LogoutObserver;
-import com.example.App.ui.places_list.PlaceListAdapter;
 
-import com.example.App.ui.places_list.PlacesListFragment;
 import com.example.App.ui.places_list.subclasses.PlaceFragmentFactory;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
