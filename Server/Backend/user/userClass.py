@@ -73,6 +73,7 @@ def registration():
 #Lista de Usuarios
 @userClass.route('/listUsers/', methods=['GET', 'POST'])
 def listUsers():
+    json_data = request.get_json()
     page = json_data["page"] #Mostrar de X en X     
     quant = json_data["quant"]
     try:
@@ -147,7 +148,7 @@ def modifyUser():
         print("Error modificando usuarios:", repr(e))
         return jsonify(exito = "false")
         
-    return UserFunct.jsonifiedList(modifiedUser)
+    return UserFunct.jsonifiedList(modifiedUser, password)
 
 #Perfil Usuario
 @userClass.route('/profileUser/', methods=['GET', 'POST']) #No se usa
@@ -158,4 +159,4 @@ def profileUser():
     if userQuery is None:
         return jsonify(exito = "false")
     
-    return UserFunct.jsonifiedList(userQuery)
+    return UserFunct.jsonifiedList2(userQuery)

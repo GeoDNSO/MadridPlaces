@@ -21,7 +21,7 @@ def showUser(user): #Practicamente lo mismo que el profile, pero de algún otro 
 
 
 
-def complenteList(usuario):
+def completeList(usuario):
   u = {
   "nickname":usuario.nickname,
   "name":usuario.name,
@@ -58,7 +58,7 @@ def jsonifiedList2(usuario):
     name=usuario.name,
     surname=usuario.surname,
     email=usuario.email,
-    password=password,
+    password=usuario.password,
     gender=usuario.gender,
     birth_date=usuario.birth_date.strftime("%Y-%m-%d"),
     city=usuario.city,
