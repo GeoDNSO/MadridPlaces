@@ -3,6 +3,11 @@ package com.example.App.ui.register;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,11 +15,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,16 +33,23 @@ import com.example.App.App;
 import com.example.App.R;
 import com.example.App.utilities.Validator;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class RegisterFragment extends Fragment {
 
     private View root;
     private RegisterViewModel mRegisterViewModel;
     private App app;
+    private Bitmap bitmap;
+    private Uri uri;
 
     /*MVVM*/
     private EditText et_Name;
     private EditText et_Surname;
     private EditText et_Username;
+    private ImageButton ib_profileImage;
     private EditText et_Email;
     private EditText et_Password, et_RepeatPassword;
     private Button registerButton;
@@ -105,6 +122,7 @@ public class RegisterFragment extends Fragment {
         registerButton = (Button) root.findViewById(R.id.button);
         tv_ToLogin = (TextView) root.findViewById(R.id.to_login);
         progressBar = (ProgressBar) root.findViewById(R.id.progressBarRegister);
+        ib_profileImage = root.findViewById(R.id.register_imageButton);
     }
 
     @Override
@@ -130,6 +148,12 @@ public class RegisterFragment extends Fragment {
             }
         });
 
+        ib_profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                insertImagesFromGallery();
+            }
+        });
 
     }
 
@@ -143,6 +167,7 @@ public class RegisterFragment extends Fragment {
         String surname = et_Surname.getText().toString();
         String pass = et_Password.getText().toString();
         String pass2 = et_RepeatPassword.getText().toString();
+        String profile_image = bitmapToBase64(bitmap);
 
         if (Validator.argumentsEmpty(username, name, email, surname, pass, pass2)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
@@ -158,7 +183,7 @@ public class RegisterFragment extends Fragment {
             et_Username.setError(getString(R.string.username_exists));
         }
 
-        mRegisterViewModel.registerUser(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user");
+        mRegisterViewModel.registerUser(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user", profile_image);
     }
 
 
@@ -175,6 +200,53 @@ public class RegisterFragment extends Fragment {
         return !( et_Username.getError() == null && et_Name.getError() == null &&
                 et_Email.getError() == null && et_Surname.getError() == null &&
                 et_Password.getError() == null && et_RepeatPassword.getError() == null);
+    }
+
+    //función para seleccionar imagenes de la galeria
+    private void insertImagesFromGallery(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Seleccionar Imagenes"), 0);
+    }
+
+    public void showImages(){
+        ib_profileImage.setImageURI(uri);
+        ib_profileImage.setBackgroundColor(getResources().getColor(R.color.white));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0){
+            if(resultCode == Activity.RESULT_OK){
+                if(data.getClipData() != null) {
+                    try {
+                        uri = data.getClipData().getItemAt(0).getUri();
+                        bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    try {
+                        uri = data.getData();
+                        bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                showImages();
+            }
+        }
+    }
+
+    public static String bitmapToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
 }

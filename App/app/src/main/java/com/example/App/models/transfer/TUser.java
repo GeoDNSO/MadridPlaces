@@ -18,8 +18,9 @@ public class TUser implements JSONSerializable, Parcelable {
     private String birthDate;
     private String city;
     private String rol;
+    private String profile;
 
-    public TUser(String username, String password, String name, String surname, String email, String gender, String birthDate, String city, String rol) {
+    public TUser(String username, String password, String name, String surname, String email, String gender, String birthDate, String city, String rol, String profile) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -29,6 +30,7 @@ public class TUser implements JSONSerializable, Parcelable {
         this.birthDate = birthDate;
         this.city = city;
         this.rol = rol;
+        this.profile = profile;
     }
 
     public static final Creator<TUser> CREATOR = new Creator<TUser>() {
@@ -115,6 +117,14 @@ public class TUser implements JSONSerializable, Parcelable {
         this.rol = rol;
     }
 
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
     @Override
     public JSONObject toJSON() {
         JSONObject infoJSON = new JSONObject();
@@ -127,6 +137,7 @@ public class TUser implements JSONSerializable, Parcelable {
             infoJSON.put("email", this.getEmail());
             infoJSON.put("gender", this.getGender());
             infoJSON.put("birth_date", this.getBirthDate());
+            infoJSON.put( "profile_image", this.getProfile());
         } catch (JSONException e) {
             e.printStackTrace();
             infoJSON = null;
@@ -155,6 +166,7 @@ public class TUser implements JSONSerializable, Parcelable {
         dest.writeString(this.birthDate);
         dest.writeString(this.city);
         dest.writeString(this.rol);
+        dest.writeString(this.profile);
     }
 
     public TUser(Parcel in) {
@@ -167,7 +179,7 @@ public class TUser implements JSONSerializable, Parcelable {
         this.birthDate = in.readString();
         this.city = in.readString();
         this.rol = in.readString();
-
+        this.profile = in.readString();
     }
 
     public static Comparator<TUser> comparatorUsernameAZusers = new Comparator<TUser>() {

@@ -27,6 +27,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageButton
+            android:id="@+id/register_imageButton"
+            android:layout_marginTop="20dp"
+            android:adjustViewBounds="true"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/ic_baseline_add_24"/>
+
+        <!--
+        Otra opción para poner la imagen
+        android:scaleType="fitXY"-->
+
         <EditText
             android:id="@+id/username"
             android:layout_width="300dp"
@@ -43,7 +57,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.493"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_completename" />
+            app:layout_constraintTop_toBottomOf="@+id/register_imageButton" />
 
         <EditText
             android:id="@+id/register_completename"
