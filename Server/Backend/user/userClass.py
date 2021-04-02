@@ -47,7 +47,8 @@ def login():
                     gender=userQuery.gender,
                     birth_date=userQuery.birth_date.strftime("%Y-%m-%d"),
                     city=userQuery.city,
-                    rol=userQuery.rol)
+                    rol=userQuery.rol,
+                    profile_image=userQuery.profile_image) #Se devuelve en binario
         else:
           print("Contraseña incorrecta")
     else:
@@ -67,26 +68,17 @@ def registration():
     birth_date = json_data["birth_date"]
     profile_image = json_data["profile_image"]
     pwdCipher = passwordCipher(password)
-
-    blobImage = base64.b64decode(str(profile_image)) 
+    if(profile_image == ""):
+      blobImage = ""
+    else:
+      blobImage = base64.b64decode(str(profile_image))
 
     newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date, profile_image=blobImage)
     
     try:
         modules.sqlAlchemy.session.add(newUser)
         modules.sqlAlchemy.session.commit()
-        return jsonify(
-                   exito = "true",
-                   nickname=newUser.nickname,
-                   name=newUser.name,
-                   surname=newUser.surname,
-                   email=newUser.email,
-                   password=newUser.password,
-                   gender=newUser.gender,
-                   birth_date=newUser.birth_date.strftime("%Y-%m-%d"),
-                   city=newUser.city,
-                   rol=newUser.rol,
-                   profile_image=profile_image)
+        return jsonify(exito = "true")
 
     except Exception as e:
         print("Error registrando el nuevo usuario :", repr(e))
