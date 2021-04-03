@@ -106,7 +106,9 @@ def showComments():
         for comment in cmQuery.items:
             rate = RateFunct.showRate(comment.user, location)
             #picture = showPicture(comment.user)
-            cmDict = {"user" : comment.user,
+            cmDict = {
+            "id_comment" : comment.id_comment,
+            "user" : comment.user,
             #"picture" : picture,s
             "comment" : comment.comment,
             "rate" : rate,
