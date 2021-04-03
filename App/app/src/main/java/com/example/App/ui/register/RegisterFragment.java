@@ -109,8 +109,6 @@ public class RegisterFragment extends Fragment {
         return root;
     }
 
-
-
     private void hideProgressBar() {
         progressBar.setVisibility(View.GONE);
     }
@@ -120,15 +118,15 @@ public class RegisterFragment extends Fragment {
     }
 
     private void initializeUI() {
-        et_Name = (EditText) root.findViewById(R.id.register_completename);
-        et_Username = (EditText) root.findViewById(R.id.username);
-        et_Surname = (EditText) root.findViewById(R.id.register_surname);
-        et_Email = (EditText) root.findViewById(R.id.register_email);
-        et_Password = (EditText) root.findViewById(R.id.password);
-        et_RepeatPassword = (EditText) root.findViewById(R.id.register_repeat_password);
-        registerButton = (Button) root.findViewById(R.id.button);
-        tv_ToLogin = (TextView) root.findViewById(R.id.to_login);
-        progressBar = (ProgressBar) root.findViewById(R.id.progressBarRegister);
+        et_Name = root.findViewById(R.id.register_completename);
+        et_Username = root.findViewById(R.id.username);
+        et_Surname = root.findViewById(R.id.register_surname);
+        et_Email = root.findViewById(R.id.register_email);
+        et_Password = root.findViewById(R.id.password);
+        et_RepeatPassword = root.findViewById(R.id.register_repeat_password);
+        registerButton = root.findViewById(R.id.button);
+        tv_ToLogin = root.findViewById(R.id.to_login);
+        progressBar = root.findViewById(R.id.progressBarRegister);
         ib_profileImage = root.findViewById(R.id.register_imageButton);
     }
 
@@ -163,7 +161,6 @@ public class RegisterFragment extends Fragment {
         });
 
     }
-
 
     //Validate form
     private void registerOnClickAction(View v) {
@@ -261,27 +258,6 @@ public class RegisterFragment extends Fragment {
         bitmap.compress(Bitmap.CompressFormat.PNG, 90, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
-    }
-
-    private Bitmap getRoundedCroppedImage(Bitmap bmp) {
-        int widthLight = bmp.getWidth();
-        int heightLight = bmp.getHeight();
-
-        Bitmap output = Bitmap.createBitmap(widthLight, heightLight, Bitmap.Config.ARGB_8888);
-
-        Canvas canvas = new Canvas(output);
-        Paint paint = new Paint();
-        paint.setFlags(Paint.ANTI_ALIAS_FLAG);
-
-        RectF rectF = new RectF(new Rect(0, 0, widthLight, heightLight));
-
-        canvas.drawRoundRect(rectF, widthLight / 2 ,heightLight / 2,paint);
-
-        Paint paintImage = new Paint();
-        paintImage.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
-        canvas.drawBitmap(bmp, 0, 0, paintImage);
-
-        return output;
     }
 
 }

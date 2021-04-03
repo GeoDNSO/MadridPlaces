@@ -45,7 +45,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         TUser user = listUser.get(position);
 
-        //Glide.with(activity).load(user.getImage_profile()).into(holder.iv_imgProfile);
+        Glide.with(activity).load(user.getImage_profile()).into(holder.iv_imgProfile);
         holder.tv_birthdayProfile.setText(user.getBirthDate());
         holder.tv_emailProfile.setText(user.getEmail());
         holder.tv_entireNameProfile.setText(user.getName() + " " + user.getSurname());
