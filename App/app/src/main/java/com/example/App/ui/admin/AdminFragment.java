@@ -2,11 +2,14 @@ package com.example.App.ui.admin;
 
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,12 +20,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import com.example.App.App;
@@ -31,6 +36,7 @@ import com.example.App.MainActivityInterface;
 import com.example.App.R;
 import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ViewListenerUtilities;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -43,13 +49,16 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
 
     private View root;
     private AdminViewModel mViewModel;
+    private NestedScrollView nestedScrollView;
     private App app;
     private List<TUser> listUser;
+    private ProgressBar progressBar;
     private UserListAdapter adapter;
     private RecyclerView recyclerView;
     private UserListAdapter.OnListListener onListListener;
     private boolean sortUsernameboolean;
     private boolean sortNameboolean;
+    private int page = 1, quantum = 7;
 
     public static AdminFragment newInstance() {
         return new AdminFragment();
@@ -63,6 +72,8 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
 
         mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
         mViewModel.init();
+
+        init();
 
         mViewModel.getListUsers().observe(getViewLifecycleOwner(), new Observer<List<TUser>>() {
             @Override
@@ -84,7 +95,11 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
             }
         });
 
+        mViewModel.getProgressBar().observe(getViewLifecycleOwner(), aBoolean ->
+                ViewListenerUtilities.setVisibility(progressBar, aBoolean));
+
         adminManagement();
+        listeners();
 
         return root;
     }
@@ -102,11 +117,34 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         recyclerView.setAdapter(adapter);
     }
 
+    private void init(){
+        nestedScrollView = root.findViewById(R.id.list_user_nestedScrollView);
+        progressBar = root.findViewById(R.id.user_list_progressBar);
+    }
+
+    private void listeners(){
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
+                    //Cuando alacance al ultimo item de la lista
+                    //Incrementea el numero de la pagina
+                    page++;
+
+                    progressBar.setVisibility(View.VISIBLE); //progress bar visible
+                    //Pedimos más datos
+                    mViewModel.listUsers(page, quantum);
+                }
+            }
+        });
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
-        mViewModel.listUsers();
+        progressBar.setVisibility(View.VISIBLE); //progress bar visible
+        mViewModel.listUsers(page, quantum);
     }
 
     @Override

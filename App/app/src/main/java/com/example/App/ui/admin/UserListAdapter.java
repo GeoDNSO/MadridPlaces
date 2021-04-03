@@ -1,5 +1,6 @@
 package com.example.App.ui.admin;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TUser;
 
@@ -20,13 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyViewHolder> implements Filterable {
-    private Context context;
+    private Activity activity;
     private List<TUser> listUser;
     private List<TUser> listUserComplete;
     private OnListListener onListListener;
 
-    public UserListAdapter(Context context, List<TUser> listUser, OnListListener onListListener) {
-        this.context = context;
+    public UserListAdapter(Activity activity, List<TUser> listUser, OnListListener onListListener) {
+        this.activity = activity;
         this.listUser = listUser;
         this.onListListener = onListListener;
         listUserComplete = new ArrayList<>(listUser); //Se crea un nuevo array para que no apunten a la misma lista
@@ -43,7 +45,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         TUser user = listUser.get(position);
 
-        //holder.iv_imgProfile.setImageResource();
+        //Glide.with(activity).load(user.getImage_profile()).into(holder.iv_imgProfile);
         holder.tv_birthdayProfile.setText(user.getBirthDate());
         holder.tv_emailProfile.setText(user.getEmail());
         holder.tv_entireNameProfile.setText(user.getName() + " " + user.getSurname());

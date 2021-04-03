@@ -32,7 +32,8 @@ def completeList(usuario):
   "birth_date":usuario.birth_date.strftime("%Y-%m-%d"),
   "city":usuario.city,
   "rol":usuario.rol,
-  "profile_image": str(usuario.profile_image)
+  "profile_image": usuario.name
+  #str(usuario.profile_image)
   }
   return u
 
