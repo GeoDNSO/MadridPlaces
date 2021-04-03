@@ -33,12 +33,19 @@ public class PlaceRepository extends Repository{
     private MutableLiveData<List<String>> mCategoriesList = new MutableLiveData<>();
     private MutableLiveData<TPlace> mPlace = new MutableLiveData<>();
 
+    private MutableLiveData<Integer> mFavSuccess = new MutableLiveData<Integer>();
+
     public LiveData<Boolean> getBooleanPlace(){ return mBooleanPlace; }
     public LiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
     public LiveData<List<TPlace>> getTwitterPlacesList(){ return mTwitterPlacesList; }
     public LiveData<List<TPlace>> getHistoryPlacesList(){ return mHistoryPlacesList; }
     public LiveData<List<String>> getCategoriesList(){ return mCategoriesList; }
     public MutableLiveData<List<TPlace>> getCategoriesPlacesList() { return mCategoriesPlacesList; }
+
+    public MutableLiveData<Integer> getFavSuccess() { return mFavSuccess; }
+
+
+
 
     //Callback personalizado tanto para List como para Append
     class PlaceListCallBack implements Callback{
@@ -275,6 +282,75 @@ public class PlaceRepository extends Repository{
         });
     }
 
+    public void setFavOnPlace(TPlace place, String username) {
+
+        String postBodyString = jsonInfoForFav(place, username);
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = null;
+        if(place.isUserFav()){
+            request = simpleRequest.buildRequest(
+                    postBodyString,
+                    AppConstants.METHOD_DELETE, "/location/deleteFavoritePlace"
+            );
+        }
+        else{
+            request = simpleRequest.buildRequest(
+                    postBodyString,
+                    AppConstants.METHOD_POST, "/location/newFavoritePlace"
+            );
+        }
+
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mFavSuccess.postValue(AppConstants.FAV_POST_FAIL);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    mFavSuccess.postValue(AppConstants.FAV_POST_FAIL);
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if (success){
+                    mFavSuccess.postValue(AppConstants.FAV_POST_OK);//Importante que este despues del postValue de mUser
+                }
+                else{
+                    mFavSuccess.postValue(AppConstants.FAV_POST_FAIL);//Importante que este despues del postValue de mUser
+                }
+
+
+            }
+        });
+
+    }
+
+    public String jsonInfoForFav(TPlace place, String username){
+
+        JSONObject json = new JSONObject();
+        String infoString;
+        try {
+            json.put("location", place.getName());
+            json.put("user", username);
+        }catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = json.toString();
+
+        return infoString;
+    }
+
     public void addPlaceImages(String placeName, List<String> listImages){
 
     }
@@ -373,6 +449,8 @@ public class PlaceRepository extends Repository{
             String a = jsonObject.getString("road_number");
 
             List<String> jsonImagesList = jsonArrayImagesToStringList(jsonObject.getJSONArray("imageList"));
+            Boolean placeIsFav = jsonObject.getString("favorite").equals("true");
+
             return new TPlace(
                     jsonObject.getString("name"),
                     jsonObject.getString("description"),
@@ -387,7 +465,7 @@ public class PlaceRepository extends Repository{
                     jsonObject.getString("zipcode"),
                     jsonObject.getString("affluence"),
                     jsonObject.getDouble("rate"),
-                    false);
+                    placeIsFav);
             //return new TPlace(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"));
         } catch (JSONException e) {
             e.printStackTrace();

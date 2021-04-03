@@ -2,34 +2,25 @@ package com.example.App.ui.places_list;
 
 import android.app.Activity;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.media.Image;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
-import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.UserInterfaceUtils;
-import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
-import com.squareup.picasso.Picasso;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -185,7 +176,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
             favImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onPlaceListener.ovFavClick(getAdapterPosition(), favImage);
+                    onPlaceListener.onFavClick(getAdapterPosition(), favImage);
                 }
             });
 
@@ -201,7 +192,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
     public interface OnPlaceListener{
         void onPlaceClick(int position);
-        void ovFavClick(int position, ImageView favImage);
+        void onFavClick(int position, ImageView favImage);
     }
 
 }
