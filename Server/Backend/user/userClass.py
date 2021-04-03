@@ -7,6 +7,7 @@ import base64
 import bcrypt #Para hashear las contraseñas, necesidad de instalar con pip install bcrypt
 import location.locationFunct as LocationFunct
 import user.userFunct as UserFunct
+
 userClass = Blueprint("userClass", __name__)
 
 #############################################   Cifrado de Passwords   #############################################
@@ -59,7 +60,10 @@ def registration():
     if(profile_image == ""):
       newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date)
     else:
-      newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date, profile_image=profile_image)
+      image = UserFunct.decode64Img(profile_image)
+      url = UserFunct.uploadImg(image)
+      UserFunct.delImgTemp(image)
+      newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date, profile_image=url)
     
     try:
         modules.sqlAlchemy.session.add(newUser)
