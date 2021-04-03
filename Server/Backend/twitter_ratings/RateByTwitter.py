@@ -28,7 +28,13 @@ def classifyPolarity(polarity):
         rate = 1
     return rate
 
-
+def detectSentiment(polarity):
+    sentiment = 0
+    if (polarity > 0):
+        sentiment = 1
+    elif (polarity < 0):
+        sentiment = 1
+    return sentiment
 #Conexión a la BD
 mydb = MySQLdb.connect(host='localhost',
     user='root',
@@ -60,8 +66,12 @@ locations = cursor.fetchall()
 
 for location in locations:
 	try:
-		tweets = tweepy.Cursor(api.search, q=location[0], tweet_mode='extended').items(7) #Generamos los últimos 5 tweets acerca del lugar (parametro modificable)
+		tweets = tweepy.Cursor(api.search, q=location[0], tweet_mode='extended').items(10) #Generamos los últimos 5 tweets acerca del lugar (parametro modificable)
 		listRates = []
+		n_positiveTweets = 0
+		n_negativeTweets = 0
+		n_neutralTweets = 0
+
 		avgRate = 0 #Si no hay tweets, avgRate = 0
 		for tweet in tweets:
 		    cleanedTweet = p.clean(tweet.full_text) #Preprocesa el texto, quita los #, urls y emojis.
@@ -82,11 +92,19 @@ for location in locations:
 		        #print(analyzed.sentiment)
 		    	rate = classifyPolarity(analyzed.sentiment.polarity)
 		    	listRates.append(rate)
+		    	sentiment = detectSentiment(analyzed.sentiment.polarity)
+		    	if(sentiment == 0):
+		    		n_neutralTweets = n_neutralTweets + 1
+		    	elif(sentiment == 1):
+		    		n_positiveTweets = n_positiveTweets + 1
+		    	elif(sentiment == -1):
+		    		n_negativeTweets = n_negativeTweets + 1
 
 		if(len(listRates) != 0):    
 			avgRate = sum(listRates) / len(listRates)
+		n_tweets = (n_positiveTweets + n_negativeTweets + n_neutralTweets)
 		print(location[0], avgRate)
-		cursor.execute("INSERT IGNORE INTO twitter_ratings (location, twitterRate) VALUES (%s, %s)", [location, avgRate])
+		cursor.execute("INSERT IGNORE INTO twitter_ratings (location, twitterRate, n_tweets, n_positiveTweets, n_negativeTweets, n_neutralTweets) VALUES (%s, %s, %s, %s, %s, %s)", [location, avgRate, n_tweets, n_positiveTweets, n_negativeTweets, n_neutralTweets])
 		mydb.commit()
 	except tweepy.error.TweepError:
 		raise
