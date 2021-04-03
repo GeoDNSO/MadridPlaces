@@ -2,6 +2,7 @@ package com.example.App.ui.admin;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,12 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         TUser user = listUser.get(position);
 
-        Glide.with(activity).load(user.getImage_profile()).into(holder.iv_imgProfile);
+        if(user.getImage_profile() == null || user.getImage_profile() == ""){
+            holder.iv_imgProfile.setImageResource(R.drawable.ic_username);
+        }
+        else {
+            Glide.with(activity).load(user.getImage_profile()).circleCrop().into(holder.iv_imgProfile);
+        }
         holder.tv_birthdayProfile.setText(user.getBirthDate());
         holder.tv_emailProfile.setText(user.getEmail());
         holder.tv_entireNameProfile.setText(user.getName() + " " + user.getSurname());
