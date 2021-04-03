@@ -13,6 +13,7 @@ import java.util.List;
 public abstract class BaseViewModel extends ViewModelParent {
     protected PlaceRepository placeRepository;
     protected LiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
+    protected LiveData<Integer> mFavSuccess = new MutableLiveData<>();
 
     @Override
     public void init() {
