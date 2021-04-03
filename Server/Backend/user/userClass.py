@@ -146,10 +146,13 @@ def modifyUser():
         modifiedUser.password = pwdCipher
         modifiedUser.gender = gender
         modifiedUser.birth_date = birth_date
-        image = UserFunct.decode64Img(profile_image)
-        url = UserFunct.uploadImg(image)
-        UserFunct.delImgTemp(image)
-        modifiedUser.profile_image = url
+        if("http" not in profile_image):
+            image = UserFunct.decode64Img(profile_image)
+            url = UserFunct.uploadImg(image)
+            UserFunct.delImgTemp(image)
+            modifiedUser.profile_image = url
+        else:
+            modifiedUser.profile_image = profile_image
         modules.sqlAlchemy.session.commit()
     except Exception as e:
         print("Error modificando usuarios:", repr(e))
