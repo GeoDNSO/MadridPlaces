@@ -4,7 +4,6 @@ from app import app
 from user.userClass import userClass
 from location.locationClass import locationClass
 from comments.commentsClass import commentsClass
-from rates.ratesClass import ratesClass
 from visited.visitedClass import visitedClass
 from tracking.trackingClass import trackingClass
 from twitter_ratings.twitter_ratingsClass import twitter_ratingsClass
@@ -13,7 +12,6 @@ from favorites.favoritesClass import favoritesClass
 #Todas las rutas divididas en Blueprints
 app.register_blueprint(userClass)
 app.register_blueprint(commentsClass)
-app.register_blueprint(ratesClass)
 app.register_blueprint(visitedClass)
 app.register_blueprint(locationClass)
 app.register_blueprint(trackingClass)

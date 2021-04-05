@@ -18,7 +18,7 @@ class user(sqlAlchemy.Model):
     birth_date = sqlAlchemy.Column(sqlAlchemy.DateTime)
     city = sqlAlchemy.Column(sqlAlchemy.String(255), default="Madrid")
     rol = sqlAlchemy.Column(sqlAlchemy.String(255), default="user")
-    profile_image = sqlAlchemy.Column(sqlAlchemy.String(16000000), nullable=True)
+    profile_image = sqlAlchemy.Column(sqlAlchemy.String(255), nullable=True)
     
 class location(sqlAlchemy.Model):
     __tablename__ = 'location'
@@ -53,14 +53,8 @@ class comments(sqlAlchemy.Model):
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
     comment = sqlAlchemy.Column(sqlAlchemy.String(255)) 
     created =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now(), onupdate = sqlAlchemy.func.now())
-
-class ratings(sqlAlchemy.Model):
-    __tablename__ = 'ratings'
-    id_rate = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
-    user = sqlAlchemy.Column(sqlAlchemy.String(255))
-    location = sqlAlchemy.Column(sqlAlchemy.String(255))
     rate = sqlAlchemy.Column(sqlAlchemy.Integer())  
-
+    
 class visited(sqlAlchemy.Model):
     __tablename__ = 'visited'
     id_visited = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
@@ -81,6 +75,10 @@ class twitter_ratings(sqlAlchemy.Model):
     id_twitterRate = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
     twitterRate = sqlAlchemy.Column(sqlAlchemy.Integer())  
+    n_tweets = sqlAlchemy.Column(sqlAlchemy.Integer())  
+    n_positiveTweets = sqlAlchemy.Column(sqlAlchemy.Integer())  
+    n_negativeTweets = sqlAlchemy.Column(sqlAlchemy.Integer())
+    n_neutralTweets = sqlAlchemy.Column(sqlAlchemy.Integer())  
 
 class favorites(sqlAlchemy.Model):
     __tablename__ = 'location_favorites'

@@ -329,9 +329,14 @@ public class CommentRepository extends Repository {
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(jsonString);
+            String image_profile = jsonObject.getString("profile_image");
+            if(image_profile.equals("null")){
+                image_profile = null;
+            }
+
             return new TComment(
                     jsonObject.getInt("id_comment"),
-                    "Imagen Perfil",
+                    image_profile,
                     jsonObject.getString("user"),
                     jsonObject.getString("comment"),
                     jsonObject.getString("created"),

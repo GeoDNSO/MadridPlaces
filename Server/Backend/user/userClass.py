@@ -6,6 +6,8 @@ import modules
 import base64
 import bcrypt #Para hashear las contraseñas, necesidad de instalar con pip install bcrypt
 import location.locationFunct as LocationFunct
+import user.userFunct as UserFunct
+
 userClass = Blueprint("userClass", __name__)
 
 #############################################   Cifrado de Passwords   #############################################
@@ -34,18 +36,7 @@ def login():
     if (userQuery is not None):
         if (passwordVerify(password, userQuery.password) is True):
             print("success")
-            return jsonify(
-                    exito = "true",
-                    nickname = userQuery.nickname,
-                    name=userQuery.name,
-                    surname=userQuery.surname,
-                    email=userQuery.email,
-                    password=password,
-                    gender=userQuery.gender,
-                    birth_date=userQuery.birth_date.strftime("%Y-%m-%d"),
-                    city=userQuery.city,
-                    rol=userQuery.rol,
-                    profile_image=str(userQuery.profile_image)) #Se devuelve en binario
+            return UserFunct.jsonifiedList(userQuery, password)
         else:
           print("Contraseña incorrecta")  
     else:
@@ -69,7 +60,10 @@ def registration():
     if(profile_image == ""):
       newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date)
     else:
-      newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date, profile_image=profile_image)
+      image = UserFunct.decode64Img(profile_image)
+      url = UserFunct.uploadImg(image)
+      UserFunct.delImgTemp(image)
+      newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date, profile_image=url)
     
     try:
         modules.sqlAlchemy.session.add(newUser)
@@ -83,29 +77,27 @@ def registration():
 #Lista de Usuarios
 @userClass.route('/listUsers/', methods=['GET', 'POST'])
 def listUsers():
+    json_data = request.get_json()
+    page = json_data["page"] #Mostrar de X en X     
+    quant = json_data["quant"]
     try:
-        #usuarios = user.query.order_by(user.nickname.desc()).all()
-        usuarios = modules.user.query.order_by(modules.user.nickname).all()
-        lista = []
-        for usuario in usuarios:
-            u = {
-                "nickname":usuario.nickname,
-                "name":usuario.name,
-                "surname":usuario.surname,
-                "email":usuario.email,
-                "password":usuario.password,
-                "gender":usuario.gender,
-                "birth_date":usuario.birth_date.strftime("%Y-%m-%d"),
-                "city":usuario.city,
-                "rol":usuario.rol,
-                "profile_image": str(usuario.profile_image)
-                }
+        tam = modules.user.query.count()
+        comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
+        if(comp >= quant):
+            return jsonify(exito = "true", users = [])
+
+        usuarios = modules.user.query.order_by(modules.user.nickname).paginate(per_page=quant, page=page)
+        if(usuarios is not None):
+          all_items = usuarios.items
+          lista = []
+          for usuario in all_items:
+            u = UserFunct.completeList(usuario)
             lista.append(u)
+          return jsonify(exito = "true", users = lista)
+
     except Exception as e:
         print("Error leyendo usuarios:", repr(e))
         return jsonify(exito = "false")
-
-    return jsonify(exito = "true", users = lista)
 
 #Eliminar Usuario
 @userClass.route('/deleteUser/', methods=['DELETE']) #Recibe un JSON User para borrar, supongamos que recoge solamente el nickname
@@ -154,24 +146,19 @@ def modifyUser():
         modifiedUser.password = pwdCipher
         modifiedUser.gender = gender
         modifiedUser.birth_date = birth_date
-        modifiedUser.profile_image = profile_image
+        if("http" not in profile_image):
+            image = UserFunct.decode64Img(profile_image)
+            url = UserFunct.uploadImg(image)
+            UserFunct.delImgTemp(image)
+            modifiedUser.profile_image = url
+        else:
+            modifiedUser.profile_image = profile_image
         modules.sqlAlchemy.session.commit()
     except Exception as e:
         print("Error modificando usuarios:", repr(e))
         return jsonify(exito = "false")
         
-    return jsonify(
-                   exito = "true",
-                   nickname=modifiedUser.nickname,
-                   name=modifiedUser.name,
-                   surname=modifiedUser.surname,
-                   email=modifiedUser.email,
-                   password=password,
-                   gender=modifiedUser.gender,
-                   birth_date=modifiedUser.birth_date.strftime("%Y-%m-%d"),
-                   city=modifiedUser.city,
-                   rol=modifiedUser.rol,
-                   profile_image = str(modifiedUser.profile_image))
+    return UserFunct.jsonifiedList(modifiedUser, password)
 
 #Perfil Usuario
 @userClass.route('/profileUser/', methods=['GET', 'POST']) #No se usa
@@ -182,14 +169,4 @@ def profileUser():
     if userQuery is None:
         return jsonify(exito = "false")
     
-    return jsonify(exito = "true",
-                   nickname = userQuery.nickname,
-                   name=userQuery.name,
-                   surname=userQuery.surname,
-                   email=userQuery.email,
-                   password=userQuery.password,
-                   gender=userQuery.gender,
-                   birth_date=userQuery.birth_date.strftime("%Y-%m-%d"),
-                   city=userQuery.city,
-                   rol=userQuery.rol,
-                   profile_image = str(userQuery.profile_image))
+    return UserFunct.jsonifiedList2(userQuery)

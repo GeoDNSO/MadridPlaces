@@ -3,8 +3,6 @@ from flask import jsonify
 #Contiene las clases de la BD
 import modules
 import comments.commentFunct as CommentFunct
-import rates.rateFunct as RateFunct
-
 def averageTwitterRate(location): #No se usa
     try:
         rtQuery = modules.twitter_ratings.query.filter_by(location = location).first()
