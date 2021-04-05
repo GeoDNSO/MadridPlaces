@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.models.dao.SimpleRequest;
+import com.example.App.models.transfer.TPlace;
 import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
 
@@ -221,9 +222,8 @@ public class UserRepository {
 
     }
 
-    public void listUsers() {
-
-        String postBodyString = "";
+    public void listUsers(int page, int quantum) {
+        String postBodyString = pageAndQuantToString(page, quantum);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -244,6 +244,8 @@ public class UserRepository {
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
 
+                sleep(500);//Para simular la carga..
+
                 if (!response.isSuccessful()) {
                     mProfileSuccess.postValue(AppConstants.ERROR_LIST_USERS);
                     throw new IOException("Unexpected code " + response);
@@ -252,7 +254,15 @@ public class UserRepository {
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if (success){
-                    mListUsers.postValue(getListFromResponse(res));
+                    List<TUser> listaAux = mListUsers.getValue();
+                    if (listaAux == null){
+                        Log.d("UserListCallback", "La lista de usuarios estaba vacia inicialmente");
+                        mListUsers.postValue(getListFromResponse(res));
+                    }
+                    else{
+                        listaAux.addAll(getListFromResponse(res));
+                        mListUsers.postValue(listaAux);
+                    }
                     mProfileSuccess.postValue(AppConstants.LIST_USERS);//Importante que este despues del postValue de mUser
                 }
                 else{
@@ -263,6 +273,14 @@ public class UserRepository {
             }
         });
 
+    }
+
+    private void sleep(long milis){
+        try {
+            Thread.sleep(milis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private List<TUser> getListFromResponse(String response){
@@ -327,12 +345,30 @@ public class UserRepository {
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(jsonString);
-            return new TUser(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"));
+            String image_profile = jsonObject.getString("profile_image");
+            if(image_profile.equals("null")){
+                image_profile = null;
+            }
+            return new TUser(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"), image_profile);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
     }
 
+    private String pageAndQuantToString(int page, int quantity) {
+        JSONObject jsonPageQuant = new JSONObject();
+        String infoString;
+        try {
+            jsonPageQuant.put("page", page);
+            jsonPageQuant.put("quant", quantity);
+        }catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = jsonPageQuant.toString();
+
+        return infoString;
+    }
 
 }

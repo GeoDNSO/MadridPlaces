@@ -24,9 +24,9 @@ public class RegisterViewModel extends ViewModel {
     }
 
     //envia datos al servidor para registrar el nuevo usuario, en la primera linea se activa el progressBar
-    public void registerUser(String username, String pass, String name, String surname, String email, String gender, String birthDate, String city, String rol){
+    public void registerUser(String username, String pass, String name, String surname, String email, String gender, String birthDate, String city, String rol, String profileImage){
         mRegisterInProcess.setValue(true); //progress bar visible
-        TUser user = new TUser(username, pass, name, surname, email, gender, birthDate, city, rol);
+        TUser user = new TUser(username, pass, name, surname, email, gender, birthDate, city, rol, profileImage);
         userRepository.registerUser(user);
     }
 

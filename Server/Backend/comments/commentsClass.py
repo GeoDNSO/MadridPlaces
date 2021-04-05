@@ -6,7 +6,7 @@ import modules
 
 #Funciones auxiliares que no usan rutas
 import comments.commentFunct as CommentFunct
-import rates.rateFunct as RateFunct
+import user.userFunct as UserFunct
 #############################################   Funciones Comentarios   #############################################
 
 commentsClass = Blueprint("commentsClass", __name__)  
@@ -18,43 +18,35 @@ def newCommentYRate():
     location = json_data["location"]
     comment = json_data["comment"]
     rate = json_data["rate"]
-
-    createComment = modules.comments(user = user, location = location, comment = comment)
-    createRate = modules.ratings(user = user, location = location, rate = rate)
     try:
         ctQuery = modules.comments.query.filter_by(user = user, location = location).first()
-        print(ctQuery)
         if(ctQuery is None):
-            print('2')
+            if(comment != ""):
+                createComment = modules.comments(user = user, location = location, comment = comment, rate = rate)
+            else:
+                createComment = modules.comments(user = user, location = location, rate = rate)
+
             modules.sqlAlchemy.session.add(createComment)
         else:
-            print('3')
-            ctQuery.comment = comment
-
-        modules.sqlAlchemy.session.commit()
-
-        rtQuery = modules.ratings.query.filter_by(user = user, location = location).first() #Comprueba si ya existe una valoración
-        if(rtQuery is None):
-            modules.sqlAlchemy.session.add(createRate) #Si no, se crea
-        else:
-            print('4')
-            rtQuery.rate = rate #Si existe, devuelve su valor
-
+            if(comment != ""):
+                ctQuery.comment = comment
+            ctQuery.rate = rate
+            #created onUpdate, si se modifica se actualiza automaticamente
         modules.sqlAlchemy.session.commit()
 
         return jsonify(
                    exito = "true",
                    id_comment = createComment.id_comment if ctQuery is None else ctQuery.id_comment ,
-                   user=createComment.user,
-                   location=createComment.location,
-                   comment=createComment.comment,
+                   user=user,
+                   location=location,
+                   comment=createComment.comment if comment != "" else None,
                    created=createComment.created.strftime('%Y-%m-%d %H:%M:%S') if ctQuery is None else ctQuery.created.strftime('%Y-%m-%d %H:%M:%S'),
                    rate=rate)
     except Exception as e:
         print("Error insertando la nueva fila :", repr(e))
         return jsonify(exito = "false")   
 
-@commentsClass.route('/location/modifyComment', methods=['POST'])
+@commentsClass.route('/location/modifyComment', methods=['POST']) #No se usa, para modificar llama otra vez a newComment&Rate
 def modifyComment():
     json_data = request.get_json()
     comment = json_data["comment"]
@@ -104,12 +96,13 @@ def showComments():
             return jsonify(exito = "false")
         lista = []
         for comment in cmQuery.items:
-            rate = RateFunct.showRate(comment.user, location)
             #picture = showPicture(comment.user)
-            cmDict = {"user" : comment.user,
-            #"picture" : picture,s
+            cmDict = {
+            "id_comment" : comment.id_comment,
+            "user" : comment.user,
+            "profile_image" : UserFunct.showPicture(comment.user),
             "comment" : comment.comment,
-            "rate" : rate,
+            "rate" : comment.rate,
             "created" : comment.created
             }
             lista.append(cmDict)

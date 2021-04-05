@@ -13,6 +13,7 @@ import java.util.List;
 public abstract class BaseViewModel extends ViewModelParent {
     protected PlaceRepository placeRepository;
     protected LiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
+    protected LiveData<Integer> mFavSuccess = new MutableLiveData<>();
 
     @Override
     public void init() {
@@ -24,40 +25,27 @@ public abstract class BaseViewModel extends ViewModelParent {
 
         mPlacesList = Transformations.switchMap(
                 getPlaceListToParent(),
-                places -> setAndGetPlacesList(places));
+                places -> setAndGetPlacesList(places)
+        );
+
+        mFavSuccess = Transformations.switchMap(
+                placeRepository.getFavSuccess(),
+                success -> setFavSuccess(success) //Creo que se puede usar el mismo setSuccess... PROBAR
+        );
 
     }
+
+
 
     protected abstract LiveData<List<TPlace>> getPlaceListToParent();
 
-    public abstract void listPlaceToParent(int page, int quant);
+    public abstract void listPlaceToParent(int page, int quant, String nickname);
 
-    public abstract void appendPlaceToParent(int page, int quant);
-
-    /*
-    public LiveData<List<TPlace>> getPlaceListToParent(){
-        return placeRepository.getPlacesList();
-    }
-
-    public void listPlaceToParent(int page, int quant){
-        placeRepository.listPlaces(page, quant);
-    }
-
-    public void appendPlaceToParent(int page, int quant){
-        placeRepository.appendPlaces(page, quant);
-    }
-    */
 
     //Peticion de quant lugares de la pagina page al servidor
-    public void listPlaces(int page, int quant){
+    public void listPlaces(int page, int quant, String nickname){
         mProgressBar.postValue(true);
-        listPlaceToParent(page, quant);
-    }
-
-    //Peticion de quant lugares de la pagina page al servidor añadiendo anteriores
-    public void appendPlaces(int page, int quant){
-        mProgressBar.postValue(true);
-        appendPlaceToParent(page, quant);
+        listPlaceToParent(page, quant, nickname);
     }
 
     private LiveData<List<TPlace>> setAndGetPlacesList(List<TPlace> places) {
@@ -73,5 +61,17 @@ public abstract class BaseViewModel extends ViewModelParent {
         return mAux;
     }
 
+    private LiveData<Integer> setFavSuccess(Integer success) {
+        MutableLiveData<Integer> mAux = new MutableLiveData<>();
+        mAux.setValue(success);
+        return mAux;
+    }
+
     public LiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
+
+    public LiveData<Integer> getFavSuccess(){return mFavSuccess; }
+
+    public void setFavOnPlace(TPlace place, String username) {
+        placeRepository.setFavOnPlace(place, username);
+    }
 }

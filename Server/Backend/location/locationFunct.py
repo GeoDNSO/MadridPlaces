@@ -4,8 +4,8 @@ from flask import jsonify
 import base64
 import modules
 import comments.commentFunct as CommentFunct
-import rates.rateFunct as RateFunct
 import twitter_ratings.twitter_ratingsFunct as TwitterRatingsFunct
+import favorites.favoritesFunct as FavoritesFunct
 
 #Para imagenes
 import requests, json 
@@ -68,10 +68,11 @@ def jsonifiedPlace(createLocation):
                    zipcode=createLocation.zipcode,
                    affluence=createLocation.affluence)
 
-def completeList(place):
+def completeList(place, user):
     n_comments = CommentFunct.numberOfComments(place.name)
     imageList = listImages(place.name)
-    avgRate = RateFunct.averageRate(place.name)
+    avgRate = CommentFunct.averageRate(place.name)
+    favorite = FavoritesFunct.isFavorite(user, place)
     obj = {"name" : place.name,
     "description":place.description,
     "coordinate_latitude":place.coordinate_latitude,
@@ -85,12 +86,14 @@ def completeList(place):
     "affluence":place.affluence,
     "imageList" : imageList,
     "rate" : avgRate,
-    "n_comments" : n_comments}
+    "n_comments" : n_comments,
+    "favorite" : favorite}
     return obj
 
-def listByTwitter(place, twitterRate):
+def listByTwitter(place, user, twitterRate):
     n_comments = TwitterRatingsFunct.numberOfTwitterComments(place.name)
     imageList = listImages(place.name)
+    favorite = FavoritesFunct.isFavorite(user, place)
     obj = {"name" : place.name,
     "description":place.description,
     "coordinate_latitude":place.coordinate_latitude,
@@ -104,7 +107,8 @@ def listByTwitter(place, twitterRate):
     "affluence":place.affluence,
     "imageList" : imageList,
     "rate" : twitterRate,
-    "n_comments" : n_comments}
+    "n_comments" : n_comments,
+    "favorite" : favorite}
     return obj
 
 def mapCategoryToInt(category):

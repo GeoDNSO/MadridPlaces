@@ -15,9 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.SessionManager;
@@ -31,6 +33,7 @@ public class DetailFragment extends Fragment{
     private TextView tv_Username;
     private TextView tv_FullName;
     private TextView tv_Email;
+    private ImageView iv_imageView;
 
     private TextView tv_Comments;
     private TextView tv_VisitedPlaces;
@@ -58,6 +61,7 @@ public class DetailFragment extends Fragment{
         tv_Username = root.findViewById(R.id.tv_username2);
         tv_FullName = root.findViewById(R.id.tv_full_name2);
         tv_Email = root.findViewById(R.id.tv_email2);
+        iv_imageView = root.findViewById(R.id.profile_view_admin);
 
 
         //Maybe used in the future
@@ -122,6 +126,15 @@ public class DetailFragment extends Fragment{
         tv_Username.setText(user.getUsername());
         tv_FullName.setText((user.getName() + " " + user.getSurname()));
         tv_Email.setText(user.getEmail());
+
+        if(user.getImage_profile() == null || user.getImage_profile() == ""){
+            iv_imageView.setImageResource(R.drawable.ic_username);
+        }
+        else{
+            Glide.with(getActivity()).load(user.getImage_profile())
+                    .circleCrop()
+                    .into(iv_imageView);
+        }
     }
 
     @Override

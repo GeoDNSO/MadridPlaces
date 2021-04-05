@@ -17,12 +17,8 @@ public class NearestPlaceViewModel extends BaseViewModel {
     }
 
     @Override
-    public void listPlaceToParent(int page, int quant) {
-        placeRepository.listPlaces(page, quant);
+    public void listPlaceToParent(int page, int quant, String nickname) {
+        placeRepository.listPlaces(page, quant, nickname);
     }
 
-    @Override
-    public void appendPlaceToParent(int page, int quant) {
-        placeRepository.appendPlaces(page, quant);
-    }
 }

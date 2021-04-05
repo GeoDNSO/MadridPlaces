@@ -74,13 +74,15 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         shimmerDrawable.setShimmer(shimmer);
 
 
-        //TODO cambiar por la imagen de los usuarios
-
-        Glide.with(activity).load(R.drawable.imagen_lugar_default)
-                .circleCrop()
-                .placeholder(shimmerDrawable)
-                .into(holder.userImage);
-
+        if(comment.getImageProfileUser() == null || comment.getImageProfileUser() == "") {
+            holder.userImage.setImageResource(R.drawable.ic_username);
+        }
+        else {
+            Glide.with(activity).load(comment.getImageProfileUser())
+                    .circleCrop()
+                    .placeholder(shimmerDrawable)
+                    .into(holder.userImage);
+        }
         //Colocar los valores del comentario en el view holder
         holder.tvComment.setText(comment.getContent());
         holder.tvUsername.setText(comment.getUsername());

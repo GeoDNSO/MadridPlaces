@@ -168,10 +168,10 @@ public class CommentRepository extends Repository {
         });
     }
 
-    public void deleteRate (int id_comment) {
+    public void deleteComment(TComment comment, int position) {
 
         //TODO Únicamente creo la valoracion en la BD, no lo muestro en la APP, me da miedo crear un Tcomment con el comment vacío
-        String postBodyString = deleteToString(id_comment);
+        String postBodyString = deleteToString(comment.getId());
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_DELETE, "/location/deleteComment");
@@ -181,7 +181,7 @@ public class CommentRepository extends Repository {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_LIST_COMMENTS);
+                mSuccess.postValue(AppConstants.ERROR_DELETE_COMMENT);
                 call.cancel();
             }
 
@@ -189,20 +189,25 @@ public class CommentRepository extends Repository {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_NEW_COMMENT);
+                    mSuccess.postValue(AppConstants.ERROR_DELETE_COMMENT);
                     throw new IOException("Unexpected code " + response);
                 }
                 String res = response.body().string();
                 boolean success = simpleRequest.isSuccessful(res);
-                List<TComment> listaAux = mCommentList.getValue();
-                TComment newComment = jsonStringToComment(res);
+
                 if (success){
-                    searchAndDeleteList(listaAux,newComment);
-                    mSuccess.postValue(AppConstants.NEW_COMMENT);//Importante que este despues del postValue de mUser
+                    //TODO lo comentado estaba antes
+                    List<TComment> listaAux = mCommentList.getValue();
+                    //TComment newComment = jsonStringToComment(res);
+                    listaAux.remove(position);
+                    mCommentList.setValue(listaAux); //El problema es que carga la lista de cero y se empieza al inicio
+                    //searchAndDeleteList(listaAux,newComment);
+
+                    mSuccess.postValue(AppConstants.DELETE_COMMENT_OK);//Importante que este despues del postValue de mUser
                 }
                 else{
-                    mCommentList.postValue(null);
-                    mSuccess.postValue(AppConstants.ERROR_NEW_COMMENT);//Importante que este despues del postValue de mUser
+                    //mCommentList.postValue(null);
+                    mSuccess.postValue(AppConstants.ERROR_DELETE_COMMENT);//Importante que este despues del postValue de mUser
                 }
             }
         });
@@ -324,8 +329,14 @@ public class CommentRepository extends Repository {
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(jsonString);
+            String image_profile = jsonObject.getString("profile_image");
+            if(image_profile.equals("null")){
+                image_profile = null;
+            }
+
             return new TComment(
-                    "Imagen Perfil",
+                    jsonObject.getInt("id_comment"),
+                    image_profile,
                     jsonObject.getString("user"),
                     jsonObject.getString("comment"),
                     jsonObject.getString("created"),

@@ -68,9 +68,15 @@ public class AppConstants {
     public static final int PLACE_CATEGORIES = 4;
 
     public static final String BUNDLE_CATEGORY_TYPE = "CATEGORIA";
+    public static final Integer DELETE_COMMENT_OK = 340;
+    public static final Integer ERROR_DELETE_COMMENT = -340;
 
     public static String TAB_RATING = "W";
     public static String TAB_NEAREST = "W";
     public static String TAB_TWITTER = "W";
     public static String TAB_CATEGORY = "W";
+
+
+    public static final Integer FAV_POST_OK = 1;
+    public static final Integer FAV_POST_FAIL = 0;
 }

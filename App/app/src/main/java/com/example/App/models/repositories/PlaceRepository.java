@@ -33,9 +33,7 @@ public class PlaceRepository extends Repository{
     private MutableLiveData<List<String>> mCategoriesList = new MutableLiveData<>();
     private MutableLiveData<TPlace> mPlace = new MutableLiveData<>();
 
-    public void getPlace() {
-
-    }
+    private MutableLiveData<Integer> mFavSuccess = new MutableLiveData<Integer>();
 
     public LiveData<Boolean> getBooleanPlace(){ return mBooleanPlace; }
     public LiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
@@ -44,105 +42,86 @@ public class PlaceRepository extends Repository{
     public LiveData<List<String>> getCategoriesList(){ return mCategoriesList; }
     public MutableLiveData<List<TPlace>> getCategoriesPlacesList() { return mCategoriesPlacesList; }
 
+    public MutableLiveData<Integer> getFavSuccess() { return mFavSuccess; }
+
+
+
+
+    //Callback personalizado tanto para List como para Append
+    class PlaceListCallBack implements Callback{
+
+        private SimpleRequest simpleRequest;
+        private MutableLiveData<List<TPlace>> placeList;
+
+
+        public PlaceListCallBack(SimpleRequest simpleRequest, MutableLiveData<List<TPlace>> placeList){
+            this.simpleRequest = simpleRequest;
+            this.placeList = placeList;
+        }
+
+        private void sleep(long milis){
+            try {
+                Thread.sleep(milis);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            e.printStackTrace();
+            mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
+            Log.d("CCC", "FAILURE GORDO");
+            placeList.postValue(null);
+            call.cancel();
+        }
+
+        @Override
+        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+            this.sleep(500);//Para simular la carga...
+
+            if (!response.isSuccessful()) {
+                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
+                throw new IOException("Unexpected code " + response);
+            }
+            String res = response.body().string();
+            boolean success = simpleRequest.isSuccessful(res);
+
+            if(!success){
+                Log.d("PlaceListCallback", "Not success");
+                placeList.postValue(null);
+                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
+
+                return;
+            }
+
+            //si no hubo problemas...
+            List<TPlace> listaAux = placeList.getValue();
+
+            if (listaAux == null){
+                Log.d("PlaceListCallback", "La lista estaba vacia inicialmente");
+                placeList.postValue(getListFromResponse(res));
+            }
+            else{
+                listaAux.addAll(getListFromResponse(res));
+                placeList.postValue(listaAux);
+            }
+            mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
+        }
+    }
 
     //lista lugares de quantity en quantity en función de page alfabeticamente
     // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
-    public void listPlaces(int page, int quantity) {
+    public void listPlaces(int page, int quantity, String nickname) {
 
-        String postBodyString = pageAndQuantToSTring(page, quantity);
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listLocations");
         Call call = simpleRequest.createCall(request);
 
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                Log.d("CCC", "FAILURE GORDO");
-                mPlacesList.postValue(null);
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                    throw new IOException("Unexpected code " + response);
-                }
-                String res = response.body().string();
-                boolean success = simpleRequest.isSuccessful(res);
-
-                if (success){
-                    mPlacesList.postValue(getListFromResponse(res));
-                    mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-                else{
-                    Log.d("BBB", "not success");
-                    mPlacesList.postValue(null);
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-            }
-        });
-    }
-
-    //lista lugares de quantity en quantity en función de page alfabeticamente añadiendo anteriores
-    // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
-    public void appendPlaces(int page, int quantity) {
-
-        String postBodyString = pageAndQuantToSTring(page, quantity);
-        SimpleRequest simpleRequest = new SimpleRequest();
-        Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/location/listLocations");
-        Call call = simpleRequest.createCall(request);
-
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                mPlacesList.postValue(null);
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                    throw new IOException("Unexpected code " + response);
-                }
-                String res = response.body().string();
-                boolean success = simpleRequest.isSuccessful(res);
-
-                List<TPlace> listaAux = mPlacesList.getValue();
-                if (success){
-                    if (listaAux.isEmpty()){
-                        Log.d("Info", "La lista esta vacia inicialmente");
-                        mPlacesList.postValue(getListFromResponse(res));
-                    }
-                    else{
-                        listaAux.addAll(getListFromResponse(res));
-                        mPlacesList.postValue(listaAux);
-                    }
-                    mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-                else{
-                    mPlacesList.postValue(null);
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-            }
-        });
+        call.enqueue(new PlaceListCallBack(simpleRequest, mPlacesList));
     }
 
     public void addPlace(TPlace place){
@@ -303,32 +282,66 @@ public class PlaceRepository extends Repository{
         });
     }
 
-    public void addPlaceImages(String placeName, List<String> listImages){
+    public void setFavOnPlace(TPlace place, String username) {
 
-    }
+        String postBodyString = jsonInfoForFav(place, username);
 
-    private String pageAndQuantToSTring(int page, int quantity) {
-        JSONObject jsonPageQuant = new JSONObject();
-        String infoString;
-        try {
-            jsonPageQuant.put("page", page);
-            jsonPageQuant.put("quant", quantity);
-        }catch (JSONException e) {
-            e.printStackTrace();
-            infoString = "error";
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = null;
+        if(place.isUserFav()){
+            request = simpleRequest.buildRequest(
+                    postBodyString,
+                    AppConstants.METHOD_DELETE, "/location/deleteFavoritePlace"
+            );
         }
-        infoString = jsonPageQuant.toString();
+        else{
+            request = simpleRequest.buildRequest(
+                    postBodyString,
+                    AppConstants.METHOD_POST, "/location/newFavoritePlace"
+            );
+        }
 
-        return infoString;
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mFavSuccess.postValue(AppConstants.FAV_POST_FAIL);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    mFavSuccess.postValue(AppConstants.FAV_POST_FAIL);
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if (success){
+                    mFavSuccess.postValue(AppConstants.FAV_POST_OK);//Importante que este despues del postValue de mUser
+                }
+                else{
+                    mFavSuccess.postValue(AppConstants.FAV_POST_FAIL);//Importante que este despues del postValue de mUser
+                }
+
+
+            }
+        });
+
     }
 
-    private String paramsToGetCategoriePlace(int page, int quantity, String category) {
+    public String jsonInfoForFav(TPlace place, String username){
+
         JSONObject json = new JSONObject();
         String infoString;
         try {
-            json.put("page", page);
-            json.put("quant", quantity);
-            json.put("category", category);
+            json.put("location", place.getName());
+            json.put("user", username);
         }catch (JSONException e) {
             e.printStackTrace();
             infoString = "error";
@@ -336,6 +349,10 @@ public class PlaceRepository extends Repository{
         infoString = json.toString();
 
         return infoString;
+    }
+
+    public void addPlaceImages(String placeName, List<String> listImages){
+
     }
 
     public void closePlaces() {
@@ -358,296 +375,36 @@ public class PlaceRepository extends Repository{
 
     }
 
-    public void historyListPlaces(int page, int quantity) {
+    public void historyListPlaces(int page, int quantity, String nickname) {
         //TODO devuelve la lista de lugares. Solo es necesario la lista visitada.
-        String postBodyString = pageAndQuantToSTring(page, quantity);
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listLocations");
         Call call = simpleRequest.createCall(request);
 
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                Log.d("CCC", "FAILURE GORDO");
-                mHistoryPlacesList.postValue(null);
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                    throw new IOException("Unexpected code " + response);
-                }
-                String res = response.body().string();
-                boolean success = simpleRequest.isSuccessful(res);
-
-                if (success){
-                    mHistoryPlacesList.postValue(getListFromResponse(res));
-                    mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-                else{
-                    Log.d("BBB", "not success");
-                    mHistoryPlacesList.postValue(null);
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-            }
-        });
+        call.enqueue(new PlaceListCallBack(simpleRequest, mHistoryPlacesList));
     }
 
-    public void appendHistoryPlaces(int page, int quantity) {
 
-        String postBodyString = pageAndQuantToSTring(page, quantity);
-        SimpleRequest simpleRequest = new SimpleRequest();
-        Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/location/listLocations");
-        Call call = simpleRequest.createCall(request);
+    public void listPlacesCategories(int page, int quantity, String nickname, String category) {
 
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                mHistoryPlacesList.postValue(null);
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                    throw new IOException("Unexpected code " + response);
-                }
-                String res = response.body().string();
-                boolean success = simpleRequest.isSuccessful(res);
-
-                List<TPlace> listaAux = mHistoryPlacesList.getValue();
-                if (success){
-                    if (listaAux.isEmpty()){
-                        Log.d("Info", "La lista esta vacia inicialmente");
-                        mHistoryPlacesList.postValue(getListFromResponse(res));
-                    }
-                    else{
-                        listaAux.addAll(getListFromResponse(res));
-                        mHistoryPlacesList.postValue(listaAux);
-                    }
-                    mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-                else{
-                    mHistoryPlacesList.postValue(null);
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-            }
-        });
-    }
-
-    public void listPlacesCategories(int page, int quantity, String category) {
-
-        String postBodyString = paramsToGetCategoriePlace(page, quantity, category);
+        String postBodyString = paramsToGetCategoriePlace(page, quantity, nickname, category);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listByCategory");
         Call call = simpleRequest.createCall(request);
 
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                Log.d("CCC", "FAILURE GORDO");
-                mCategoriesPlacesList.postValue(null);
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                    throw new IOException("Unexpected code " + response);
-                }
-                String res = response.body().string();
-                boolean success = simpleRequest.isSuccessful(res);
-
-                if (success){
-                    mCategoriesPlacesList.postValue(getListFromResponse(res));
-                    Log.i("XX", "Categorias tiene valor");
-                    mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-                else{
-                    mCategoriesPlacesList.postValue(null);
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-            }
-        });
+        call.enqueue(new PlaceListCallBack(simpleRequest, mCategoriesPlacesList));
     }
+    public void listTwitterPlaces(int page, int quantity, String nickname) {
 
-    //lista lugares de quantity en quantity en función de page alfabeticamente añadiendo anteriores
-    // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
-    public void appendPlacesCategories(int page, int quantity, String category) {
-
-        String postBodyString = paramsToGetCategoriePlace(page, quantity, category);
-        SimpleRequest simpleRequest = new SimpleRequest();
-        Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/location/listByCategory");
-        Call call = simpleRequest.createCall(request);
-
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                mCategoriesPlacesList.postValue(null);
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                    throw new IOException("Unexpected code " + response);
-                }
-                String res = response.body().string();
-                boolean success = simpleRequest.isSuccessful(res);
-
-                List<TPlace> listaAux = mCategoriesPlacesList.getValue();
-                if (success){
-                    if (listaAux.isEmpty()){
-                        Log.d("Info", "La lista esta vacia inicialmente");
-                        mCategoriesPlacesList.postValue(getListFromResponse(res));
-                    }
-                    else{
-                        listaAux.addAll(getListFromResponse(res));
-                        mCategoriesPlacesList.postValue(listaAux);
-                    }
-                    mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-                else{
-                    mCategoriesPlacesList.postValue(null);
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-            }
-        });
-    }
-
-    public void listTwitterPlaces(int page, int quantity) {
-
-        String postBodyString = pageAndQuantToSTring(page, quantity);
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listByTwitter");
         Call call = simpleRequest.createCall(request);
-
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                Log.d("CCC", "FAILURE GORDO");
-                mTwitterPlacesList.postValue(null);
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                    throw new IOException("Unexpected code " + response);
-                }
-                String res = response.body().string();
-                boolean success = simpleRequest.isSuccessful(res);
-
-                if (success){
-                    mTwitterPlacesList.postValue(getListFromResponse(res));
-                    mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-                else{
-                    Log.d("BBB", "not success");
-                    mTwitterPlacesList.postValue(null);
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-            }
-        });
-    }
-
-    //lista lugares de quantity en quantity en función de page alfabeticamente añadiendo anteriores
-    // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
-    public void appendTwitterPlaces(int page, int quantity) {
-
-        String postBodyString = pageAndQuantToSTring(page, quantity);
-        SimpleRequest simpleRequest = new SimpleRequest();
-        Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/location/listByTwitter");
-        Call call = simpleRequest.createCall(request);
-
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                mTwitterPlacesList.postValue(null);
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
-                    throw new IOException("Unexpected code " + response);
-                }
-                String res = response.body().string();
-                boolean success = simpleRequest.isSuccessful(res);
-
-                List<TPlace> listaAux = mTwitterPlacesList.getValue();
-                if (success){
-                    if (listaAux.isEmpty()){
-                        Log.d("Info", "La lista esta vacia inicialmente");
-                        mTwitterPlacesList.postValue(getListFromResponse(res));
-                    }
-                    else{
-                        listaAux.addAll(getListFromResponse(res));
-                        mTwitterPlacesList.postValue(listaAux);
-                    }
-                    mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-                else{
-                    mTwitterPlacesList.postValue(null);
-                    mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
-                }
-            }
-        });
+        call.enqueue(new PlaceListCallBack(simpleRequest, mTwitterPlacesList));
     }
 
     private List<TPlace> getListFromResponse(String res) {
@@ -692,6 +449,8 @@ public class PlaceRepository extends Repository{
             String a = jsonObject.getString("road_number");
 
             List<String> jsonImagesList = jsonArrayImagesToStringList(jsonObject.getJSONArray("imageList"));
+            Boolean placeIsFav = jsonObject.getString("favorite").equals("true");
+
             return new TPlace(
                     jsonObject.getString("name"),
                     jsonObject.getString("description"),
@@ -706,7 +465,7 @@ public class PlaceRepository extends Repository{
                     jsonObject.getString("zipcode"),
                     jsonObject.getString("affluence"),
                     jsonObject.getDouble("rate"),
-                    false);
+                    placeIsFav);
             //return new TPlace(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -717,7 +476,7 @@ public class PlaceRepository extends Repository{
     private List<String> jsonArrayImagesToStringList(JSONArray jsonImageList) {
         ArrayList<String> lista = new ArrayList<>();
 
-    
+
         for (int i=0;i<jsonImageList.length();i++){
             try {
                 String imageURL = jsonImageList.getJSONObject(i).getString("image");
@@ -734,5 +493,38 @@ public class PlaceRepository extends Repository{
     private String jsonUrlCorrector(String json_data) {
         json_data = json_data.replace("\\", "");
         return json_data;
+    }
+
+    private String pageAndQuantToSTring(int page, int quantity, String nickname) {
+        JSONObject jsonPageQuant = new JSONObject();
+        String infoString;
+        try {
+            jsonPageQuant.put("page", page);
+            jsonPageQuant.put("quant", quantity);
+            jsonPageQuant.put("user", nickname);
+        }catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = jsonPageQuant.toString();
+
+        return infoString;
+    }
+
+    private String paramsToGetCategoriePlace(int page, int quantity, String nickname, String category) {
+        JSONObject json = new JSONObject();
+        String infoString;
+        try {
+            json.put("page", page);
+            json.put("quant", quantity);
+            json.put("user", nickname);
+            json.put("category", category);
+        }catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = json.toString();
+
+        return infoString;
     }
 }

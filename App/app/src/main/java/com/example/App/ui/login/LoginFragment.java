@@ -72,7 +72,7 @@ public class LoginFragment extends Fragment {
                 }
                 else {
                     //hideProgressBar();
-                    Toast.makeText(getActivity(),  getString(R.string.register_failed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),  getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
                 }
             }
         });
