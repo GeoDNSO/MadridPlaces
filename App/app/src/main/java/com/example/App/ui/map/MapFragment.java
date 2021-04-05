@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -87,7 +88,9 @@ public class MapFragment extends Fragment implements OnLocationClickListener, On
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
+    public void setMapBox(MapboxMap mapboxMap){
+        this.mapboxMap = mapboxMap;
+    }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -101,10 +104,11 @@ public class MapFragment extends Fragment implements OnLocationClickListener, On
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
-
+                setMapBox(mapboxMap);
                 List<Feature> symbolLayerIconFeatureList = new ArrayList<>();
                 symbolLayerIconFeatureList.add(Feature.fromGeometry(Point.fromLngLat(place.getLongitude(), place.getLatitude())));
                 // Set map style
+                /*
                 mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
@@ -112,11 +116,14 @@ public class MapFragment extends Fragment implements OnLocationClickListener, On
                         // Map is set up and the style has loaded. Now you can add data or make other map adjustments
 
 
+                        enableLocationComponent(style);
                     }
                 });
+                 */
+                Bitmap bitmap = BitmapFactory.decodeResource(
+                        getActivity().getResources(), R.drawable.mapbox_marker_icon_default);
                 mapboxMap.setStyle(new Style.Builder().fromUri("mapbox://styles/mapbox/cjf4m44iw0uza2spb3q0a7s41")
-                                .withImage(ICON_ID, BitmapFactory.decodeResource(
-                                        getActivity().getResources(), R.drawable.mapbox_marker_icon_default))
+                                .withImage(ICON_ID, bitmap)
                                 .withSource(new GeoJsonSource(SOURCE_ID, FeatureCollection.fromFeatures(symbolLayerIconFeatureList)))
                                 .withLayer(new SymbolLayer(LAYER_ID, SOURCE_ID)
                                         .withProperties(
@@ -132,7 +139,6 @@ public class MapFragment extends Fragment implements OnLocationClickListener, On
                             }
                         }
                 );
-
                 // Set the camera's starting position
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(new LatLng(place.getLatitude(), place.getLongitude())) // set the camera's center position
@@ -143,6 +149,7 @@ public class MapFragment extends Fragment implements OnLocationClickListener, On
 
                 // Move the camera to that position
                 mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
 
             }
 
@@ -171,9 +178,9 @@ public class MapFragment extends Fragment implements OnLocationClickListener, On
 // Create and customize the LocationComponent's options
             LocationComponentOptions customLocationComponentOptions = LocationComponentOptions.builder(root.getContext())
                     .elevation(5)
-                    .accuracyAlpha(.6f)
-                    .accuracyColor(Color.RED)
-                    .foregroundDrawable(R.drawable.circle)
+                    .layerBelow(LAYER_ID)
+                    .accuracyAlpha(.20f)
+                    .accuracyColor(Color.CYAN)
                     .build();
 
 // Get an instance of the component
