@@ -7,13 +7,15 @@ import org.json.JSONObject;
 
 public class TComment implements JSONSerializable, Parcelable {
 
+    private int id;
     private String imageProfileUser;
     private String username;
     private String content;
     private String date;
     private double rating;
 
-    public TComment(String imageProfileUser, String username, String content, String date, double rating) {
+    public TComment(int id, String imageProfileUser, String username, String content, String date, double rating) {
+        this.id = id;
         this.imageProfileUser = imageProfileUser;
         this.username = username;
         this.content = content;
@@ -73,6 +75,14 @@ public class TComment implements JSONSerializable, Parcelable {
         this.rating = rating;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -80,6 +90,7 @@ public class TComment implements JSONSerializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
         dest.writeString(this.imageProfileUser);
         dest.writeString(this.username);
         dest.writeString(this.content);
@@ -88,6 +99,7 @@ public class TComment implements JSONSerializable, Parcelable {
     }
 
     public TComment(Parcel in) {
+        this.id = in.readInt();
         this.imageProfileUser = in.readString();
         this.username = in.readString();
         this.content = in.readString();

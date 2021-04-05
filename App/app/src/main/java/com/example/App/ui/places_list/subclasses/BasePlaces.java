@@ -119,6 +119,27 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
             }
         });
 
+        mViewModel.getFavSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+
+                if (integer.equals(AppConstants.FAV_POST_OK)){
+                    TPlace place = placeList.get(lastFavPlacePos);
+                    place.setUserFav(!place.isUserFav());
+
+                    int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
+                    if(place.isUserFav()){
+                        favTint = ContextCompat.getColor(getActivity(), R.color.colorFavRed);
+                    }
+
+                    ImageViewCompat.setImageTintList(lastFavImage, ColorStateList.valueOf(favTint));
+                    return ;
+                }
+
+                Toast.makeText(getActivity(), "Error al hacer favorito", Toast.LENGTH_SHORT);
+            }
+        });
+
         mViewModel.getProgressBar().observe(getViewLifecycleOwner(), aBoolean ->
                 ViewListenerUtilities.setVisibility(progressBar, aBoolean));
     }
@@ -212,18 +233,26 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
         //Le pasamos el bundle
         Navigation.findNavController(root).navigate(R.id.placeDetailFragment, bundle);
     }
+
+
+    protected Integer lastFavPlacePos;
+    protected ImageView lastFavImage;
     @Override
     public void onFavClick(int position, ImageView favImage) {
         Toast.makeText(getActivity(), "fav listener", Toast.LENGTH_SHORT).show();
 
-        TPlace place = placeList.get(position);
-        place.setUserFav(!place.isUserFav());
-
-        int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
-        if(place.isUserFav()){
-            favTint = ContextCompat.getColor(getActivity(), R.color.colorFavRed);
+        if(App.getInstance(getActivity()).getSessionManager().isLogged() == false){
+            Toast.makeText(getActivity(), "Tienes que estar logueado para poder tener favoritos", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        ImageViewCompat.setImageTintList(favImage, ColorStateList.valueOf(favTint));
+        lastFavPlacePos = position;
+        lastFavImage = favImage;
+
+
+        TPlace place = placeList.get(position);
+        String username = App.getInstance(getActivity()).getUsername();
+
+        mViewModel.setFavOnPlace(place, username);
     }
 }

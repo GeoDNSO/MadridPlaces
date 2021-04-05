@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import com.example.App.models.repositories.CommentRepository;
 import com.example.App.models.transfer.TComment;
-import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.ViewModelParent;
 import java.util.List;
 
@@ -43,10 +42,7 @@ public class CommentsViewModel extends ViewModelParent {
         mProgressBar.postValue(true);
         commentRepository.newRate(user,placeName, rate);
     }
-    public void deleteRate(int id_comment){
-        mProgressBar.postValue(true);
-        commentRepository.deleteRate(id_comment);
-    }
+
     private LiveData<List<TComment>> setAndGetCommentsList(List<TComment> comments) {
         MutableLiveData<List<TComment>> mAux = new MutableLiveData<>();
         mAux.setValue(comments);
@@ -61,4 +57,9 @@ public class CommentsViewModel extends ViewModelParent {
     }
 
     public LiveData<List<TComment>> getmCommentsList(){ return mCommentsList; }
+
+    public void deleteComment(TComment comment, int position) {
+        mProgressBar.setValue(true);
+        commentRepository.deleteComment(comment, position);
+    }
 }
