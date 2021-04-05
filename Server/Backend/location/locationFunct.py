@@ -4,7 +4,6 @@ from flask import jsonify
 import base64
 import modules
 import comments.commentFunct as CommentFunct
-import rates.rateFunct as RateFunct
 import twitter_ratings.twitter_ratingsFunct as TwitterRatingsFunct
 import favorites.favoritesFunct as FavoritesFunct
 
@@ -72,7 +71,7 @@ def jsonifiedPlace(createLocation):
 def completeList(place, user):
     n_comments = CommentFunct.numberOfComments(place.name)
     imageList = listImages(place.name)
-    avgRate = RateFunct.averageRate(place.name)
+    avgRate = CommentFunct.averageRate(place.name)
     favorite = FavoritesFunct.isFavorite(user, place)
     obj = {"name" : place.name,
     "description":place.description,

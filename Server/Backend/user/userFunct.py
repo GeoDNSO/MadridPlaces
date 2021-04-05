@@ -27,7 +27,12 @@ def showUser(user): #Practicamente lo mismo que el profile, pero de algún otro 
                    city : userQuery.city,
                    rol : userQuery.rol}
 
-
+def showPicture(user):
+    userQuery = modules.user.query.filter_by(nickname = user).first()
+    if userQuery is None:
+        return None
+    
+    return userQuery.profile_image
 
 def completeList(usuario):
   u = {

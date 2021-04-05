@@ -53,14 +53,8 @@ class comments(sqlAlchemy.Model):
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
     comment = sqlAlchemy.Column(sqlAlchemy.String(255)) 
     created =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now(), onupdate = sqlAlchemy.func.now())
-
-class ratings(sqlAlchemy.Model):
-    __tablename__ = 'ratings'
-    id_rate = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
-    user = sqlAlchemy.Column(sqlAlchemy.String(255))
-    location = sqlAlchemy.Column(sqlAlchemy.String(255))
     rate = sqlAlchemy.Column(sqlAlchemy.Integer())  
-
+    
 class visited(sqlAlchemy.Model):
     __tablename__ = 'visited'
     id_visited = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
