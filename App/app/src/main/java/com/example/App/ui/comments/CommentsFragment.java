@@ -130,15 +130,8 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
                 //TODO Tres casos: comentario sin valoración, con valoración o con las dos cosas
                 if(app.isLogged()) { //Tienes que estar logueado
 
-                    if (!etComment.getEditText().getText().toString().equals("") && ratingBar.getRating() != 0) {
+                    if (ratingBar.getRating() != 0) {
                         mViewModel.newComment(app.getUsername(), etComment.getEditText().getText().toString(), placeName, ratingBar.getRating());
-                        //Toast.makeText(getActivity(), "Comentario Creado", Toast.LENGTH_SHORT).show();
-
-                    } else if (etComment.getEditText().getText().toString().equals("") && ratingBar.getRating() != 0) {
-                        //Función únicamente para meter un rate
-                        mViewModel.newRate(app.getUsername(), placeName, ratingBar.getRating());
-                        Toast.makeText(getActivity(), "Rating de " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
-
                     } else {
                         //No se hace nada
                         Toast.makeText(getActivity(), "Selecciona una valoración", Toast.LENGTH_SHORT).show();

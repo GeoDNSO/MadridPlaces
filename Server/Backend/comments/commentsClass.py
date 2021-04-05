@@ -40,8 +40,9 @@ def newCommentYRate():
                    exito = "true",
                    id_comment = createComment.id_comment if ctQuery is None else ctQuery.id_comment ,
                    user=user,
+                   profile_image=UserFunct.showPicture(user),
                    location=location,
-                   comment=createComment.comment if comment != "" else None,
+                   comment=comment if comment != "" else None,
                    created=createComment.created.strftime('%Y-%m-%d %H:%M:%S') if ctQuery is None else ctQuery.created.strftime('%Y-%m-%d %H:%M:%S'),
                    rate=rate,
                    exist=exist)

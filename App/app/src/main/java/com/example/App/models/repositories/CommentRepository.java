@@ -1,4 +1,4 @@
-package com.example.App.models.repositories;
+    package com.example.App.models.repositories;
 
 import android.util.Log;
 
@@ -119,7 +119,6 @@ public class CommentRepository extends Repository {
     }
     //Para modificar el comentario, tambien se puede usar esta funcion
     public void newComment (String userName, String content, String placeName, float rate) { //Función que realiza la creación de un comentario con valoración
-
         String postBodyString = commentToString(userName, content, placeName, rate);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
@@ -154,6 +153,7 @@ public class CommentRepository extends Repository {
                         mCommentList.postValue(nuevaLista);
                     }
                     else{
+                        searchAndDeleteList(listaAux, newComment);
                         listaAux.add(0,newComment);
                         mCommentList.postValue(listaAux);
                     }
@@ -211,42 +211,7 @@ public class CommentRepository extends Repository {
             }
         });
     }
-    public void newRate (String user, String placeName, float rate) {
 
-        //TODO Únicamente creo la valoracion en la BD, no lo muestro en la APP, me da miedo crear un Tcomment con el comment vacío
-        String postBodyString = rateToString(user, placeName, rate);
-        SimpleRequest simpleRequest = new SimpleRequest();
-        Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/location/newRate");
-        Call call = simpleRequest.createCall(request);
-
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_LIST_COMMENTS);
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-
-                if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_NEW_COMMENT);
-                    throw new IOException("Unexpected code " + response);
-                }
-                String res = response.body().string();
-                boolean success = simpleRequest.isSuccessful(res);
-                if (success){
-                    mSuccess.postValue(AppConstants.NEW_COMMENT);//Importante que este despues del postValue de mUser
-                }
-                else{
-                    mCommentList.postValue(null);
-                    mSuccess.postValue(AppConstants.ERROR_NEW_COMMENT);//Importante que este despues del postValue de mUser
-                }
-            }
-        });
-    }
     private String deleteToString(int id_comment) {
         JSONObject jsonName = new JSONObject();
         String infoString;
@@ -332,7 +297,6 @@ public class CommentRepository extends Repository {
             if(image_profile.equals("null")){
                 image_profile = null;
             }
-
             return new TComment(
                     jsonObject.getInt("id_comment"),
                     image_profile,
@@ -351,6 +315,7 @@ public class CommentRepository extends Repository {
         int i = 0;
         
         for (TComment comment : lista) {
+
             if(comment.getUsername().equals(newComment.getUsername())){
                 ok = true;
                 break;
