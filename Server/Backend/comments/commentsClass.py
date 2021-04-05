@@ -18,6 +18,7 @@ def newCommentYRate():
     location = json_data["location"]
     comment = json_data["comment"]
     rate = json_data["rate"]
+    exist = "false" #False el comentario no existia
     try:
         ctQuery = modules.comments.query.filter_by(user = user, location = location).first()
         if(ctQuery is None):
@@ -28,6 +29,7 @@ def newCommentYRate():
 
             modules.sqlAlchemy.session.add(createComment)
         else:
+            exist = "true"
             if(comment != ""):
                 ctQuery.comment = comment
             ctQuery.rate = rate
@@ -41,7 +43,8 @@ def newCommentYRate():
                    location=location,
                    comment=createComment.comment if comment != "" else None,
                    created=createComment.created.strftime('%Y-%m-%d %H:%M:%S') if ctQuery is None else ctQuery.created.strftime('%Y-%m-%d %H:%M:%S'),
-                   rate=rate)
+                   rate=rate,
+                   exist=exist)
     except Exception as e:
         print("Error insertando la nueva fila :", repr(e))
         return jsonify(exito = "false")   

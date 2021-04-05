@@ -154,7 +154,6 @@ public class CommentRepository extends Repository {
                         mCommentList.postValue(nuevaLista);
                     }
                     else{
-                        searchAndDeleteList(listaAux,newComment); //Si existe, modifica el comentario
                         listaAux.add(0,newComment);
                         mCommentList.postValue(listaAux);
                     }
@@ -200,7 +199,7 @@ public class CommentRepository extends Repository {
                     List<TComment> listaAux = mCommentList.getValue();
                     //TComment newComment = jsonStringToComment(res);
                     listaAux.remove(position);
-                    mCommentList.setValue(listaAux); //El problema es que carga la lista de cero y se empieza al inicio
+                    mCommentList.postValue(listaAux); //El problema es que carga la lista de cero y se empieza al inicio
                     //searchAndDeleteList(listaAux,newComment);
 
                     mSuccess.postValue(AppConstants.DELETE_COMMENT_OK);//Importante que este despues del postValue de mUser

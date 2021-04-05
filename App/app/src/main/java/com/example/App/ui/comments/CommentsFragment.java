@@ -228,7 +228,6 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
     public void onCommentDelete(int position) {
         Toast.makeText(getActivity(), "Delete a Comentario Num " + position, Toast.LENGTH_SHORT).show();
         TComment comment = commentsList.get(position);
-
         mViewModel.deleteComment(comment, position);
     }
 }
