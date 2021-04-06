@@ -41,7 +41,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         this.commentList = commentList;
         this.commentObserver = commentObserver;
 
-        Toast.makeText(activity, "Coments: " + commentList.size(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(activity, "Coments: " + commentList.size(), Toast.LENGTH_SHORT).show();
     }
 
     @NonNull

@@ -27,6 +27,7 @@ import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TPlace;
+import com.example.App.ui.LogoutObserver;
 import com.example.App.ui.places_list.PlaceListAdapter;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ViewListenerUtilities;
@@ -37,7 +38,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public abstract class BasePlaces extends Fragment implements PlaceListAdapter.OnPlaceListener {
+public abstract class BasePlaces extends Fragment implements PlaceListAdapter.OnPlaceListener, LogoutObserver {
 
     protected BaseViewModel mViewModel;
     protected View root;
@@ -72,6 +73,9 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
         root = inflater.inflate(R.layout.places_list_fragment, container, false);
         //mViewModel = new ViewModelProvider(this).get(BaseViewModel.class);
+
+        App.getInstance(getContext()).addLogoutObserver(this);
+
         mViewModel = getViewModelToParent();
         mViewModel.init();
 
@@ -232,6 +236,13 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
         //Le pasamos el bundle
         Navigation.findNavController(root).navigate(R.id.placeDetailFragment, bundle);
+    }
+
+    @Override
+    public void onLogout(){
+        placeList.clear();
+        page=1;
+        listPlaces();
     }
 
 

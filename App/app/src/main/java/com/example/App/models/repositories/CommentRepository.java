@@ -280,7 +280,9 @@ public class CommentRepository extends Repository {
             JSONArray arrayComments = jresponse.getJSONArray("listComments");
             for (int i = 0; i < arrayComments.length(); i++) {
                 TComment tComment = jsonStringToComment(arrayComments.getString(i));
-                listOfComments.add(tComment);
+                String content = tComment.getContent();
+                if(content != null && content != "null" && content != "")//Para no añadir comentarios nulos
+                    listOfComments.add(tComment);
             }
             return listOfComments;
         } catch (JSONException e) {

@@ -39,11 +39,9 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
 
     private App app; //global variable
 
-    private NestedScrollView nestedScrollView;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private ShimmerFrameLayout shimmerFrameLayout;
-
 
     private TextInputLayout etComment; //Será usado para newComment
 
@@ -61,6 +59,13 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
 
     public static CommentsFragment newInstance(String placeName) {
         return new CommentsFragment(placeName);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mViewModel = new ViewModelProvider(this).get(CommentsViewModel.class);
+        // TODO: Use the ViewModel
     }
 
     @Override
@@ -144,42 +149,23 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
             }
         });
 
-
-        //TODO PASAR AL BOTON
-        /*
-
-
-        ivPostComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //if(isEmpty(etComment)){
-                if(isEmpty(etComment.getEditText())){
-                    Toast.makeText(getActivity(), "El texto de comentario está vacío", Toast.LENGTH_SHORT).show();
-                    return ;
-                }
-                TComment comment = new TComment("/img", "Usuario NUEVO",
-                        etComment.getEditText().getText().toString(), "25/02/2021", ratingBar.getRating());
-
-                commentsList.add(0, comment); //Añadir al principio el comentario
-                commentListAdapter = new CommentListAdapter(getActivity(), commentsList);
-                recyclerView.setAdapter(commentListAdapter);
-            }
-        });
-
-        */
-
     }
 
     private boolean isEmpty(EditText etText) {
         return etText.getText().toString().trim().length() == 0;
     }
 
+    //PlaceListDetail usa esta función para actualizar el scroll
     public void onScrollViewAtBottom(){
-
-        //Cuando alacance al ultimo item de la lista
-        //Incrementea el numero de la pagina
-
+        //Cuando alacance al ultimo item de la lista incrementea el numero de la pagina
         page++;
+
+        //Mostrar progress bar
+        progressBar.setVisibility(View.VISIBLE);
+
+        shimmerFrameLayout.startShimmer();
+
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
 
         mViewModel.appendComments(placeName, page, quant);
     }
@@ -208,13 +194,6 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
         mViewModel.showComments(placeName, page, quant);
         //Empezar el efecto de shimmer
         shimmerFrameLayout.startShimmer();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(CommentsViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     @Override

@@ -217,20 +217,4 @@ public class App {
     public void setMainActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
-
-
-                /*
-                if(!App.isServerReachable()){
-                    Toast.makeText(getActivity(), getString(R.string.no_internet), Toast.LENGTH_LONG).show();
-                    swipeRefreshLayout.setRefreshing(false);
-                    return ;
-                }
-
-                //Reseteamos la pagina para ver cambios y borramos la lista...
-                page = 1;
-                placeList.clear();
-
-                mViewModel.listPlaces(page, quantum);
-                */
-
 }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:paddingBottom="?actionBarSize"
     android:id="@+id/placesList_SwipeRefreshLayout"
-    tools:context=".ui.places_list.PlacesListFragment">
+    tools:context=".ui.places_list.subclasses.BasePlaces">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="wrap_content"

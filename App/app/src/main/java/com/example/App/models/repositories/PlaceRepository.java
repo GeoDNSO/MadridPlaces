@@ -309,6 +309,7 @@ public class PlaceRepository extends Repository{
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
                 mFavSuccess.postValue(AppConstants.FAV_POST_FAIL);
+                mSuccess.postValue(AppConstants.FAV_POST_FAIL);
                 call.cancel();
             }
 
@@ -316,6 +317,7 @@ public class PlaceRepository extends Repository{
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     mFavSuccess.postValue(AppConstants.FAV_POST_FAIL);
+                    mSuccess.postValue(AppConstants.FAV_POST_FAIL);
                     throw new IOException("Unexpected code " + response);
                 }
 

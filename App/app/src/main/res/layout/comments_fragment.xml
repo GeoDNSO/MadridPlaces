@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Cambiar a nested scroll view si fuese necesario -->
-
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/comments_main_layout">
-
 
     <LinearLayout
         android:id="@+id/linearLayout_rating_coment"
