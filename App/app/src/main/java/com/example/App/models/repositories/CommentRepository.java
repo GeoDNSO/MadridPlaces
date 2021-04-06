@@ -297,11 +297,15 @@ public class CommentRepository extends Repository {
             if(image_profile.equals("null")){
                 image_profile = null;
             }
+            String comment = jsonObject.getString("comment");
+            if(comment.equals("null")){
+                comment = "";
+            }
             return new TComment(
                     jsonObject.getInt("id_comment"),
                     image_profile,
                     jsonObject.getString("user"),
-                    jsonObject.getString("comment"),
+                    comment,
                     jsonObject.getString("created"),
                     jsonObject.getDouble("rate"));
         } catch (JSONException e) {
