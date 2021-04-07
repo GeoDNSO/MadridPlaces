@@ -76,14 +76,3 @@ def showComments():
         print("Error listando lugares favoritos:", repr(e))
         #return jsonify(exito = "false")
         return jsonify(exito = "false")
-
-@favoritesClass.route('/location/countfavoritesPlaces', methods=['POST']) #Devuelve un listado de lugares, las fechas y las veces que se visitaron
-def countPlaceVisited():
-    json_data = request.get_json()
-    user = json_data["user"]
-    try:
-        fvQuery = modules.favorites.query.filter_by(user = user).count() #Los lugares repetidos se contarán también? Preguntar a Dani qué prefiere
-        return jsonify(exito = "true", nVisited = fvQuery) 
-    except Exception as e:
-        print("Error:", repr(e))
-        return jsonify(exito = "false")

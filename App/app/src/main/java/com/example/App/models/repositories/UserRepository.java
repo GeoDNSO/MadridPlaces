@@ -255,12 +255,16 @@ public class UserRepository {
 
                 if (success){
                     List<TUser> listaAux = mListUsers.getValue();
+                    List<TUser> listFromResponse = getListFromResponse(res);
+                    if(listFromResponse.isEmpty()){
+                        return;
+                    }
                     if (listaAux == null){
                         Log.d("UserListCallback", "La lista de usuarios estaba vacia inicialmente");
-                        mListUsers.postValue(getListFromResponse(res));
+                        mListUsers.postValue(listFromResponse);
                     }
                     else{
-                        listaAux.addAll(getListFromResponse(res));
+                        listaAux.addAll(listFromResponse);
                         mListUsers.postValue(listaAux);
                     }
                     mProfileSuccess.postValue(AppConstants.LIST_USERS);//Importante que este despues del postValue de mUser

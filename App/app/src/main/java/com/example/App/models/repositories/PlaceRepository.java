@@ -95,16 +95,18 @@ public class PlaceRepository extends Repository{
 
                 return;
             }
-
             //si no hubo problemas...
             List<TPlace> listaAux = placeList.getValue();
-
+            List<TPlace> listaFromResponse = getListFromResponse(res);
+            if(listaFromResponse.isEmpty()){
+                return;
+            }
             if (listaAux == null){
                 Log.d("PlaceListCallback", "La lista estaba vacia inicialmente");
-                placeList.postValue(getListFromResponse(res));
+                placeList.postValue(listaFromResponse);
             }
             else{
-                listaAux.addAll(getListFromResponse(res));
+                listaAux.addAll(listaFromResponse);
                 placeList.postValue(listaAux);
             }
             mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser

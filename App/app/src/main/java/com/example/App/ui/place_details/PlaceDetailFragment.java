@@ -279,7 +279,12 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
         if(App.getInstance(getActivity()).isLogged()){
             modifyPlace.setVisible(true);
-            deletePlace.setVisible(true);
+            if(App.getInstance(getActivity()).isAdmin()){
+                deletePlace.setVisible(true);
+            }
+            else{
+                deletePlace.setVisible(false);
+            }
         }
         else {
             modifyPlace.setVisible(false);
@@ -309,6 +314,9 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
 
         //TODO probar con un navigate a si mismo
+        if(getActivity() == null){
+            return ;
+        }
         int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
         ImageViewCompat.setImageTintList(favIcon, ColorStateList.valueOf(favTint));
         ratingBar.setRating(0);

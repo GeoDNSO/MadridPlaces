@@ -170,3 +170,15 @@ def profileUser():
         return jsonify(exito = "false")
     
     return UserFunct.jsonifiedList2(userQuery)
+
+@userClass.route('/countfavorites&historyPlaces', methods=['POST']) #Devuelve la cantidad de lugares favoritos y visitados
+def countPlaceVisited(): #Funcion que se llamará en perfil
+    json_data = request.get_json()
+    user = json_data["user"]
+    try:
+        fvQuery = modules.favorites.query.filter_by(user = user).count()
+        htQuery = modules.visited.query.filter_by(user = user).count()
+        return jsonify(exito = "true", nFavorites = fvQuery, nVisited = htQuery) 
+    except Exception as e:
+        print("Error:", repr(e))
+        return jsonify(exito = "false")
