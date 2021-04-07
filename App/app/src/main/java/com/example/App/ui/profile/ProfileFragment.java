@@ -33,6 +33,7 @@ import com.example.App.R;
 import com.example.App.SessionManager;
 import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.Validator;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -47,9 +48,16 @@ public class ProfileFragment extends Fragment {
     private TextView tv_Username;
     private TextView tv_FullName;
     private TextView tv_Email;
-    private TextView tv_Password;
     private EditText et_Email;
+
+
+    private TextView tv_Password;
     private EditText et_Password;
+    private TextView tv_NewPassword;
+    private EditText et_NewPassword;
+    private TextView tv_RepeatPassword;
+    private EditText et_RepeatPassword;
+
     private ImageButton ib_profile_image;
 
     private TextView tv_Comments;
@@ -97,13 +105,18 @@ public class ProfileFragment extends Fragment {
         tv_Username = root.findViewById(R.id.tv_username);
         tv_FullName = root.findViewById(R.id.tv_full_name);
         tv_Email = root.findViewById(R.id.tv_email);
-        tv_Password = root.findViewById(R.id.profile_password);
+
+        tv_Password = root.findViewById(R.id.tv_profile_password_editable);
+        et_Password = root.findViewById(R.id.profile_password_editable);
+        tv_NewPassword = root.findViewById(R.id.tv_profile_new_password_editable);
+        et_NewPassword = root.findViewById(R.id.profile_new_password_editable);
+        tv_RepeatPassword = root.findViewById(R.id.tv_profile_repeat_password_editable);
+        et_RepeatPassword = root.findViewById(R.id.profile_repeat_password_editable);
 
         ib_profile_image = root.findViewById(R.id.iv_imgUser);
 
         //editar perfil
         et_Email = root.findViewById(R.id.tv_email_editable);
-        et_Password = root.findViewById(R.id.profile_password_editable);
 
         //Maybe used in the future
         tv_Comments = root.findViewById(R.id.tv_n_comments);
@@ -204,7 +217,7 @@ public class ProfileFragment extends Fragment {
 
         tv_Username.setText(sm.getUsername());
         tv_FullName.setText((sm.getFirstName() + " " + sm.getSurname()));
-        tv_Password.setText(sm.getPassword());
+        //tv_Password.setText(sm.getPassword());
         tv_Email.setText(sm.getEmail());
 
         String image_profile = sm.getImageProfile();
@@ -266,9 +279,16 @@ public class ProfileFragment extends Fragment {
         //Para habilitar la edicion de la imagen
         ib_profile_image.setClickable(true);
 
-        tv_Password.setVisibility(View.GONE);
+        //Antigua Contraseña
+        tv_Password.setVisibility(View.VISIBLE);
         et_Password.setVisibility(View.VISIBLE);
-        et_Password.setText(tv_Password.getText().toString());
+        //Nueva Contraseña
+        tv_NewPassword.setVisibility(View.VISIBLE);
+        et_NewPassword.setVisibility(View.VISIBLE);
+        //Repite Nueva Contraseña
+        tv_RepeatPassword.setVisibility(View.VISIBLE);
+        et_RepeatPassword.setVisibility(View.VISIBLE);
+
         deleteAccountButton.setVisibility(View.GONE);
         confirmChangesButton.setVisibility(View.VISIBLE);
         cancelChangesButton.setVisibility(View.VISIBLE);
@@ -281,8 +301,15 @@ public class ProfileFragment extends Fragment {
         //Para deshabilitar la edicion de la imagen
         ib_profile_image.setClickable(false);
 
-        tv_Password.setVisibility(View.VISIBLE);
+        //Antigua Contraseña
+        tv_Password.setVisibility(View.GONE);
         et_Password.setVisibility(View.GONE);
+        //Nueva Contraseña
+        tv_NewPassword.setVisibility(View.GONE);
+        et_NewPassword.setVisibility(View.GONE);
+        //Repite Nueva Contraseña
+        tv_RepeatPassword.setVisibility(View.GONE);
+        et_RepeatPassword.setVisibility(View.GONE);
 
         deleteAccountButton.setVisibility(View.VISIBLE);
         confirmChangesButton.setVisibility(View.GONE);
@@ -290,28 +317,58 @@ public class ProfileFragment extends Fragment {
     }
 
     private void confirmChangesAction(View v){
-        et_Email.setVisibility(View.GONE);
-        tv_Email.setVisibility(View.VISIBLE);
-
-        //Para deshabilitar la edicion de la imagen
-        ib_profile_image.setClickable(false);
-
-        et_Password.setVisibility(View.GONE);
-        tv_Password.setVisibility(View.VISIBLE);
-
         //Conseguir los datos del usuario para despues modificarlos
         app = App.getInstance(getActivity());
         SessionManager sm = app.getSessionManager();
         TUser u = sm.getSesionUser();
 
-        //Modificar datos del usuario según lo modificado
-        u.setEmail(et_Email.getText().toString());
-        u.setPassword(et_Password.getText().toString());
-        if(bitmap != null) {
-            u.setImage_profile(bitmapToBase64(bitmap));
+        if(Validator.argumentsEmpty(et_Email.getText().toString(), et_Password.getText().toString())){
+            Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
-        mViewModel.modifyUser(u);
+        else if(!Validator.validEmail(et_Email.getText().toString())){
+            et_Email.setError(getString(R.string.email_not_valid));
+        }
+        else if(!et_Password.getText().toString().equals(sm.getPassword())){
+            et_Password.setError(getString(R.string.password_not_equal));
+        }
+        else if (!et_NewPassword.getText().toString().equals(et_RepeatPassword.getText().toString())) {
+            et_NewPassword.setError(getString(R.string.password_not_equal));
+            et_RepeatPassword.setError(getString(R.string.password_not_equal));
+        }
+        else {
+            et_Email.setVisibility(View.GONE);
+            tv_Email.setVisibility(View.VISIBLE);
 
+            //Para deshabilitar la edicion de la imagen
+            ib_profile_image.setClickable(false);
+
+            //Antigua Contraseña
+            tv_Password.setVisibility(View.GONE);
+            et_Password.setVisibility(View.GONE);
+            //Nueva Contraseña
+            tv_NewPassword.setVisibility(View.GONE);
+            et_NewPassword.setVisibility(View.GONE);
+            //Repite Nueva Contraseña
+            tv_RepeatPassword.setVisibility(View.GONE);
+            et_RepeatPassword.setVisibility(View.GONE);
+
+            //Modificar datos del usuario según lo modificado
+            u.setEmail(et_Email.getText().toString());
+            if(et_NewPassword.getText().toString() == "" || et_NewPassword.getText().toString() == null) {
+                u.setPassword(et_Password.getText().toString());
+            }
+            else{
+                u.setPassword(et_NewPassword.getText().toString());
+            }
+            if (bitmap != null) {
+                u.setImage_profile(bitmapToBase64(bitmap));
+            }
+            mViewModel.modifyUser(u);
+
+            deleteAccountButton.setVisibility(View.VISIBLE);
+            confirmChangesButton.setVisibility(View.GONE);
+            cancelChangesButton.setVisibility(View.GONE);
+        }
         /*
         if(app.modifyUser(u)){
             u = app.getUser(u.getUsername());
@@ -323,9 +380,7 @@ public class ProfileFragment extends Fragment {
             Toast.makeText(getActivity(), "Algo ha funcionado mal", Toast.LENGTH_SHORT).show();
         }
         */
-        deleteAccountButton.setVisibility(View.VISIBLE);
-        confirmChangesButton.setVisibility(View.GONE);
-        cancelChangesButton.setVisibility(View.GONE);
+
     }
 
     //función para seleccionar imagenes de la galeria

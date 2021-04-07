@@ -173,25 +173,26 @@ public class RegisterFragment extends Fragment {
         String pass2 = et_RepeatPassword.getText().toString();
         String profile_image = "";
 
-        if(bitmap != null){
+        if (bitmap != null) {
             profile_image = bitmapToBase64(bitmap);
         }
 
         if (Validator.argumentsEmpty(username, name, email, surname, pass, pass2)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
-        if (!Validator.validEmail(email)) {
+        else if (!Validator.validEmail(email)) {
             et_Email.setError(getString(R.string.email_not_valid));
         }
-        if (!pass.equals(pass2)) {
+        else if (!pass.equals(pass2)) {
             et_Password.setError(getString(R.string.password_not_equal));
             et_RepeatPassword.setError(getString(R.string.password_not_equal));
         }
-        if (Validator.usernameAlredyExists(username)) { //TODO HAY QUE LLAMAR a app EN LA FUNCION
+        else if (Validator.usernameAlredyExists(username)) { //TODO HAY QUE LLAMAR a app EN LA FUNCION
             et_Username.setError(getString(R.string.username_exists));
         }
-
-        mRegisterViewModel.registerUser(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user", profile_image);
+        else {
+            mRegisterViewModel.registerUser(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user", profile_image);
+        }
     }
 
 

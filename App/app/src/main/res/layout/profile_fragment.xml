@@ -177,7 +177,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="30dp"
@@ -261,19 +260,13 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_profile_password_editable"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/app_user_pass"
+                        android:text="@string/app_user_actual_pass"
                         android:textColor="@color/headings"
+                        android:visibility="gone"
                         android:textSize="13sp" />
-
-                    <TextView
-                        android:id="@+id/profile_password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:inputType="textPassword"
-                        android:text="aaaaaaaa" />
 
                     <EditText
                         android:id="@+id/profile_password_editable"
@@ -282,9 +275,62 @@
                         android:ems="10"
                         android:visibility="gone"
                         android:inputType="textPassword"
-                        android:text="aaaaaaaa"
+                        android:text=""
                         android:background="@null"/>
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_profile_new_password_editable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_user_new_pass"
+                        android:textColor="@color/headings"
+                        android:textSize="13sp"
+                        android:visibility="gone" />
+
+                    <EditText
+                        android:id="@+id/profile_new_password_editable"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:visibility="gone"
+                        android:inputType="textPassword"
+                        android:text=""
+                        android:background="@null"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_profile_repeat_password_editable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_user_repeat_pass2"
+                        android:visibility="gone"
+                        android:textColor="@color/headings"
+                        android:textSize="13sp" />
+
+                    <EditText
+                        android:id="@+id/profile_repeat_password_editable"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:visibility="gone"
+                        android:inputType="textPassword"
+                        android:text=""
+                        android:background="@null"/>
                 </LinearLayout>
 
                 <LinearLayout
