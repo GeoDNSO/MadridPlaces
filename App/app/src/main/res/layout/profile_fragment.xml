@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:orientation="vertical"
     tools:context=".ui.profile.ProfileFragment">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
     <RelativeLayout
         android:id="@+id/rellay1"
@@ -165,12 +174,6 @@
         android:layout_below="@+id/linlay1"
         android:layout_marginTop="0dp">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:orientation="vertical"  >
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -234,7 +237,7 @@
 
                     <EditText
                         android:id="@+id/tv_email_editable"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
                         android:text="user@gmail.com"
@@ -319,8 +322,8 @@
 
             </LinearLayout>
 
-        </ScrollView>
-
     </RelativeLayout>
 
 </RelativeLayout>
+
+</ScrollView>

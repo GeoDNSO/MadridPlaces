@@ -307,8 +307,9 @@ public class ProfileFragment extends Fragment {
         //Modificar datos del usuario según lo modificado
         u.setEmail(et_Email.getText().toString());
         u.setPassword(et_Password.getText().toString());
-        u.setImage_profile(bitmapToBase64(bitmap));
-
+        if(bitmap != null) {
+            u.setImage_profile(bitmapToBase64(bitmap));
+        }
         mViewModel.modifyUser(u);
 
         /*
