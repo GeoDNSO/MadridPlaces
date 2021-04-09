@@ -18,6 +18,7 @@ import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +61,7 @@ public class ProfileFragment extends Fragment {
 
     private ImageButton ib_profile_image;
 
-    private TextView tv_Comments;
+    private TextView tv_Favourites;
     private TextView tv_VisitedPlaces;
 
     private Bitmap bitmap;
@@ -119,7 +120,7 @@ public class ProfileFragment extends Fragment {
         et_Email = root.findViewById(R.id.tv_email_editable);
 
         //Maybe used in the future
-        tv_Comments = root.findViewById(R.id.tv_n_comments);
+        tv_Favourites = root.findViewById(R.id.tv_n_favourites);
         tv_VisitedPlaces  = root.findViewById(R.id.tv_visited_places);
     }
 
@@ -163,6 +164,14 @@ public class ProfileFragment extends Fragment {
                     fillProfileFields();
                 }
 
+            }
+        });
+
+        mViewModel.getProfilePairMutableLiveData().observe(getViewLifecycleOwner(), new Observer<Pair<Integer, Integer>>() {
+            @Override
+            public void onChanged(Pair<Integer, Integer> pair) {
+                tv_Favourites.setText(pair.first + "");
+                tv_VisitedPlaces.setText(pair.second + "");
             }
         });
     }
@@ -214,6 +223,8 @@ public class ProfileFragment extends Fragment {
     //Rellena los datos del usuario segun la informacion de la sesion
     private void fillProfileFields(){
         SessionManager sm = app.getSessionManager();
+
+        mViewModel.countCommentsAndHistoryUser(sm.getUsername());
 
         tv_Username.setText(sm.getUsername());
         tv_FullName.setText((sm.getFirstName() + " " + sm.getSurname()));

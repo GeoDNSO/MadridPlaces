@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -29,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.MainActivity;
@@ -58,7 +60,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
     private UserListAdapter.OnListListener onListListener;
     private boolean sortUsernameboolean;
     private boolean sortNameboolean;
-    private int page = 1, quantum = 7;
+    private int page = 1, quantum = 8;
 
     public static AdminFragment newInstance() {
         return new AdminFragment();
@@ -74,6 +76,12 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         mViewModel.init();
 
         init();
+
+        page = 1;
+        progressBar.setVisibility(View.VISIBLE); //progress bar visible
+        mViewModel.listUsers(page, quantum);
+
+        listeners();
 
         mViewModel.getListUsers().observe(getViewLifecycleOwner(), new Observer<List<TUser>>() {
             @Override
@@ -99,7 +107,6 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
                 ViewListenerUtilities.setVisibility(progressBar, aBoolean));
 
         adminManagement();
-        listeners();
 
         return root;
     }
@@ -120,13 +127,15 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
     private void init(){
         nestedScrollView = root.findViewById(R.id.list_user_nestedScrollView);
         progressBar = root.findViewById(R.id.user_list_progressBar);
+        sortNameboolean = true;
+        sortUsernameboolean = true;
     }
 
     private void listeners(){
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
+                if(scrollY <= v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
                     //Cuando alacance al ultimo item de la lista
                     //Incrementea el numero de la pagina
                     page++;
@@ -143,8 +152,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
-        progressBar.setVisibility(View.VISIBLE); //progress bar visible
-        mViewModel.listUsers(page, quantum);
+        //progressBar.setVisibility(View.VISIBLE); //progress bar visible
     }
 
     @Override
@@ -215,20 +223,26 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         Menu menu1 = ((MainActivity) getActivity()).sortUserNameMenuItem();
         Menu menu2 =  ((MainActivity) getActivity()).sortNameMenuItem();
         MenuItem sortUsernameIcon = menu1.findItem(R.id.sortUsernameUser);//menu.findItem(R.id.sortUsernameUser);
+        sortUsernameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
 
         MenuItem sortNameIcon = menu2.findItem(R.id.sortNameUser);//menu.findItem(R.id.sortNameUser);
+        sortNameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
 
         sortUsernameIcon.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (item.getIcon() == null || sortUsernameboolean == true) {
+                if (sortUsernameboolean == true) {
                     sortUsernameIcon.setIcon(R.drawable.ic_baseline_keyboard_arrow_up_24);
+                    sortNameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
                     sortUsernameboolean = false;
+                    sortNameboolean = true;
                     Collections.sort(listUser, TUser.comparatorUsernameAZusers);
                     adapter.notifyDataSetChanged();
                 } else {
                     sortUsernameIcon.setIcon(R.drawable.ic_baseline_keyboard_arrow_down_24);
+                    sortNameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
                     sortUsernameboolean = true;
+                    sortNameboolean = true;
                     Collections.sort(listUser, TUser.comparatorUsernameZAusers);
                     adapter.notifyDataSetChanged();
                 }
@@ -238,14 +252,18 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         sortNameIcon.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (item.getIcon() == null || sortNameboolean == true) {
+                if (sortNameboolean == true) {
                     sortNameIcon.setIcon(R.drawable.ic_baseline_keyboard_arrow_up_24);
+                    sortUsernameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
                     sortNameboolean = false;
+                    sortUsernameboolean = true;
                     Collections.sort(listUser, TUser.comparatorRealnameAZusers);
                     adapter.notifyDataSetChanged();
                 } else {
                     sortNameIcon.setIcon(R.drawable.ic_baseline_keyboard_arrow_down_24);
+                    sortUsernameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
                     sortNameboolean = true;
+                    sortUsernameboolean = true;
                     Collections.sort(listUser, TUser.comparatorRealnameZAusers);
                     adapter.notifyDataSetChanged();
                 }

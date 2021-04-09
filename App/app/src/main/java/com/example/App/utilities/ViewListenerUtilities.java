@@ -1,8 +1,10 @@
 package com.example.App.utilities;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ViewListenerUtilities {
 
@@ -24,6 +26,7 @@ public class ViewListenerUtilities {
     }
 
     public static void setVisibility(ProgressBar progressBar, boolean isVisible) {
+        Log.i("Esoty en oncreate", String.valueOf(isVisible));
         if (isVisible) {
             progressBar.setVisibility(View.VISIBLE);
         } else {

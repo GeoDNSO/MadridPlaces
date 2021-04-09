@@ -1,6 +1,7 @@
 package com.example.App.models.repositories;
 
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -29,6 +30,8 @@ public class UserRepository {
 
     private MutableLiveData<TUser> mUser = new MutableLiveData<>();
     private MutableLiveData<List<TUser>> mListUsers = new MutableLiveData<>();
+
+    private MutableLiveData<Pair<Integer,Integer>> mCountProfileCommentsAndHistory = new MutableLiveData<>();
 
     public void registerUser(TUser user) {
 
@@ -279,6 +282,67 @@ public class UserRepository {
 
     }
 
+    public void getCommentsAndHistoryCount(String nickname) {
+
+        JSONObject jsonUser = new JSONObject();
+        try {
+            jsonUser.put("user", nickname);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String postBodyString = jsonUser.toString();
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_POST, "/countfavorites&historyPlaces/"
+        );
+
+        Call call = simpleRequest.createCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mCountProfileCommentsAndHistory.postValue(null);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    mCountProfileCommentsAndHistory.postValue(null);
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String res = response.body().string();
+                if(!simpleRequest.isSuccessful(res)){
+                    mCountProfileCommentsAndHistory.postValue(null);
+                    throw new IOException("Unexpected code " + response);
+                }
+                else {
+                    Pair<Integer, Integer> pair = jsonPair(res);
+                    mCountProfileCommentsAndHistory.postValue(pair);
+                }
+            }
+
+        });
+    }
+
+    private Pair<Integer, Integer> jsonPair(String string) {
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(string);
+            Integer countComments = jsonObject.getInt("nFavorites");
+            Integer countHistoryPlaces = jsonObject.getInt("nVisited");
+
+            return new Pair<>(countComments, countHistoryPlaces);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private void sleep(long milis){
         try {
             Thread.sleep(milis);
@@ -324,6 +388,10 @@ public class UserRepository {
 
     public void setmUser(MutableLiveData<TUser> mUser) {
         this.mUser = mUser;
+    }
+
+    public MutableLiveData<Pair<Integer, Integer>> getmCountProfileCommentsAndHistory() {
+        return mCountProfileCommentsAndHistory;
     }
 
     //Métodos Privados para JSONs

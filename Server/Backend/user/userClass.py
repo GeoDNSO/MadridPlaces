@@ -171,7 +171,7 @@ def profileUser():
     
     return UserFunct.jsonifiedList2(userQuery)
 
-@userClass.route('/countfavorites&historyPlaces', methods=['POST']) #Devuelve la cantidad de lugares favoritos y visitados
+@userClass.route('/countfavorites&historyPlaces/', methods=['POST']) #Devuelve la cantidad de lugares favoritos y visitados
 def countPlaceVisited(): #Funcion que se llamará en perfil
     json_data = request.get_json()
     user = json_data["user"]
