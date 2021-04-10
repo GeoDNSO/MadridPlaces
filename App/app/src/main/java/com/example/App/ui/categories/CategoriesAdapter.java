@@ -45,9 +45,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
         TCategory category = categoryList.get(position);
 
-        Log.i("CAT", "llega a hacer bind con pos" + position + " y la categoria con nombre "
-                + category.getName() + " id:" + category.getDrawableId());
-
         holder.textView.setText(category.getName());
         holder.imageView.setImageResource(category.getDrawableId());
 
@@ -55,7 +52,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
     @Override
     public int getItemCount() {
-        Log.i("CAT", "se va a devolver el tamaño de lista -->"+ categoryList.size());
+        //Log.i("CAT", "se va a devolver el tamaño de lista -->"+ categoryList.size());
         return categoryList.size();
     }
 

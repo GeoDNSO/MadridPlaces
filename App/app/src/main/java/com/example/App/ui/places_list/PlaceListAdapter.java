@@ -75,14 +75,21 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
         //Otra informacion
         holder.tvPlaceAddress.setText(place.getAddress());
-        holder.tvPlaceDistance.setText("500m");
         holder.ratingBar.setRating((float)place.getRating());
-        holder.tvPlaceNumberOfRatings.setText("100 Valoraciones");
+
+        //Para adapter
+        DecimalFormat df = new DecimalFormat("#.#");
+        df.setRoundingMode(RoundingMode.CEILING);
+
+
+        holder.tvPlaceNumberOfRatings.setText(place.getNumberOfRatings() + " Valoraciones");
+
+
+        //TODO revisar si son metros o km o es segun el valor...
+        holder.tvPlaceDistance.setText(df.format(place.getDistanceToUser()) +"m");
 
 
         //Rating del lugar
-        DecimalFormat df = new DecimalFormat("#.#");
-        df.setRoundingMode(RoundingMode.CEILING);
         holder.tvRatingValue.setText(df.format(place.getRating()));
 
         int favTint = ContextCompat.getColor(activity, R.color.grey);

@@ -79,4 +79,13 @@ public class AppConstants {
 
     public static final Integer FAV_POST_OK = 1;
     public static final Integer FAV_POST_FAIL = 0;
+
+
+    public static final Integer LONGITUDE = 0;
+    public static final Integer LATITUDE = 1;
+
+    public static final Double DEFAULT_RADIUS = 500.0;
+    public static final Integer DEFAULT_NPLACES = 20;
+
+
 }
