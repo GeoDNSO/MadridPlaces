@@ -104,6 +104,7 @@
         android:drawablePadding="10sp"
         android:drawableTint="@color/grey"
         android:ems="10"
+        android:inputType="textPersonName"
         android:hint="@string/place_default_name"
         android:singleLine="false"
         android:textColorHint="@color/grey"

@@ -22,7 +22,7 @@ import com.example.App.models.transfer.TUser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyViewHolder> implements Filterable {
+public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyViewHolder> /*implements Filterable*/ {
     private Activity activity;
     private List<TUser> listUser;
     private List<TUser> listUserComplete;
@@ -66,7 +66,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
         }
         return 0;
     }
-
+    /*
     @Override
     public Filter getFilter() {
         return listUserFilter;
@@ -102,7 +102,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
             listUser.addAll((List) results.values);
             notifyDataSetChanged();
         }
-    };
+    };*/
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView iv_imgProfile;

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,7 @@ public class DetailFragment extends Fragment{
     private TextView tv_Email;
     private ImageView iv_imageView;
 
-    private TextView tv_Comments;
+    private TextView tv_Favourites;
     private TextView tv_VisitedPlaces;
 
     private Button deleteAccountButton;
@@ -65,8 +66,8 @@ public class DetailFragment extends Fragment{
 
 
         //Maybe used in the future
-        tv_Comments = root.findViewById(R.id.tv_n_comments2);
-        tv_VisitedPlaces  = root.findViewById(R.id.tv_visited_places2);
+        tv_Favourites = root.findViewById(R.id.tv_n_favourites_admin);
+        tv_VisitedPlaces  = root.findViewById(R.id.tv_visited_places_admin);
 
         fillProfileFields();
         initializeListeners();
@@ -111,6 +112,14 @@ public class DetailFragment extends Fragment{
                 }
             }
         });
+
+        mViewModel.getProfilePairMutableLiveData().observe(getViewLifecycleOwner(), new Observer<Pair<Integer, Integer>>() {
+            @Override
+            public void onChanged(Pair<Integer, Integer> pair) {
+                tv_Favourites.setText(pair.first + "");
+                tv_VisitedPlaces.setText(pair.second + "");
+            }
+        });
     }
 
     private void initializeListeners() {
@@ -126,6 +135,8 @@ public class DetailFragment extends Fragment{
         tv_Username.setText(user.getUsername());
         tv_FullName.setText((user.getName() + " " + user.getSurname()));
         tv_Email.setText(user.getEmail());
+
+        mViewModel.countCommentsAndHistoryUser(user.getUsername());
 
         if(user.getImage_profile() == null || user.getImage_profile() == ""){
             iv_imageView.setImageResource(R.drawable.ic_username);

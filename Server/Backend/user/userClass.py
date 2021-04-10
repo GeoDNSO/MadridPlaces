@@ -80,13 +80,16 @@ def listUsers():
     json_data = request.get_json()
     page = json_data["page"] #Mostrar de X en X     
     quant = json_data["quant"]
+    filter_by = json_data["filter_by"]
+    search_value = json_data["search"]
+    search = "%{}%".format(search_value)
+
     try:
-        tam = modules.user.query.count()
-        comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
-        if(comp >= quant):
+        if(UserFunct.checkpaginationBySearch(page, quant, search) is False):
             return jsonify(exito = "true", users = [])
 
-        usuarios = modules.user.query.order_by(modules.user.nickname).paginate(per_page=quant, page=page)
+        #Nickname A-Z
+        usuarios = UserFunct.filtered_by(filter_by, search, page, quant)
         if(usuarios is not None):
           all_items = usuarios.items
           lista = []
@@ -94,7 +97,6 @@ def listUsers():
             u = UserFunct.completeList(usuario)
             lista.append(u)
           return jsonify(exito = "true", users = lista)
-
     except Exception as e:
         print("Error leyendo usuarios:", repr(e))
         return jsonify(exito = "false")
@@ -170,3 +172,17 @@ def profileUser():
         return jsonify(exito = "false")
     
     return UserFunct.jsonifiedList2(userQuery)
+
+@userClass.route('/countfavorites&historyPlaces/', methods=['POST']) #Devuelve la cantidad de lugares favoritos y visitados
+def countPlaceVisited(): #Funcion que se llamará en perfil
+    json_data = request.get_json()
+    user = json_data["user"]
+    try:
+        fvQuery = modules.favorites.query.filter_by(user = user).count()
+        htQuery = modules.visited.query.filter_by(user = user).count()
+        return jsonify(exito = "true", nFavorites = fvQuery, nVisited = htQuery) 
+    except Exception as e:
+        print("Error:", repr(e))
+        return jsonify(exito = "false")
+
+

@@ -100,15 +100,17 @@ public class PlaceRepository extends Repository{
 
                 return;
             }
-
             //si no hubo problemas...
             List<TPlace> listaAux = placeList.getValue();
-
+            List<TPlace> listaFromResponse = getListFromResponse(res);
+            if(listaFromResponse.isEmpty()){
+                return;
+            }
             if (listaAux == null){
                 placeList.postValue(getListFromResponse(res));
             }
             else{
-                listaAux.addAll(getListFromResponse(res));
+                listaAux.addAll(listaFromResponse);
                 placeList.postValue(listaAux);
             }
             mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser

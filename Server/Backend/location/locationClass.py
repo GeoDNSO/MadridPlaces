@@ -203,7 +203,7 @@ def listByProximity():
     try:
         user_coords = (userLatitude, userLongitude)
         places = modules.location.query.all()
-        lista = [] #Lista con los resultados paginados
+        lista = []
         if(places is not None):
 	        for place in places:
 	        	place_coords = (place.coordinate_latitude, place.coordinate_longitude)
@@ -216,7 +216,7 @@ def listByProximity():
 	        print("success")
 	        return jsonify(
 	                exito = "true",
-	                list = lista[0:nPlaces])
+	                list = lista[0:nPlaces] if nPlaces <= len(lista) else len(lista))
 
         return jsonify(exito = "false")   
 

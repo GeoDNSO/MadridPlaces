@@ -4,6 +4,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -27,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -43,9 +45,11 @@ import com.example.App.utilities.Validator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class RegisterFragment extends Fragment {
 
+    private DatePickerDialog.OnDateSetListener datePicker;
     private View root;
     private RegisterViewModel mRegisterViewModel;
     private App app;
@@ -57,6 +61,7 @@ public class RegisterFragment extends Fragment {
     private EditText et_Surname;
     private EditText et_Username;
     private ImageButton ib_profileImage;
+    private EditText et_Date;
     private EditText et_Email;
     private EditText et_Password, et_RepeatPassword;
     private Button registerButton;
@@ -123,6 +128,7 @@ public class RegisterFragment extends Fragment {
         et_Surname = root.findViewById(R.id.register_surname);
         et_Email = root.findViewById(R.id.register_email);
         et_Password = root.findViewById(R.id.password);
+        et_Date = root.findViewById(R.id.register_date);
         et_RepeatPassword = root.findViewById(R.id.register_repeat_password);
         registerButton = root.findViewById(R.id.button);
         tv_ToLogin = root.findViewById(R.id.to_login);
@@ -160,6 +166,16 @@ public class RegisterFragment extends Fragment {
             }
         });
 
+        et_Date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+            }
+        });
+
     }
 
     //Validate form
@@ -173,25 +189,26 @@ public class RegisterFragment extends Fragment {
         String pass2 = et_RepeatPassword.getText().toString();
         String profile_image = "";
 
-        if(bitmap != null){
+        if (bitmap != null) {
             profile_image = bitmapToBase64(bitmap);
         }
 
         if (Validator.argumentsEmpty(username, name, email, surname, pass, pass2)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
-        if (!Validator.validEmail(email)) {
+        else if (!Validator.validEmail(email)) {
             et_Email.setError(getString(R.string.email_not_valid));
         }
-        if (!pass.equals(pass2)) {
+        else if (!pass.equals(pass2)) {
             et_Password.setError(getString(R.string.password_not_equal));
             et_RepeatPassword.setError(getString(R.string.password_not_equal));
         }
-        if (Validator.usernameAlredyExists(username)) { //TODO HAY QUE LLAMAR a app EN LA FUNCION
+        else if (Validator.usernameAlredyExists(username)) { //TODO HAY QUE LLAMAR a app EN LA FUNCION
             et_Username.setError(getString(R.string.username_exists));
         }
-
-        mRegisterViewModel.registerUser(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user", profile_image);
+        else {
+            mRegisterViewModel.registerUser(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user", profile_image);
+        }
     }
 
 
