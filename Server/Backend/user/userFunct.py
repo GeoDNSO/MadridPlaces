@@ -96,3 +96,29 @@ def delImgTemp(imgTemp):
 
   except Exception as e:
     print("Error eliminando la imagen temporal: ", repr(e))
+
+
+
+def checkpagination(page, quant):
+  tam = modules.user.query.count()
+  comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
+  if(comp >= quant):
+    return False
+  return True
+
+def checkpaginationBySearch(page, quant, search):
+  tam = modules.user.query.filter(modules.user.nickname.like(search)).count()
+  comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
+  if(comp >= quant):
+    return False
+  return True
+
+def filtered_by(filter_by, search, page, quant):
+  usuarios = modules.user.query.filter((modules.user.nickname.like(search))|(modules.user.name.like(search))|(modules.user.surname.like(search))).order_by(modules.user.nickname).paginate(per_page=quant, page=page)
+  if filter_by == 2: #Nickname Z-A
+      usuarios = modules.user.query.filter((modules.user.nickname.like(search))|(modules.user.name.like(search))|(modules.user.surname.like(search))).order_by(modules.user.nickname.desc()).paginate(per_page=quant, page=page)
+  elif filter_by == 3: #name A-Z
+      usuarios = modules.user.query.filter((modules.user.nickname.like(search))|(modules.user.name.like(search))|(modules.user.surname.like(search))).order_by(modules.user.name).paginate(per_page=quant, page=page)
+  elif filter_by == 4: #name Z-A
+      usuarios = modules.user.query.filter((modules.user.nickname.like(search))|(modules.user.name.like(search))|(modules.user.surname.like(search))).order_by(modules.user.desc()).paginate(per_page=quant, page=page)
+  return usuarios
