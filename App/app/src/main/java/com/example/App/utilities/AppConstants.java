@@ -76,6 +76,18 @@ public class AppConstants {
     public static String TAB_TWITTER = "W";
     public static String TAB_CATEGORY = "W";
 
+    public static final int NO_SORT = 0;
+    public static final int SORT_UP = 1;
+    public static final int SORT_DOWN = 2;
+
+    public static final int FINAL_NO_SORT = 0;
+    public static final int NICKNAME_SORT_UP = 1;
+    public static final int NICKNAME_SORT_DOWN = 2;
+    public static final int NAME_SORT_UP = 3;
+    public static final int NAME_SORT_DOWN = 4;
+
+
+
 
     public static final Integer FAV_POST_OK = 1;
     public static final Integer FAV_POST_FAIL = 0;

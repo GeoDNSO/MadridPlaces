@@ -225,8 +225,8 @@ public class UserRepository {
 
     }
 
-    public void listUsers(int page, int quantum) {
-        String postBodyString = pageAndQuantToString(page, quantum);
+    public void listUsers(int page, int quantum, String searchText, int sortType) {
+        String postBodyString = paramsToString(page, quantum, searchText, sortType);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -246,8 +246,6 @@ public class UserRepository {
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
-
-                sleep(500);//Para simular la carga..
 
                 if (!response.isSuccessful()) {
                     mProfileSuccess.postValue(AppConstants.ERROR_LIST_USERS);
@@ -428,19 +426,25 @@ public class UserRepository {
         }
     }
 
-    private String pageAndQuantToString(int page, int quantity) {
-        JSONObject jsonPageQuant = new JSONObject();
+    private String paramsToString(int page, int quantity, String searchText, int sortType) {
+        JSONObject params = new JSONObject();
         String infoString;
         try {
-            jsonPageQuant.put("page", page);
-            jsonPageQuant.put("quant", quantity);
+            params.put("page", page);
+            params.put("quant", quantity);
+            params.put("search", searchText);
+            params.put("filter_by", sortType);
+
         }catch (JSONException e) {
             e.printStackTrace();
             infoString = "error";
         }
-        infoString = jsonPageQuant.toString();
+        infoString = params.toString();
 
         return infoString;
     }
 
+    public void clearListUsers() {
+        mListUsers.setValue(new ArrayList<>());
+    }
 }

@@ -30,8 +30,12 @@ public class AdminViewModel extends ViewModelParent {
     }
 
     //TODO envia datos al servidor para registrar el nuevo usuario, en la primera linea se activa el progressBar
-    public void listUsers(int page, int quantum){
-        userRepository.listUsers(page, quantum);
+    public void listUsers(int page, int quantum, String searchText, int sort){
+        userRepository.listUsers(page, quantum, searchText, sort);
+    }
+
+    public void clearList(){
+        userRepository.clearListUsers();
     }
 
     //funcion que se usa en el switchMap, asocia un liveData cuando cambia el valor de mSuccess en DAOUserImp
