@@ -121,5 +121,9 @@
     <string name="delete_place">Borrar Lugar</string>
     <string name="mapbox_access_token">pk.eyJ1IjoicG90aTk4IiwiYSI6ImNrbWdtaWIxbzI5YnYybnFsd2xjNmlpd28ifQ.xtXKbXA5FiIAGPoxeVa54g</string>
     <string name="app_user_date">Fecha de nacimiento</string>
+    <string name="fecha_nacimiento">Añadir Fecha</string>
+    <string name="gender_male">Hombre</string>
+    <string name="gender_female">Mujer</string>
+    <string name="gender">Género</string>
 
 </resources>

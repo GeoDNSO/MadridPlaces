@@ -8,12 +8,14 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -34,6 +36,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,7 +65,9 @@ public class RegisterFragment extends Fragment {
     private EditText et_Surname;
     private EditText et_Username;
     private ImageButton ib_profileImage;
-    private EditText et_Date;
+    private TextView tv_date;
+    private Button buttonDate;
+    private RadioGroup radioGroup;
     private EditText et_Email;
     private EditText et_Password, et_RepeatPassword;
     private Button registerButton;
@@ -128,7 +134,9 @@ public class RegisterFragment extends Fragment {
         et_Surname = root.findViewById(R.id.register_surname);
         et_Email = root.findViewById(R.id.register_email);
         et_Password = root.findViewById(R.id.password);
-        et_Date = root.findViewById(R.id.register_date);
+        tv_date = root.findViewById(R.id.register_date);
+        buttonDate = root.findViewById(R.id.register_date_button);
+        radioGroup = root.findViewById(R.id.register_radioGroup);
         et_RepeatPassword = root.findViewById(R.id.register_repeat_password);
         registerButton = root.findViewById(R.id.button);
         tv_ToLogin = root.findViewById(R.id.to_login);
@@ -166,15 +174,29 @@ public class RegisterFragment extends Fragment {
             }
         });
 
-        et_Date.setOnClickListener(new View.OnClickListener() {
+        buttonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH);
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        datePicker, year, month, day);
+                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                datePickerDialog.show();
+
             }
         });
+
+        datePicker = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                tv_date.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
+            }
+        };
 
     }
 
@@ -187,13 +209,24 @@ public class RegisterFragment extends Fragment {
         String surname = et_Surname.getText().toString();
         String pass = et_Password.getText().toString();
         String pass2 = et_RepeatPassword.getText().toString();
+        String date = tv_date.getText().toString();
+        RadioButton radioButton = (RadioButton) root.findViewById(radioGroup.getCheckedRadioButtonId());
+        String gender = "";
+        //TODO Habra que diferenciar genericamente cuando haya varios idiomas
+        if(radioButton.getText().equals("Hombre")){
+            gender = "H";
+        }
+        else if(radioButton.getText().equals("Mujer")){
+            gender = "M";
+        }
+
         String profile_image = "";
 
         if (bitmap != null) {
             profile_image = bitmapToBase64(bitmap);
         }
 
-        if (Validator.argumentsEmpty(username, name, email, surname, pass, pass2)) {
+        if (Validator.argumentsEmpty(username, name, email, surname, pass, pass2, date, gender)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
         else if (!Validator.validEmail(email)) {
@@ -207,7 +240,7 @@ public class RegisterFragment extends Fragment {
             et_Username.setError(getString(R.string.username_exists));
         }
         else {
-            mRegisterViewModel.registerUser(username, pass, name, surname, email, "H", "1990-01-01", "Madrid", "user", profile_image);
+            mRegisterViewModel.registerUser(username, pass, name, surname, email, gender, date, "Madrid", "user", profile_image);
         }
     }
 
