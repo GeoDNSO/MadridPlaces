@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 
@@ -35,6 +36,7 @@ import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.LogoutObserver;
 import com.example.App.ui.comments.CommentsFragment;
+import com.example.App.ui.map.MapboxActivity;
 import com.example.App.ui.profile.ProfileViewModel;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.TextViewExpandableUtil;
@@ -146,7 +148,10 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
                 bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
 
                 //Le pasamos el bundle
-                Navigation.findNavController(root).navigate(R.id.mapFragment, bundle);
+                //Navigation.findNavController(root).navigate(R.id.mapFragment, bundle);
+                Intent mapboxIntent = new Intent(getActivity(), MapboxActivity.class);
+                mapboxIntent.putExtra("key", "value"); //Optional parameters
+                getActivity().startActivity(mapboxIntent);
             }
         });
 

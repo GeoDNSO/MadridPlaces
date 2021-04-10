@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         //Thread.sleep(300); //Para añadir un pequeño delay antes del splash screen
         setTheme(R.style.Theme_App);
         super.onCreate(savedInstanceState);
-        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
+        // Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activity_main);
 
         initializeUI();
