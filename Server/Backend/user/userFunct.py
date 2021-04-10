@@ -106,7 +106,7 @@ def checkpagination(page, quant):
     return False
   return True
 
-def checkpaginationBySearch(page, quant, search):
+def checkpaginationBySearch(page, quant, search): #Método que comprueba la capacidad de la paginación, si se excede, devolverá False
   tam = modules.user.query.filter((modules.user.nickname.like(search))|(modules.user.name.like(search))|(modules.user.surname.like(search))).count()
   comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
   if(comp >= quant):
