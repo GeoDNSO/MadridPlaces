@@ -26,7 +26,7 @@ import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.PermissionsManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.mapbox.mapboxsdk.Mapbox;
+//import com.mapbox.mapboxsdk.Mapbox;
 
 public class MainActivity extends AppCompatActivity implements MainActivityInterface{
 
