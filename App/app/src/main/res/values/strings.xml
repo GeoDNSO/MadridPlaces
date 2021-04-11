@@ -114,5 +114,7 @@
     <string name="tracking_enabled">Trackeo activado</string>
     <string name="tracking_already_enabled">El trackeo ya está activado</string>
     <string name="current_location">Loc actual</string>
+    <string name="user_location_permission_explanation">Explicacion toast de onExplanationNeeded</string>
+    <string name="user_location_permission_not_granted">No se han dado los permisos necesarios</string>
 
 </resources>
