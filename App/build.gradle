@@ -14,6 +14,8 @@ buildscript {
 
 allprojects {
     repositories {
+
+        maven { url 'https://mapbox.bintray.com/mapbox' }
         google()
         jcenter()
         maven {
@@ -30,11 +32,8 @@ allprojects {
             }
         }
     }
-
-    dependencies {
-        implementation "com.mapbox.navigation:ui:1.5.1"
-    }
 }
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
