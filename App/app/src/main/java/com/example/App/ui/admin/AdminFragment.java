@@ -64,6 +64,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
     private UserListAdapter.OnListListener onListListener;
     private Integer sortUsernameboolean; /*0 == no sort, 1 == sort up (A-Z), 2 == sort down (Z-A)*/
     private Integer sortNameboolean; /*0 == no sort, 1 == sort up (A-Z), 2 == sort down (Z-A)*/
+    private Integer finalsort;
     private int page = 1, quantum = 8;
     private SearchView searchView;
 
@@ -130,6 +131,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         progressBar = root.findViewById(R.id.user_list_progressBar);
         sortNameboolean = AppConstants.NO_SORT;
         sortUsernameboolean = AppConstants.NO_SORT;
+        finalsort = AppConstants.NO_SORT;
     }
 
     private void listeners(){
@@ -209,21 +211,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
                 page = 1;
                 progressBar.setVisibility(View.VISIBLE);
                 mViewModel.clearList();
-                if(sortNameboolean == AppConstants.NO_SORT && sortUsernameboolean == AppConstants.NO_SORT){
-                    mViewModel.listUsers(page, quantum, newText, AppConstants.FINAL_NO_SORT);
-                }
-                else if(sortNameboolean == AppConstants.NO_SORT && sortUsernameboolean == AppConstants.SORT_UP){
-                    mViewModel.listUsers(page, quantum, newText, AppConstants.NICKNAME_SORT_UP);
-                }
-                else if(sortNameboolean == AppConstants.NO_SORT && sortUsernameboolean == AppConstants.SORT_DOWN){
-                    mViewModel.listUsers(page, quantum, newText, AppConstants.NICKNAME_SORT_DOWN);
-                }
-                else if(sortNameboolean == AppConstants.SORT_UP && sortUsernameboolean == AppConstants.NO_SORT){
-                    mViewModel.listUsers(page, quantum, newText, AppConstants.NAME_SORT_UP);
-                }
-                else {
-                    mViewModel.listUsers(page, quantum, newText, AppConstants.NAME_SORT_DOWN);
-                }
+                mViewModel.listUsers(page, quantum, newText, finalsort);
 
                 //adapter.getFilter().filter(newText);
                 return false;
@@ -270,6 +258,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
                     sortNameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
                     sortUsernameboolean = AppConstants.SORT_DOWN;
                     sortNameboolean = AppConstants.NO_SORT;
+                    finalsort = AppConstants.NICKNAME_SORT_UP;
 
                     page = 1;
                     progressBar.setVisibility(View.VISIBLE); //progress bar visible
@@ -282,6 +271,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
                     sortNameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
                     sortUsernameboolean = AppConstants.SORT_UP;
                     sortNameboolean = AppConstants.NO_SORT;
+                    finalsort = AppConstants.NICKNAME_SORT_DOWN;
 
                     page = 1;
                     progressBar.setVisibility(View.VISIBLE); //progress bar visible
@@ -302,6 +292,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
                     sortUsernameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
                     sortNameboolean = AppConstants.SORT_DOWN;
                     sortUsernameboolean = AppConstants.NO_SORT;
+                    finalsort = AppConstants.NAME_SORT_UP;
 
                     page = 1;
                     progressBar.setVisibility(View.VISIBLE); //progress bar visible
@@ -314,6 +305,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
                     sortUsernameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
                     sortNameboolean = AppConstants.SORT_UP;
                     sortUsernameboolean = AppConstants.NO_SORT;
+                    finalsort = AppConstants.NAME_SORT_DOWN;
 
                     page = 1;
                     progressBar.setVisibility(View.VISIBLE); //progress bar visible
@@ -338,21 +330,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
                     page = 1;
                     progressBar.setVisibility(View.VISIBLE);
                     mViewModel.clearList();
-                    if(sortNameboolean == AppConstants.NO_SORT && sortUsernameboolean == AppConstants.NO_SORT){
-                        mViewModel.listUsers(page, quantum, text.get(0), AppConstants.FINAL_NO_SORT);
-                    }
-                    else if(sortNameboolean == AppConstants.NO_SORT && sortUsernameboolean == AppConstants.SORT_UP){
-                        mViewModel.listUsers(page, quantum, text.get(0), AppConstants.NICKNAME_SORT_UP);
-                    }
-                    else if(sortNameboolean == AppConstants.NO_SORT && sortUsernameboolean == AppConstants.SORT_DOWN){
-                        mViewModel.listUsers(page, quantum, text.get(0), AppConstants.NICKNAME_SORT_DOWN);
-                    }
-                    else if(sortNameboolean == AppConstants.SORT_UP && sortUsernameboolean == AppConstants.NO_SORT){
-                        mViewModel.listUsers(page, quantum, text.get(0), AppConstants.NAME_SORT_UP);
-                    }
-                    else {
-                        mViewModel.listUsers(page, quantum, text.get(0), AppConstants.NAME_SORT_DOWN);
-                    }
+                    mViewModel.listUsers(page, quantum, text.get(0), finalsort);
                 }
                 break;
         }

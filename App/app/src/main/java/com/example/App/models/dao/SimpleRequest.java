@@ -29,7 +29,7 @@ public class SimpleRequest {
 
 
     private static final String DIR_PROTOCOL = "http";
-    private static final String IP_ADDRESS = "10.0.2.2";
+    private static final String IP_ADDRESS = "192.168.1.140";
     private static final int PORT = 5000;
     private static final int TTL_SECONDS = 3;
     private static final int TTL_MSECONDS = 3000;

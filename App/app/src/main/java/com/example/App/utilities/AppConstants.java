@@ -97,7 +97,7 @@ public class AppConstants {
     public static final Integer LATITUDE = 1;
 
     public static final Double DEFAULT_RADIUS = 500.0;
-    public static final Integer DEFAULT_NPLACES = 20;
+    public static final Integer DEFAULT_NPLACES = 6;
 
 
 }

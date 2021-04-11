@@ -226,6 +226,8 @@ public class RegisterFragment extends Fragment {
             profile_image = bitmapToBase64(bitmap);
         }
 
+        //TODO falta checkear si la fecha es correcta
+
         if (Validator.argumentsEmpty(username, name, email, surname, pass, pass2, date, gender)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
