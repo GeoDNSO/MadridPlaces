@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask import request
 from flask import jsonify
 from pprint import pprint
+from sqlalchemy.sql import func
 #Contiene las clases de la BD
 import modules
 from sqlalchemy import desc
@@ -147,17 +148,12 @@ def deleteLocation():
 @locationClass.route('/location/listLocations', methods=['GET', 'POST'])
 def listLocations():
     json_data = request.get_json()
-    page = json_data["page"] #Mostrar de X en X     
-    quant = json_data["quant"]
-    user = json_data["user"]
+    page, quant, user, search = LocationFunct.initParameters(json_data)
     try:
-        tam = modules.location.query.count()
-        comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
-        #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
-        if(comp >= quant):
+        if(LocationFunct.checkPagination(page, quant) is False):
             return jsonify(exito = "true", list = [])
-
-        places = modules.location.query.paginate(per_page=quant, page=page)
+        #places = modules.location.query.join(modules.comments, modules.location.name == modules.comments.location, isouter = True).filter(modules.location.name.like(search)).order_by(modules.comments.rate.desc()).paginate(per_page=quant, page=page)
+        places = modules.location.query.filter(modules.location.name.like(search)).paginate(per_page=quant, page=page)
         if(places is not None):
 	        all_items = places.items
 	        lista = []
@@ -195,19 +191,15 @@ def dts(e):#Funcion auxiliar para ordenar la lista por proximidad
 @locationClass.route('/location/listByProximity', methods=['GET', 'POST']) #Devolver una lista de 30 lugares más próximos
 def listByProximity():
     json_data = request.get_json()
-    userLatitude = json_data["latitude"]
-    userLongitude = json_data["longitude"]
-    radius = json_data["radius"] #No se sabe si el rango es estático o dinámico 
-    nPlaces = json_data["nPlaces"] #Número de lugares que se quiere mostrar 10, 20, 50, 100
-    user = json_data["user"]
+    userLatitude, userLongitude, radius, nPlaces, user, search = LocationFunct.initParametersProximity(json_data)
     try:
         user_coords = (userLatitude, userLongitude)
-        places = modules.location.query.all()
-        lista = []
+        places = modules.location.query.filter(modules.location.name.like(search)).all()
+        lista = []  
         if(places is not None):
 	        for place in places:
 	        	place_coords = (place.coordinate_latitude, place.coordinate_longitude)
-	        	distance = geodesic(user_coords, place_coords).meters #Distancia calcula entre el usuario y el lugar en METROS
+	        	distance = geodesic(user_coords, place_coords).meters #Distancia calculada entre el usuario y el lugar en METROS
 	        	if(distance <= radius): #Descartamos los lugares que no estén en el radio
 		            obj = LocationFunct.completeList(place, user)
 		            obj["distance"] = distance
@@ -216,10 +208,8 @@ def listByProximity():
 	        print("success")
 	        return jsonify(
 	                exito = "true",
-	                list = lista[0:nPlaces] if nPlaces <= len(lista) else len(lista))
-
+	                list = lista[0:nPlaces] if nPlaces <= len(lista) else lista[0:len(lista)]) #Devuelve nPlaces o lo que haya disponible
         return jsonify(exito = "false")   
-
     except Exception as e:
         print("Error: ", repr(e))
         return jsonify(exito = "false") 
@@ -227,20 +217,14 @@ def listByProximity():
 @locationClass.route('/location/listByCategory', methods=['GET', 'POST'])
 def listByCategory():
     json_data = request.get_json()
-    page = json_data["page"] #Mostrar de X en X     
-    quant = json_data["quant"]
+    page, quant, user, search = LocationFunct.initParameters(json_data)
     category = json_data["category"]
-    user = json_data["user"]
     try:
         idCategory = LocationFunct.mapCategoryToInt(category) #Recoge el número asociado de la categoria
-        tam = modules.location.query.filter_by(type_of_place = idCategory).count()
-
-        comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
-        #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
-        if(comp >= quant):
+        if(LocationFunct.checkPaginationCategory(idCategory, page, quant) is False):
             return jsonify(exito = "true", list = [])
 
-        places = modules.location.query.filter_by(type_of_place = idCategory).paginate(per_page=quant, page=page)
+        places = modules.location.query.filter(modules.location.type_of_place == idCategory, modules.location.name.like(search)).paginate(per_page=quant, page=page)
         if(places is not None):
 	        all_items = places.items
 	        lista = []
@@ -263,14 +247,10 @@ def listByCategory():
 def listByCategoryAndProximity():
     json_data = request.get_json()
     category = json_data["category"]
-    userLatitude = json_data["latitude"]
-    userLongitude = json_data["longitude"]
-    radius = json_data["radius"] #Radio del usuario
-    nPlaces = json_data["nPlaces"] #Número de lugares que se quiere mostrar 10, 20, 50, 100, Todos
-    user = json_data["user"]
+    userLatitude, userLongitude, radius, nPlaces, user, search = LocationFunct.initParametersProximity(json_data)
     try:
         idCategory = LocationFunct.mapCategoryToInt(category) #Recoge el número asociado de la categoria
-        places = modules.location.query.filter_by(type_of_place = idCategory)
+        places = modules.location.query.filter(modules.location.type_of_place == idCategory, modules.location.name.like(search)).all()
         if(places is not None):
 	        lista = []
 	        user_coords = (userLatitude, userLongitude)
@@ -296,16 +276,11 @@ def listByCategoryAndProximity():
 @locationClass.route('/location/listByTwitter', methods=['GET', 'POST'])
 def listByTwitter():
     json_data = request.get_json()
-    page = json_data["page"] #Mostrar de X en X     
-    quant = json_data["quant"]
-    user = json_data["user"]
+    page, quant, user, search = LocationFunct.initParameters(json_data)
     try:
-        tam = modules.twitter_ratings.query.count()
-        comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
-        #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
-        if(comp >= quant):
+        if(LocationFunct.checkPaginationTwitter(page, quant) is False):
             return jsonify(exito = "true", list = [])
-        rates = modules.twitter_ratings.query.order_by(modules.twitter_ratings.twitterRate.desc(),modules.twitter_ratings.location).paginate(per_page=quant, page=page)
+        rates = modules.twitter_ratings.query.filter(modules.twitter_ratings.location.like(search)).order_by(modules.twitter_ratings.twitterRate.desc(),modules.twitter_ratings.location).paginate(per_page=quant, page=page)
         if(rates is not None):
             all_items = rates.items
             lista = []

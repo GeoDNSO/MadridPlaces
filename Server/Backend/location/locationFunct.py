@@ -40,6 +40,43 @@ def delImgTemp(imgTemp):
   except Exception as e:
     print("Error eliminando la imagen temporal: ", repr(e))
 
+def checkPagination(page, quant):
+  tam = modules.location.query.count()
+  comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
+  #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
+  if(comp >= quant):
+    return False
+  return True
+
+def checkPaginationTwitter(page, quant):
+  tam = modules.twitter_ratings.query.count()
+  comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
+  #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
+  if(comp >= quant):
+    return False
+  return True
+def checkPaginationCategory(idCategory, page, quant):
+  tam = modules.location.query.filter_by(type_of_place = idCategory).count()
+  comp = (page   * quant) - tam 
+  if(comp >= quant):
+    return False
+  return True
+
+def initParameters(json_data):
+  page = json_data["page"] #Mostrar de X en X     
+  quant = json_data["quant"]
+  user = json_data["user"]
+  search = "%{}%".format(json_data["search"])
+  return page, quant, user, search
+
+def initParametersProximity(json_data):
+  userLatitude = json_data["latitude"]
+  userLongitude = json_data["longitude"]
+  radius = json_data["radius"] #No se sabe si el rango es estático o dinámico 
+  nPlaces = json_data["nPlaces"] #Número de lugares que se quiere mostrar 10, 20, 50, 100
+  user = json_data["user"]
+  search = "%{}%".format(json_data["search"])
+  return userLatitude, userLongitude, radius, nPlaces, user, search
 def listImages(location): #Devuelve una lista de imagenes de un lugar espefícico, usado para la función listLocations
     try:
         stQuery = modules.location_images.query.filter_by(location_name=location).all()
