@@ -129,6 +129,8 @@ public class App {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
+            //TODO Borrar Lo de Abajo
+            /*
 
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
@@ -143,6 +145,7 @@ public class App {
                             e.printStackTrace();
                         }
 
+
                         addresses.get(0).getLatitude();
                         addresses.get(0).getLongitude();
                         addresses.get(0).getLocality();
@@ -154,7 +157,7 @@ public class App {
                     }
                 }
             });
-
+            */
         } else {
             ActivityCompat.requestPermissions((Activity) context,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);

@@ -2,6 +2,7 @@ package com.example.App.ui.places_list.subclasses.nearest;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,11 +51,13 @@ public class NearestPlacesFragment extends BasePlaces {
     public void listPlaces() {
 
         //Asignar los puntos antes de realizar la busqueda
-        LocationTrack locationTrack = new LocationTrack(getActivity());
+        LocationTrack locationTrack = App.getInstance().getLocationTrack();
 
         List<Double> points = new ArrayList<>();
         points.add(locationTrack.getLongitude());
         points.add(locationTrack.getLatitude());
+
+        Log.d("NEAREST_LIST", "LAT: "+ locationTrack.getLatitude() +  " LONG" + locationTrack.getLongitude());
 
         ((NearestPlaceViewModel) mViewModel).setPoints(points);
 

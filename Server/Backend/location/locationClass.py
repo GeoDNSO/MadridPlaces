@@ -216,7 +216,7 @@ def listByProximity():
 	        print("success")
 	        return jsonify(
 	                exito = "true",
-	                list = lista[0:nPlaces] if nPlaces <= len(lista) else len(lista))
+	                list = lista[0:nPlaces] if nPlaces <= len(lista) else lista[0:len(lista)])
 
         return jsonify(exito = "false")   
 

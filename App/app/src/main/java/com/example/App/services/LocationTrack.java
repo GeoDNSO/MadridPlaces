@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -26,13 +27,13 @@ public class LocationTrack extends Service implements LocationListener {
     private Activity mActivity;
     private PermissionsManager permissionsManager;
 
-    boolean checkGPS = false;
-    boolean checkNetwork = false;
-    boolean canGetLocation = false;
+    private boolean checkGPS = false;
+    private boolean checkNetwork = false;
+    private boolean canGetLocation = false;
 
-    Location loc;
-    double latitude;
-    double longitude;
+    private Location loc;
+    private double latitude;
+    private double longitude;
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
@@ -65,9 +66,13 @@ public class LocationTrack extends Service implements LocationListener {
         // if GPS Enabled get lat/long using GPS Services
         if (checkGPS && permissionsManager.hasGeolocationPermissions()) {
 
+            /*
             locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER,
                     MIN_TIME_BW_UPDATES,
                     MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+            */
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    0, 0, this);
 
             loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
@@ -146,12 +151,13 @@ public class LocationTrack extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
+        this.loc = location;
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
 
+        Log.d("LOC_TRACK", "Se ha cambiado las coordeanadas a Lat:" + latitude + " Long:"+ longitude);
         //TODO temporal para evitar problemas de sincronización, con que detecte una vez el cambio
         //para coger las coordenadas correctas es suficiente por el momento
-        stopListener();
     }
 
     @Override
