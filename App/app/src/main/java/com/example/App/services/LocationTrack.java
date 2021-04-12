@@ -36,7 +36,7 @@ public class LocationTrack extends Service implements LocationListener {
     private double longitude;
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
+    private static final long MIN_TIME_BW_UPDATES = 5000;
 
     protected LocationManager locationManager;
 
@@ -66,13 +66,10 @@ public class LocationTrack extends Service implements LocationListener {
         // if GPS Enabled get lat/long using GPS Services
         if (checkGPS && permissionsManager.hasGeolocationPermissions()) {
 
-            /*
+
             locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER,
                     MIN_TIME_BW_UPDATES,
                     MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-            */
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                    0, 0, this);
 
             loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 

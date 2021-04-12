@@ -24,9 +24,9 @@ public class TPlace implements JSONSerializable, Parcelable {
     private String affluence;
     private double rating;
     private boolean userFav;
-    private String timeVisited;
     private Double distanceToUser;
     private Integer numberOfRatings;
+    private String timeVisited;
 
 //("lugar", "descripcion", "direccion", 3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid", "Localidad", "Afluencia", 4.0f)
 
@@ -34,7 +34,7 @@ public class TPlace implements JSONSerializable, Parcelable {
                   double longitude, List<String> imagesList, String typeOfPlace, String city,
                   String road_class, String road_name, String road_number,
                   String zipcode, String affluence, double rating, boolean userFav,
-                  Double distanceToUser, Integer numberOfRatings) {
+                  Double distanceToUser, Integer numberOfRatings, String timeVisited) {
         this.name = name;
         this.description = description;
         this.latitude = latitude;
@@ -51,6 +51,7 @@ public class TPlace implements JSONSerializable, Parcelable {
         this.userFav = userFav;
         this.distanceToUser = distanceToUser;
         this.numberOfRatings = numberOfRatings;
+        this.timeVisited = timeVisited;
     }
 
     @Override
@@ -71,6 +72,7 @@ public class TPlace implements JSONSerializable, Parcelable {
         dest.writeByte((byte) (this.userFav ? 1 : 0));     //if myBoolean == true, byte == 1
         dest.writeDouble(this.distanceToUser);
         dest.writeInt(this.numberOfRatings);
+        dest.writeString(this.timeVisited);
     }
 
     public TPlace(Parcel in) {
@@ -90,6 +92,7 @@ public class TPlace implements JSONSerializable, Parcelable {
         this.userFav = (in.readByte() != 0);     //myBoolean == true if byte != 0
         this.distanceToUser = in.readDouble();
         this.numberOfRatings = in.readInt();
+        this.timeVisited = in.readString();
     }
 
     public static final Creator<TPlace> CREATOR = new Creator<TPlace>() {

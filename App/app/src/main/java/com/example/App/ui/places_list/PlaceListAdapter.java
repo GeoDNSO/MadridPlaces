@@ -39,7 +39,6 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         this.activity = activity;
         this.placeList = placeList;
         this.onPlaceListener = onPlaceListener;
-        //this.placeList = new ArrayList<>();
         placeListComplete = new ArrayList<>(placeList);
     }
 
