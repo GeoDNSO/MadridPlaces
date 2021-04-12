@@ -31,7 +31,7 @@ public class SimpleRequest {
     private static final String DIR_PROTOCOL = "http";
     private static final String IP_ADDRESS = "10.0.2.2";
     private static final int PORT = 5000;
-    private static final int TTL_SECONDS = 3;
+    private static final int TTL_SECONDS = 30;
     private static final int TTL_MSECONDS = 3000;
     private static final String SERVER_URL = DIR_PROTOCOL + "://" + IP_ADDRESS + ":" + PORT;
 
@@ -50,6 +50,8 @@ public class SimpleRequest {
     public Call createCall(Request request){
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(TTL_SECONDS, TimeUnit.SECONDS)
+                .readTimeout(TTL_SECONDS, TimeUnit.SECONDS)
+                .writeTimeout(TTL_SECONDS, TimeUnit.SECONDS)
                 .build();
         Call call = client.newCall(request);
 
@@ -70,6 +72,7 @@ public class SimpleRequest {
                     .url(SERVER_URL + route)//Ej http://10.0.0.2:5000/login
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
+                    .header("Connection", "close")
                     .build();
         }else{
             request = new Request.Builder()
@@ -77,6 +80,7 @@ public class SimpleRequest {
                     .url(SERVER_URL + route)//Ej http://10.0.0.2:5000/login
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
+                    .header("Connection", "close")
                     .build();
         }
 
