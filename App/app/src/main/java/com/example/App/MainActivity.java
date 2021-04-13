@@ -29,7 +29,6 @@ import com.example.App.utilities.PermissionsManager;
 import com.example.App.utilities.TextViewExpandableUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.mapbox.mapboxsdk.Mapbox;
 
 public class MainActivity extends AppCompatActivity implements MainActivityInterface{
 
@@ -48,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         //Thread.sleep(300); //Para añadir un pequeño delay antes del splash screen
         setTheme(R.style.Theme_App);
         super.onCreate(savedInstanceState);
-        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activity_main);
 
         initializeUI();
@@ -120,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                 int dest_id = destination.getId();
                 if(dest_id == R.id.loginFragment || dest_id == R.id.registerFragment ||
                         dest_id == R.id.profileFragment || dest_id == R.id.adminFragment ||
-                        dest_id == R.id.detailFragment || dest_id == R.id.addPlaceFragment || dest_id == R.id.modifyPlaceFragment){
+                        dest_id == R.id.detailFragment || dest_id == R.id.addPlaceFragment || dest_id == R.id.modifyPlaceFragment || dest_id == R.id.mapFragment){
                     bottomNavView.setVisibility(View.GONE);
                 }
                 else{
