@@ -68,9 +68,36 @@ public class AppConstants {
     public static final int PLACE_CATEGORIES = 4;
 
     public static final String BUNDLE_CATEGORY_TYPE = "CATEGORIA";
+    public static final Integer DELETE_COMMENT_OK = 340;
+    public static final Integer ERROR_DELETE_COMMENT = -340;
 
     public static String TAB_RATING = "W";
     public static String TAB_NEAREST = "W";
     public static String TAB_TWITTER = "W";
     public static String TAB_CATEGORY = "W";
+
+    public static final int NO_SORT = 0;
+    public static final int SORT_UP = 1;
+    public static final int SORT_DOWN = 2;
+
+    public static final int FINAL_NO_SORT = 0;
+    public static final int NICKNAME_SORT_UP = 1;
+    public static final int NICKNAME_SORT_DOWN = 2;
+    public static final int NAME_SORT_UP = 3;
+    public static final int NAME_SORT_DOWN = 4;
+
+
+
+
+    public static final Integer FAV_POST_OK = 1;
+    public static final Integer FAV_POST_FAIL = 0;
+
+
+    public static final Integer LONGITUDE = 0;
+    public static final Integer LATITUDE = 1;
+
+    public static final Double DEFAULT_RADIUS = 500.0;
+    public static final Integer DEFAULT_NPLACES = 6;
+
+
 }

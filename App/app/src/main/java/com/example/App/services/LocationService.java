@@ -3,6 +3,7 @@ package com.example.App.services;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
+import android.location.Location;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
@@ -36,8 +37,9 @@ public class LocationService extends Service {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-                Log.d("LocationServiceTag", "Lat: "+ locationResult.getLastLocation().getLatitude() + ". "
-                + "Lng: " + locationResult.getLastLocation().getLongitude());
+                Location location = locationResult.getLastLocation();
+                Log.d("LocationServiceTag", "Lat: "+ location.getLatitude() + ". "
+                + "Lng: " + location.getLongitude());
             }
         };
     }

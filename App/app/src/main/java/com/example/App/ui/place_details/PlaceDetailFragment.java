@@ -130,14 +130,7 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         favIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                place.setUserFav(!place.isUserFav());
-
-                int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
-                if(place.isUserFav()){
-                    favTint = ContextCompat.getColor(getActivity(), R.color.colorFavRed);
-                }
-
-                ImageViewCompat.setImageTintList(favIcon, ColorStateList.valueOf(favTint));
+               onFavClick(0, lastFavImage);
             }
         });
 
@@ -159,7 +152,13 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
-                if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
+                //Info para debug
+
+                Log.i("SCROLL_PLACE_LIST", "X:" + scrollX + " Y:" + scrollY);
+                int diff = v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight();
+                Log.i("SCROLL_PLACE_LIST", "Diff:" + diff);
+
+                if(scrollY >= diff){
                     ((CommentsFragment) childFragment).onScrollViewAtBottom();
                 }
             }
@@ -178,6 +177,26 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
                 else {
                     Toast.makeText(getActivity(), "Algo ha funcionado mal", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        mViewModel.getFavSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+
+                if (integer.equals(AppConstants.FAV_POST_OK)){
+                    place.setUserFav(!place.isUserFav());
+
+                    int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
+                    if(place.isUserFav()){
+                        favTint = ContextCompat.getColor(getActivity(), R.color.colorFavRed);
+                    }
+
+                    ImageViewCompat.setImageTintList(favIcon, ColorStateList.valueOf(favTint));
+                    return ;
+                }
+
+                Toast.makeText(getActivity(), "Error al hacer favorito", Toast.LENGTH_SHORT);
             }
         });
 
@@ -208,8 +227,6 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         ViewListenerUtilities.makeTextViewExpandable(tvPlaceDescription, true);
 
     }
-
-
 
     private void initUI() {
         nestedScrollView = root.findViewById(R.id.placeDetail_ScrollView);
@@ -267,7 +284,12 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
         if(App.getInstance(getActivity()).isLogged()){
             modifyPlace.setVisible(true);
-            deletePlace.setVisible(true);
+            if(App.getInstance(getActivity()).isAdmin()){
+                deletePlace.setVisible(true);
+            }
+            else{
+                deletePlace.setVisible(false);
+            }
         }
         else {
             modifyPlace.setVisible(false);
@@ -294,5 +316,31 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
     public void onLogout() {
         modifyPlace.setVisible(false);
         deletePlace.setVisible(false);
+
+
+        //TODO probar con un navigate a si mismo
+        if(getActivity() == null){
+            return ;
+        }
+        int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
+        ImageViewCompat.setImageTintList(favIcon, ColorStateList.valueOf(favTint));
+        ratingBar.setRating(0);
+    }
+
+    protected ImageView lastFavImage;
+
+    public void onFavClick(int position, ImageView favImage) {
+        Toast.makeText(getActivity(), "fav listener", Toast.LENGTH_SHORT).show();
+
+        if(App.getInstance(getActivity()).getSessionManager().isLogged() == false){
+            Toast.makeText(getActivity(), "Tienes que estar logueado para poder tener favoritos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        lastFavImage = favImage;
+
+        String username = App.getInstance(getActivity()).getUsername();
+
+        mViewModel.setFavOnPlace(place, username);
     }
 }

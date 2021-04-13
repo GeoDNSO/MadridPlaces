@@ -1,18 +1,14 @@
 package com.example.App.ui.browser;
 
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,16 +20,10 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.App.R;
-import com.example.App.models.transfer.TUser;
-import com.example.App.ui.admin.UserListAdapter;
 import com.example.App.ui.places_list.PlaceListAdapter;
-import com.example.App.ui.places_list.PlacesListFragment;
-import com.example.App.utilities.AppConstants;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,35 +53,8 @@ public class BrowserFragment extends Fragment {
         initUI();
         initializeListeners();
 
-        listTypesPlaces = mViewModel.getTypesOfPlaces();
-
-        for(String typePlace : listTypesPlaces) {
-            listTypePlaces = new ArrayList<>();
-            Chip chip = (Chip) LayoutInflater.from(getContext()).inflate(R.layout.type_place_list_fragment,null);
-            chip.setText(typePlace);
-            chip.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(chip.isChecked()){
-                        listTypePlaces.add(chip.getText().toString());
-                        /*adapter.getFilter().filter(chip.getText().toString());
-                        adapter.notifyDataSetChanged();*/
-                    }
-                    else {
-                        //listTypePlaces.remove(chip.getText().toString());
-                    }
-                }
-            });
-            chipGroupView.addView(chip);
-        }
-
         //Para no estar todo el rato recargando lugares
         // ,es decir, generando nuevos lugares cada dez que volvemos al fragmento home
-        if(placeListFragment == null){
-            placeListFragment = new PlacesListFragment();
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.replace(R.id.place_list_container, placeListFragment).commit();
-        }
 
         return root;
     }

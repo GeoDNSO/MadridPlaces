@@ -3,7 +3,10 @@ from flask import request
 from flask import jsonify
 #Contiene las clases de la BD
 import modules
+import base64
 import bcrypt #Para hashear las contraseñas, necesidad de instalar con pip install bcrypt
+import location.locationFunct as LocationFunct
+import user.userFunct as UserFunct
 
 userClass = Blueprint("userClass", __name__)
 
@@ -33,19 +36,9 @@ def login():
     if (userQuery is not None):
         if (passwordVerify(password, userQuery.password) is True):
             print("success")
-            return jsonify(
-                    exito = "true",
-                    nickname = userQuery.nickname,
-                    name=userQuery.name,
-                    surname=userQuery.surname,
-                    email=userQuery.email,
-                    password=password,
-                    gender=userQuery.gender,
-                    birth_date=userQuery.birth_date.strftime("%Y-%m-%d"),
-                    city=userQuery.city,
-                    rol=userQuery.rol)
+            return UserFunct.jsonifiedList(userQuery, password)
         else:
-          print("Contraseña incorrecta")
+          print("Contraseña incorrecta")  
     else:
       print("No existe el usuario")
     return jsonify(exito = "false")    
@@ -61,54 +54,52 @@ def registration():
     password = json_data["password"]
     gender = json_data["gender"]
     birth_date = json_data["birth_date"]
-
+    profile_image = json_data["profile_image"]
     pwdCipher = passwordCipher(password)
-    newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date)
+
+    if(profile_image == ""):
+      newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date)
+    else:
+      image = UserFunct.decode64Img(profile_image)
+      url = UserFunct.uploadImg(image)
+      UserFunct.delImgTemp(image)
+      newUser = modules.user(nickname=nickname, name=name, surname=surname, email=email, password=pwdCipher, gender=gender, birth_date=birth_date, profile_image=url)
     
     try:
         modules.sqlAlchemy.session.add(newUser)
         modules.sqlAlchemy.session.commit()
-        return jsonify(
-                   exito = "true",
-                   nickname=newUser.nickname,
-                   name=newUser.name,
-                   surname=newUser.surname,
-                   email=newUser.email,
-                   password=newUser.password,
-                   gender=newUser.gender,
-                   birth_date=newUser.birth_date.strftime("%Y-%m-%d"),
-                   city=newUser.city,
-                   rol=newUser.rol)
+        return jsonify(exito = "true")
 
     except Exception as e:
-        print("Error insertando la nueva fila :", repr(e))
+        print("Error registrando el nuevo usuario :", repr(e))
         return jsonify(exito = "false")
 
 #Lista de Usuarios
 @userClass.route('/listUsers/', methods=['GET', 'POST'])
 def listUsers():
+    json_data = request.get_json()
+    page = json_data["page"] #Mostrar de X en X     
+    quant = json_data["quant"]
+    filter_by = json_data["filter_by"]
+    search_value = json_data["search"]
+    search = "%{}%".format(search_value)
+
     try:
-        #usuarios = user.query.order_by(user.nickname.desc()).all()
-        usuarios = modules.user.query.order_by(modules.user.nickname).all()
-        lista = []
-        for usuario in usuarios:
-            u = {
-                "nickname":usuario.nickname,
-                "name":usuario.name,
-                "surname":usuario.surname,
-                "email":usuario.email,
-                "password":usuario.password,
-                "gender":usuario.gender,
-                "birth_date":usuario.birth_date.strftime("%Y-%m-%d"),
-                "city":usuario.city,
-                "rol":usuario.rol
-                }
+        if(UserFunct.checkpaginationBySearch(page, quant, search) is False):
+            return jsonify(exito = "true", users = [])
+
+        #Nickname A-Z
+        usuarios = UserFunct.filtered_by(filter_by, search, page, quant)
+        if(usuarios is not None):
+          all_items = usuarios.items
+          lista = []
+          for usuario in all_items:
+            u = UserFunct.completeList(usuario)
             lista.append(u)
+          return jsonify(exito = "true", users = lista)
     except Exception as e:
         print("Error leyendo usuarios:", repr(e))
         return jsonify(exito = "false")
-
-    return jsonify(exito = "true", users = lista)
 
 #Eliminar Usuario
 @userClass.route('/deleteUser/', methods=['DELETE']) #Recibe un JSON User para borrar, supongamos que recoge solamente el nickname
@@ -146,6 +137,7 @@ def modifyUser():
     password = json_data["password"]
     gender = json_data["gender"]
     birth_date = json_data["birth_date"]
+    profile_image = json_data["profile_image"]
     pwdCipher = passwordCipher(password)
     try:
         modifiedUser = modules.user.query.filter_by(nickname=nickname).first()
@@ -156,25 +148,22 @@ def modifyUser():
         modifiedUser.password = pwdCipher
         modifiedUser.gender = gender
         modifiedUser.birth_date = birth_date
+        if("http" not in profile_image):
+            image = UserFunct.decode64Img(profile_image)
+            url = UserFunct.uploadImg(image)
+            UserFunct.delImgTemp(image)
+            modifiedUser.profile_image = url
+        else:
+            modifiedUser.profile_image = profile_image
         modules.sqlAlchemy.session.commit()
     except Exception as e:
         print("Error modificando usuarios:", repr(e))
         return jsonify(exito = "false")
         
-    return jsonify(
-                   exito = "true",
-                   nickname=modifiedUser.nickname,
-                   name=modifiedUser.name,
-                   surname=modifiedUser.surname,
-                   email=modifiedUser.email,
-                   password=password,
-                   gender=modifiedUser.gender,
-                   birth_date=modifiedUser.birth_date.strftime("%Y-%m-%d"),
-                   city=modifiedUser.city,
-                   rol=modifiedUser.rol)
+    return UserFunct.jsonifiedList(modifiedUser, password)
 
 #Perfil Usuario
-@userClass.route('/profileUser/', methods=['GET', 'POST'])
+@userClass.route('/profileUser/', methods=['GET', 'POST']) #No se usa
 def profileUser():
     json_data = request.get_json()
     nickname = json_data["nickname"]
@@ -182,13 +171,18 @@ def profileUser():
     if userQuery is None:
         return jsonify(exito = "false")
     
-    return jsonify(exito = "true",
-                   nickname = userQuery.nickname,
-                   name=userQuery.name,
-                   surname=userQuery.surname,
-                   email=userQuery.email,
-                   password=userQuery.password,
-                   gender=userQuery.gender,
-                   birth_date=userQuery.birth_date.strftime("%Y-%m-%d"),
-                   city=userQuery.city,
-                   rol=userQuery.rol)
+    return UserFunct.jsonifiedList2(userQuery)
+
+@userClass.route('/countfavorites&historyPlaces/', methods=['POST']) #Devuelve la cantidad de lugares favoritos y visitados
+def countPlaceVisited(): #Funcion que se llamará en perfil
+    json_data = request.get_json()
+    user = json_data["user"]
+    try:
+        fvQuery = modules.favorites.query.filter_by(user = user).count()
+        htQuery = modules.visited.query.filter_by(user = user).count()
+        return jsonify(exito = "true", nFavorites = fvQuery, nVisited = htQuery) 
+    except Exception as e:
+        print("Error:", repr(e))
+        return jsonify(exito = "false")
+
+

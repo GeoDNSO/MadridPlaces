@@ -2,34 +2,25 @@ package com.example.App.ui.places_list;
 
 import android.app.Activity;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.media.Image;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
-import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.UserInterfaceUtils;
-import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
-import com.squareup.picasso.Picasso;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -84,14 +75,21 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
         //Otra informacion
         holder.tvPlaceAddress.setText(place.getAddress());
-        holder.tvPlaceDistance.setText("500m");
         holder.ratingBar.setRating((float)place.getRating());
-        holder.tvPlaceNumberOfRatings.setText("100 Valoraciones");
+
+        //Para adapter
+        DecimalFormat df = new DecimalFormat("#.#");
+        df.setRoundingMode(RoundingMode.CEILING);
+
+
+        holder.tvPlaceNumberOfRatings.setText(place.getNumberOfRatings() + " Valoraciones");
+
+
+        //TODO revisar si son metros o km o es segun el valor...
+        holder.tvPlaceDistance.setText(df.format(place.getDistanceToUser()) +"m");
 
 
         //Rating del lugar
-        DecimalFormat df = new DecimalFormat("#.#");
-        df.setRoundingMode(RoundingMode.CEILING);
         holder.tvRatingValue.setText(df.format(place.getRating()));
 
         int favTint = ContextCompat.getColor(activity, R.color.grey);
@@ -101,7 +99,14 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         ImageViewCompat.setImageTintList(holder.favImage, ColorStateList.valueOf(favTint));
 
         //Cargar imagen en el viewholder / imageview
-        String url = place.getImagesList().get(0);
+        String url = "";
+        if(place.getImagesList().isEmpty()) {
+            Log.i("PlaceListAdapter", "La lista de imagenes esta vacia");
+            url = "https://youimg1.tripcdn.com/target/10060j0000009zxuk4720.jpg?proc=source%2Ftrip";
+        }
+        else{
+            url = place.getImagesList().get(0);
+        }
         UserInterfaceUtils.loadImageWithShimmer(activity, url, shimmerDrawable, holder.placeImage);
 
     }
@@ -178,17 +183,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
             favImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), "fav listener", Toast.LENGTH_SHORT).show();
-
-                    TPlace place = placeList.get(getAdapterPosition());
-                    place.setUserFav(!place.isUserFav());
-
-                    int favTint = ContextCompat.getColor(activity, R.color.grey);
-                    if(place.isUserFav()){
-                        favTint = ContextCompat.getColor(activity, R.color.colorFavRed);
-                    }
-
-                    ImageViewCompat.setImageTintList(favImage, ColorStateList.valueOf(favTint));
+                    onPlaceListener.onFavClick(getAdapterPosition(), favImage);
                 }
             });
 
@@ -204,6 +199,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
 
     public interface OnPlaceListener{
         void onPlaceClick(int position);
+        void onFavClick(int position, ImageView favImage);
     }
 
 }

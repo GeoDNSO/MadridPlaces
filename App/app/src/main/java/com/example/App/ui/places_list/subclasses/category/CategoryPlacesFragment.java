@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.App.App;
 import com.example.App.models.transfer.TCategory;
 import com.example.App.ui.places_list.subclasses.BasePlaces;
 import com.example.App.ui.places_list.subclasses.BaseViewModel;
@@ -53,12 +55,8 @@ public class CategoryPlacesFragment extends BasePlaces {
 
         return superView;
     }
-
     @Override
-    public void appendPlaces() { super.mViewModel.appendPlaces(page, quantum); }
-
-    @Override
-    public void listPlaces() { super.mViewModel.listPlaces(page, quantum);  }
+    public void listPlaces() { super.mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername());  }
 
     @Override
     public BaseViewModel getViewModelToParent() {
@@ -66,6 +64,5 @@ public class CategoryPlacesFragment extends BasePlaces {
         cvm.setCategory(category);
         return cvm;
     }
-
 
 }

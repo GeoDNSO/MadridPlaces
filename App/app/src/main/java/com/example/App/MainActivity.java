@@ -22,11 +22,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.App.services.LocationService;
+import com.example.App.services.LocationTrack;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.PermissionsManager;
+import com.example.App.utilities.TextViewExpandableUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-//import com.mapbox.mapboxsdk.Mapbox;
 
 public class MainActivity extends AppCompatActivity implements MainActivityInterface{
 
@@ -37,13 +39,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     private NavigationView drawerNavigationView;
     private NavigationView rightSideNavView;
 
+    private LocationTrack locationTrack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Thread.sleep(300); //Para añadir un pequeño delay antes del splash screen
         setTheme(R.style.Theme_App);
         super.onCreate(savedInstanceState);
-        // Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activity_main);
 
         initializeUI();
@@ -56,14 +59,23 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         app.setMainActivity(this);
         app.askLocationPermission();
 
+        locationTrack = new LocationTrack(this);
+        app.setLocationTrack(locationTrack);
+
     }
 
 
     private void setGlobalVariables() {
+        //TODO Hacerlo en app?
+
         AppConstants.TAB_RATING = getString(R.string.tab_rating);
         AppConstants.TAB_NEAREST = getString(R.string.tab_nearest);
         AppConstants.TAB_TWITTER = getString(R.string.tab_twitter);
         AppConstants.TAB_CATEGORY = getString(R.string.tab_category);
+
+        //Param configuration
+        TextViewExpandableUtil.seeMore = getString(R.string.see_more);
+        TextViewExpandableUtil.seeLess = getString(R.string.see_less);
     }
 
 

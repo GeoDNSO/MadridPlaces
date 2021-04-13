@@ -24,6 +24,8 @@ public class PermissionsManager {
         this.activity = activity;
     }
 
+    //Abre una pantalla de ajustes del movil del usuario en el que puede cambiar los permisos de distintas aplicaciones
+    //Necesario para poder quitar el permiso de la aplicación, tiene que ser removido de manera directa por el usuario
     public void userPermissionsIntent(){
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

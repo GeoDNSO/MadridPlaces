@@ -124,6 +124,7 @@ public class MapFragment extends Fragment implements OnLocationClickListener, On
                         getActivity().getResources(), R.drawable.mapbox_marker_icon_default);
                 mapboxMap.setStyle(new Style.Builder().fromUri("mapbox://styles/mapbox/cjf4m44iw0uza2spb3q0a7s41")
                                 .withImage(ICON_ID, bitmap)
+
                                 .withSource(new GeoJsonSource(SOURCE_ID, FeatureCollection.fromFeatures(symbolLayerIconFeatureList)))
                                 .withLayer(new SymbolLayer(LAYER_ID, SOURCE_ID)
                                         .withProperties(
@@ -135,10 +136,12 @@ public class MapFragment extends Fragment implements OnLocationClickListener, On
                         new Style.OnStyleLoaded() {
                             @Override
                             public void onStyleLoaded(@NonNull Style style) {
+
                                 enableLocationComponent(style);
                             }
                         }
                 );
+
                 // Set the camera's starting position
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(new LatLng(place.getLatitude(), place.getLongitude())) // set the camera's center position
@@ -158,6 +161,7 @@ public class MapFragment extends Fragment implements OnLocationClickListener, On
 
 
         tvMapTest = root.findViewById(R.id.tvMapTest);
+
 
 
         tvMapTest.setText("Lugar --> Latitud: " + place.getLatitude() + " Longitud: " + place.getLongitude());
@@ -240,6 +244,7 @@ public class MapFragment extends Fragment implements OnLocationClickListener, On
             permissionsManager.requestLocationPermissions(getActivity());
         }
     }
+
 
 
     @Override

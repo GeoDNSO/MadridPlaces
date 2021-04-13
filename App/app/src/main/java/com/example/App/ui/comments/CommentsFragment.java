@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.transfer.TComment;
+import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ViewListenerUtilities;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.textfield.TextInputLayout;
@@ -38,11 +39,9 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
 
     private App app; //global variable
 
-    private NestedScrollView nestedScrollView;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private ShimmerFrameLayout shimmerFrameLayout;
-
 
     private TextInputLayout etComment; //Será usado para newComment
 
@@ -60,6 +59,13 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
 
     public static CommentsFragment newInstance(String placeName) {
         return new CommentsFragment(placeName);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mViewModel = new ViewModelProvider(this).get(CommentsViewModel.class);
+        // TODO: Use the ViewModel
     }
 
     @Override
@@ -89,6 +95,15 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
         mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
+
+                if(integer.equals(AppConstants.ERROR_DELETE_COMMENT)){
+                    Toast.makeText(getActivity(), "Error al borrar comentario", Toast.LENGTH_SHORT ).show();
+                    return;
+                }
+                else if(integer.equals(AppConstants.DELETE_COMMENT_OK)){
+                    Toast.makeText(getActivity(), "Comentario borrado con exito", Toast.LENGTH_SHORT ).show();
+                    return;
+                }
 
                 //Mostrar el recyclerView
                 recyclerView.setVisibility(View.VISIBLE);
@@ -120,15 +135,8 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
                 //TODO Tres casos: comentario sin valoración, con valoración o con las dos cosas
                 if(app.isLogged()) { //Tienes que estar logueado
 
-                    if (!etComment.getEditText().getText().toString().equals("") && ratingBar.getRating() != 0) {
+                    if (ratingBar.getRating() != 0) {
                         mViewModel.newComment(app.getUsername(), etComment.getEditText().getText().toString(), placeName, ratingBar.getRating());
-                        //Toast.makeText(getActivity(), "Comentario Creado", Toast.LENGTH_SHORT).show();
-
-                    } else if (etComment.getEditText().getText().toString().equals("") && ratingBar.getRating() != 0) {
-                        //Función únicamente para meter un rate
-                        mViewModel.newRate(app.getUsername(), placeName, ratingBar.getRating());
-                        Toast.makeText(getActivity(), "Rating de " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
-
                     } else {
                         //No se hace nada
                         Toast.makeText(getActivity(), "Selecciona una valoración", Toast.LENGTH_SHORT).show();
@@ -141,42 +149,23 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
             }
         });
 
-
-        //TODO PASAR AL BOTON
-        /*
-
-
-        ivPostComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //if(isEmpty(etComment)){
-                if(isEmpty(etComment.getEditText())){
-                    Toast.makeText(getActivity(), "El texto de comentario está vacío", Toast.LENGTH_SHORT).show();
-                    return ;
-                }
-                TComment comment = new TComment("/img", "Usuario NUEVO",
-                        etComment.getEditText().getText().toString(), "25/02/2021", ratingBar.getRating());
-
-                commentsList.add(0, comment); //Añadir al principio el comentario
-                commentListAdapter = new CommentListAdapter(getActivity(), commentsList);
-                recyclerView.setAdapter(commentListAdapter);
-            }
-        });
-
-        */
-
     }
 
     private boolean isEmpty(EditText etText) {
         return etText.getText().toString().trim().length() == 0;
     }
 
+    //PlaceListDetail usa esta función para actualizar el scroll
     public void onScrollViewAtBottom(){
-
-        //Cuando alacance al ultimo item de la lista
-        //Incrementea el numero de la pagina
-
+        //Cuando alacance al ultimo item de la lista incrementea el numero de la pagina
         page++;
+
+        //Mostrar progress bar
+        progressBar.setVisibility(View.VISIBLE);
+
+        shimmerFrameLayout.startShimmer();
+
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
 
         mViewModel.appendComments(placeName, page, quant);
     }
@@ -207,52 +196,10 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
         shimmerFrameLayout.startShimmer();
     }
 
-    static int numComentario = 0;
-    private void getData() {
-
-        //NO recogemos mas datos al llegar a la pagina 5
-        if(page >= 5){
-            return ;
-        }
-        //Si la respuesta no es nula, es decir, recibimos mensaje del servidor
-        if(true) {
-            //Esconder la barra de carga
-            progressBar.setVisibility(View.GONE);
-            //Mostrar el recyclerView
-            recyclerView.setVisibility(View.VISIBLE);
-            //Parar el efecto shimmer
-            shimmerFrameLayout.stopShimmer();
-            //Esconder al frameLayout de shimmer
-            shimmerFrameLayout.setVisibility(View.GONE);
-
-            for(int i = 0; i < limit; ++i){
-                double rate = (double) Math.random()*5 + 1;
-                TComment comment = new TComment("/image", "Usuario" + numComentario,
-                        "Comentario de Usuario "+ numComentario++ + " " + getString(R.string.lorem_ipsu),
-                        "23/02/2021", rate);
-
-                commentsList.add(comment);
-            }
-
-            commentListAdapter = new CommentListAdapter(getActivity(), commentsList, this);
-            recyclerView.setAdapter(commentListAdapter);
-
-        }
-        else{
-            //Mostrar mensaje de error o trasladar mensaje de error a la vista
-        }
-
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(CommentsViewModel.class);
-        // TODO: Use the ViewModel
-    }
-
     @Override
     public void onCommentDelete(int position) {
         Toast.makeText(getActivity(), "Delete a Comentario Num " + position, Toast.LENGTH_SHORT).show();
+        TComment comment = commentsList.get(position);
+        mViewModel.deleteComment(comment, position);
     }
 }

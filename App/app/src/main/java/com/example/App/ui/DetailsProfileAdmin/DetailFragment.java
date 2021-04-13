@@ -62,8 +62,8 @@ public class DetailFragment extends Fragment{
 
 
         //Maybe used in the future
-        tv_Comments = root.findViewById(R.id.tv_n_comments2);
-        tv_VisitedPlaces  = root.findViewById(R.id.tv_visited_places2);
+        tv_Comments = root.findViewById(R.id.tv_n_favourites_admin);
+        tv_VisitedPlaces  = root.findViewById(R.id.tv_visited_places_admin);
 
         fillProfileFields();
         initializeListeners();

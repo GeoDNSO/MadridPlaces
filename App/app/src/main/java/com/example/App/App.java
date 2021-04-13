@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TUser;
+import com.example.App.services.LocationTrack;
 import com.example.App.ui.LogoutObserver;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.TextViewExpandableUtil;
@@ -53,13 +54,12 @@ public class App {
 
     private FusedLocationProviderClient fusedLocationProviderClient;
 
+    private LocationTrack locationTrack;
+
     private App(Context context) {
         this.context = context;
         sessionManager = new SessionManager(context);
         logoutObservers = new ArrayList<>();
-        //Param configuration
-        TextViewExpandableUtil.seeMore = context.getString(R.string.see_more);
-        TextViewExpandableUtil.seeLess = context.getString(R.string.see_less);
     }
 
     public static App getInstance(Context ctx) {
@@ -67,6 +67,12 @@ public class App {
             app = new App(ctx);
         app.context = ctx;
         app.sessionManager.setContext(ctx);
+        return app;
+    }
+
+    public static App getInstance() {
+        if (app == null)
+            return null;
         return app;
     }
 
@@ -218,19 +224,11 @@ public class App {
         this.mainActivity = mainActivity;
     }
 
+    public void setLocationTrack(LocationTrack locationTrack) {
+        this.locationTrack = locationTrack;
+    }
 
-                /*
-                if(!App.isServerReachable()){
-                    Toast.makeText(getActivity(), getString(R.string.no_internet), Toast.LENGTH_LONG).show();
-                    swipeRefreshLayout.setRefreshing(false);
-                    return ;
-                }
-
-                //Reseteamos la pagina para ver cambios y borramos la lista...
-                page = 1;
-                placeList.clear();
-
-                mViewModel.listPlaces(page, quantum);
-                */
-
+    public LocationTrack getLocationTrack() {
+        return locationTrack;
+    }
 }

@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.App.models.repositories.UserRepository;
 import com.example.App.models.transfer.TUser;
+import com.example.App.ui.ViewModelParent;
 
 import java.util.List;
 
-public class AdminViewModel extends ViewModel {
+public class AdminViewModel extends ViewModelParent {
     private UserRepository userRepository;
-    private MutableLiveData<Boolean> mProgressBar = new MutableLiveData<>(); //true indica progress bar activo
     private LiveData<Integer> mListSuccess = new MutableLiveData<>();
     private LiveData<List<TUser>> mListUsers = new MutableLiveData<>();
 
@@ -30,21 +30,22 @@ public class AdminViewModel extends ViewModel {
     }
 
     //TODO envia datos al servidor para registrar el nuevo usuario, en la primera linea se activa el progressBar
-    public void listUsers(){
-        mProgressBar.setValue(true); //progress bar visible
-        userRepository.listUsers();
+    public void listUsers(int page, int quantum, String searchText, int sort){
+        userRepository.listUsers(page, quantum, searchText, sort);
+    }
+
+    public void clearList(){
+        userRepository.clearListUsers();
     }
 
     //funcion que se usa en el switchMap, asocia un liveData cuando cambia el valor de mSuccess en DAOUserImp
     private LiveData<Integer> getListInProcess(Integer success) {
-        mProgressBar.setValue(false); //progress bar visible
         MutableLiveData<Integer> mAux = new MutableLiveData<>();
         mAux.setValue(success);
         return mAux;
     }
 
     private LiveData<List<TUser>> setAndGetListUsers(List<TUser> user) {
-        mProgressBar.setValue(false); //progress bar visible
         MutableLiveData<List<TUser>> mAux = new MutableLiveData<>();
         mAux.setValue(user);
         return mAux;

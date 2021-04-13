@@ -41,6 +41,7 @@ def selectLugar(): #Recoge todos los lugares excepto monumentos,
 	for obj in allNames:
 		if(obj[5] < 2 or obj[5] >= 15):
 			listaSelenium.append({"locationName" : obj[0], "search" : obj[0] + ", " + obj[4] + " " + obj[1] + " " + obj[2] + " " + obj[3] + ", " + str(obj[6])})
+	
 
 def main(): #Uso de Selenium exclusivamente para datos sin imágenes
 	selectLugar() #Devuelve la lista de los nombres de todos los lugares exceptos los monumentos

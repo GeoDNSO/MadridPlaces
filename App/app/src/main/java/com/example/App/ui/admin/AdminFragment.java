@@ -2,11 +2,18 @@ package com.example.App.ui.admin;
 
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,13 +24,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.MainActivity;
@@ -31,6 +42,7 @@ import com.example.App.MainActivityInterface;
 import com.example.App.R;
 import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ViewListenerUtilities;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -40,16 +52,21 @@ import java.util.List;
 
 public class AdminFragment extends Fragment implements UserListAdapter.OnListListener {
 
-
+    protected static final int RESULT_SPEECH = 1;
     private View root;
     private AdminViewModel mViewModel;
+    private NestedScrollView nestedScrollView;
     private App app;
     private List<TUser> listUser;
+    private ProgressBar progressBar;
     private UserListAdapter adapter;
     private RecyclerView recyclerView;
     private UserListAdapter.OnListListener onListListener;
-    private boolean sortUsernameboolean;
-    private boolean sortNameboolean;
+    private Integer sortUsernameboolean; /*0 == no sort, 1 == sort up (A-Z), 2 == sort down (Z-A)*/
+    private Integer sortNameboolean; /*0 == no sort, 1 == sort up (A-Z), 2 == sort down (Z-A)*/
+    private Integer finalsort;
+    private int page = 1, quantum = 8;
+    private SearchView searchView;
 
     public static AdminFragment newInstance() {
         return new AdminFragment();
@@ -63,6 +80,10 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
 
         mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
         mViewModel.init();
+
+        init();
+
+        listeners();
 
         mViewModel.getListUsers().observe(getViewLifecycleOwner(), new Observer<List<TUser>>() {
             @Override
@@ -84,6 +105,9 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
             }
         });
 
+        mViewModel.getProgressBar().observe(getViewLifecycleOwner(), aBoolean ->
+                ViewListenerUtilities.setVisibility(progressBar, aBoolean));
+
         adminManagement();
 
         return root;
@@ -102,11 +126,36 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         recyclerView.setAdapter(adapter);
     }
 
+    private void init(){
+        nestedScrollView = root.findViewById(R.id.list_user_nestedScrollView);
+        progressBar = root.findViewById(R.id.user_list_progressBar);
+        sortNameboolean = AppConstants.NO_SORT;
+        sortUsernameboolean = AppConstants.NO_SORT;
+        finalsort = AppConstants.NO_SORT;
+    }
+
+    private void listeners(){
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
+                    //Cuando alacance al ultimo item de la lista
+                    //Incrementea el numero de la pagina
+                    page++;
+
+                    progressBar.setVisibility(View.VISIBLE); //progress bar visible
+                    //Pedimos más datos
+                    mViewModel.listUsers(page, quantum, searchView.getQuery().toString(), AppConstants.FINAL_NO_SORT);
+                }
+            }
+        });
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
-        mViewModel.listUsers();
+        //progressBar.setVisibility(View.VISIBLE); //progress bar visible
     }
 
     @Override
@@ -146,21 +195,11 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         });
 
         MenuItem searchIcon = menu.findItem(R.id.search_button);
-        SearchView searchView = (SearchView) searchIcon.getActionView();
 
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                azIcon.setVisible(false);
-            }
-        });
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                azIcon.setVisible(true);
-                return false;
-            }
-        });
+        searchView = (SearchView) searchIcon.getActionView();
+
+        searchView.setMaxWidth(600);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -169,29 +208,76 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
+                page = 1;
+                progressBar.setVisibility(View.VISIBLE);
+                mViewModel.clearList();
+                mViewModel.listUsers(page, quantum, newText, finalsort);
+
+                //adapter.getFilter().filter(newText);
                 return false;
             }
         });
 
+        MenuItem micIcon = menu.findItem(R.id.microphone_button);
+
+        micIcon.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-ES");
+                try {
+                    startActivityForResult(intent, RESULT_SPEECH);
+                }catch (ActivityNotFoundException e){
+                    Toast.makeText(getContext(), "Error: No se ha podido conectar con el micrófono", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        });
+
+
+        page = 1;
+        progressBar.setVisibility(View.VISIBLE); //progress bar visible
+        mViewModel.listUsers(page, quantum, searchView.getQuery().toString(), AppConstants.FINAL_NO_SORT);
+
         Menu menu1 = ((MainActivity) getActivity()).sortUserNameMenuItem();
         Menu menu2 =  ((MainActivity) getActivity()).sortNameMenuItem();
         MenuItem sortUsernameIcon = menu1.findItem(R.id.sortUsernameUser);//menu.findItem(R.id.sortUsernameUser);
+        sortUsernameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
 
         MenuItem sortNameIcon = menu2.findItem(R.id.sortNameUser);//menu.findItem(R.id.sortNameUser);
+        sortNameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
 
         sortUsernameIcon.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (item.getIcon() == null || sortUsernameboolean == true) {
+                mViewModel.clearList();
+                if (sortUsernameboolean == AppConstants.NO_SORT || sortUsernameboolean == AppConstants.SORT_UP) {
                     sortUsernameIcon.setIcon(R.drawable.ic_baseline_keyboard_arrow_up_24);
-                    sortUsernameboolean = false;
-                    Collections.sort(listUser, TUser.comparatorUsernameAZusers);
+                    sortNameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
+                    sortUsernameboolean = AppConstants.SORT_DOWN;
+                    sortNameboolean = AppConstants.NO_SORT;
+                    finalsort = AppConstants.NICKNAME_SORT_UP;
+
+                    page = 1;
+                    progressBar.setVisibility(View.VISIBLE); //progress bar visible
+                    mViewModel.listUsers(page, quantum, searchView.getQuery().toString(), AppConstants.NICKNAME_SORT_UP);
+
+                    //Collections.sort(listUser, TUser.comparatorUsernameAZusers);
                     adapter.notifyDataSetChanged();
                 } else {
                     sortUsernameIcon.setIcon(R.drawable.ic_baseline_keyboard_arrow_down_24);
-                    sortUsernameboolean = true;
-                    Collections.sort(listUser, TUser.comparatorUsernameZAusers);
+                    sortNameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
+                    sortUsernameboolean = AppConstants.SORT_UP;
+                    sortNameboolean = AppConstants.NO_SORT;
+                    finalsort = AppConstants.NICKNAME_SORT_DOWN;
+
+                    page = 1;
+                    progressBar.setVisibility(View.VISIBLE); //progress bar visible
+                    mViewModel.listUsers(page, quantum, searchView.getQuery().toString(), AppConstants.NICKNAME_SORT_DOWN);
+
+                    //Collections.sort(listUser, TUser.comparatorUsernameZAusers);
                     adapter.notifyDataSetChanged();
                 }
                 return true;
@@ -200,21 +286,54 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         sortNameIcon.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (item.getIcon() == null || sortNameboolean == true) {
+                mViewModel.clearList();
+                if (sortNameboolean == AppConstants.NO_SORT || sortNameboolean == AppConstants.SORT_UP) {
                     sortNameIcon.setIcon(R.drawable.ic_baseline_keyboard_arrow_up_24);
-                    sortNameboolean = false;
-                    Collections.sort(listUser, TUser.comparatorRealnameAZusers);
+                    sortUsernameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
+                    sortNameboolean = AppConstants.SORT_DOWN;
+                    sortUsernameboolean = AppConstants.NO_SORT;
+                    finalsort = AppConstants.NAME_SORT_UP;
+
+                    page = 1;
+                    progressBar.setVisibility(View.VISIBLE); //progress bar visible
+                    mViewModel.listUsers(page, quantum, searchView.getQuery().toString(), AppConstants.NAME_SORT_UP);
+
+                    //Collections.sort(listUser, TUser.comparatorRealnameAZusers);
                     adapter.notifyDataSetChanged();
                 } else {
                     sortNameIcon.setIcon(R.drawable.ic_baseline_keyboard_arrow_down_24);
-                    sortNameboolean = true;
-                    Collections.sort(listUser, TUser.comparatorRealnameZAusers);
+                    sortUsernameIcon.setIcon(new ColorDrawable(Color.TRANSPARENT));
+                    sortNameboolean = AppConstants.SORT_UP;
+                    sortUsernameboolean = AppConstants.NO_SORT;
+                    finalsort = AppConstants.NAME_SORT_DOWN;
+
+                    page = 1;
+                    progressBar.setVisibility(View.VISIBLE); //progress bar visible
+                    mViewModel.listUsers(page, quantum, searchView.getQuery().toString(), AppConstants.NAME_SORT_DOWN);
+
+                    //Collections.sort(listUser, TUser.comparatorRealnameZAusers);
                     adapter.notifyDataSetChanged();
                 }
                 return true;
             }
         });
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case RESULT_SPEECH:
+                if (resultCode == Activity.RESULT_OK && data != null){
+                    ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    page = 1;
+                    progressBar.setVisibility(View.VISIBLE);
+                    mViewModel.clearList();
+                    mViewModel.listUsers(page, quantum, text.get(0), finalsort);
+                }
+                break;
+        }
     }
 
 

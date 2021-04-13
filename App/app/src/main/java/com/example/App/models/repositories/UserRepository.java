@@ -1,10 +1,12 @@
 package com.example.App.models.repositories;
 
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.models.dao.SimpleRequest;
+import com.example.App.models.transfer.TPlace;
 import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
 
@@ -28,6 +30,8 @@ public class UserRepository {
 
     private MutableLiveData<TUser> mUser = new MutableLiveData<>();
     private MutableLiveData<List<TUser>> mListUsers = new MutableLiveData<>();
+
+    private MutableLiveData<Pair<Integer,Integer>> mCountProfileCommentsAndHistory = new MutableLiveData<>();
 
     public void registerUser(TUser user) {
 
@@ -221,9 +225,8 @@ public class UserRepository {
 
     }
 
-    public void listUsers() {
-
-        String postBodyString = "";
+    public void listUsers(int page, int quantum, String searchText, int sortType) {
+        String postBodyString = paramsToString(page, quantum, searchText, sortType);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -252,7 +255,19 @@ public class UserRepository {
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if (success){
-                    mListUsers.postValue(getListFromResponse(res));
+                    List<TUser> listaAux = mListUsers.getValue();
+                    List<TUser> listFromResponse = getListFromResponse(res);
+                    if(listFromResponse.isEmpty()){
+                        return;
+                    }
+                    if (listaAux == null){
+                        Log.d("UserListCallback", "La lista de usuarios estaba vacia inicialmente");
+                        mListUsers.postValue(listFromResponse);
+                    }
+                    else{
+                        listaAux.addAll(listFromResponse);
+                        mListUsers.postValue(listaAux);
+                    }
                     mProfileSuccess.postValue(AppConstants.LIST_USERS);//Importante que este despues del postValue de mUser
                 }
                 else{
@@ -263,6 +278,75 @@ public class UserRepository {
             }
         });
 
+    }
+
+    public void getCommentsAndHistoryCount(String nickname) {
+
+        JSONObject jsonUser = new JSONObject();
+        try {
+            jsonUser.put("user", nickname);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String postBodyString = jsonUser.toString();
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_POST, "/countfavorites&historyPlaces/"
+        );
+
+        Call call = simpleRequest.createCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mCountProfileCommentsAndHistory.postValue(null);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    mCountProfileCommentsAndHistory.postValue(null);
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String res = response.body().string();
+                if(!simpleRequest.isSuccessful(res)){
+                    mCountProfileCommentsAndHistory.postValue(null);
+                    throw new IOException("Unexpected code " + response);
+                }
+                else {
+                    Pair<Integer, Integer> pair = jsonPair(res);
+                    mCountProfileCommentsAndHistory.postValue(pair);
+                }
+            }
+
+        });
+    }
+
+    private Pair<Integer, Integer> jsonPair(String string) {
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(string);
+            Integer countComments = jsonObject.getInt("nFavorites");
+            Integer countHistoryPlaces = jsonObject.getInt("nVisited");
+
+            return new Pair<>(countComments, countHistoryPlaces);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void sleep(long milis){
+        try {
+            Thread.sleep(milis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private List<TUser> getListFromResponse(String response){
@@ -304,6 +388,10 @@ public class UserRepository {
         this.mUser = mUser;
     }
 
+    public MutableLiveData<Pair<Integer, Integer>> getmCountProfileCommentsAndHistory() {
+        return mCountProfileCommentsAndHistory;
+    }
+
     //Métodos Privados para JSONs
 
     //Crea un JSON con la información necesaria para el login: nickname y password
@@ -327,12 +415,36 @@ public class UserRepository {
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(jsonString);
-            return new TUser(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"));
+            String image_profile = jsonObject.getString("profile_image");
+            if(image_profile.equals("null")){
+                image_profile = null;
+            }
+            return new TUser(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"), image_profile);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
     }
 
+    private String paramsToString(int page, int quantity, String searchText, int sortType) {
+        JSONObject params = new JSONObject();
+        String infoString;
+        try {
+            params.put("page", page);
+            params.put("quant", quantity);
+            params.put("search", searchText);
+            params.put("filter_by", sortType);
 
+        }catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = params.toString();
+
+        return infoString;
+    }
+
+    public void clearListUsers() {
+        mListUsers.setValue(new ArrayList<>());
+    }
 }

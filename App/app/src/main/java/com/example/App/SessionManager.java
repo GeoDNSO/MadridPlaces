@@ -56,7 +56,7 @@ public class SessionManager {
         editor.putString(AppConstants.EMAIL, user.getEmail());
         editor.putString(AppConstants.GENDER, user.getGender());
         editor.putString(AppConstants.BIRTH_DATE, user.getBirthDate());
-        editor.putString(AppConstants.PROFILE_PICTURE, "AA");//TODO Usuario con imagen de perfil??
+        editor.putString(AppConstants.PROFILE_PICTURE, user.getImage_profile());
         editor.putString(AppConstants.ADMIN, user.getRol());
         editor.commit();
     }
@@ -93,9 +93,11 @@ public class SessionManager {
         return prefs.getString(AppConstants.GENDER, "");
     }
 
+    public String getImageProfile() { return prefs.getString(AppConstants.PROFILE_PICTURE, ""); }
+
     public TUser getSesionUser(){
         return new TUser(getUsername(), getPassword(), getFirstName(),
                 getSurname(), getEmail(), getGender(),
-                getBirthDate(), getCity(), getRol());
+                getBirthDate(), getCity(), getRol(), getImageProfile());
     }
 }

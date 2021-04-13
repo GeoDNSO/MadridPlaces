@@ -23,6 +23,10 @@
 
     <!--Strings para los mensajes a la hora de hacer un login o registro-->
     <string name="app_user_name">Nombre de Usuario</string>
+    <string name="app_user_new_pass">Nueva contraseña</string>
+    <string name="app_user_repeat_pass2">Repite la nueva contraseña</string>
+    <string name="app_user_actual_pass">Actual Contraseña</string>
+
     <string name="app_user_pass">Contraseña</string>
     <string name="app_user_pass2">Repite contraseña</string>
     <string name="app_user_email">E-mail</string>
@@ -35,17 +39,22 @@
     <!--Strings para los mensajes de error o informacion a la hora de registrarse/ hacer login-->
     <string name="email_not_valid">Correo Electrónico Inválido</string>
     <string name="password_not_equal">Las contraseñas son distintas</string>
+    <string name="password_not_equal_db">La contraseña no es igual a tu actual contraseña</string>
     <string name="empty_fields">Hay algún campo vacío</string>
     <string name="username_exists">El nombre de usuario ya existe</string>
+    <string name="place_exists">El nombre del lugar ya existe</string>
     <string name="account_created">Cuenta creado con éxito</string>
     <string name="sign_in">Se ha iniciado la sesión</string>
     <string name="register_failed">Error al registrarse</string>
+    <string name="modify_user_failed">Error al modificar el perfil</string>
     <string name="login_failed">Usuario o contraseña incorrectas</string>
+    <string name="modify_user_text">Puedes modificar la foto, el e-mail y la contraseña</string>
+    <string name="app_register_profile_image">Foto de perfil (Opcional)</string>
 
 
     <!--Strings relativos al perfil-->
     <string name="profile_visited_places">Sitios Visitados</string>
-    <string name="profile_comments">Comentarios</string>
+    <string name="profile_fav">Sitios Favoritos</string>
     <string name="profile_city">Nombre</string>
     <string name="profile_delete_account_title">Borrar Cuenta</string>
     <string name="profile_delete_account_message">¿Estás seguro de borrar tu cuenta? Todos tus datos se perderán</string>

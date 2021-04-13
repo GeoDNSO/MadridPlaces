@@ -1,5 +1,7 @@
 package com.example.App.ui.profile;
 
+import android.util.Pair;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
@@ -13,6 +15,8 @@ public class ProfileViewModel extends ViewModel {
     UserRepository userRepository;
     private MutableLiveData<Boolean> mProfileActionInProgress = new MutableLiveData<>(); //true indica progress bar activo
     private LiveData<Integer> mActionProfileSuccess = new MutableLiveData<>();
+
+    private LiveData<Pair<Integer, Integer>> mProfilePairMutableLiveData = new MutableLiveData<>();
     private LiveData<TUser> mUser = new MutableLiveData<>();
 
     public void init(){
@@ -20,6 +24,10 @@ public class ProfileViewModel extends ViewModel {
 
         mActionProfileSuccess = Transformations.switchMap(
                 userRepository.getProfileSuccess(),
+                success -> setProfileActionInProgress(success));
+
+        mProfilePairMutableLiveData = Transformations.switchMap(
+                userRepository.getmCountProfileCommentsAndHistory(),
                 success -> setProfileActionInProgress(success));
 
         mUser = Transformations.switchMap(
@@ -45,6 +53,17 @@ public class ProfileViewModel extends ViewModel {
         userRepository.modifyUser(u);
     }
 
+    public void countCommentsAndHistoryUser(String nickname) {
+        mProfileActionInProgress.setValue(true);
+        userRepository.getCommentsAndHistoryCount(nickname);
+    }
+
+    private LiveData<Pair<Integer, Integer>> setProfileActionInProgress(Pair<Integer, Integer> pair) {
+        MutableLiveData<Pair<Integer, Integer>> mAux = new MutableLiveData<>();
+        mAux.setValue(pair);
+        return mAux;
+    }
+
     //Para delete
     private LiveData<Integer> setProfileActionInProgress(Integer success) {
         mProfileActionInProgress.setValue(false); //progress bar visible
@@ -62,6 +81,9 @@ public class ProfileViewModel extends ViewModel {
     }
     public LiveData<Integer> getActionProfileSuccess(){
         return mActionProfileSuccess;
+    }
+    public LiveData<Pair<Integer, Integer>> getProfilePairMutableLiveData() {
+        return mProfilePairMutableLiveData;
     }
 
 }

@@ -1,16 +1,20 @@
 package com.example.App.ui.places_list.subclasses;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.ImageViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -19,12 +23,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TPlace;
+import com.example.App.ui.LogoutObserver;
 import com.example.App.ui.places_list.PlaceListAdapter;
-import com.example.App.ui.places_list.PlacesListFragment;
-import com.example.App.ui.places_list.PlaceListViewModel;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ViewListenerUtilities;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -34,7 +38,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public abstract class BasePlaces extends Fragment implements PlaceListAdapter.OnPlaceListener {
+public abstract class BasePlaces extends Fragment implements PlaceListAdapter.OnPlaceListener, LogoutObserver {
 
     protected BaseViewModel mViewModel;
     protected View root;
@@ -53,13 +57,8 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
 
     //Funciones a implementar en los hijos según el tipo de lugares a mostrar
-    public abstract void appendPlaces();
     public abstract void listPlaces();
     public abstract BaseViewModel getViewModelToParent();
-
-    public static PlacesListFragment newInstance() {
-        return new PlacesListFragment();
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -74,6 +73,9 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
         root = inflater.inflate(R.layout.places_list_fragment, container, false);
         //mViewModel = new ViewModelProvider(this).get(BaseViewModel.class);
+
+        App.getInstance(getContext()).addLogoutObserver(this);
+
         mViewModel = getViewModelToParent();
         mViewModel.init();
 
@@ -106,24 +108,6 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
             }
         });
 
-        /*
-        mViewModel.getCategoriesPlacesListPlacesList().observe(getViewLifecycleOwner(), new Observer<List<TPlace>>() {
-            @Override
-            public void onChanged(List<TPlace> tPlaces) {
-                if(tPlaces == null){
-                    Log.d("ERROR_NULO", "tPLaces nulo");
-                    return;
-                }
-
-                placeList = tPlaces; //TODO Aquí hay un bug que hay que arreglar
-
-                placeListAdapter = new PlaceListAdapter(getActivity(), placeList, BasePlaces.this);
-
-                recyclerView.setAdapter(placeListAdapter);
-            }
-        });
-*/
-
         mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
@@ -136,6 +120,27 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                 shimmerFrameLayout.setVisibility(View.GONE);
 
                 swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        mViewModel.getFavSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+
+                if (integer.equals(AppConstants.FAV_POST_OK)){
+                    TPlace place = placeList.get(lastFavPlacePos);
+                    place.setUserFav(!place.isUserFav());
+
+                    int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
+                    if(place.isUserFav()){
+                        favTint = ContextCompat.getColor(getActivity(), R.color.colorFavRed);
+                    }
+
+                    ImageViewCompat.setImageTintList(lastFavImage, ColorStateList.valueOf(favTint));
+                    return ;
+                }
+
+                Toast.makeText(getActivity(), "Error al hacer favorito", Toast.LENGTH_SHORT);
             }
         });
 
@@ -168,7 +173,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                     //Reseteamos la pagina para ver cambios y borramos la lista...
                     page = 1;
                     placeList.clear();
-                    mViewModel.listPlaces(page, quantum);
+                    mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername());
                 };
 
                 ExecutorService executorService = Executors.newFixedThreadPool(1);
@@ -192,7 +197,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                     shimmerFrameLayout.setVisibility(View.VISIBLE);
 
                     //Pedimos más datos
-                    appendPlaces();
+                    listPlaces();
                 }
             }
         });
@@ -231,5 +236,34 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
         //Le pasamos el bundle
         Navigation.findNavController(root).navigate(R.id.placeDetailFragment, bundle);
+    }
+
+    @Override
+    public void onLogout(){
+        placeList.clear();
+        page=1;
+        listPlaces();
+    }
+
+
+    protected Integer lastFavPlacePos;
+    protected ImageView lastFavImage;
+    @Override
+    public void onFavClick(int position, ImageView favImage) {
+        Toast.makeText(getActivity(), "fav listener", Toast.LENGTH_SHORT).show();
+
+        if(App.getInstance(getActivity()).getSessionManager().isLogged() == false){
+            Toast.makeText(getActivity(), "Tienes que estar logueado para poder tener favoritos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        lastFavPlacePos = position;
+        lastFavImage = favImage;
+
+
+        TPlace place = placeList.get(position);
+        String username = App.getInstance(getActivity()).getUsername();
+
+        mViewModel.setFavOnPlace(place, username);
     }
 }

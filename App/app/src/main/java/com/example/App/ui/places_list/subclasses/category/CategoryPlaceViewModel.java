@@ -17,13 +17,8 @@ public class CategoryPlaceViewModel extends BaseViewModel {
     }
 
     @Override
-    public void listPlaceToParent(int page, int quant) {
-        placeRepository.listPlacesCategories(page, quant, category);
-    }
-
-    @Override
-    public void appendPlaceToParent(int page, int quant) {
-        placeRepository.appendPlacesCategories(page, quant, category);
+    public void listPlaceToParent(int page, int quant, String nickname) {
+        placeRepository.listPlacesCategories(page, quant, nickname, category);
     }
 
     public void setCategory(String category) {

@@ -262,6 +262,11 @@ public class AddPlaceFragment extends Fragment {
         if (Validator.argumentsEmpty(placeName, placeDescription, finalTypePlace)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
-        mViewModel.addPlace(placeName, placeDescription, finalTypePlace, imageStringBase64);
+        else if(Validator.placeAlredyExists(placeName)){
+            et_placeName.setError(getString(R.string.place_exists));
+        }
+        else {
+            mViewModel.addPlace(placeName, placeDescription, finalTypePlace, imageStringBase64);
+        }
     }
 }

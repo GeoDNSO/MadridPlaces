@@ -1,5 +1,7 @@
 package com.example.App.ui.details_profile_admin;
 
+import android.util.Pair;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
@@ -12,6 +14,7 @@ public class DetailViewModel extends ViewModel {
     UserRepository userRepository;
     private MutableLiveData<Boolean> mDetailProfileActionInProgress = new MutableLiveData<>(); //true indica progress bar activo
     private LiveData<Integer> mActionDetailProfileSuccess = new MutableLiveData<>();
+    private LiveData<Pair<Integer, Integer>> mProfilePairMutableLiveData = new MutableLiveData<>();
     private LiveData<TUser> mUser = new MutableLiveData<>();
 
     public void init(){
@@ -24,6 +27,10 @@ public class DetailViewModel extends ViewModel {
         mUser = Transformations.switchMap(
                 userRepository.getmUser(),
                 user -> setAndGetUser(user));
+
+        mProfilePairMutableLiveData = Transformations.switchMap(
+                userRepository.getmCountProfileCommentsAndHistory(),
+                success -> setProfileActionInProgress(success));
 
     }
 
@@ -39,12 +46,23 @@ public class DetailViewModel extends ViewModel {
         userRepository.deleteUser(username);
     }
 
+    private LiveData<Pair<Integer, Integer>> setProfileActionInProgress(Pair<Integer, Integer> pair) {
+        MutableLiveData<Pair<Integer, Integer>> mAux = new MutableLiveData<>();
+        mAux.setValue(pair);
+        return mAux;
+    }
+
     //Para delete
     private LiveData<Integer> setDetailProfileActionInProgress(Integer success) {
         mDetailProfileActionInProgress.setValue(false); //progress bar visible
         MutableLiveData<Integer> mAux = new MutableLiveData<>();
         mAux.setValue(success);
         return mAux;
+    }
+
+    public void countCommentsAndHistoryUser(String nickname) {
+        mDetailProfileActionInProgress.setValue(true);
+        userRepository.getCommentsAndHistoryCount(nickname);
     }
 
 
@@ -56,5 +74,9 @@ public class DetailViewModel extends ViewModel {
     }
     public LiveData<Integer> getActionDetailProfileSuccess(){
         return mActionDetailProfileSuccess;
+    }
+
+    public LiveData<Pair<Integer, Integer>> getProfilePairMutableLiveData() {
+        return mProfilePairMutableLiveData;
     }
 }
