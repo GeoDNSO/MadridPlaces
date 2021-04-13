@@ -173,7 +173,8 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                     //Reseteamos la pagina para ver cambios y borramos la lista...
                     page = 1;
                     placeList.clear();
-                    mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername());
+                    //mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername());
+                    listPlaces();
                 };
 
                 ExecutorService executorService = Executors.newFixedThreadPool(1);

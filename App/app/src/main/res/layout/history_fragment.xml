@@ -13,6 +13,13 @@
         android:orientation="vertical"
         android:padding="4dp">
 
+        <TextView
+            android:id="@+id/tvNoLogued"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No estás Logueado"
+            android:visibility="gone"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="0dp"

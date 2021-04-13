@@ -103,6 +103,10 @@ public class PlaceRepository extends Repository{
             //si no hubo problemas...
             List<TPlace> listaAux = placeList.getValue();
             List<TPlace> listaFromResponse = getListFromResponse(res);
+            if(listaFromResponse == null){
+                Log.d("PLACE_REPO", "La lista JSON convertida es NULO, MIRAR...");
+                return;
+            }
             if(listaFromResponse.isEmpty()){
                 return;
             }
@@ -348,7 +352,7 @@ public class PlaceRepository extends Repository{
         String postBodyString = pageAndQuantToSTring(page, quantity, nickname, "");
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/location/listLocations");
+                AppConstants.METHOD_POST, "/location/readHistory");
         Call call = simpleRequest.createCall(request);
 
         call.enqueue(new PlaceListCallBack(simpleRequest, mHistoryPlacesList));
@@ -485,6 +489,8 @@ public class PlaceRepository extends Repository{
 
             double distanceToUser = ((float) loc1.distanceTo(loc2));
             Integer numberOfRatings = jsonObject.getInt("n_comments");
+            //String dateVisited = jsonObject.getString("date_visited");
+            String dateVisited = "12-04-2021";
 
             return new TPlace(
                     jsonObject.getString("name"),
@@ -502,7 +508,8 @@ public class PlaceRepository extends Repository{
                     jsonObject.getDouble("rate"),
                     placeIsFav,
                     distanceToUser,
-                    numberOfRatings);
+                    numberOfRatings,
+                    dateVisited);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

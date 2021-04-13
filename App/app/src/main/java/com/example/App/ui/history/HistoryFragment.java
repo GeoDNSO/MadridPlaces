@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
@@ -39,6 +41,8 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
     private ProgressBar progressBar;
     private ShimmerFrameLayout shimmerFrameLayout;
 
+    private TextView tvNoLogued;
+
     private List<TPlace> historyplaceList = new ArrayList<>();
     private HistoryAdapter historyplaceListAdapter;
 
@@ -59,6 +63,14 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
         initUI();
 
         //((MainActivity)getActivity()).setDrawerUnlock();
+
+        if(!App.getInstance().isLogged()){
+            tvNoLogued.setVisibility(View.VISIBLE);
+            shimmerFrameLayout.setVisibility(View.GONE);
+            Toast.makeText(getContext(), "Tienes que estar logueado para poder usar está función", Toast.LENGTH_SHORT).show();
+            return root;
+        }
+
 
         mViewModel.getHistoryPlacesList().observe(getViewLifecycleOwner(), new Observer<List<TPlace>>() {
             @Override
@@ -128,20 +140,6 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
         });
     }
 
-    //@TODO Ver video para enseñar a Jin lo de las peticiones por paginas...
-    //Simula llamada al servidor
-    static int numLugar = 0;
-    private void getData() {
-
-        //Si la respuesta no es nula, es decir, recibimos mensaje del servidor
-        if(true){
-            historyplaceListAdapter = new HistoryAdapter(getActivity(), historyplaceList, this);
-
-            recyclerView.setAdapter(historyplaceListAdapter);
-        }else{
-            //Mostrar mensaje de error o trasladar mensaje de error a la vista
-        }
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -155,6 +153,8 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
         recyclerView = root.findViewById(R.id.History_RecyclerView);
         progressBar = root.findViewById(R.id.placeList_ProgressBar);
         shimmerFrameLayout = root.findViewById(R.id.placeList_ShimmerLayout);
+
+        tvNoLogued = root.findViewById(R.id.tvNoLogued);
     }
 
     @Override
