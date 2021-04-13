@@ -86,9 +86,7 @@ public class AppConstants {
     public static final int NAME_SORT_UP = 3;
     public static final int NAME_SORT_DOWN = 4;
 
-
-
-
+    
     public static final Integer FAV_POST_OK = 1;
     public static final Integer FAV_POST_FAIL = 0;
 
