@@ -86,9 +86,7 @@ public class AppConstants {
     public static final int NAME_SORT_UP = 3;
     public static final int NAME_SORT_DOWN = 4;
 
-
-
-
+    
     public static final Integer FAV_POST_OK = 1;
     public static final Integer FAV_POST_FAIL = 0;
 
@@ -96,8 +94,8 @@ public class AppConstants {
     public static final Integer LONGITUDE = 0;
     public static final Integer LATITUDE = 1;
 
+
     public static final Double DEFAULT_RADIUS = 2000.0;
     public static final Integer DEFAULT_NPLACES = 20;
-
 
 }

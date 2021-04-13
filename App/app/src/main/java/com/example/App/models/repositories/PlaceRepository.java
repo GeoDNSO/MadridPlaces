@@ -338,7 +338,7 @@ public class PlaceRepository extends Repository{
     // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
     public void listPlaces(int page, int quantity, String nickname) {
 
-        String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname, "");
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listLocations");
@@ -349,7 +349,7 @@ public class PlaceRepository extends Repository{
 
     public void historyListPlaces(int page, int quantity, String nickname) {
         //TODO devuelve la lista de lugares. Solo es necesario la lista visitada.
-        String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname, "");
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/readHistory");
@@ -360,7 +360,7 @@ public class PlaceRepository extends Repository{
 
     public void listPlacesCategories(int page, int quantity, String nickname, String category) {
 
-        String postBodyString = paramsToGetCategoriePlace(page, quantity, nickname, category);
+        String postBodyString = paramsToGetCategoriePlace(page, quantity, nickname, category, "");
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listByCategory");
@@ -371,7 +371,7 @@ public class PlaceRepository extends Repository{
 
     public void listTwitterPlaces(int page, int quantity, String nickname) {
 
-        String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname, "");
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listByTwitter");
@@ -398,7 +398,7 @@ public class PlaceRepository extends Repository{
 
         //Log.i("PLACE_REPOSITORY", "listNearestPlaces: long: " + longitude + " lat: " + latitude);
         
-        String postBodyString = jsonToSendFrom(longitude, latitude, radius, nPlaces, nickname);
+        String postBodyString = jsonToSendFrom(longitude, latitude, radius, nPlaces, nickname, "");
         
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
@@ -409,7 +409,7 @@ public class PlaceRepository extends Repository{
 
     //Utilidades JSON
 
-    private String jsonToSendFrom(Double longitude, Double latitude, Double radius, Integer nPlaces, String nickname) {
+    private String jsonToSendFrom(Double longitude, Double latitude, Double radius, Integer nPlaces, String nickname, String search) {
 
         JSONObject json = new JSONObject();
         String infoString = null;
@@ -419,6 +419,7 @@ public class PlaceRepository extends Repository{
             json.put("longitude", longitude);
             json.put("radius", radius);
             json.put("nPlaces", nPlaces);
+            json.put("search", search);
         }catch (JSONException e) {
             e.printStackTrace();
             infoString = "error";
@@ -537,13 +538,14 @@ public class PlaceRepository extends Repository{
         return json_data;
     }
 
-    private String pageAndQuantToSTring(int page, int quantity, String nickname) {
+    private String pageAndQuantToSTring(int page, int quantity, String nickname, String search) {
         JSONObject jsonPageQuant = new JSONObject();
         String infoString;
         try {
             jsonPageQuant.put("page", page);
             jsonPageQuant.put("quant", quantity);
             jsonPageQuant.put("user", nickname);
+            jsonPageQuant.put("search", search);
         }catch (JSONException e) {
             e.printStackTrace();
             infoString = "error";
@@ -553,7 +555,7 @@ public class PlaceRepository extends Repository{
         return infoString;
     }
 
-    private String paramsToGetCategoriePlace(int page, int quantity, String nickname, String category) {
+    private String paramsToGetCategoriePlace(int page, int quantity, String nickname, String category, String search) {
         JSONObject json = new JSONObject();
         String infoString;
         try {
@@ -561,6 +563,7 @@ public class PlaceRepository extends Repository{
             json.put("quant", quantity);
             json.put("user", nickname);
             json.put("category", category);
+            json.put("search", search);
         }catch (JSONException e) {
             e.printStackTrace();
             infoString = "error";
