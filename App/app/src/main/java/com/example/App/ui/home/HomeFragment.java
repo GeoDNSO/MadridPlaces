@@ -32,16 +32,12 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements LogoutObserver {
+public class HomeFragment extends Fragment {
 
     private View root;
     private HomeViewModel mViewModel;
 
     private App app; //global variable
-
-    private MenuItem addPlace;
-
-    private Fragment placeListFragment;
 
     private List<String> tabTitlesList;
     private TabLayout tabLayout;
@@ -58,7 +54,7 @@ public class HomeFragment extends Fragment implements LogoutObserver {
                              @Nullable Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.home_fragment, container, false);
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
         app = App.getInstance(getActivity());
 
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -80,10 +76,6 @@ public class HomeFragment extends Fragment implements LogoutObserver {
         tabLayout.setupWithViewPager(viewPager);
 
         prepareViewPager();
-
-        
-
-        App.getInstance(getActivity()).addLogoutObserver(this);
 
         /*
         placeListFragment = new PlacesListFragment();
@@ -151,29 +143,4 @@ public class HomeFragment extends Fragment implements LogoutObserver {
        }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.add_place_menu, menu);
-
-        addPlace = menu.findItem(R.id.add_place_menu_item);
-        if(App.getInstance(getActivity()).isLogged()){
-            addPlace.setVisible(true);
-        }
-        else {
-            addPlace.setVisible(false);
-        }
-
-        addPlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Navigation.findNavController(root).navigate(R.id.addPlaceFragment);
-                return false;
-            }
-        });
-    }
-
-    @Override
-    public void onLogout() {
-        addPlace.setVisible(false);
-    }
 }

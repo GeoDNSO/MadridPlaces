@@ -56,7 +56,7 @@ public class CategoryPlacesFragment extends BasePlaces {
         return superView;
     }
     @Override
-    public void listPlaces() { super.mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername());  }
+    public void listPlaces() { super.mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername(), search_text);  }
 
     @Override
     public BaseViewModel getViewModelToParent() {

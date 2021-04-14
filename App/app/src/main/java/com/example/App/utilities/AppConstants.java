@@ -98,4 +98,6 @@ public class AppConstants {
     public static final Double DEFAULT_RADIUS = 2000.0;
     public static final Integer DEFAULT_NPLACES = 20;
 
+    public static final int RESULT_SPEECH = 1;
+
 }
