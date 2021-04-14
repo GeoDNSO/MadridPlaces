@@ -26,7 +26,7 @@ public class NearestPlaceViewModel extends BaseViewModel {
     }
 
     @Override
-    public void listPlaceToParent(int page, int quant, String nickname) {
+    public void listPlaceToParent(int page, int quant, String nickname, String searchText) {
 
         /*
         //Asignar los puntos antes de realizar la busqueda
@@ -42,7 +42,7 @@ public class NearestPlaceViewModel extends BaseViewModel {
 
         */
 
-        placeRepository.listNearestPlaces(page, quant, nickname, this.points);
+        placeRepository.listNearestPlaces(page, quant, nickname, this.points, searchText);
     }
 
     public void setPoints(List<Double> points) {

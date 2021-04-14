@@ -6,56 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.browser.BrowserFragment">
 
-    <TextView
-        android:id="@+id/textView2"
+    <Button
+        android:id="@+id/browser_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="15dp"
-        android:text="@string/typeOfPlaces"
+        android:layout_marginTop="64dp"
+        android:gravity="center"
+        android:text="@string/search"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/type_of_place_list"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2">
-    </com.google.android.material.chip.ChipGroup>
-
-    <LinearLayout
-        android:layout_width="370dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/linearLayout_browser_button"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/type_of_place_list">
-
-        <Button
-            android:layout_width="match_parent"
-            android:id="@+id/browser_button"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/search"
-            app:layout_constraintStart_toStartOf="parent" />
-    </LinearLayout>
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/place_list_container"
-        android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout_browser_button"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

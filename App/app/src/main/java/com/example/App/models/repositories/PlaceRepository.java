@@ -336,9 +336,9 @@ public class PlaceRepository extends Repository{
 
     //lista lugares de quantity en quantity en función de page alfabeticamente
     // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
-    public void listPlaces(int page, int quantity, String nickname) {
+    public void listPlaces(int page, int quantity, String nickname, String searchText) {
 
-        String postBodyString = pageAndQuantToSTring(page, quantity, nickname, "");
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname, searchText);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listLocations");
@@ -358,9 +358,9 @@ public class PlaceRepository extends Repository{
         call.enqueue(new PlaceListCallBack(simpleRequest, mHistoryPlacesList));
     }
 
-    public void listPlacesCategories(int page, int quantity, String nickname, String category) {
+    public void listPlacesCategories(int page, int quantity, String nickname, String category, String searchText) {
 
-        String postBodyString = paramsToGetCategoriePlace(page, quantity, nickname, category, "");
+        String postBodyString = paramsToGetCategoriePlace(page, quantity, nickname, category, searchText);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listByCategory");
@@ -369,9 +369,9 @@ public class PlaceRepository extends Repository{
         call.enqueue(new PlaceListCallBack(simpleRequest, mCategoriesPlacesList));
     }
 
-    public void listTwitterPlaces(int page, int quantity, String nickname) {
+    public void listTwitterPlaces(int page, int quantity, String nickname, String searchText) {
 
-        String postBodyString = pageAndQuantToSTring(page, quantity, nickname, "");
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname, searchText);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/location/listByTwitter");
@@ -379,7 +379,7 @@ public class PlaceRepository extends Repository{
         call.enqueue(new PlaceListCallBack(simpleRequest, mTwitterPlacesList));
     }
 
-    public void listNearestPlaces(int page, int quantity, String nickname, List<Double> point) {
+    public void listNearestPlaces(int page, int quantity, String nickname, List<Double> point, String searchText) {
 
         //Vaciamos la lista cada vez que se haga una busqueda...
         //Las busqueda por cercano no son paginadas, así que es necesario limpiar el valor
@@ -398,7 +398,7 @@ public class PlaceRepository extends Repository{
 
         //Log.i("PLACE_REPOSITORY", "listNearestPlaces: long: " + longitude + " lat: " + latitude);
         
-        String postBodyString = jsonToSendFrom(longitude, latitude, radius, nPlaces, nickname, "");
+        String postBodyString = jsonToSendFrom(longitude, latitude, radius, nPlaces, nickname, searchText);
         
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,

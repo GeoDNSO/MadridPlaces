@@ -1,14 +1,19 @@
 package com.example.App.ui.browser;
 
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,28 +21,38 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.example.App.App;
 import com.example.App.R;
+import com.example.App.models.dao.SimpleRequest;
+import com.example.App.models.transfer.TPlace;
 import com.example.App.ui.places_list.PlaceListAdapter;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class BrowserFragment extends Fragment {
 
     private BrowserViewModel mViewModel;
-    private Fragment placeListFragment;
     private View root;
-    private List<String> listTypesPlaces;
-    private PlaceListAdapter adapter;
-    private ChipGroup chipGroupView;
-    private Button buttonBrowserView;
-    private List<String> listTypePlaces;
+    protected List<TPlace> placeList = new ArrayList<>();
 
+    //UI elements
+    protected SwipeRefreshLayout swipeRefreshLayout;
+    protected NestedScrollView nestedScrollView;
+    protected RecyclerView recyclerView;
+    protected ProgressBar progressBar;
+    protected ShimmerFrameLayout shimmerFrameLayout;
+
+    protected int page = 1, limit = 3, quantum = 3;
 
     public static BrowserFragment newInstance() {
         return new BrowserFragment();
@@ -47,7 +62,7 @@ public class BrowserFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(BrowserViewModel.class);
-        root = inflater.inflate(R.layout.browser_fragment, container, false);
+        root = inflater.inflate(R.layout.places_list_fragment, container, false);
         setHasOptionsMenu(true);
 
         initUI();
@@ -81,32 +96,77 @@ public class BrowserFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(getActivity(), listTypePlaces.toString(), Toast.LENGTH_SHORT).show();
-                //adapter.getFilter().filter(query);
-                //adapter.notifyDataSetChanged();
-                //recyclerView.setAdapter(adapter);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //adapter.getFilter().filter(newText);
                 return false;
             }
         });
     }
 
     private void initializeListeners() {
-        buttonBrowserView.setOnClickListener(new View.OnClickListener() {
+        Activity activity = getActivity();
+        String s = getString(R.string.no_internet);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), listTypePlaces.toString(), Toast.LENGTH_SHORT).show();
+            public void onRefresh() {
+
+                Runnable task = ()->{
+                    boolean hostReachable =  SimpleRequest.isHostReachable();
+
+                    if(!hostReachable){
+                        swipeRefreshLayout.setRefreshing(false);
+                        Log.i("IN_SER", "Server no alcanzable");
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(activity, s, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        return ; //IMP
+                    }
+                    //Reseteamos la pagina para ver cambios y borramos la lista...
+                    page = 1;
+                    placeList.clear();
+                    //mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername());
+                    //mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername());
+                };
+
+                ExecutorService executorService = Executors.newFixedThreadPool(1);
+                executorService.submit(task);
+
+            }
+        });
+
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
+                    //Cuando alacance al ultimo item de la lista
+                    //Incrementea el numero de la pagina
+                    page++;
+                    //Mostrar progress bar
+                    progressBar.setVisibility(View.VISIBLE);
+
+                    shimmerFrameLayout.startShimmer();
+
+                    shimmerFrameLayout.setVisibility(View.VISIBLE);
+
+                    //Pedimos más datos
+                    //mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername());
+                }
             }
         });
     }
 
     private void initUI(){
-        chipGroupView = root.findViewById(R.id.type_of_place_list);
-        buttonBrowserView = root.findViewById(R.id.browser_button);
+        nestedScrollView = root.findViewById(R.id.placesList_ScrollView);
+        recyclerView = root.findViewById(R.id.PlaceList_RecyclerView);
+        progressBar = root.findViewById(R.id.placeList_ProgressBar);
+        shimmerFrameLayout = root.findViewById(R.id.placeList_ShimmerLayout);
+        swipeRefreshLayout = root.findViewById(R.id.placesList_SwipeRefreshLayout);
     }
 }

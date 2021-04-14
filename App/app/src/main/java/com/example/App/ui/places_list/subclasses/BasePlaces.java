@@ -1,14 +1,21 @@
 package com.example.App.ui.places_list.subclasses;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,6 +50,12 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
     protected BaseViewModel mViewModel;
     protected View root;
 
+    private MenuItem search_place;
+    private MenuItem mic_search_place;
+    private MenuItem addPlace;
+
+    private SearchView searchView;
+
     //UI Elements
     protected SwipeRefreshLayout swipeRefreshLayout;
     protected NestedScrollView nestedScrollView;
@@ -54,6 +67,8 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
     protected PlaceListAdapter placeListAdapter;
 
     protected int page = 1, limit = 3, quantum = 3;
+
+    protected String search_text = "";
 
 
     //Funciones a implementar en los hijos según el tipo de lugares a mostrar
@@ -73,7 +88,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
         root = inflater.inflate(R.layout.places_list_fragment, container, false);
         //mViewModel = new ViewModelProvider(this).get(BaseViewModel.class);
-
+        setHasOptionsMenu(true);
         App.getInstance(getContext()).addLogoutObserver(this);
 
         mViewModel = getViewModelToParent();
@@ -174,6 +189,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                     page = 1;
                     placeList.clear();
                     //mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername());
+                    search_text = "";
                     listPlaces();
                 };
 
@@ -241,6 +257,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
     @Override
     public void onLogout(){
+        addPlace.setVisible(false);
         placeList.clear();
         page=1;
         listPlaces();
@@ -267,4 +284,89 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
         mViewModel.setFavOnPlace(place, username);
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search_icon_menu, menu);
+
+        MenuItem azIcon = menu.findItem(R.id.sortListUsers);
+        azIcon.setVisible(false);
+
+        search_place = menu.findItem(R.id.search_button);
+        mic_search_place = menu.findItem(R.id.microphone_button);
+
+        searchView = (SearchView) search_place.getActionView();
+
+        searchView.setMaxWidth(600);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                page = 1;
+                progressBar.setVisibility(View.VISIBLE);
+                placeList.clear();
+                mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername(), newText);
+                search_text = newText;
+                //adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+        mic_search_place.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-ES");
+                try {
+                    startActivityForResult(intent, AppConstants.RESULT_SPEECH);
+                }catch (ActivityNotFoundException e){
+                    Toast.makeText(getContext(), "Error: No se ha podido conectar con el micrófono", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        });
+
+        inflater.inflate(R.menu.add_place_menu, menu);
+
+        addPlace = menu.findItem(R.id.add_place_menu_item);
+        if(App.getInstance(getActivity()).isLogged()){
+            addPlace.setVisible(true);
+        }
+        else {
+            addPlace.setVisible(false);
+        }
+
+        addPlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Navigation.findNavController(root).navigate(R.id.addPlaceFragment);
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case AppConstants.RESULT_SPEECH:
+                if (resultCode == Activity.RESULT_OK && data != null){
+                    ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    page = 1;
+                    progressBar.setVisibility(View.VISIBLE);
+                    placeList.clear();
+                    mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername(), text.get(0));
+                    search_text = text.get(0);
+                }
+                break;
+        }
+    }
+
 }
