@@ -257,7 +257,9 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
     @Override
     public void onLogout(){
-        addPlace.setVisible(false);
+        if(addPlace != null) {
+            addPlace.setVisible(false);
+        }
         placeList.clear();
         page=1;
         listPlaces();
