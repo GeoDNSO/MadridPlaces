@@ -85,3 +85,11 @@ class favorites(sqlAlchemy.Model):
     id_favorite = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
     user = sqlAlchemy.Column(sqlAlchemy.String(255))
+
+class recommendations(sqlAlchemy.Model):
+    __tablename__ = 'recommendations'
+    id_recommendation = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
+    userSrc = sqlAlchemy.Column(sqlAlchemy.String(255))
+    userDst = sqlAlchemy.Column(sqlAlchemy.String(255))
+    location = sqlAlchemy.Column(sqlAlchemy.String(255))
+    state = sqlAlchemy.Column(sqlAlchemy.String(255))
