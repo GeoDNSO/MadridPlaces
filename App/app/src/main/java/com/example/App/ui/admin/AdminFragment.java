@@ -52,7 +52,6 @@ import java.util.List;
 
 public class AdminFragment extends Fragment implements UserListAdapter.OnListListener {
 
-    protected static final int RESULT_SPEECH = 1;
     private View root;
     private AdminViewModel mViewModel;
     private NestedScrollView nestedScrollView;
@@ -227,7 +226,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-ES");
                 try {
-                    startActivityForResult(intent, RESULT_SPEECH);
+                    startActivityForResult(intent, AppConstants.RESULT_SPEECH);
                 }catch (ActivityNotFoundException e){
                     Toast.makeText(getContext(), "Error: No se ha podido conectar con el micrófono", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
@@ -324,7 +323,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
-            case RESULT_SPEECH:
+            case AppConstants.RESULT_SPEECH:
                 if (resultCode == Activity.RESULT_OK && data != null){
                     ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     page = 1;

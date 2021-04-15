@@ -101,4 +101,5 @@ public class AppConstants {
 
     public static final Integer SEND_REC_OK = 0;
     public static final Integer SEND_REC_FAIL = 1;
+    public static final int RESULT_SPEECH = 1;
 }

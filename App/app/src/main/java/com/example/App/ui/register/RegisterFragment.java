@@ -50,6 +50,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class RegisterFragment extends Fragment {
 
@@ -178,13 +179,17 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
+                calendar.set(2000, 2, 1);
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH);
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
-
+                Calendar c = Calendar.getInstance();
+                c.set(1900, 2, 1);
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
                         android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                         datePicker, year, month, day);
+                datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis());
+                datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
                 datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 datePickerDialog.show();
 

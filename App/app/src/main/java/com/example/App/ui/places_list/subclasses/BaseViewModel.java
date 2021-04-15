@@ -39,13 +39,13 @@ public abstract class BaseViewModel extends ViewModelParent {
 
     protected abstract LiveData<List<TPlace>> getPlaceListToParent();
 
-    public abstract void listPlaceToParent(int page, int quant, String nickname);
+    public abstract void listPlaceToParent(int page, int quant, String nickname, String serchText);
 
 
     //Peticion de quant lugares de la pagina page al servidor
-    public void listPlaces(int page, int quant, String nickname){
+    public void listPlaces(int page, int quant, String nickname, String serchText){
         mProgressBar.postValue(true);
-        listPlaceToParent(page, quant, nickname);
+        listPlaceToParent(page, quant, nickname, serchText);
     }
 
     private LiveData<List<TPlace>> setAndGetPlacesList(List<TPlace> places) {
