@@ -71,6 +71,7 @@ public class AppConstants {
     public static final Integer DELETE_COMMENT_OK = 340;
     public static final Integer ERROR_DELETE_COMMENT = -340;
 
+
     public static String TAB_RATING = "W";
     public static String TAB_NEAREST = "W";
     public static String TAB_TWITTER = "W";
@@ -98,4 +99,6 @@ public class AppConstants {
     public static final Double DEFAULT_RADIUS = 2000.0;
     public static final Integer DEFAULT_NPLACES = 20;
 
+    public static final Integer SEND_REC_OK = 0;
+    public static final Integer SEND_REC_FAIL = 1;
 }

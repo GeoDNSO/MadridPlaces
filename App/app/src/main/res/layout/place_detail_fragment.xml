@@ -158,6 +158,11 @@
             android:text="@string/lorem_ipsu"
             android:background="@drawable/ripple_efect"/>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/go_to_rec_form"/>
+
         <FrameLayout
             android:id="@+id/comments_placeholder"
             android:layout_width="match_parent"
