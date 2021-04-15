@@ -148,19 +148,19 @@ def modifyUser():
         modifiedUser.password = pwdCipher
         modifiedUser.gender = gender
         modifiedUser.birth_date = birth_date
-        if("http" not in profile_image):
-            image = UserFunct.decode64Img(profile_image)
-            url = UserFunct.uploadImg(image)
-            UserFunct.delImgTemp(image)
-            modifiedUser.profile_image = url
-        else:
-            modifiedUser.profile_image = profile_image
-        modules.sqlAlchemy.session.commit()
+        if(profile_image != ""):
+            if("http" not in profile_image):
+                image = UserFunct.decode64Img(profile_image)
+                url = UserFunct.uploadImg(image)
+                UserFunct.delImgTemp(image)
+                modifiedUser.profile_image = url
+            else:
+                modifiedUser.profile_image = profile_image
+            modules.sqlAlchemy.session.commit()
+        return UserFunct.jsonifiedList(modifiedUser, password)
     except Exception as e:
         print("Error modificando usuarios:", repr(e))
         return jsonify(exito = "false")
-        
-    return UserFunct.jsonifiedList(modifiedUser, password)
 
 #Perfil Usuario
 @userClass.route('/profileUser/', methods=['GET', 'POST']) #No se usa

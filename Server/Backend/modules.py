@@ -61,6 +61,7 @@ class visited(sqlAlchemy.Model):
     user = sqlAlchemy.Column(sqlAlchemy.String(255))
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
     date_visited =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now())
+    state = sqlAlchemy.Column(sqlAlchemy.String(255))
 
 class tracking(sqlAlchemy.Model):
     __tablename__ = 'tracking'
@@ -93,3 +94,4 @@ class recommendations(sqlAlchemy.Model):
     userDst = sqlAlchemy.Column(sqlAlchemy.String(255))
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
     state = sqlAlchemy.Column(sqlAlchemy.String(255))
+    created =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now(), onupdate = sqlAlchemy.func.now())
