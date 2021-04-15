@@ -16,6 +16,9 @@ def newRecommentation():
     state = "P"   #--> P = pending A = acepted.  Si el usuario rechaza, se elimina directamente 
 
     try:
+        print(userSrc)
+        print(userDst)
+        print(location)
         userQuery = modules.user.query.filter_by(nickname = userDst).first()
         if (userQuery is None):
             return jsonify(exito = "false", mensaje = "No existe el usuario")

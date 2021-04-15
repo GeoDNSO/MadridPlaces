@@ -61,7 +61,7 @@ public class UserInteractionRepository extends Repository{
         JSONObject json = new JSONObject();
         String infoString;
         try {
-            json.put("userSrc", userOrigin);
+            json.put("userSrc", "Jin"); //TODO Está a pelo
             json.put("userDst", userDest);
             json.put("location", place);
         }catch (JSONException e) {
