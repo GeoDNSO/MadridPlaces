@@ -1,13 +1,10 @@
-package com.example.App.ui.history;
+package com.example.App.ui.visited;
 
 import android.app.Activity;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,15 +18,11 @@ import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.utilities.UserInterfaceUtils;
-import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
+public class VisitedAdapter extends RecyclerView.Adapter<VisitedAdapter.VisitedViewHolder> {
 
     private Activity activity;
     private List<TPlace> historyPlaceList;
@@ -37,7 +30,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     private OnHistoryListListener onHistoryListener;
 
-    public HistoryAdapter(Activity activity, List<TPlace> historyPlaceList, HistoryAdapter.OnHistoryListListener onHistoryListener){
+    public VisitedAdapter(Activity activity, List<TPlace> historyPlaceList, VisitedAdapter.OnHistoryListListener onHistoryListener){
         this.activity = activity;
         this.historyPlaceList = historyPlaceList;
         this.onHistoryListener = onHistoryListener;
@@ -46,15 +39,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     @NonNull
     @Override
-    public HistoryAdapter.HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public VisitedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.history_place_item, parent, false);
 
-        return new HistoryAdapter.HistoryViewHolder(view, onHistoryListener);
+        return new VisitedViewHolder(view, onHistoryListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HistoryAdapter.HistoryViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull VisitedViewHolder holder, int position) {
         TPlace place = historyPlaceList.get(position);
 
        //Shimmer Drawable
@@ -84,7 +77,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return historyPlaceList.size();
     }
 
-    public class HistoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class VisitedViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView placeImage;
         TextView tvPlaceName;
         ImageView favImage;
@@ -93,7 +86,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         ImageView starImage;
         OnHistoryListListener onHistoryListener;
 
-        public HistoryViewHolder(@NonNull View itemView, OnHistoryListListener onHistoryListener) {
+        public VisitedViewHolder(@NonNull View itemView, OnHistoryListListener onHistoryListener) {
             super(itemView);
             placeImage = itemView.findViewById(R.id.historyPlacePicture);
             tvPlaceName = itemView.findViewById(R.id.tvHistoryPlaceName);

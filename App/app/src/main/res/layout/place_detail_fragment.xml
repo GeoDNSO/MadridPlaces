@@ -35,50 +35,51 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
 
 
             <TextView
                 android:id="@+id/tvPlaceDetailsName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="6dp"
-                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:paddingRight="8dp"
+                android:gravity="left"
                 android:text="@string/place_default_name"
                 android:textColor="@color/black"
                 android:textSize="26sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/placeDetailsMapIcon"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <ImageView
                 android:id="@+id/placeDetailsMapIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="2.5dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="20dp"
+                app:tint="@color/mapbox_navigation_route_layer_blue"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:contentDescription="@string/love_icon_default_desc"
-                android:src="@drawable/ic_baseline_map_24"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvPlaceDetailDistance" />
+                android:src="@drawable/ic_pin"
+                app:layout_constraintEnd_toStartOf="@+id/favDetailsImage"
+                app:layout_constraintTop_toTopOf="@+id/tvPlaceDetailsName" />
 
             <ImageView
                 android:id="@+id/favDetailsImage"
-                android:layout_width="wrap_content"
+                android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:contentDescription="@string/love_icon_default_desc"
                 android:src="@drawable/love_icon_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvPlaceDetailsName"
                 app:tint="@color/grey" />
 
             <TextView

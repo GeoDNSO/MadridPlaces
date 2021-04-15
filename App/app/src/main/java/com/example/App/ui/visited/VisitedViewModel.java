@@ -1,19 +1,16 @@
-package com.example.App.ui.history;
+package com.example.App.ui.visited;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModel;
 
 import com.example.App.models.repositories.PlaceRepository;
-import com.example.App.models.repositories.UserRepository;
 import com.example.App.models.transfer.TPlace;
-import com.example.App.models.transfer.TUser;
 import com.example.App.ui.ViewModelParent;
 
 import java.util.List;
 
-public class HistoryViewModel extends ViewModelParent {
+public class VisitedViewModel extends ViewModelParent {
     private PlaceRepository historyPlaceRepository;
     private MutableLiveData<Boolean> mProgressBar = new MutableLiveData<>(); //true indica progress bar activo
     private LiveData<List<TPlace>> mHistoryPlacesList = new MutableLiveData<>();

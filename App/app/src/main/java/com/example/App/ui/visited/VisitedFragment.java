@@ -1,4 +1,4 @@
-package com.example.App.ui.history;
+package com.example.App.ui.visited;
 
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
@@ -30,9 +30,9 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistoryListListener{
+public class VisitedFragment extends Fragment implements VisitedAdapter.OnHistoryListListener{
 
-    private HistoryViewModel mViewModel;
+    private VisitedViewModel mViewModel;
     private View root;
 
     //UI Elements
@@ -43,20 +43,20 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
 
     private TextView tvNoLogued;
 
-    private List<TPlace> historyplaceList = new ArrayList<>();
-    private HistoryAdapter historyplaceListAdapter;
+    private List<TPlace> visitedPlacesList = new ArrayList<>();
+    private VisitedAdapter visitedAdapter;
 
     private int page = 1, quantum = 3;
 
-    public static HistoryFragment newInstance() {
-        return new HistoryFragment();
+    public static VisitedFragment newInstance() {
+        return new VisitedFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
-        root = inflater.inflate(R.layout.history_fragment, container, false);
+        mViewModel = new ViewModelProvider(this).get(VisitedViewModel.class);
+        root = inflater.inflate(R.layout.visited_fragment, container, false);
 
         mViewModel.init();
 
@@ -75,9 +75,9 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
         mViewModel.getHistoryPlacesList().observe(getViewLifecycleOwner(), new Observer<List<TPlace>>() {
             @Override
             public void onChanged(List<TPlace> tPlaces) {
-                historyplaceList = tPlaces;
-                historyplaceListAdapter = new HistoryAdapter(getActivity(), historyplaceList, HistoryFragment.this);
-                recyclerView.setAdapter(historyplaceListAdapter);
+                visitedPlacesList = tPlaces;
+                visitedAdapter = new VisitedAdapter(getActivity(), visitedPlacesList, VisitedFragment.this);
+                recyclerView.setAdapter(visitedAdapter);
             }
         });
 
@@ -107,14 +107,14 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
     }
 
     private void placeListManagement(){
-        if(historyplaceList == null){
-            historyplaceList = new ArrayList<>();
+        if(visitedPlacesList == null){
+            visitedPlacesList = new ArrayList<>();
         }
-        historyplaceListAdapter = new HistoryAdapter(getActivity(), historyplaceList, this); //getActivity = MainActivity.this
+        visitedAdapter = new VisitedAdapter(getActivity(), visitedPlacesList, this); //getActivity = MainActivity.this
 
         //Set layout
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(historyplaceListAdapter);
+        recyclerView.setAdapter(visitedAdapter);
 
         //getData();
 
@@ -144,7 +144,7 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(VisitedViewModel.class);
         // TODO: Use the ViewModel
     }
 
@@ -161,7 +161,7 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
     public void OnHistoryListClick(int position) {
         Bundle bundle = new Bundle();
 
-        TPlace place = historyplaceList.get(position);
+        TPlace place = visitedPlacesList.get(position);
         bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
 
         //Le pasamos el bundle

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:paddingBottom="?actionBarSize"
     android:id="@+id/placesList_ScrollView"
-    tools:context=".ui.history.HistoryFragment">
+    tools:context=".ui.visited.VisitedFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

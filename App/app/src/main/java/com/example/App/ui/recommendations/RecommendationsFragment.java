@@ -1,7 +1,6 @@
-package com.example.App.ui.browser;
+package com.example.App.ui.recommendations;
 
 import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
@@ -20,28 +19,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TPlace;
-import com.example.App.ui.places_list.PlaceListAdapter;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class BrowserFragment extends Fragment {
+public class RecommendationsFragment extends Fragment {
 
-    private BrowserViewModel mViewModel;
+    private RecommendationsViewModel mViewModel;
     private View root;
     protected List<TPlace> placeList = new ArrayList<>();
 
@@ -54,14 +48,14 @@ public class BrowserFragment extends Fragment {
 
     protected int page = 1, limit = 3, quantum = 3;
 
-    public static BrowserFragment newInstance() {
-        return new BrowserFragment();
+    public static RecommendationsFragment newInstance() {
+        return new RecommendationsFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(BrowserViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(RecommendationsViewModel.class);
         root = inflater.inflate(R.layout.places_list_fragment, container, false);
         setHasOptionsMenu(true);
 
@@ -77,7 +71,7 @@ public class BrowserFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(BrowserViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(RecommendationsViewModel.class);
         // TODO: Use the ViewModel
     }
 
