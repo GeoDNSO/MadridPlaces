@@ -148,6 +148,12 @@ def listByTwitter(place, user, twitterRate):
     "favorite" : favorite}
     return obj
 
+def listByName(location, user):
+  lcQuery = modules.location.query.filter_by(name=location).first()
+  if(lcQuery is None):
+    return {}
+  return completeList(lcQuery, user)
+
 def mapCategoryToInt(category):
 	idCategories = {
 	"Oficinas de Turismo" : 1,

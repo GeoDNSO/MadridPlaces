@@ -106,4 +106,9 @@
         android:name="com.example.App.ui.modify_place.ModifyPlaceFragment"
         android:label="@string/modify_place"
         tools:layout="@layout/modify_place_fragment" />
+    <fragment
+        android:id="@+id/sendRecomendationFragment"
+        android:name="com.example.App.ui.sendRecomendation.SendRecomendationFragment"
+        android:label="send_recomendation_fragment"
+        tools:layout="@layout/send_recomendation_fragment" />
 </navigation>

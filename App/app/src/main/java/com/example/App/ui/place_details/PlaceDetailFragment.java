@@ -26,6 +26,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -77,6 +78,7 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
     private MenuItem modifyPlace;
 
     private Fragment childFragment;
+    private Button recomButton;
 
 
     public static PlaceDetailFragment newInstance() {
@@ -126,6 +128,13 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
     }
 
     private void listeners() {
+
+        recomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onRecomClick();
+            }
+        });
 
         favIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,6 +243,7 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         tvPlaceName = root.findViewById(R.id.tvPlaceDetailsName);
         ivMapIcon = root.findViewById(R.id.placeDetailsMapIcon);
         favIcon = root.findViewById(R.id.favDetailsImage);
+        recomButton = root.findViewById(R.id.go_to_rec_form);
         tvPlaceDescription = root.findViewById(R.id.placeDetailsDescription);
         tvPlaceRating = root.findViewById(R.id.tvPlaceDetailsRating);
 
@@ -342,5 +352,23 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         String username = App.getInstance(getActivity()).getUsername();
 
         mViewModel.setFavOnPlace(place, username);
+    }
+
+    public void onRecomClick() {
+        Toast.makeText(getActivity(), "Recom listener", Toast.LENGTH_SHORT).show();
+
+        if(App.getInstance(getActivity()).getSessionManager().isLogged() == false) {
+            Toast.makeText(getActivity(), "Tienes que estar logueado para enviar una recomendacion", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else {
+            Bundle bundle = new Bundle();
+
+            bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
+
+            //Le pasamos el bundle
+            Navigation.findNavController(root).navigate(R.id.sendRecomendationFragment, bundle);
+        }
+
     }
 }
