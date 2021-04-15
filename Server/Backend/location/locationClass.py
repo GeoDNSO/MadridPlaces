@@ -197,18 +197,18 @@ def listByProximity():
         places = modules.location.query.filter(modules.location.name.like(search)).all()
         lista = []  
         if(places is not None):
-	        for place in places:
-	        	place_coords = (place.coordinate_latitude, place.coordinate_longitude)
-	        	distance = geodesic(user_coords, place_coords).meters #Distancia calculada entre el usuario y el lugar en METROS
-	        	if(distance <= radius): #Descartamos los lugares que no estén en el radio
-		            obj = LocationFunct.completeList(place, user)
-		            obj["distance"] = distance
-		            lista.append(obj)
-	        lista.sort(key=dts)
-	        print("success")
-	        return jsonify(
-	                exito = "true",
-	                list = lista[0:nPlaces] if nPlaces <= len(lista) else lista[0:len(lista)]) #Devuelve nPlaces o lo que haya disponible
+            for place in places:
+                place_coords = (place.coordinate_latitude, place.coordinate_longitude)
+                distance = geodesic(user_coords, place_coords).meters #Distancia calculada entre el usuario y el lugar en METROS
+                if(distance <= radius): #Descartamos los lugares que no estén en el radio
+                    obj = LocationFunct.completeList(place, user)
+                    obj["distance"] = distance
+                    lista.append(obj)
+            lista.sort(key=dts)
+            print("success")
+            return jsonify(
+                    exito = "true",
+                    list = lista[0:nPlaces] if nPlaces <= len(lista) else lista[0:len(lista)]) #Devuelve nPlaces o lo que haya disponible
         return jsonify(exito = "false")   
     except Exception as e:
         print("Error: ", repr(e))
@@ -252,21 +252,20 @@ def listByCategoryAndProximity():
         idCategory = LocationFunct.mapCategoryToInt(category) #Recoge el número asociado de la categoria
         places = modules.location.query.filter(modules.location.type_of_place == idCategory, modules.location.name.like(search)).all()
         if(places is not None):
-	        lista = []
-	        user_coords = (userLatitude, userLongitude)
-	        for place in places:
-	        	place_coords = (place.coordinate_latitude, place.coordinate_longitude)
-	        	distance = geodesic(user_coords, place_coords).meters #Distancia calcula entre el usuario y el lugar en METROS
-		        if(distance <= radius): #Descartamos los lugares que no estén en el radio
-		            obj = LocationFunct.completeList(place, user)
-		            obj["distance"] = distance
-		            lista.append(obj)
-	        lista.sort(key=dts)
-	        print("success")
-	        return jsonify(
-	                exito = "true",
-	                list = lista[0:nPlaces])
-
+            lista = []
+            user_coords = (userLatitude, userLongitude)
+            for place in places:
+                place_coords = (place.coordinate_latitude, place.coordinate_longitude)
+                distance = geodesic(user_coords, place_coords).meters #Distancia calcula entre el usuario y el lugar en METROS
+                if(distance <= radius): #Descartamos los lugares que no estén en el radio
+                    obj = LocationFunct.completeList(place, user)
+                    obj["distance"] = distance
+                    lista.append(obj)
+            lista.sort(key=dts)
+            print("success")
+            return jsonify(
+                    exito = "true",
+                    list = lista[0:nPlaces] if nPlaces <= len(lista) else lista[0:len(lista)])
         print("failure")
         return jsonify(exito = "false")   
     except Exception as e:
