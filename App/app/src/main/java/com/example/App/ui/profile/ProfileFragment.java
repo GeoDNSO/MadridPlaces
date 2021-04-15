@@ -365,7 +365,7 @@ public class ProfileFragment extends Fragment {
 
             //Modificar datos del usuario según lo modificado
             u.setEmail(et_Email.getText().toString());
-            if(et_NewPassword.getText().toString() == "" || et_NewPassword.getText().toString() == null) {
+            if(et_NewPassword.getText().toString().isEmpty() || et_NewPassword.getText().toString() == null) {
                 u.setPassword(et_Password.getText().toString());
             }
             else{
