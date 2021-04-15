@@ -34,6 +34,7 @@ import androidx.navigation.Navigation;
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.ui.browser.BrowserViewModel;
+import com.example.App.ui.map.MapboxActivity;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.Validator;
 import com.google.android.material.chip.Chip;
@@ -71,6 +72,7 @@ public class AddPlaceFragment extends Fragment {
     private List<Uri> uriList;
     List<Bitmap> bitmapList;
     private List<String> imageStringBase64;
+    private ImageButton mapboxAddPlace;
 
     public static AddPlaceFragment newInstance() {
         return new AddPlaceFragment();
@@ -120,6 +122,7 @@ public class AddPlaceFragment extends Fragment {
         button = root.findViewById(R.id.button_add_place);
         et_placeName = root.findViewById(R.id.name_place_add_place);
         tiet_placeDescription = root.findViewById(R.id.description_place_add_place);
+        mapboxAddPlace = root.findViewById(R.id.image_button_add_place_map);
         uriList = new ArrayList<>();
     }
 
@@ -139,6 +142,20 @@ public class AddPlaceFragment extends Fragment {
             public void onClick(View v) {
                 addPlaceOnClickAction(v);
                 //Toast.makeText(getActivity(), finalTypePlace, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mapboxAddPlace.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                /*Bundle bundle = new Bundle();
+                bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);*/
+
+                //Le pasamos el bundle
+                //Navigation.findNavController(root).navigate(R.id.mapFragment, bundle);
+                Intent mapboxIntent = new Intent(getActivity(), AddPlaceMapboxActivity.class);
+                // mapboxIntent.putExtra("key", "value"); //Optional parameters
+                getActivity().startActivity(mapboxIntent);
             }
         });
     }

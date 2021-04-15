@@ -134,5 +134,10 @@
     <string name="mapbox_new_location">New Lat %s%n new Long %s</string>
     <string name="recom_text">Recomendar</string>
     <string name="sendRecButton_text">Enviar</string>
+    <string name="move_map_instruction">Pulse en el mapa</string>
+    <string name="location_picker_select_location_button_cancel">Cancelar</string>
+    <string name="location_picker_select_location_button_select">Selecciona la localización</string>
+    <string name="location_picker_place_name_result">Lugar: %1$s</string>
+    <string name="location_picker_dropped_marker_snippet_no_results">Sin resultados</string>
 
 </resources>
