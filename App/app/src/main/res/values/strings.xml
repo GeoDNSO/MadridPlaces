@@ -139,5 +139,6 @@
     <string name="my_recommedations">Mis Recomendaciones</string>
     <string name="pending_recomendations">Recomendaciones Recibidas</string>
     <string name="pending_visited_menu_text">Añadir a Pendientes Por Visitar</string>
+    <string name="pending_visited_text">Pendientes por Visitar</string>
 
 </resources>
