@@ -30,7 +30,9 @@
             app:sliderIndicatorUnselectedColor="#FFFFFF"
             app:sliderAnimationDuration="1000"
             app:sliderIndicatorOrientation="horizontal"
-            app:sliderIndicatorGravity="center_horizontal|bottom"/>
+            app:sliderIndicatorGravity="center_horizontal|bottom">
+
+        </com.smarteist.autoimageslider.SliderView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -132,6 +134,15 @@
                 android:text="@string/place_address_example"
                 app:layout_constraintStart_toStartOf="@+id/tvPlaceDetailsRating"
                 app:layout_constraintTop_toBottomOf="@+id/tvPlaceDetailsRating" />
+
+            <ImageView
+                android:id="@+id/ivVisitedFlag"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/favDetailsImage"
+                app:layout_constraintTop_toBottomOf="@+id/favDetailsImage"
+                tools:src="@drawable/ic_flag_grey" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

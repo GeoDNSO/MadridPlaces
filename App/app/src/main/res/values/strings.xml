@@ -135,5 +135,9 @@
     <string name="user_location_permission_not_granted">No se han dado los permisos necesarios</string>
     <string name="mapbox_new_location">New Lat %s%n new Long %s</string>
     <string name="menu_nearest_text">Más Cercanos</string>
+    <string name="add_recommendation">Enviar Recomendación</string>
+    <string name="my_recommedations">Mis Recomendaciones</string>
+    <string name="pending_recomendations">Recomendaciones Recibidas</string>
+    <string name="pending_visited_menu_text">Añadir a Pendientes Por Visitar</string>
 
 </resources>
