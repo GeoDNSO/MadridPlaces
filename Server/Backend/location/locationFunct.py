@@ -40,23 +40,24 @@ def delImgTemp(imgTemp):
   except Exception as e:
     print("Error eliminando la imagen temporal: ", repr(e))
 
-def checkPagination(page, quant):
-  tam = modules.location.query.count()
+def checkPagination(page, quant, search):
+  tam = modules.location.query.filter(modules.location.name.like(search)).count()
   comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
   #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
   if(comp >= quant):
     return False
   return True
 
-def checkPaginationTwitter(page, quant):
-  tam = modules.twitter_ratings.query.count()
+def checkPaginationTwitter(page, quant, search):
+  tam = modules.twitter_ratings.query.filter(modules.twitter_ratings.location.like(search)).count()
   comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
   #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
   if(comp >= quant):
     return False
   return True
-def checkPaginationCategory(idCategory, page, quant):
-  tam = modules.location.query.filter_by(type_of_place = idCategory).count()
+  
+def checkPaginationCategory(idCategory, page, quant, search):
+  tam = modules.location.query.filter(modules.location.type_of_place == idCategory, modules.location.name.like(search)).count()
   comp = (page   * quant) - tam 
   if(comp >= quant):
     return False
