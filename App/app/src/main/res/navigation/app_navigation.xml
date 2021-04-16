@@ -106,4 +106,8 @@
         android:name="com.example.App.ui.modify_place.ModifyPlaceFragment"
         android:label="@string/modify_place"
         tools:layout="@layout/modify_place_fragment" />
+    <fragment
+        android:id="@+id/favouritesPlacesFragment"
+        android:name="com.example.App.ui.places_list.subclasses.favourites.FavouritesPlacesFragment"
+        android:label="FavouritesPlacesFragment" />
 </navigation>

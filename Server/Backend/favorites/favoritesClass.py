@@ -53,24 +53,24 @@ def showComments():
     json_data = request.get_json()
     user = json_data["user"] 
     page = json_data["page"] #Mostrar de X en X     
-    quant = json_data["quant"]  
-
+    quant = json_data["quant"]
+    search = "%{}%".format(json_data["search"])
     try:
-        tam = modules.favorites.query.filter_by(user=user).count()
+        tam = modules.favorites.query.filter(modules.favorites.user == user, modules.favorites.location.like(search)).count()
         comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
 
         if(comp >= quant):
-            return jsonify(exito = "true", listFavorites = [])
+            return jsonify(exito = "true", list = [])
 
-        lfvQuery = modules.favorites.query.filter_by(user = user).order_by(modules.favorites.location).paginate(per_page=quant, page=page)
+        lfvQuery = modules.favorites.query.filter(modules.favorites.user == user, modules.favorites.location.like(search)).order_by(modules.favorites.location).paginate(per_page=quant, page=page)
         if lfvQuery is None:
             return jsonify(exito = "false")
         lista = []
         for favorite in lfvQuery.items:
             lcQuery = modules.location.query.filter_by(name=favorite.location).first()
-            obj = LocationFunct.completeList(lcQuery)
+            obj = LocationFunct.completeList(lcQuery, favorite.user)
             lista.append(obj)
-        return jsonify(exito = "true", listFavorites = lista)
+        return jsonify(exito = "true", list = lista)
 
     except Exception as e:
         print("Error listando lugares favoritos:", repr(e))

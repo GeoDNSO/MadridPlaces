@@ -36,6 +36,7 @@ public class PlaceRepository extends Repository{
     private MutableLiveData<List<TPlace>> mTwitterPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mHistoryPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mNearestPlacesList = new MutableLiveData<>();
+    private MutableLiveData<List<TPlace>> mFavouritesPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mCategoriesPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<String>> mCategoriesList = new MutableLiveData<>();
     private MutableLiveData<TPlace> mPlace = new MutableLiveData<>();
@@ -49,6 +50,8 @@ public class PlaceRepository extends Repository{
     public LiveData<List<String>> getCategoriesList(){ return mCategoriesList; }
     public MutableLiveData<List<TPlace>> getCategoriesPlacesList() { return mCategoriesPlacesList; }
     public MutableLiveData<List<TPlace>> getNearestPlacesList() { return mNearestPlacesList; }
+    public MutableLiveData<List<TPlace>> getFavouritesPlacesList() { return mFavouritesPlacesList; }
+
 
     public MutableLiveData<Integer> getFavSuccess() { return mFavSuccess; }
 
@@ -367,6 +370,17 @@ public class PlaceRepository extends Repository{
         Call call = simpleRequest.createCall(request);
 
         call.enqueue(new PlaceListCallBack(simpleRequest, mCategoriesPlacesList));
+    }
+
+    public void listFavouritesPlaces(int page, int quantity, String nickname, String searchText) {
+
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname, searchText);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/location/listFavoritesPlaces");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new PlaceListCallBack(simpleRequest, mFavouritesPlacesList));
     }
 
     public void listTwitterPlaces(int page, int quantity, String nickname, String searchText) {
