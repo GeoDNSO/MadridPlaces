@@ -60,7 +60,7 @@ def showComments():
         comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
 
         if(comp >= quant):
-            return jsonify(exito = "true", listFavorites = [])
+            return jsonify(exito = "true", list = [])
 
         lfvQuery = modules.favorites.query.filter_by(user = user).order_by(modules.favorites.location).paginate(per_page=quant, page=page)
         if lfvQuery is None:
@@ -70,7 +70,7 @@ def showComments():
             lcQuery = modules.location.query.filter_by(name=favorite.location).first()
             obj = LocationFunct.completeList(lcQuery)
             lista.append(obj)
-        return jsonify(exito = "true", listFavorites = lista)
+        return jsonify(exito = "true", list = lista)
 
     except Exception as e:
         print("Error listando lugares favoritos:", repr(e))
