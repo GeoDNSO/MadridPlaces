@@ -163,7 +163,8 @@ def mapCategoryToInt(category):
 	"Alojamientos" : 5,
 	"Monumentos" : 6,
 	"Museos" : 7,
-	"Templos" : 8
+	"Templos" : 8,
+  "Parques" : 19 #CAMBIAR
 	}
 
 	return idCategories[category]
@@ -178,7 +179,8 @@ def maptIntToCategory(idCategory):
   5 :"Alojamientos",
   6 :"Monumentos",
   7 :"Museos",
-  8 :"Templos"
+  8 :"Templos",
+  19: "Parques" #CAMBIAR
   }
 
   return idCategories[idCategory]
