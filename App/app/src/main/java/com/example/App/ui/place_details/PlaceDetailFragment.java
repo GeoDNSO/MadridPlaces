@@ -149,13 +149,13 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         ivMapIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
+                //Bundle bundle = new Bundle();
+                //bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
 
                 //Le pasamos el bundle
                 //Navigation.findNavController(root).navigate(R.id.mapFragment, bundle);
                 Intent mapboxIntent = new Intent(getActivity(), MapboxActivity.class);
-                mapboxIntent.putExtra("key", "value"); //Optional parameters
+                mapboxIntent.putExtra("placeMapbox", place); //Optional parameters
                 getActivity().startActivity(mapboxIntent);
             }
         });

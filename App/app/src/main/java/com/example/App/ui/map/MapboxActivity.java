@@ -7,6 +7,8 @@ import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +17,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.App.R;
+import com.example.App.models.transfer.TPlace;
+import com.example.App.utilities.AppConstants;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
@@ -73,12 +77,17 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private MapboxLocationCallback callback = new MapboxLocationCallback(this);
     private LocationComponent locationComponent;
+    private TPlace place;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.mapbox);
+
+        place = getIntent().getExtras().getParcelable("placeMapbox");
+        Toast.makeText(this, "lugar"+place.getName(), Toast.LENGTH_SHORT).show();
+
         getSupportActionBar().setTitle("Lugar al que ir");
         mapView = (MapView) findViewById(R.id.mapboxMap);
         mapView.onCreate(savedInstanceState);
