@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.App.services.LocationService;
 import com.example.App.services.LocationTrack;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.PermissionsManager;
