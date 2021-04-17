@@ -146,6 +146,10 @@
 
     <string name="recom_text">Recomendar</string>
     <string name="sendRecButton_text">Enviar</string>
+    <string name="place_rate">Valoración</string>
+    <string name="place_category">Categoría</string>
+    <string name="recommendation_by">Este lugar te lo ha recomendado el usuario </string>
+    <string name="recommendation_by_username">Anónimo</string>
 
 
 </resources>
