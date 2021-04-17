@@ -28,7 +28,7 @@ public class TPlace implements JSONSerializable, Parcelable {
     private Integer numberOfRatings;
     private String timeVisited;
 
-//("lugar", "descripcion", "direccion", 3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid", "Localidad", "Afluencia", 4.0f)
+    //("lugar", "descripcion", "direccion", 3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid", "Localidad", "Afluencia", 4.0f)
 
     public TPlace(String name, String description, double latitude,
                   double longitude, List<String> imagesList, String typeOfPlace, String city,
