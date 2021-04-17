@@ -148,4 +148,14 @@
     <string name="sendRecButton_text">Enviar</string>
 
 
+    <!-- Parte para los textos de recomendaciones  -->
+    <string name="my_recommendation_text_part_1">Le has recomendado el lugar</string>
+    <string name="my_recommendation_text_part_2">a</string>
+
+    <string name="my_recommendation_text_state">aceptó la recomendación</string>
+    <string name="my_recommendation_text_state_accept"> </string>
+    <string name="my_recommendation_text_state_not"> no</string>
+    <string name="my_recommendation_text_state_still">aún no se ha decidido</string>
+
+
 </resources>
