@@ -174,12 +174,13 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
                     return;
                 }
 
-// Create a Toast which displays the new location's coordinates
+                // Create a Toast which displays the new location's coordinates
+                /*
                 Toast.makeText(activity, String.format(activity.getString(R.string.mapbox_new_location),
                         String.valueOf(result.getLastLocation().getLatitude()), String.valueOf(result.getLastLocation().getLongitude())),
                         Toast.LENGTH_SHORT).show();
-
-// Pass the new location to the Maps SDK's LocationComponent
+                */
+                // Pass the new location to the Maps SDK's LocationComponent
                 if (activity.mapboxMap != null && result.getLastLocation() != null) {
                     activity.mapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
                 }
@@ -290,10 +291,10 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
 
     @SuppressWarnings( {"MissingPermission"})
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
-// Check if permissions are enabled and if not request
+        // Check if permissions are enabled and if not request
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
 
-// Get an instance of the component
+            // Get an instance of the component
             locationComponent = mapboxMap.getLocationComponent();
 
             //Options to make animation of the pulse
@@ -304,16 +305,16 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
             LocationComponentActivationOptions activationOptions = LocationComponentActivationOptions.builder(this, loadedMapStyle)
                     .locationComponentOptions(locationComponentOptions)
                     .build();
-// Activate with options
+            // Activate with options
             locationComponent.activateLocationComponent(activationOptions);
 
-// Enable to make component visible
+            // Enable to make component visible
             locationComponent.setLocationComponentEnabled(true);
 
-// Set the component's camera mode
+            // Set the component's camera mode
             locationComponent.setCameraMode(CameraMode.TRACKING);
 
-// Set the component's render mode
+            // Set the component's render mode
             locationComponent.setRenderMode(RenderMode.COMPASS);
 
             initLocationEngine();

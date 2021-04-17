@@ -219,6 +219,10 @@ public class App {
         return reachable;
     }
 
+    public String getAppString(int id){
+        return this.mainActivity.getString(id);
+    }
+
     public MainActivity getMainActivity() {
         return mainActivity;
     }

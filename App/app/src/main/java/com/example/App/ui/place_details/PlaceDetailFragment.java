@@ -74,8 +74,11 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
     private TextView tvAddress;
     private TextView tvNumberOfRatings;
 
+    private ImageView ivVisited;
+
     private MenuItem deletePlace;
     private MenuItem modifyPlace;
+    private MenuItem toPendingVisited;
 
     private Fragment childFragment;
     private Button recomButton;
@@ -235,6 +238,9 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
         ViewListenerUtilities.makeTextViewExpandable(tvPlaceDescription, true);
 
+        if(place.getTimeVisited() != null && !place.getTimeVisited().equals(""))
+            ivVisited.setImageResource(R.drawable.ic_flag);
+
     }
 
     private void initUI() {
@@ -254,6 +260,8 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
 
         sliderView = root.findViewById(R.id.placeDetail_slide_view);
+
+        ivVisited = root.findViewById(R.id.ivVisitedFlag);
 
         isDescCollapsed = true;
     }
@@ -292,6 +300,15 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
             }
         });
 
+        toPendingVisited = menu.findItem(R.id.pending_visited_menu_item);
+        toPendingVisited.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //TODO
+                return true;
+            }
+        });
+
         if(App.getInstance(getActivity()).isLogged()){
             modifyPlace.setVisible(true);
             if(App.getInstance(getActivity()).isAdmin()){
@@ -306,6 +323,8 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
             deletePlace.setVisible(false);
 
         }
+
+
     }
 
     public void deleteDialog(){

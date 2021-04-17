@@ -8,6 +8,8 @@
     <string name="menu_profile_text">Perfil</string>
     <string name="menu_home_text">Inicio</string>
     <string name="menu_history_text">Historial</string>
+    <string name="menu_visited_text">Visitados</string>
+    <string name="menu_recomendations_text">Recomendaciones</string>
     <string name="menu_browser_text">Buscador</string>
     <string name="register_button_text">Registrarse</string>
     <string name="login_button_text">Login</string>
@@ -132,7 +134,16 @@
     <string name="user_location_permission_explanation">Explicacion toast de onExplanationNeeded</string>
     <string name="user_location_permission_not_granted">No se han dado los permisos necesarios</string>
     <string name="mapbox_new_location">New Lat %s%n new Long %s</string>
+
+    <string name="menu_nearest_text">Más Cercanos</string>
+    <string name="add_recommendation">Enviar Recomendación</string>
+    <string name="my_recommedations">Mis Recomendaciones</string>
+    <string name="pending_recomendations">Recomendaciones Recibidas</string>
+    <string name="pending_visited_menu_text">Añadir a Pendientes Por Visitar</string>
+    <string name="pending_visited_text">Pendientes por Visitar</string>
+
     <string name="recom_text">Recomendar</string>
     <string name="sendRecButton_text">Enviar</string>
+
 
 </resources>

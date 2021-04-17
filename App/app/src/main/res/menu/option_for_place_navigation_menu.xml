@@ -11,4 +11,11 @@
         android:icon="@drawable/ic_baseline_delete_24"
         android:title="@string/delete_place"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/pending_visited_menu_item"
+        android:icon="@drawable/ic_baseline_delete_24"
+        android:title="@string/pending_visited_menu_text"
+       />
+
 </menu>

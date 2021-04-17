@@ -2,6 +2,9 @@ package com.example.App.ui.places_list.subclasses.category;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,11 +17,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.App.App;
 import com.example.App.models.transfer.TCategory;
+import com.example.App.services.LocationTrack;
 import com.example.App.ui.places_list.subclasses.BasePlaces;
 import com.example.App.ui.places_list.subclasses.BaseViewModel;
 import com.example.App.utilities.AppConstants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CategoryPlacesFragment extends BasePlaces {
 
@@ -55,8 +60,32 @@ public class CategoryPlacesFragment extends BasePlaces {
 
         return superView;
     }
+
+
     @Override
-    public void listPlaces() { super.mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername(), search_text);  }
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        addPlace.setVisible(false);
+
+
+        nearestPlaces.setVisible(true);
+        nearestPlaces.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                LocationTrack locationTrack = App.getInstance().getLocationTrack();
+                List<Double> points = new ArrayList<>();
+                points.add(locationTrack.getLongitude());
+                points.add(locationTrack.getLatitude());
+
+                ((CategoryPlaceViewModel)mViewModel).listNearestCategories(page, quantum, App.getInstance().getUsername(), search_text, points);
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void listPlaces() { super.mViewModel.listPlaces(page, quantum, App.getInstance().getUsername(), search_text);  }
 
     @Override
     public BaseViewModel getViewModelToParent() {
