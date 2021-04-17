@@ -150,7 +150,7 @@ def listLocations():
     json_data = request.get_json()
     page, quant, user, search = LocationFunct.initParameters(json_data)
     try:
-        if(LocationFunct.checkPagination(page, quant) is False):
+        if(LocationFunct.checkPagination(page, quant, search) is False):
             return jsonify(exito = "true", list = [])
         #places = modules.location.query.join(modules.comments, modules.location.name == modules.comments.location, isouter = True).filter(modules.location.name.like(search)).order_by(modules.comments.rate.desc()).paginate(per_page=quant, page=page)
         places = modules.location.query.filter(modules.location.name.like(search)).paginate(per_page=quant, page=page)
@@ -221,7 +221,7 @@ def listByCategory():
     category = json_data["category"]
     try:
         idCategory = LocationFunct.mapCategoryToInt(category) #Recoge el número asociado de la categoria
-        if(LocationFunct.checkPaginationCategory(idCategory, page, quant) is False):
+        if(LocationFunct.checkPaginationCategory(idCategory, page, quant, search) is False):
             return jsonify(exito = "true", list = [])
 
         places = modules.location.query.filter(modules.location.type_of_place == idCategory, modules.location.name.like(search)).paginate(per_page=quant, page=page)
@@ -277,7 +277,7 @@ def listByTwitter():
     json_data = request.get_json()
     page, quant, user, search = LocationFunct.initParameters(json_data)
     try:
-        if(LocationFunct.checkPaginationTwitter(page, quant) is False):
+        if(LocationFunct.checkPaginationTwitter(page, quant, search) is False):
             return jsonify(exito = "true", list = [])
         rates = modules.twitter_ratings.query.filter(modules.twitter_ratings.location.like(search)).order_by(modules.twitter_ratings.twitterRate.desc(),modules.twitter_ratings.location).paginate(per_page=quant, page=page)
         if(rates is not None):

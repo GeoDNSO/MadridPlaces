@@ -51,6 +51,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.squareup.okhttp3:okhttp:4.5.0'
     implementation 'com.github.smarteist:autoimageslider:1.4.0'
-    //Lifecycle components
 
 }
