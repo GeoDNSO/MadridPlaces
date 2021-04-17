@@ -10,10 +10,10 @@ public class TRecomendation implements JSONSerializable, Parcelable {
 
     private String userOrigin;
     private String userDest;
-    private TPlace place;
+    private String place;
     private String state;
 
-    public TRecomendation(String userOrigin, String userDest, TPlace place, String state){
+    public TRecomendation(String userOrigin, String userDest, String place, String state){
         this.userOrigin = userOrigin;
         this.userDest = userDest;
         this.place = place;
@@ -22,7 +22,7 @@ public class TRecomendation implements JSONSerializable, Parcelable {
     public TRecomendation(Parcel in) {
         this.userOrigin = in.readString();
         this.userDest = in.readString();
-        this.place = in.readParcelable(getClass().getClassLoader());
+        this.place = in.readString();
         this.state = in.readString();
     }
 
@@ -34,7 +34,7 @@ public class TRecomendation implements JSONSerializable, Parcelable {
         return userDest;
     }
 
-    public TPlace getPlace() {
+    public String getPlace() {
         return place;
     }
 
@@ -50,7 +50,7 @@ public class TRecomendation implements JSONSerializable, Parcelable {
         this.userDest = userDest;
     }
 
-    public void setPlace(TPlace place) {
+    public void setPlace(String place) {
         this.place = place;
     }
 
@@ -62,7 +62,7 @@ public class TRecomendation implements JSONSerializable, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.userOrigin);
         dest.writeString(this.userDest);
-        dest.writeParcelable(this.place, flags);
+        dest.writeString(this.place);
         dest.writeString(this.state);
     }
 
