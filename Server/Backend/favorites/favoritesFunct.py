@@ -2,6 +2,10 @@ from flask import request
 from flask import jsonify
 #Contiene las clases de la BD
 import modules
+import location.locationFunct as LocationFunct
+
+def completeList(location, user):
+	return LocationFunct.listByName(location,user)
 
 def isFavorite(user, location):
     try:
@@ -11,4 +15,4 @@ def isFavorite(user, location):
         return "true"
     except Exception as e:
         print("Error:", repr(e))
-        return -1
+        return "false"

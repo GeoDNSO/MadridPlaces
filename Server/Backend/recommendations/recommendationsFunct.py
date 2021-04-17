@@ -5,6 +5,11 @@ import modules
 #Para imagenes
 import requests, json 
 import location.locationFunct as LocationFunct
+import visited.visitedFunct as VisitedFunct
+
+
+def newPendingVisit(userDst, location):
+  return VisitedFunct.newPendingVisit(userDst, location)
 
 def initParameters():
     json_data = request.get_json()
@@ -28,9 +33,18 @@ def checkPagination(page, quant, user, state):
     return False
   return True
 
+def checkPaginationSent(page, quant, user):
+  tam = modules.recommendations.query.filter_by(userSrc=user).count()
+  comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
+  #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
+  if(comp >= quant):
+    return False
+  return True
+
 def completeList(recommendation):
-    obj = LocationFunct.listByName(recommendation.location, recommendation.userDst)
+    obj = {}
     obj["userSrc"] = recommendation.userSrc
     obj["userDst"] = recommendation.userDst
+    obj["location"] = recommendation.location
     obj["state"] = recommendation.state
     return obj
