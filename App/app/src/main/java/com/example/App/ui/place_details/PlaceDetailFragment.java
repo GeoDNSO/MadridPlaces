@@ -26,6 +26,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -73,10 +74,14 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
     private TextView tvAddress;
     private TextView tvNumberOfRatings;
 
+    private ImageView ivVisited;
+
     private MenuItem deletePlace;
     private MenuItem modifyPlace;
+    private MenuItem toPendingVisited;
 
     private Fragment childFragment;
+    private Button recomButton;
 
 
     public static PlaceDetailFragment newInstance() {
@@ -126,6 +131,13 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
     }
 
     private void listeners() {
+
+        recomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onRecomClick();
+            }
+        });
 
         favIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,6 +238,9 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
         ViewListenerUtilities.makeTextViewExpandable(tvPlaceDescription, true);
 
+        if(place.getTimeVisited() != null && !place.getTimeVisited().equals(""))
+            ivVisited.setImageResource(R.drawable.ic_flag);
+
     }
 
     private void initUI() {
@@ -234,6 +249,7 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         tvPlaceName = root.findViewById(R.id.tvPlaceDetailsName);
         ivMapIcon = root.findViewById(R.id.placeDetailsMapIcon);
         favIcon = root.findViewById(R.id.favDetailsImage);
+        recomButton = root.findViewById(R.id.go_to_rec_form);
         tvPlaceDescription = root.findViewById(R.id.placeDetailsDescription);
         tvPlaceRating = root.findViewById(R.id.tvPlaceDetailsRating);
 
@@ -244,6 +260,8 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
 
         sliderView = root.findViewById(R.id.placeDetail_slide_view);
+
+        ivVisited = root.findViewById(R.id.ivVisitedFlag);
 
         isDescCollapsed = true;
     }
@@ -282,6 +300,15 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
             }
         });
 
+        toPendingVisited = menu.findItem(R.id.pending_visited_menu_item);
+        toPendingVisited.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //TODO
+                return true;
+            }
+        });
+
         if(App.getInstance(getActivity()).isLogged()){
             modifyPlace.setVisible(true);
             if(App.getInstance(getActivity()).isAdmin()){
@@ -296,6 +323,8 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
             deletePlace.setVisible(false);
 
         }
+
+
     }
 
     public void deleteDialog(){
@@ -342,5 +371,23 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         String username = App.getInstance(getActivity()).getUsername();
 
         mViewModel.setFavOnPlace(place, username);
+    }
+
+    public void onRecomClick() {
+        Toast.makeText(getActivity(), "Recom listener", Toast.LENGTH_SHORT).show();
+
+        if(App.getInstance(getActivity()).getSessionManager().isLogged() == false) {
+            Toast.makeText(getActivity(), "Tienes que estar logueado para enviar una recomendacion", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else {
+            Bundle bundle = new Bundle();
+
+            bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
+
+            //Le pasamos el bundle
+            Navigation.findNavController(root).navigate(R.id.sendRecomendationFragment, bundle);
+        }
+
     }
 }

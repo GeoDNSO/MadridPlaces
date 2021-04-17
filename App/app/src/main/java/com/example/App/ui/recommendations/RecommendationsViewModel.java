@@ -1,15 +1,11 @@
-package com.example.App.ui.browser;
+package com.example.App.ui.recommendations;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
-import com.example.App.models.transfer.TUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BrowserViewModel extends ViewModel {
+public class RecommendationsViewModel extends ViewModel {
     // TODO: Implement the ViewModel
     List<String> mListTypesOfPlace = new ArrayList<String>();
 

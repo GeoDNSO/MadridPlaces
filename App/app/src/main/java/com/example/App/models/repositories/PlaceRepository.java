@@ -53,7 +53,9 @@ public class PlaceRepository extends Repository{
     public MutableLiveData<List<TPlace>> getFavouritesPlacesList() { return mFavouritesPlacesList; }
 
 
+
     public MutableLiveData<Integer> getFavSuccess() { return mFavSuccess; }
+
 
     //Callback personalizado tanto para List como para Append
     class PlaceListCallBack implements Callback{
@@ -421,7 +423,53 @@ public class PlaceRepository extends Repository{
         call.enqueue(new PlaceListCallBack(simpleRequest, mNearestPlacesList));
     }
 
+    public void listNearestCategories(int page, int quant, String nickname, String category, String searchText, List<Double> point) {
+
+        if(Looper.myLooper() == Looper.getMainLooper()){ //Si se hace un refresh la llamada no es el thread principal
+            mCategoriesPlacesList.setValue(new ArrayList<>());
+        }else{
+            mCategoriesPlacesList.postValue(new ArrayList<>());
+        }
+
+        Double longitude = point.get(AppConstants.LONGITUDE);
+        Double latitude = point.get(AppConstants.LATITUDE);
+        Double radius = AppConstants.DEFAULT_RADIUS;
+        Integer nPlaces = AppConstants.DEFAULT_NPLACES;
+
+        String postBodyString = jsonToSendFrom(longitude, latitude, radius, nPlaces, nickname, searchText, category);
+
+        Log.d("PLACE_REPO", "PostBody: "+ postBodyString);
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/location/listByCategoryAndProximity");
+        Call call = simpleRequest.createCall(request);
+        call.enqueue(new PlaceListCallBack(simpleRequest, mCategoriesPlacesList));
+    }
+
     //Utilidades JSON
+
+    private String jsonToSendFrom(Double longitude, Double latitude, Double radius, Integer nPlaces, String nickname, String searchText, String category) {
+        JSONObject json = new JSONObject();
+        String infoString = null;
+        try {
+            json.put("user", nickname);
+            json.put("latitude", latitude);
+            json.put("longitude", longitude);
+            json.put("radius", radius);
+            json.put("nPlaces", nPlaces);
+            json.put("search", searchText);
+            json.put("category", category);
+        }catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = json.toString();
+
+        return infoString;
+
+    }
+
 
     private String jsonToSendFrom(Double longitude, Double latitude, Double radius, Integer nPlaces, String nickname, String search) {
 

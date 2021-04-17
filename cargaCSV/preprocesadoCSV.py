@@ -67,6 +67,21 @@ def limpiezaInfoTurismo(dataInfo):
     tipo = separate[28].split("/")[3].replace('";', '') if separate[28] != '' else "Sin especificar"
     return [nombre, descripcion, latitud, longitud, tipo, clase_vial, nombre_vial, numero_vial, codigo_postal]
 
+
+def limpiezaParque(dataParque):
+    separate = re.split(r';', dataParque)
+    nombre = separate[1].replace('"', '')
+    descripcion = separate[2].replace('"', '') if separate[2] != '' else "Sin especificar"
+    clase_vial = separate[10].replace('"', '') if separate[10] != '' else "Sin especificar"
+    nombre_vial = separate[9].replace('"', '') if separate[9] != '' else "Sin especificar"
+    numero_vial = separate[12].replace('"', '') if separate[12] != '' and separate[12] != 's/n'else '0'
+    codigo_postal = separate[19].replace('"', '') if separate[19] != '' and separate[19] != '0'else '00000'
+    latitud = separate[24].replace('"', '') if separate[24] != '' else '0'
+    longitud = separate[25].replace('"', '') if separate[25] != '' else '0'
+    tipo = "Parques"
+    return [nombre, descripcion, latitud, longitud, tipo, clase_vial, nombre_vial, numero_vial, codigo_postal]
+
+
 def limpiezaXML(url):
 	tree = ElementTree.parse(url+'.xml')
 	root = tree.getroot()
@@ -185,6 +200,25 @@ dataInfo.drop(dataInfo.columns, axis=1)
 infoTurismo.to_csv("informacionTurismoProcesados.csv",index=False, encoding='utf-8-sig', sep= '\t')
 
 print("CSV de Puntos de informacion Turisticas creados")
+
+#########################################################################      Parque      #########################################################################
+parques = pd.DataFrame(columns=['Nombre','Descripcion','Latitud', 'Longitud', 'Tipo', 'Clase_vial', 'Nombre_vial', 'Numero_vial', 'Codigo_postal'])
+dataParques = pd.read_csv("parques.csv", sep='delimiter', encoding='utf-8-sig', header=None, engine='python')
+for i in range(1, len(dataParques)):
+    prueba = dataParques.iloc[i, 0] #Recoge toda la fila
+    res = limpiezaParque(prueba)
+    if(res[1] == ""):
+        res[1] = "Sin descripcion"
+    if(res[8] == ""):
+        res[8] = 0
+    if(res[7] == ""):
+        res[7] = 0
+    parques = parques.append({'Nombre' : res[0], 'Descripcion' : res[1], 'Latitud' : res[2], 'Longitud' : res[3],'Tipo' : res[4], 'Clase_vial' : res[5], 'Nombre_vial' : res[6], 'Numero_vial' : res[7], 'Codigo_postal' : res[8]},ignore_index=True)
+dataParques.drop(dataParques.columns, axis=1)
+
+parques.to_csv("parquesProcesados.csv",index=False, encoding='utf-8-sig', sep= '\t')
+
+print("CSV de Parques creados")
 #########################################################################   Restaurantes   #########################################################################
 
 limpiezaXML("restaurantes")

@@ -18,15 +18,15 @@
             app:destination="@id/registerFragment" />
     </fragment>
     <fragment
-        android:id="@+id/browserFragment"
-        android:name="com.example.App.ui.browser.BrowserFragment"
-        android:label="@string/menu_browser_text"
-        tools:layout="@layout/browser_fragment" />
+        android:id="@+id/recommendationsFragment"
+        android:name="com.example.App.ui.recommendations.RecommendationsFragment"
+        android:label="@string/menu_recomendations_text"
+        tools:layout="@layout/recommendations_fragment" />
     <fragment
-        android:id="@+id/historyFragment"
-        android:name="com.example.App.ui.history.HistoryFragment"
-        android:label="@string/menu_history_text"
-        tools:layout="@layout/history_fragment" />
+        android:id="@+id/visitedFragment"
+        android:name="com.example.App.ui.visited.VisitedFragment"
+        android:label="@string/menu_visited_text"
+        tools:layout="@layout/visited_fragment" />
     <fragment
         android:id="@+id/aboutUsFragment"
         android:name="com.example.App.ui.aboutus.AboutUsFragment"
@@ -107,7 +107,8 @@
         android:label="@string/modify_place"
         tools:layout="@layout/modify_place_fragment" />
     <fragment
-        android:id="@+id/favouritesPlacesFragment"
-        android:name="com.example.App.ui.places_list.subclasses.favourites.FavouritesPlacesFragment"
-        android:label="FavouritesPlacesFragment" />
+        android:id="@+id/sendRecomendationFragment"
+        android:name="com.example.App.ui.sendRecomendation.SendRecomendationFragment"
+        android:label="send_recomendation_fragment"
+        tools:layout="@layout/send_recomendation_fragment" />
 </navigation>
