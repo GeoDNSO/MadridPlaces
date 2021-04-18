@@ -37,6 +37,8 @@ public class MyRecommendationsFragment extends Fragment {
 
     private MyRecommendationsAdapter myRecommendationsAdapter;
 
+    protected int page = 1, limit = 3, quantum = 8;
+
 
     public static MyRecommendationsFragment newInstance() {
         return new MyRecommendationsFragment();
@@ -49,6 +51,7 @@ public class MyRecommendationsFragment extends Fragment {
         root = inflater.inflate(R.layout.my_recommendations_fragment, container, false);
 
         initUI();
+        initListeners();
 
         recommendationList = new ArrayList<>();
         myRecommendationsAdapter = new MyRecommendationsAdapter(getActivity(), recommendationList);
@@ -57,9 +60,34 @@ public class MyRecommendationsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(myRecommendationsAdapter);
 
+        progressBar.setVisibility(View.VISIBLE);
         generateExamples();
 
         return root;
+    }
+
+    private void initListeners() {
+
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+                if (v.getChildAt(0).getBottom() <= (v.getHeight() + v.getScrollY())) {
+                    page++;
+                    //Mostrar progress bar
+                    progressBar.setVisibility(View.VISIBLE);
+
+                    /*
+                    shimmerFrameLayout.startShimmer();
+
+                    shimmerFrameLayout.setVisibility(View.VISIBLE);
+                     */
+
+                    //Pedimos más datos
+                    generateExamples();
+                }
+            }
+        });
     }
 
     private void initUI() {
@@ -76,8 +104,10 @@ public class MyRecommendationsFragment extends Fragment {
     }
 
     private void generateExamples(){
-        for (int i = 0; i < 10; ++i){
-            String userOrigin = "userOrigin" + i, userDest = "userDest"+i, place = "placeNum"+i;
+
+        for (int i = 0; i < quantum; ++i){
+            String suffix = "P"+page +"I"+ i;
+            String userOrigin = "userOrigin" + suffix, userDest = "userDest"+suffix, place = "placeNum"+suffix;
             String state = "";
 
             if(i%2 == 0)
@@ -92,6 +122,8 @@ public class MyRecommendationsFragment extends Fragment {
         }
         myRecommendationsAdapter = new MyRecommendationsAdapter(getActivity(), recommendationList);
         recyclerView.setAdapter(myRecommendationsAdapter);
+
+        progressBar.setVisibility(View.GONE);
     }
 
 }
