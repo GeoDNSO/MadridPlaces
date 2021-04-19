@@ -14,6 +14,7 @@ import java.util.List;
 
 public class RecommendationsViewModel extends ViewModelParent {
     private LiveData<List<TRecomendation>> mListRecom = new MutableLiveData<>();
+    private LiveData<List<TRecomendation>> mListPendingRecom = new MutableLiveData<>();
     private UserInteractionRepository recomRepository;
 
     @Override
@@ -22,6 +23,10 @@ public class RecommendationsViewModel extends ViewModelParent {
         mListRecom = Transformations.switchMap(
                 recomRepository.getmRecommendationsList(),
                 listRecom -> setListRecom(listRecom)
+        );
+        mListPendingRecom = Transformations.switchMap(
+                recomRepository.getmPendingRecommendationsList(),
+                listPendingRecom -> setListPendingRecom(listPendingRecom)
         );
     }
 
@@ -36,11 +41,25 @@ public class RecommendationsViewModel extends ViewModelParent {
         return mAux;
     }
 
+    private LiveData<List<TRecomendation>> setListPendingRecom(List<TRecomendation> listPendingRecom){
+        mProgressBar.setValue(false);
+        MutableLiveData<List<TRecomendation>> mAux = new MutableLiveData<>();
+        mAux.setValue(listPendingRecom);
+        return mAux;
+    }
+
     public LiveData<List<TRecomendation>> getmListRecom() {
         return mListRecom;
+    }
+    public LiveData<List<TRecomendation>> getmListPendingRecom() {
+        return mListPendingRecom;
     }
 
     public void setmListRecom(LiveData<List<TRecomendation>> mListRecom) {
         this.mListRecom = mListRecom;
+    }
+
+    public void listUserPendingRecommendations(int page, int quantum, String username) {
+        recomRepository.listPendingRecom(page,quantum,username);
     }
 }

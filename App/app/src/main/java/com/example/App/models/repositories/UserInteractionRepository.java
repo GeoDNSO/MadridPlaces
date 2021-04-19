@@ -26,9 +26,14 @@ import okhttp3.Response;
 public class UserInteractionRepository extends Repository{
 
     private MutableLiveData<List<TRecomendation>> mRecommendationsList = new MutableLiveData<>();
+    private MutableLiveData<List<TRecomendation>> mPendingRecommendationsList = new MutableLiveData<>();
 
     public MutableLiveData<List<TRecomendation>> getmRecommendationsList() {
         return mRecommendationsList;
+    }
+
+    public MutableLiveData<List<TRecomendation>> getmPendingRecommendationsList() {
+        return mPendingRecommendationsList;
     }
 
     class RecommendationsListCallBack implements Callback {
@@ -110,6 +115,17 @@ public class UserInteractionRepository extends Repository{
         Call call = simpleRequest.createCall(request);
 
         call.enqueue(new UserInteractionRepository.RecommendationsListCallBack(simpleRequest, mRecommendationsList));
+    }
+
+    public void listPendingRecom(int page, int quantity, String nickname) {
+
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/recommendations/listPendingRecommendations");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new UserInteractionRepository.RecommendationsListCallBack(simpleRequest, mPendingRecommendationsList));
     }
 
     private String pageAndQuantToSTring(int page, int quantity, String nickname) {
