@@ -23,7 +23,8 @@
         android:theme="@style/Theme.App.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity android:name=".ui.map.MapboxActivity"
-            android:theme="@style/Theme.Mapbox"></activity>
+            android:theme="@style/Theme.Mapbox"/>
+
         <activity
             android:name=".MainActivity"
             android:theme="@style/SplashTheme">
