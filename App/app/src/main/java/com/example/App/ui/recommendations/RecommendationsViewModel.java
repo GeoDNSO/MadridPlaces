@@ -25,6 +25,10 @@ public class RecommendationsViewModel extends ViewModelParent {
         );
     }
 
+    public void listUserRecommendations(int page,int quant, String username){
+        recomRepository.listRecom(page, quant, username);
+    }
+
     private LiveData<List<TRecomendation>> setListRecom(List<TRecomendation> listRecom){
         mProgressBar.setValue(false);
         MutableLiveData<List<TRecomendation>> mAux = new MutableLiveData<>();

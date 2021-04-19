@@ -70,6 +70,8 @@ public class MyRecommendationsFragment extends Fragment {
 
         progressBar.setVisibility(View.VISIBLE);
 
+        mViewModel.listUserRecommendations(page, quantum, App.getInstance().getUsername());
+
         return root;
     }
 
@@ -93,6 +95,7 @@ public class MyRecommendationsFragment extends Fragment {
                 recommendationList = tRecomendations;
                 myRecommendationsAdapter = new MyRecommendationsAdapter(getActivity(), recommendationList);
                 recyclerView.setAdapter(myRecommendationsAdapter);
+                progressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -115,7 +118,7 @@ public class MyRecommendationsFragment extends Fragment {
                      */
 
                     //Pedimos más datos
-                    mViewModel.getmListRecom();
+                    mViewModel.listUserRecommendations(page, quantum, App.getInstance().getUsername());
                 }
             }
         });

@@ -106,7 +106,7 @@ public class UserInteractionRepository extends Repository{
         String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/recommendations/listRecommendations");
+                AppConstants.METHOD_POST, "/recommendations/listRecommendationsSent");
         Call call = simpleRequest.createCall(request);
 
         call.enqueue(new UserInteractionRepository.RecommendationsListCallBack(simpleRequest, mRecommendationsList));
@@ -193,7 +193,7 @@ public class UserInteractionRepository extends Repository{
 
             return new TRecomendation(
                     jsonObject.getString("userSrc"),
-                    jsonObject.getString("userDest"),
+                    jsonObject.getString("userDst"),
                     jsonObject.getString("location"),
                     jsonObject.getString("state"));
         } catch (JSONException e) {

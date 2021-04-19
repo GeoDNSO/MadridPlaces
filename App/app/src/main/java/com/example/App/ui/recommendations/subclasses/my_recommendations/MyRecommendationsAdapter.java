@@ -81,7 +81,7 @@ public class MyRecommendationsAdapter extends RecyclerView.Adapter<MyRecommendat
             messageState += app.getAppString(R.string.my_recommendation_text_state_accept) + " " + msg_state_1;
         }
         else if(state.equals(AppConstants.STATE_PENDING)){
-            messageState += app.getAppString(R.string.my_recommendation_text_state_still);
+            messageState += (" " + app.getAppString(R.string.my_recommendation_text_state_still));
         }
         else{
             colorState = ContextCompat.getColor(activity, R.color.colorFavRed);

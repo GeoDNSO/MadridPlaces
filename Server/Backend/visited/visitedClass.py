@@ -45,16 +45,23 @@ def deletePendingToVisit():
         print("Error", repr(e))
         return jsonify(exito = "false")  
 
-@visitedClass.route('/location/newPLaceVisited', methods=['POST']) #Añade a la lista de lugares pendientes por visitar
+@visitedClass.route('/location/newPLaceVisited', methods=['POST']) #Añade a la lista de lugares pendientes por visitar (Sin checkear coordenadas)
 def newPLaceVisited():    
     json_data = request.get_json()
     user = json_data["user"]
     location = json_data["location"]
+    #userLatitude = json_data["latitude"] #Para checkear coordenadas
+    #userLongitude = json_data["longitude"]
     try:
         vtQuery = modules.visited.query.filter_by(user = user, location = location, state = "V").first() #state --> P = Pending | V = Visited
         if(vtQuery is not None): #Comprueba si ya esta visitado
             print("Ya está visitado")
             return jsonify(exito = "false")
+            
+        # if(VisitedFunct.isNear(user, location, userLatitude, userLongitude)):
+        #     print("No está cerca del lugar")
+        #     return jsonify(exito = "false")
+
         vt2Query = modules.visited.query.filter_by(user = user, location = location, state = "P").first()
         if(vt2Query is not None): #Comprueba si está en la lista de lugares pendientes por visitar
             vt2Query.state = "V" 

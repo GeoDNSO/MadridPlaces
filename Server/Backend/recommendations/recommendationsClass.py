@@ -4,7 +4,6 @@ from flask import jsonify
 from pprint import pprint
 import modules
 
-import visited.visitedFunct as VisitedFunct
 import recommendations.recommendationsFunct as RecommendationsFunct
 
 recommendationsClass = Blueprint("recommendationsClass", __name__)
@@ -16,21 +15,18 @@ def newRecommentation():
     state = "P"   #--> P = pending A = acepted.  Si el usuario rechaza, se elimina directamente 
 
     try:
-        print(userSrc)
-        print(userDst)
-        print(location)
-        userQuery = modules.user.query.filter_by(nickname = userDst).first()
+        userQuery = modules.user.query.filter_by(nickname = userDst).first() #Comprueba si existe el nickname
         if (userQuery is None):
             return jsonify(exito = "false", mensaje = "No existe el usuario")
-        if (userSrc == userDst):
+        if (userSrc == userDst): #Comprueba si es el mismo usuario
             return jsonify(exito = "false", mensaje = "No puedes recomendar el lugar a ti mismo")
-        rcQuery = modules.recommendations.query.filter_by(userSrc = userSrc, userDst = userDst, location = location).first()
+        rcQuery = modules.recommendations.query.filter_by(userSrc = userSrc, userDst = userDst, location = location).first() #Comprueba si ya existe la recomendacion
         if (rcQuery is not None):
-            return jsonify(exito = "false", mensaje = "No se puede recomendar porque ya has recomendado al usuario este lugar")
+            return jsonify(exito = "false", mensaje = "No se puede recomendar porque ya has recomendado al usuario este lugar") 
         rc2Query = modules.recommendations.query.filter_by(userDst = userDst, location = location).first()
         if (rc2Query is not None):
-            return jsonify(exito = "false", mensaje = "No se puede recomendar porque ya le han recomendado al usuario este lugar")
-        vsQuery = modules.visited.query.filter_by(user = userDst, location = location).first()
+            return jsonify(exito = "false", mensaje = "No se puede recomendar porque ya le han recomendado al usuario este lugar")#Comprueba si ya le han recomendado
+        vsQuery = modules.visited.query.filter_by(user = userDst, location = location).first() #Comprueba si ya existe en su lista de pendiente por visitar, o ya lo ha visitado
         if (vsQuery is not None):
             return jsonify(exito = "false", mensaje = "No se puede recomendar porque el usuario ya ha visitado el lugar o lo tiene como pendiente por visitar")    
 
@@ -70,7 +66,7 @@ def acceptRecommendation():
 
         rcQuery.state = state
         modules.sqlAlchemy.session.commit()
-        if(VisitedFunct.newPendingVisit(userDst, location) is False): #Añade en la lista de lugares pendientes por visitar.
+        if(RecommendationsFunct.newPendingVisit(userDst, location) is False): #Añade en la lista de lugares pendientes por visitar.
         	return jsonify(exito = "true", mensaje = "Se ha aceptado la recomendación pero ya lo has visitado o lo tienes en tu lista de lugares pendientes")
         return jsonify(exito = "true", mensaje = "Se ha aceptado la recomendación")
     except Exception as e:
@@ -98,17 +94,15 @@ def PendingRecommendations():
         print("Ha habido algún error: ", repr(e))
         return jsonify(exito = "false")
 
-# POR AHORA NO SE USARÁ ESTA FUNCIÓN. LA FUNCIÓN PARA MOSTRAR LA LISTA DE LUGARES PENDIENTES POR VISITAR, ESTÁ EN visitedClass.py
-@recommendationsClass.route('/recommendations/listAcceptedRecommendations', methods=['POST']) #Muestra las recomendaciones que has aceptado
+@recommendationsClass.route('/recommendations/listRecommendationsSent', methods=['POST']) #Muestra las recomendaciones que has aceptado
 def AcceptedRecommendations():
     user, page, quant = RecommendationsFunct.initParametersList()
-    state = "A"
     try:
         lista = []
-        if(RecommendationsFunct.checkPagination(page, quant, user, state) is False):
+        if(RecommendationsFunct.checkPaginationSent(page, quant, user) is False):
             return jsonify(exito = "true", list = lista)
 
-        rcQuery = modules.recommendations.query.filter_by(userDst = user, state = state).order_by(modules.recommendations.created).paginate(per_page=quant, page=page)
+        rcQuery = modules.recommendations.query.filter_by(userSrc = user).order_by(modules.recommendations.created).paginate(per_page=quant, page=page)
 
         for recommendation in rcQuery.items:
             obj = RecommendationsFunct.completeList(recommendation)

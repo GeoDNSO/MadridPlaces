@@ -3,7 +3,7 @@ from flask import request
 from flask import jsonify
 #Contiene las clases de la BD
 import modules
-import location.locationFunct as LocationFunct
+import favorites.favoritesFunct as FavoritesFunct
 
 
 favoritesClass = Blueprint("favoritesClass", __name__)
@@ -67,8 +67,7 @@ def showComments():
             return jsonify(exito = "false")
         lista = []
         for favorite in lfvQuery.items:
-            lcQuery = modules.location.query.filter_by(name=favorite.location).first()
-            obj = LocationFunct.completeList(lcQuery, favorite.user)
+            obj = FavoritesFunct.completeList(favorite.location, favorite.user)
             lista.append(obj)
         return jsonify(exito = "true", list = lista)
 
