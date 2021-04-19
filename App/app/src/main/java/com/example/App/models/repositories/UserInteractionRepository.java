@@ -210,7 +210,7 @@ public class UserInteractionRepository extends Repository{
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(jsonString);
-            TPlace place = jsonStringToPlace(jsonObject.getJSONObject("location").toString());
+            TPlace place = jsonStringToPlace(jsonObject.toString());
             return new TRecomendation(
                     jsonObject.getString("userSrc"),
                     jsonObject.getString("userDst"),
@@ -226,7 +226,7 @@ public class UserInteractionRepository extends Repository{
         JSONObject json = new JSONObject();
         String infoString;
         try {
-            json.put("userSrc", "Jin"); //TODO Está a pelo
+            json.put("userSrc", userOrigin); //TODO Está a pelo
             json.put("userDst", userDest);
             json.put("location", place);
         }catch (JSONException e) {

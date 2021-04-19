@@ -20,12 +20,10 @@ import java.util.List;
 
 public class PendingRecommendationsListAdapter extends RecyclerView.Adapter<PendingRecommendationsListAdapter.ViewHolder>{
 
-    private List<TPlace> listPlace;
     private List<TRecomendation> listRecommendation;
     private OnPendingRecommendationsListener onPendingRecommendationsListener;
 
-    public PendingRecommendationsListAdapter(List<TPlace> listPlace, List<TRecomendation> listRecommendation, OnPendingRecommendationsListener onPendingRecommendationsListener){
-        this.listPlace = listPlace;
+    public PendingRecommendationsListAdapter(List<TRecomendation> listRecommendation, OnPendingRecommendationsListener onPendingRecommendationsListener){
         this.listRecommendation = listRecommendation;
         this.onPendingRecommendationsListener = onPendingRecommendationsListener;
     }
@@ -39,12 +37,11 @@ public class PendingRecommendationsListAdapter extends RecyclerView.Adapter<Pend
 
     @Override
     public void onBindViewHolder(@NonNull PendingRecommendationsListAdapter.ViewHolder holder, int position) {
-        TPlace place = listPlace.get(position);
         TRecomendation recomendation = listRecommendation.get(position);
 
-        holder.tv_name_place.setText(String.format("%s: %s", holder.itemView.getContext().getString(R.string.place_default_name), place.getName()));
-        holder.tv_rating_place.setText(String.format("%s: %s", holder.itemView.getContext().getString(R.string.place_rate), place.getRating()));
-        holder.tv_category_place.setText(String.format("%s: %s", holder.itemView.getContext().getString(R.string.place_category), place.getTypeOfPlace()));
+        holder.tv_name_place.setText(String.format("%s: %s", holder.itemView.getContext().getString(R.string.place_default_name), recomendation.getPlace().getName()));
+        holder.tv_rating_place.setText(String.format("%s: %s", holder.itemView.getContext().getString(R.string.place_rate), recomendation.getPlace().getRating()));
+        holder.tv_category_place.setText(String.format("%s: %s", holder.itemView.getContext().getString(R.string.place_category), recomendation.getPlace().getTypeOfPlace()));
         holder.tv_recommended_by.setText(String.format("%s %s", holder.itemView.getContext().getString(R.string.recommendation_by), recomendation.getUserOrigin()));
         holder.ib_accept_place.setBackgroundResource(R.drawable.ic_baseline_check_24);
         holder.ib_deny_place.setBackgroundResource(R.drawable.ic_close);

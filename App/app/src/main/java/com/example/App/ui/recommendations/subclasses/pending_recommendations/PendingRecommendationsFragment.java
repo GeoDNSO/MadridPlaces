@@ -41,7 +41,6 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
     private ProgressBar progressBar;
     private NestedScrollView nestedScrollView;
     private PendingRecommendationsListAdapter pendingRecommendationsListAdapter;
-    private List<TPlace> placeList;
     private List<TRecomendation> recommendationsList;
     private int page = 1, quantum = 3;
 
@@ -62,9 +61,8 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
         initListeners();
         initObservers();
 
-        placeList = new ArrayList<>();
         recommendationsList = new ArrayList<>();
-        pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(placeList, recommendationsList, this); //getActivity = MainActivity.this
+        pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, this); //getActivity = MainActivity.this
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(pendingRecommendationsListAdapter);
 
@@ -76,6 +74,7 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
     private void initUI(){
         recyclerView = root.findViewById(R.id.recommendations_pending_list_recycle_view);
         progressBar = root.findViewById(R.id.recommendations_pending_list_progressBar);
+        nestedScrollView = root.findViewById(R.id.recommedations_pending_list_user_nestedScrollView);
     }
 
     private void initListeners() {
@@ -120,20 +119,12 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
                     Log.d("MY_RECO", "Lista de recomendaciones nula");
                     return;
                 }
-                loadView(tRecomendations.size());
-
                 recommendationsList = tRecomendations;
-                pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(placeList, recommendationsList, PendingRecommendationsFragment.this);
+                pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, PendingRecommendationsFragment.this);
                 recyclerView.setAdapter(pendingRecommendationsListAdapter);
                 progressBar.setVisibility(View.GONE);
             }
         });
-    }
-
-    private void loadView(int size){
-        placeList = new ArrayList<>();
-        for (int i = 0; i < size; ++i)
-            placeList.add(new TPlace("a", "a", 2.6, 4.5, new ArrayList<>(), "", "", "", "", "", "", "", 2.2, true, 2.2, 2, ""));
     }
 
     @Override
@@ -146,7 +137,7 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
     @Override
     public void onPendingRecommendationsClick(int position) {
         Bundle bundle = new Bundle();
-        TPlace place = placeList.get(position);
+        TPlace place = recommendationsList.get(position).getPlace();
 
         bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
 

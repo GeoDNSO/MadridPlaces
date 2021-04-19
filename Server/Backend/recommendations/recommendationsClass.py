@@ -84,7 +84,7 @@ def PendingRecommendations():
 
         rcQuery = modules.recommendations.query.filter_by(userDst = user, state = state).order_by(modules.recommendations.created).paginate(per_page=quant, page=page)
         for recommendation in rcQuery.items:
-            obj = RecommendationsFunct.completeList(recommendation)
+            obj = RecommendationsFunct.completeList(recommendation, user)
             lista.append(obj)
         print("success")
         return jsonify(
@@ -105,7 +105,7 @@ def AcceptedRecommendations():
         rcQuery = modules.recommendations.query.filter_by(userSrc = user).order_by(modules.recommendations.created).paginate(per_page=quant, page=page)
 
         for recommendation in rcQuery.items:
-            obj = RecommendationsFunct.completeList(recommendation)
+            obj = RecommendationsFunct.completeList(recommendation, user)
             lista.append(obj)
         print("success")
         return jsonify(
