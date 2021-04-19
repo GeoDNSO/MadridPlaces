@@ -14,8 +14,11 @@
     <color name="light_green">#B8FFB9</color>
     <color name="red">#E31B23</color>
     <color name="light_red">#FFB0B3</color>
+  
+    <color name="blue_link">#2196F3</color>
     <color name="light_grey">#63DCDBDB</color>
     <color name="light_blue">#6368FFFF</color>
+    <color name="green_ok">#29BC29</color>
 
     <!--Colors from Profile template-->
     <color name="colorPrimary">#49BEFF</color>
