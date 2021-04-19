@@ -41,10 +41,9 @@ def checkPaginationSent(page, quant, user):
     return False
   return True
 
-def completeList(recommendation):
-    obj = {}
+def completeList(recommendation, user):
+    obj = LocationFunct.listByName(recommendation.location, user)
     obj["userSrc"] = recommendation.userSrc
     obj["userDst"] = recommendation.userDst
-    obj["location"] = recommendation.location
     obj["state"] = recommendation.state
     return obj
