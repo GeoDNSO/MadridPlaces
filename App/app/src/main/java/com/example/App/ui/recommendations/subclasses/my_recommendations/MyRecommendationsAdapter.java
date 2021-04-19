@@ -54,7 +54,7 @@ public class MyRecommendationsAdapter extends RecyclerView.Adapter<MyRecommendat
 
         //Para construir el mensaje principal
         String msg_1 = app.getAppString(R.string.my_recommendation_text_part_1);
-        String msg_placeName = recommendation.getPlace();
+        String msg_placeName = recommendation.getPlace().getName();
         String msg_2 = app.getAppString(R.string.my_recommendation_text_part_2);
 
         //Texto azul del lugar
