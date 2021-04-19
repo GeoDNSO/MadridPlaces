@@ -9,7 +9,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#B4B4B4</color>
-
+    <color name="dark_grey">#7C7C7C</color>
+    <color name="green">#2DCF2F</color>
+    <color name="light_green">#B8FFB9</color>
+    <color name="red">#E31B23</color>
+    <color name="light_red">#FFB0B3</color>
+  
     <color name="blue_link">#2196F3</color>
     <color name="light_grey">#63DCDBDB</color>
     <color name="light_blue">#6368FFFF</color>
