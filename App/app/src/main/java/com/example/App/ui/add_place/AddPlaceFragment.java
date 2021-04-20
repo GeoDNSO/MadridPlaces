@@ -30,7 +30,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.App.R;
-import com.example.App.ui.browser.BrowserViewModel;
 import com.example.App.ui.map.MapboxActivity;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.Validator;
