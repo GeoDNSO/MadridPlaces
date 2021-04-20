@@ -2,37 +2,26 @@ package com.example.App.ui.visited.subclasses.visitedPlaces;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import android.os.Bundle;
+import com.example.App.App;
+import com.example.App.ui.places_list.subclasses.BasePlaces;
+import com.example.App.ui.places_list.subclasses.BaseViewModel;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import java.util.ArrayList;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+public class VisitedPlacesFragment extends BasePlaces {
 
-import com.example.App.R;
-
-public class VisitedPlacesFragment extends Fragment {
-
-    private VisitedPlacesViewModel mViewModel;
-
-    public static VisitedPlacesFragment newInstance() {
-        return new VisitedPlacesFragment();
+    public VisitedPlacesFragment(){
+        super();
+        placeList = new ArrayList<>();
+    }
+    @Override
+    public void listPlaces() {
+        super.mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername(), search_text);
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.visited_places_fragment, container, false);
+    public BaseViewModel getViewModelToParent() {
+        VisitedPlacesViewModel rvm = new ViewModelProvider(this).get(VisitedPlacesViewModel.class);
+        return rvm;
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(VisitedPlacesViewModel.class);
-        // TODO: Use the ViewModel
-    }
-
 }
