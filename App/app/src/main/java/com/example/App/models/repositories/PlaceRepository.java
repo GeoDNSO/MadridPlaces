@@ -40,6 +40,8 @@ public class PlaceRepository extends Repository{
     private MutableLiveData<List<TPlace>> mCategoriesPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<String>> mCategoriesList = new MutableLiveData<>();
     private MutableLiveData<TPlace> mPlace = new MutableLiveData<>();
+    private MutableLiveData<List<TPlace>> mPlaceVisited = new MutableLiveData<>();
+    private MutableLiveData<List<TPlace>> mPlacesPendingToVisit = new MutableLiveData<>();
 
     private MutableLiveData<Integer> mFavSuccess = new MutableLiveData<Integer>();
 
@@ -51,7 +53,8 @@ public class PlaceRepository extends Repository{
     public MutableLiveData<List<TPlace>> getCategoriesPlacesList() { return mCategoriesPlacesList; }
     public MutableLiveData<List<TPlace>> getNearestPlacesList() { return mNearestPlacesList; }
     public MutableLiveData<List<TPlace>> getFavouritesPlacesList() { return mFavouritesPlacesList; }
-
+    public MutableLiveData<List<TPlace>> getPlaceVisitedList() { return mPlaceVisited; }
+    public MutableLiveData<List<TPlace>> getPendingToVisitList() { return mPlacesPendingToVisit; }
 
 
     public MutableLiveData<Integer> getFavSuccess() { return mFavSuccess; }
@@ -445,6 +448,71 @@ public class PlaceRepository extends Repository{
                 AppConstants.METHOD_POST, "/location/listByCategoryAndProximity");
         Call call = simpleRequest.createCall(request);
         call.enqueue(new PlaceListCallBack(simpleRequest, mCategoriesPlacesList));
+    }
+
+    public void listVisitedPlaces(int page, int quantity, String nickname, String searchText) {
+
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname, searchText);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/location/listVisitedPLaces");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new PlaceListCallBack(simpleRequest, mPlaceVisited));
+    }
+    public void listPendingToVisit(int page, int quantity, String nickname, String searchText) {
+
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname, searchText);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/location/listPendingToVisit");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new PlaceListCallBack(simpleRequest, mPlacesPendingToVisit));
+    }
+
+    public void deletePlacePendingToVisit(String nickname, String placeName){
+        JSONObject jsonPlace = new JSONObject();
+
+        try {
+            jsonPlace.put("user", nickname);
+            jsonPlace.put("location", placeName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String postBodyString = jsonPlace.toString();
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_DELETE, "/location/deletePendingToVisit");
+
+        Call call = simpleRequest.createCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                    throw new IOException("Unexpected code " + response);
+                }
+                Boolean success = simpleRequest.isSuccessful(response);
+                if(success){
+                    mSuccess.postValue(AppConstants.DELETE_PLACE);
+                }
+                else{
+                    mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                }
+
+            }
+        });
     }
 
     //Utilidades JSON
