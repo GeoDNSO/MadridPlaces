@@ -4,6 +4,7 @@ from flask import jsonify
 import base64
 import modules
 import comments.commentFunct as CommentFunct
+import visited.visitedFunct as VisitedFunct
 import twitter_ratings.twitter_ratingsFunct as TwitterRatingsFunct
 import favorites.favoritesFunct as FavoritesFunct
 
@@ -107,6 +108,7 @@ def jsonifiedPlace(createLocation):
                    affluence=createLocation.affluence)
 
 def completeList(place, user):
+    visited = VisitedFunct.isVisited(place.name, user)
     n_comments = CommentFunct.numberOfComments(place.name)
     imageList = listImages(place.name)
     avgRate = CommentFunct.averageRate(place.name)
@@ -125,10 +127,12 @@ def completeList(place, user):
     "imageList" : imageList,
     "rate" : avgRate,
     "n_comments" : n_comments,
-    "favorite" : favorite}
+    "favorite" : favorite,
+    "visited" : visited}
     return obj
 
 def listByTwitter(place, user, twitterRate):
+    visited = VisitedFunct.isVisited(place.name, user)
     n_comments = TwitterRatingsFunct.numberOfTwitterComments(place.name)
     imageList = listImages(place.name)
     favorite = FavoritesFunct.isFavorite(user, place)
@@ -146,7 +150,8 @@ def listByTwitter(place, user, twitterRate):
     "imageList" : imageList,
     "rate" : twitterRate,
     "n_comments" : n_comments,
-    "favorite" : favorite}
+    "favorite" : favorite,
+    "visited" : visited}
     return obj
 
 def listByName(location, user):
@@ -186,3 +191,4 @@ def maptIntToCategory(idCategory):
 
   return idCategories[idCategory]
 
+#def isNear(user, location, userLatitude, userLongitude):

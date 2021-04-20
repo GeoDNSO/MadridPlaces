@@ -1,12 +1,16 @@
 package com.example.App.models.repositories;
 
 
+import android.location.Location;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.App.App;
 import com.example.App.models.dao.SimpleRequest;
+import com.example.App.models.transfer.TPlace;
 import com.example.App.models.transfer.TRecomendation;
+import com.example.App.services.LocationTrack;
 import com.example.App.utilities.AppConstants;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,9 +30,25 @@ import okhttp3.Response;
 public class UserInteractionRepository extends Repository{
 
     private MutableLiveData<List<TRecomendation>> mRecommendationsList = new MutableLiveData<>();
+    private MutableLiveData<List<TRecomendation>> mPendingRecommendationsList = new MutableLiveData<>();
+    private MutableLiveData<Integer> mAcceptRecommendation = new MutableLiveData<Integer>();
+    private MutableLiveData<Integer> mDenyRecommendation = new MutableLiveData<Integer>();
+
 
     public MutableLiveData<List<TRecomendation>> getmRecommendationsList() {
         return mRecommendationsList;
+    }
+
+    public MutableLiveData<List<TRecomendation>> getmPendingRecommendationsList() {
+        return mPendingRecommendationsList;
+    }
+
+    public MutableLiveData<Integer> getmAcceptRecommendation(){
+        return mAcceptRecommendation;
+    }
+
+    public MutableLiveData<Integer> getmDenyRecommendation(){
+        return mDenyRecommendation;
     }
 
     class RecommendationsListCallBack implements Callback {
@@ -106,10 +126,101 @@ public class UserInteractionRepository extends Repository{
         String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/recommendations/listRecommendations");
+                AppConstants.METHOD_POST, "/recommendations/listRecommendationsSent");
         Call call = simpleRequest.createCall(request);
 
         call.enqueue(new UserInteractionRepository.RecommendationsListCallBack(simpleRequest, mRecommendationsList));
+    }
+
+    public void acceptPendingRecom(String placeName, String userOrigin, String userDest){
+        String postBodyString = jsonInfoForSendRecomendation(userOrigin, userDest, placeName);
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_POST, "/recommendations/acceptRecommendation"
+        );
+
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mAcceptRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(!response.isSuccessful()) {
+                    mAcceptRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if(success) {
+                    mAcceptRecommendation.postValue(AppConstants.ACCEPT_REC_OK);
+                }
+                else {
+                    mAcceptRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                }
+            }
+        });
+    }
+
+    public void denyPendingRecom(String placeName, String userOrigin, String userDest){
+        String postBodyString = jsonInfoForSendRecomendation(userOrigin, userDest, placeName);
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_DELETE, "/recommendations/deleteRecommendation"
+        );
+
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mDenyRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(!response.isSuccessful()) {
+                    mDenyRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if(success) {
+                    mDenyRecommendation.postValue(AppConstants.DENY_REC_OK);
+                }
+                else {
+                    mDenyRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                }
+            }
+        });
+    }
+
+    public void listPendingRecom(int page, int quantity, String nickname) {
+
+        String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/recommendations/listPendingRecommendations");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new UserInteractionRepository.RecommendationsListCallBack(simpleRequest, mPendingRecommendationsList));
     }
 
     private String pageAndQuantToSTring(int page, int quantity, String nickname) {
@@ -190,11 +301,11 @@ public class UserInteractionRepository extends Repository{
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(jsonString);
-
+            TPlace place = jsonStringToPlace(jsonObject.toString());
             return new TRecomendation(
                     jsonObject.getString("userSrc"),
-                    jsonObject.getString("userDest"),
-                    jsonObject.getString("location"),
+                    jsonObject.getString("userDst"),
+                    place,
                     jsonObject.getString("state"));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -206,7 +317,7 @@ public class UserInteractionRepository extends Repository{
         JSONObject json = new JSONObject();
         String infoString;
         try {
-            json.put("userSrc", "Jin"); //TODO Está a pelo
+            json.put("userSrc", userOrigin); //TODO Está a pelo
             json.put("userDst", userDest);
             json.put("location", place);
         }catch (JSONException e) {
@@ -216,6 +327,84 @@ public class UserInteractionRepository extends Repository{
         infoString = json.toString();
 
         return infoString;
+    }
+
+
+    //TODO esta repetido
+    private TPlace jsonStringToPlace(String jsonString) {
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(jsonString);
+            String a = jsonObject.getString("road_number");
+
+            List<String> jsonImagesList = jsonArrayImagesToStringList(jsonObject.getJSONArray("imageList"));
+            Boolean placeIsFav = jsonObject.getString("favorite").equals("true");
+
+
+            Double latitude = jsonObject.getDouble("coordinate_latitude");
+            Double longitude = jsonObject.getDouble("coordinate_longitude");
+
+            Location loc1 = new Location("");
+            loc1.setLatitude(latitude);
+            loc1.setLongitude(longitude);
+
+            LocationTrack locationTrack = App.getInstance().getLocationTrack();
+
+            Location loc2 = new Location("");
+            loc2.setLatitude(locationTrack.getLatitude());
+            loc2.setLongitude(locationTrack.getLongitude());
+
+            double distanceToUser = ((float) loc1.distanceTo(loc2));
+            Integer numberOfRatings = jsonObject.getInt("n_comments");
+            //String dateVisited = jsonObject.getString("date_visited");
+            String dateVisited = "12-04-2021";
+
+            return new TPlace(
+                    jsonObject.getString("name"),
+                    jsonObject.getString("description"),
+                    jsonObject.getDouble("coordinate_latitude"),
+                    jsonObject.getDouble("coordinate_longitude"),
+                    jsonImagesList,
+                    jsonObject.getString("type_of_place"),
+                    jsonObject.getString("city"),
+                    jsonObject.getString("road_class"),
+                    jsonObject.getString("road_name"),
+                    jsonObject.getString("road_number"),
+                    jsonObject.getString("zipcode"),
+                    jsonObject.getString("affluence"),
+                    jsonObject.getDouble("rate"),
+                    placeIsFav,
+                    distanceToUser,
+                    numberOfRatings,
+                    dateVisited);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    //TODO esta repetido
+    private List<String> jsonArrayImagesToStringList(JSONArray jsonImageList) {
+        ArrayList<String> lista = new ArrayList<>();
+
+
+        for (int i=0;i<jsonImageList.length();i++){
+            try {
+                String imageURL = jsonImageList.getJSONObject(i).getString("image");
+                String imageURLCorrected = jsonUrlCorrector(imageURL);
+                lista.add(imageURLCorrected);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.d("ERROR", "jsonArrayImagesToStringList: Error al procesar array");
+            }
+        }
+        return lista;
+    }
+
+    //TODO esta repetido
+    private String jsonUrlCorrector(String json_data) {
+        json_data = json_data.replace("\\", "");
+        return json_data;
     }
 
 

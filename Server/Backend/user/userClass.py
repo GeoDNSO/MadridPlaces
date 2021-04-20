@@ -5,7 +5,6 @@ from flask import jsonify
 import modules
 import base64
 import bcrypt #Para hashear las contraseñas, necesidad de instalar con pip install bcrypt
-import location.locationFunct as LocationFunct
 import user.userFunct as UserFunct
 
 userClass = Blueprint("userClass", __name__)

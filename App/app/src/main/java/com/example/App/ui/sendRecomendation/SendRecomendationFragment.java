@@ -95,11 +95,10 @@ public class SendRecomendationFragment extends Fragment {
     }
 
     private void sendRecomendationAction(View v){
-        String userDest = et_usuarioDestino.getText().toString();
-        String userOrigin = "";
-        String placeName = "tu pasta";
         app = App.getInstance(getActivity());
-
+        String userDest = et_usuarioDestino.getText().toString();
+        String userOrigin = app.getUsername();
+        String placeName = "tu pasta";
         if (Validator.argumentsEmpty(userDest)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
