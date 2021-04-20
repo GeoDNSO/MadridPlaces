@@ -31,6 +31,9 @@ public class UserInteractionRepository extends Repository{
 
     private MutableLiveData<List<TRecomendation>> mRecommendationsList = new MutableLiveData<>();
     private MutableLiveData<List<TRecomendation>> mPendingRecommendationsList = new MutableLiveData<>();
+    private MutableLiveData<Integer> mAcceptRecommendation = new MutableLiveData<Integer>();
+    private MutableLiveData<Integer> mDenyRecommendation = new MutableLiveData<Integer>();
+
 
     public MutableLiveData<List<TRecomendation>> getmRecommendationsList() {
         return mRecommendationsList;
@@ -38,6 +41,14 @@ public class UserInteractionRepository extends Repository{
 
     public MutableLiveData<List<TRecomendation>> getmPendingRecommendationsList() {
         return mPendingRecommendationsList;
+    }
+
+    public MutableLiveData<Integer> getmAcceptRecommendation(){
+        return mAcceptRecommendation;
+    }
+
+    public MutableLiveData<Integer> getmDenyRecommendation(){
+        return mDenyRecommendation;
     }
 
     class RecommendationsListCallBack implements Callback {
@@ -119,6 +130,86 @@ public class UserInteractionRepository extends Repository{
         Call call = simpleRequest.createCall(request);
 
         call.enqueue(new UserInteractionRepository.RecommendationsListCallBack(simpleRequest, mRecommendationsList));
+    }
+
+    public void acceptPendingRecom(String placeName, String userOrigin, String userDest){
+        String postBodyString = jsonInfoForSendRecomendation(userOrigin, userDest, placeName);
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_POST, "/recommendations/acceptRecommendation"
+        );
+
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mAcceptRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(!response.isSuccessful()) {
+                    mAcceptRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if(success) {
+                    mAcceptRecommendation.postValue(AppConstants.ACCEPT_REC_OK);
+                }
+                else {
+                    mAcceptRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                }
+            }
+        });
+    }
+
+    public void denyPendingRecom(String placeName, String userOrigin, String userDest){
+        String postBodyString = jsonInfoForSendRecomendation(userOrigin, userDest, placeName);
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_DELETE, "/recommendations/deleteRecommendation"
+        );
+
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mDenyRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(!response.isSuccessful()) {
+                    mDenyRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if(success) {
+                    mDenyRecommendation.postValue(AppConstants.DENY_REC_OK);
+                }
+                else {
+                    mDenyRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                }
+            }
+        });
     }
 
     public void listPendingRecom(int page, int quantity, String nickname) {

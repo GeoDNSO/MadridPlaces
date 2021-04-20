@@ -74,14 +74,14 @@ public class PendingRecommendationsListAdapter extends RecyclerView.Adapter<Pend
             ib_accept_place.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    onPendingRecommendationsListener.onPendingRecommendationsAcceptClick(getAdapterPosition());
                 }
             });
 
             ib_deny_place.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    onPendingRecommendationsListener.onPendingRecommendationsDenyClick(getAdapterPosition());
                 }
             });
 
@@ -96,6 +96,8 @@ public class PendingRecommendationsListAdapter extends RecyclerView.Adapter<Pend
 
     public interface OnPendingRecommendationsListener {
         void onPendingRecommendationsClick(int position);
+        void onPendingRecommendationsDenyClick(int position);
+        void onPendingRecommendationsAcceptClick(int position);
     }
 
 

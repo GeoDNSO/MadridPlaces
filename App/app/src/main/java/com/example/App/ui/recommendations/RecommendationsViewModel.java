@@ -15,6 +15,9 @@ import java.util.List;
 public class RecommendationsViewModel extends ViewModelParent {
     private LiveData<List<TRecomendation>> mListRecom = new MutableLiveData<>();
     private LiveData<List<TRecomendation>> mListPendingRecom = new MutableLiveData<>();
+    private LiveData<Integer> mAcceptRecom = new MutableLiveData<>();
+    private LiveData<Integer> mDenyRecom = new MutableLiveData<>();
+
     private UserInteractionRepository recomRepository;
 
     @Override
@@ -27,6 +30,14 @@ public class RecommendationsViewModel extends ViewModelParent {
         mListPendingRecom = Transformations.switchMap(
                 recomRepository.getmPendingRecommendationsList(),
                 listPendingRecom -> setListPendingRecom(listPendingRecom)
+        );
+        mAcceptRecom = Transformations.switchMap(
+                recomRepository.getmAcceptRecommendation(),
+                acceptRecom -> setAcceptRecom(acceptRecom)
+        );
+        mDenyRecom = Transformations.switchMap(
+                recomRepository.getmDenyRecommendation(),
+                denyRecom -> setDenyRecom(denyRecom)
         );
     }
 
@@ -48,11 +59,18 @@ public class RecommendationsViewModel extends ViewModelParent {
         return mAux;
     }
 
-    public LiveData<List<TRecomendation>> getmListRecom() {
-        return mListRecom;
+    private LiveData<Integer> setAcceptRecom(int listPendingRecom){
+        mProgressBar.setValue(false);
+        MutableLiveData<Integer> mAux = new MutableLiveData<>();
+        mAux.setValue(listPendingRecom);
+        return mAux;
     }
-    public LiveData<List<TRecomendation>> getmListPendingRecom() {
-        return mListPendingRecom;
+
+    private LiveData<Integer> setDenyRecom(int listPendingRecom){
+        mProgressBar.setValue(false);
+        MutableLiveData<Integer> mAux = new MutableLiveData<>();
+        mAux.setValue(listPendingRecom);
+        return mAux;
     }
 
     public void setmListRecom(LiveData<List<TRecomendation>> mListRecom) {
@@ -60,6 +78,28 @@ public class RecommendationsViewModel extends ViewModelParent {
     }
 
     public void listUserPendingRecommendations(int page, int quantum, String username) {
-        recomRepository.listPendingRecom(page,quantum,username);
+        recomRepository.listPendingRecom(page, quantum, username);
     }
+
+    public void acceptPendingRecommendation(String placeName, String userOrigin, String userDest){
+        recomRepository.acceptPendingRecom(placeName, userOrigin, userDest);
+    }
+
+    public void denyPendingRecommendation(String placeName, String userOrigin, String userDest){
+        recomRepository.denyPendingRecom(placeName, userOrigin, userDest);
+    }
+
+    public LiveData<List<TRecomendation>> getmListRecom() {
+        return mListRecom;
+    }
+    public LiveData<List<TRecomendation>> getmListPendingRecom() {
+        return mListPendingRecom;
+    }
+    public LiveData<Integer> getmAcceptRecom() {
+        return mAcceptRecom;
+    }
+    public LiveData<Integer> getmDenyRecom() {
+        return mDenyRecom;
+    }
+
 }

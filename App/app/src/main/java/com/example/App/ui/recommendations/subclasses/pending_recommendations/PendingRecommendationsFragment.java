@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
@@ -43,6 +44,7 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
     private PendingRecommendationsListAdapter pendingRecommendationsListAdapter;
     private List<TRecomendation> recommendationsList;
     private int page = 1, quantum = 3;
+    private int listPosition = -1;
 
 
     public static PendingRecommendationsFragment newInstance() {
@@ -112,6 +114,7 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
                 progressBar.setVisibility(View.GONE);
             }
         });
+
         mViewModel.getmListPendingRecom().observe(getViewLifecycleOwner(), new Observer<List<TRecomendation>>() {
             @Override
             public void onChanged(List<TRecomendation> tRecomendations) {
@@ -123,6 +126,36 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
                 pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, PendingRecommendationsFragment.this);
                 recyclerView.setAdapter(pendingRecommendationsListAdapter);
                 progressBar.setVisibility(View.GONE);
+            }
+        });
+
+        mViewModel.getmAcceptRecom().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if(AppConstants.ACCEPT_REC_OK.equals(integer) && listPosition != -1){
+                    Toast.makeText(getContext(), "Se ha aceptado la recomendación", Toast.LENGTH_SHORT).show();
+                    TRecomendation recomendation = recommendationsList.get(listPosition);
+                    recommendationsList.remove(recomendation);
+                    pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, PendingRecommendationsFragment.this);
+                    recyclerView.setAdapter(pendingRecommendationsListAdapter);
+                    progressBar.setVisibility(View.GONE);
+                    listPosition = -1;
+                }
+            }
+        });
+
+        mViewModel.getmDenyRecom().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if(AppConstants.DENY_REC_OK.equals(integer) && listPosition != -1){
+                    Toast.makeText(getContext(), "Se ha rechazado la recomendación", Toast.LENGTH_SHORT).show();
+                    TRecomendation recomendation = recommendationsList.get(listPosition);
+                    recommendationsList.remove(recomendation);
+                    pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, PendingRecommendationsFragment.this);
+                    recyclerView.setAdapter(pendingRecommendationsListAdapter);
+                    progressBar.setVisibility(View.GONE);
+                    listPosition = -1;
+                }
             }
         });
     }
@@ -142,5 +175,25 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
         bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
 
         Navigation.findNavController(root).navigate(R.id.placeDetailFragment, bundle);
+    }
+
+    @Override
+    public void onPendingRecommendationsAcceptClick(int position) {
+        String placeName = recommendationsList.get(position).getPlace().getName();
+        String userOrigin = recommendationsList.get(position).getUserOrigin();
+        String userDest = recommendationsList.get(position).getUserDest();
+        listPosition = position;
+        progressBar.setVisibility(View.VISIBLE);
+        mViewModel.acceptPendingRecommendation(placeName, userOrigin, userDest);
+    }
+
+    @Override
+    public void onPendingRecommendationsDenyClick(int position) {
+        String placeName = recommendationsList.get(position).getPlace().getName();
+        String userOrigin = recommendationsList.get(position).getUserOrigin();
+        String userDest = recommendationsList.get(position).getUserDest();
+        listPosition = position;
+        progressBar.setVisibility(View.VISIBLE);
+        mViewModel.denyPendingRecommendation(placeName, userOrigin, userDest);
     }
 }
