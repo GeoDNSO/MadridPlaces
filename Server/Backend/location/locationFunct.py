@@ -4,6 +4,7 @@ from flask import jsonify
 import base64
 import modules
 import comments.commentFunct as CommentFunct
+import visited.visitedFunct as VisitedFunct
 import twitter_ratings.twitter_ratingsFunct as TwitterRatingsFunct
 import favorites.favoritesFunct as FavoritesFunct
 
@@ -40,23 +41,24 @@ def delImgTemp(imgTemp):
   except Exception as e:
     print("Error eliminando la imagen temporal: ", repr(e))
 
-def checkPagination(page, quant):
-  tam = modules.location.query.count()
+def checkPagination(page, quant, search):
+  tam = modules.location.query.filter(modules.location.name.like(search)).count()
   comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
   #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
   if(comp >= quant):
     return False
   return True
 
-def checkPaginationTwitter(page, quant):
-  tam = modules.twitter_ratings.query.count()
+def checkPaginationTwitter(page, quant, search):
+  tam = modules.twitter_ratings.query.filter(modules.twitter_ratings.location.like(search)).count()
   comp = (page   * quant) - tam # tam = 30 page = 7 quant = 5
   #También queremos mostrar los últimos elementos aunque no se muestren "quant" elementos
   if(comp >= quant):
     return False
   return True
-def checkPaginationCategory(idCategory, page, quant):
-  tam = modules.location.query.filter_by(type_of_place = idCategory).count()
+  
+def checkPaginationCategory(idCategory, page, quant, search):
+  tam = modules.location.query.filter(modules.location.type_of_place == idCategory, modules.location.name.like(search)).count()
   comp = (page   * quant) - tam 
   if(comp >= quant):
     return False
@@ -106,6 +108,7 @@ def jsonifiedPlace(createLocation):
                    affluence=createLocation.affluence)
 
 def completeList(place, user):
+    visited = VisitedFunct.isVisited(place.name, user)
     n_comments = CommentFunct.numberOfComments(place.name)
     imageList = listImages(place.name)
     avgRate = CommentFunct.averageRate(place.name)
@@ -124,10 +127,12 @@ def completeList(place, user):
     "imageList" : imageList,
     "rate" : avgRate,
     "n_comments" : n_comments,
-    "favorite" : favorite}
+    "favorite" : favorite,
+    "visited" : visited}
     return obj
 
 def listByTwitter(place, user, twitterRate):
+    visited = VisitedFunct.isVisited(place.name, user)
     n_comments = TwitterRatingsFunct.numberOfTwitterComments(place.name)
     imageList = listImages(place.name)
     favorite = FavoritesFunct.isFavorite(user, place)
@@ -145,7 +150,8 @@ def listByTwitter(place, user, twitterRate):
     "imageList" : imageList,
     "rate" : twitterRate,
     "n_comments" : n_comments,
-    "favorite" : favorite}
+    "favorite" : favorite,
+    "visited" : visited}
     return obj
 
 def listByName(location, user):
@@ -163,7 +169,8 @@ def mapCategoryToInt(category):
 	"Alojamientos" : 5,
 	"Monumentos" : 6,
 	"Museos" : 7,
-	"Templos" : 8
+	"Templos" : 8,
+  "Parques" : 19 #CAMBIAR
 	}
 
 	return idCategories[category]
@@ -178,8 +185,10 @@ def maptIntToCategory(idCategory):
   5 :"Alojamientos",
   6 :"Monumentos",
   7 :"Museos",
-  8 :"Templos"
+  8 :"Templos",
+  19: "Parques" #CAMBIAR
   }
 
   return idCategories[idCategory]
 
+#def isNear(user, location, userLatitude, userLongitude):

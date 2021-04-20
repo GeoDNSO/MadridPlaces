@@ -102,8 +102,20 @@ public class AppConstants {
 
     public static final Integer SEND_REC_OK = 0;
     public static final Integer SEND_REC_FAIL = 1;
+
+    public static final Integer LIST_REC_OK = 0;
+    public static final Integer LIST_REC_FAIL = 1;
+
+    public static final Integer PENDING_REC_FAIL = 0;
+    public static final Integer ACCEPT_REC_OK = 1;
+    public static final Integer DENY_REC_OK = 2;
+
     public static final int RESULT_SPEECH = 1;
 
     public static final int STATIC_INTEGER_MAPBOX_ADD = 5;
     public static final String STATIC_STRING_MAPBOX_ADD_DATA = "10";
+    public static final String STATE_PENDING = "P";
+    public static final String STATE_ACCEPTED = "A";
+
+    public static final String STATE_VISITED = "V";
 }

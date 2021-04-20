@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TPlace implements JSONSerializable, Parcelable {
@@ -28,7 +29,7 @@ public class TPlace implements JSONSerializable, Parcelable {
     private Integer numberOfRatings;
     private String timeVisited;
 
-//("lugar", "descripcion", "direccion", 3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid", "Localidad", "Afluencia", 4.0f)
+    //("lugar", "descripcion", "direccion", 3.0f, 3.0f, "/imagen", "tipodelugar", "Madrid", "Localidad", "Afluencia", 4.0f)
 
     public TPlace(String name, String description, double latitude,
                   double longitude, List<String> imagesList, String typeOfPlace, String city,
@@ -60,7 +61,7 @@ public class TPlace implements JSONSerializable, Parcelable {
         dest.writeString(this.description);
         dest.writeDouble(this.latitude);
         dest.writeDouble(this.longitude);
-        dest.writeList(this.imagesList);
+        dest.writeStringList(this.imagesList);
         dest.writeString(this.typeOfPlace);
         dest.writeString(this.city);
         dest.writeString(this.road_class);
@@ -80,7 +81,8 @@ public class TPlace implements JSONSerializable, Parcelable {
         this.description = in.readString();
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
-        in.readList(this.imagesList, List.class.getClassLoader());
+        this.imagesList = new ArrayList<>();
+        in.readList(this.imagesList, String.class.getClassLoader());
         this.typeOfPlace = in.readString();
         this.city = in.readString();
         this.road_class = in.readString();

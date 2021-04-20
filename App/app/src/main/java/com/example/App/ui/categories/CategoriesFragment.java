@@ -115,10 +115,10 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         categoriesIcons.add(R.drawable.ic_monument);
         categoriesIcons.add(R.drawable.ic_exhibition_museum);
         categoriesIcons.add(R.drawable.ic_direccion_turismo);
+        categoriesIcons.add(R.drawable.ic_tree);
         categoriesIcons.add(R.drawable.ic_fork_restaurant);
         categoriesIcons.add(R.drawable.ic_church);
         categoriesIcons.add(R.drawable.ic_shop);
-
     }
 
     @Override

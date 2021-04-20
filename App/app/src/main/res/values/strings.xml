@@ -8,6 +8,8 @@
     <string name="menu_profile_text">Perfil</string>
     <string name="menu_home_text">Inicio</string>
     <string name="menu_history_text">Historial</string>
+    <string name="menu_visited_text">Visitados</string>
+    <string name="menu_recomendations_text">Recomendaciones</string>
     <string name="menu_browser_text">Buscador</string>
     <string name="register_button_text">Registrarse</string>
     <string name="login_button_text">Login</string>
@@ -132,12 +134,39 @@
     <string name="user_location_permission_explanation">Explicacion toast de onExplanationNeeded</string>
     <string name="user_location_permission_not_granted">No se han dado los permisos necesarios</string>
     <string name="mapbox_new_location">New Lat %s%n new Long %s</string>
+    <string name="drawer_profile_name">Anónimo</string>
+    <string name="menu_favourites_text">Favoritos</string>
+
+    <string name="menu_nearest_text">Más Cercanos</string>
+    <string name="add_recommendation">Enviar Recomendación</string>
+    <string name="my_recommedations">Mis Recomendaciones</string>
+    <string name="pending_recomendations">Recomendaciones Recibidas</string>
+    <string name="pending_visited_menu_text">Añadir a Pendientes Por Visitar</string>
+    <string name="pending_visited_text">Pendientes por Visitar</string>
+
     <string name="recom_text">Recomendar</string>
     <string name="sendRecButton_text">Enviar</string>
+
     <string name="move_map_instruction">Pulse en el mapa</string>
     <string name="location_picker_select_location_button_cancel">Cancelar</string>
     <string name="location_picker_select_location_button_select">Selecciona la localización</string>
     <string name="location_picker_place_name_result">Lugar: %1$s</string>
     <string name="location_picker_dropped_marker_snippet_no_results">Sin resultados</string>
+
+    <string name="place_rate">Valoración</string>
+    <string name="place_category">Categoría</string>
+    <string name="recommendation_by">Este lugar te lo ha recomendado el usuario </string>
+    <string name="recommendation_by_username">Anónimo</string>
+
+
+    <!-- Parte para los textos de recomendaciones  -->
+    <string name="my_recommendation_text_part_1">Le has recomendado el lugar</string>
+    <string name="my_recommendation_text_part_2">a</string>
+
+    <string name="my_recommendation_text_state">aceptó la recomendación</string>
+    <string name="my_recommendation_text_state_accept"> </string>
+    <string name="my_recommendation_text_state_not"> no</string>
+    <string name="my_recommendation_text_state_still">aún no se ha decidido</string>
+
 
 </resources>

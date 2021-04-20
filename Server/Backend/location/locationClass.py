@@ -116,16 +116,18 @@ def modifyLocation():
         
     return LocationFunct.jsonifiedPlace(lcQuery)
 
-@locationClass.route('/location/readLocation', methods=['GET', 'POST']) #No se usa 
+@locationClass.route('/location/readLocation', methods=['GET', 'POST']) #Pide el nombre de usuario y el nombre del lugar, devuelve el Tplace
 def readLocation():
     json_data = request.get_json()
-    name = json_data["name"]    
-
-    lcQuery = modules.location.query.filter_by(name = name).first()
+    location = json_data["location"]    
+    user = json_data["user"]
+    lcQuery = modules.location.query.filter_by(name = location).first()
 
     if (lcQuery is not None):
         print("success")
-        return LocationFunct.jsonifiedPlace(lcQuery)
+        obj = LocationFunct.completeList(lcQuery, user)
+        obj["exito"] = "true"
+        return jsonify(obj)
 
     print("failure")
     return jsonify(exito = "false")    
@@ -150,7 +152,7 @@ def listLocations():
     json_data = request.get_json()
     page, quant, user, search = LocationFunct.initParameters(json_data)
     try:
-        if(LocationFunct.checkPagination(page, quant) is False):
+        if(LocationFunct.checkPagination(page, quant, search) is False):
             return jsonify(exito = "true", list = [])
         #places = modules.location.query.join(modules.comments, modules.location.name == modules.comments.location, isouter = True).filter(modules.location.name.like(search)).order_by(modules.comments.rate.desc()).paginate(per_page=quant, page=page)
         places = modules.location.query.filter(modules.location.name.like(search)).paginate(per_page=quant, page=page)
@@ -170,20 +172,6 @@ def listLocations():
     except Exception as e:
         print("Error: ", repr(e))
         return jsonify(exito = "false") 
-
-@locationClass.route('/location/readImages', methods=['POST']) #Devuelve una lista de URLs de las imagenes de un lugar específico
-def readImages():
-    json_data = request.get_json()
-    name = json_data["name"]
-    try:
-        stQuery = modules.location_images.query.filter_by(location_name=name).all()
-        lista = []
-        for imagen in stQuery:
-            lista.append({"image" : imagen.image})
-        return jsonify(exito = "true", list = lista) 
-    except Exception as e:
-        print("Error mostrando las imágenes: ", repr(e))
-        return jsonify(exito = "false")  
 
 def dts(e):#Funcion auxiliar para ordenar la lista por proximidad
     return e['distance']
@@ -221,7 +209,7 @@ def listByCategory():
     category = json_data["category"]
     try:
         idCategory = LocationFunct.mapCategoryToInt(category) #Recoge el número asociado de la categoria
-        if(LocationFunct.checkPaginationCategory(idCategory, page, quant) is False):
+        if(LocationFunct.checkPaginationCategory(idCategory, page, quant, search) is False):
             return jsonify(exito = "true", list = [])
 
         places = modules.location.query.filter(modules.location.type_of_place == idCategory, modules.location.name.like(search)).paginate(per_page=quant, page=page)
@@ -277,7 +265,7 @@ def listByTwitter():
     json_data = request.get_json()
     page, quant, user, search = LocationFunct.initParameters(json_data)
     try:
-        if(LocationFunct.checkPaginationTwitter(page, quant) is False):
+        if(LocationFunct.checkPaginationTwitter(page, quant, search) is False):
             return jsonify(exito = "true", list = [])
         rates = modules.twitter_ratings.query.filter(modules.twitter_ratings.location.like(search)).order_by(modules.twitter_ratings.twitterRate.desc(),modules.twitter_ratings.location).paginate(per_page=quant, page=page)
         if(rates is not None):

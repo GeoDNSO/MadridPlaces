@@ -82,6 +82,10 @@ public class LocationTrack extends Service implements LocationListener {
         return loc;
     }
 
+    public Location getLastLocation() {
+      return loc;
+    }
+
     public double getLongitude() {
         if (loc != null) {
             longitude = loc.getLongitude();

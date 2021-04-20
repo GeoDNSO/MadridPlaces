@@ -4,7 +4,7 @@ from flask import jsonify
 import modules
 import location.locationFunct as LocationFunct
 
-def newPendingVisit(user, location):
+def newPendingVisit(user, location): #Añade a la lista de pendientes por visitar
     vtQuery = modules.visited.query.filter_by(user = user, location= location).first()
     if(vtQuery is None): 
         pendingVisit = modules.visited(user = user, location = location, state = "P")
@@ -23,3 +23,15 @@ def checkPagination(user, page, quant, state):
 
 def completeList(location, user):
     return LocationFunct.listByName(location, user)
+
+def isVisited(location,user):
+    try:
+        vtQuery = modules.visited.query.filter_by(location = location, user = user, state = "V").first()
+        if (vtQuery is None):
+            return ""
+        return vtQuery.date_visited.strftime("%Y-%m-%d")
+    except Exception as e:
+        print("Error:", repr(e))
+        return ""
+
+#def isNear(user, location, userLatitude, userLongitude):

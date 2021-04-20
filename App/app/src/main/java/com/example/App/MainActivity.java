@@ -3,7 +3,6 @@ package com.example.App;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -13,16 +12,16 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.widget.Toolbar;
 
-import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.example.App.services.LocationService;
+import com.bumptech.glide.Glide;
 import com.example.App.services.LocationTrack;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.PermissionsManager;
@@ -158,10 +157,23 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     public void inflateMenu(){
         App app = App.getInstance(this);
         if(app.isLogged()){
+            ImageView iw = drawerNavigationView.getHeaderView(0).findViewById(R.id.drawer_imageView);
+            if(app.getSessionManager().getImageProfile() == null || app.getSessionManager().getImageProfile() == ""){
+                iw.setImageResource(R.drawable.ic_username);
+            }
+            else {
+                Glide.with(this).load(app.getSessionManager().getImageProfile()).circleCrop().into(iw);
+            }
+            TextView tv = drawerNavigationView.getHeaderView(0).findViewById(R.id.drawer_textView);
+            tv.setText(app.getSessionManager().getUsername());
             drawerNavigationView.getMenu().clear();
             drawerNavigationView.inflateMenu(R.menu.drawer_login_navigation_menu);
         } else
         {
+            ImageView iw = drawerNavigationView.getHeaderView(0).findViewById(R.id.drawer_imageView);
+            Glide.with(this).load(getDrawable(R.drawable.ic_launcher_foreground)).circleCrop().into(iw);
+            TextView tv = drawerNavigationView.getHeaderView(0).findViewById(R.id.drawer_textView);
+            tv.setText(getString(R.string.drawer_profile_name));
             drawerNavigationView.getMenu().clear();
             drawerNavigationView.inflateMenu(R.menu.drawer_logout_navigation_menu);
         }

@@ -8,4 +8,10 @@
         app:showAsAction="always"
         android:title="@string/add_place"
         />
+
+    <item
+        android:id="@+id/nearest_places_menu_item"
+        android:icon="@drawable/ic_baseline_near_me_24"
+        android:title="@string/menu_nearest_text"
+        app:showAsAction="always" />
 </menu>

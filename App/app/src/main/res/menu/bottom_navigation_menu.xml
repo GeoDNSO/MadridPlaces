@@ -8,13 +8,13 @@
         android:title="@string/menu_home_text" />
 
     <item
-        android:id="@+id/browserFragment"
+        android:id="@+id/recommendationsFragment"
         android:icon="@drawable/ic_baseline_search_24"
-        android:title="@string/menu_browser_text" />
+        android:title="@string/menu_recomendations_text" />
 
     <item
-        android:id="@+id/historyFragment"
+        android:id="@+id/visitedFragment"
         android:icon="@drawable/ic_baseline_history_24"
-        android:title="@string/menu_history_text" />
+        android:title="@string/menu_visited_text" />
 
 </menu>

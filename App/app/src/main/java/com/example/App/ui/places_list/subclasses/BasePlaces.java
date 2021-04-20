@@ -50,11 +50,12 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
     protected BaseViewModel mViewModel;
     protected View root;
 
-    private MenuItem search_place;
-    private MenuItem mic_search_place;
-    private MenuItem addPlace;
+    protected MenuItem search_place;
+    protected MenuItem mic_search_place;
+    protected MenuItem addPlace;
+    protected MenuItem nearestPlaces;
 
-    private SearchView searchView;
+    protected SearchView searchView;
 
     //UI Elements
     protected SwipeRefreshLayout swipeRefreshLayout;
@@ -352,6 +353,9 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                 return false;
             }
         });
+
+        nearestPlaces = menu.findItem(R.id.nearest_places_menu_item);
+        nearestPlaces.setVisible(false);
     }
 
     @Override

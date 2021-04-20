@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -217,6 +218,11 @@ public class App {
             e.printStackTrace();
         }
         return reachable;
+    }
+
+
+    public String getAppString(int id){
+        return this.mainActivity.getString(id);
     }
 
     public MainActivity getMainActivity() {

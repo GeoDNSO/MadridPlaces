@@ -18,6 +18,11 @@
         android:title="@string/menu_aboutus_text" />
 
     <item
+        android:id="@+id/favouritesPlacesFragment"
+        android:icon="@drawable/love_icon_24dp"
+        android:title="@string/menu_favourites_text" />
+
+    <item
         android:id="@+id/adminFragment"
         android:icon="@drawable/ic_baseline_admin_user_24"
         android:title="@string/menu_admin_text"

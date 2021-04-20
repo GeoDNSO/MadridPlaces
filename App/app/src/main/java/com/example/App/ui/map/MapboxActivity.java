@@ -7,6 +7,8 @@ import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +17,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.App.R;
+import com.example.App.models.transfer.TPlace;
+import com.example.App.utilities.AppConstants;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
@@ -73,12 +77,17 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private MapboxLocationCallback callback = new MapboxLocationCallback(this);
     private LocationComponent locationComponent;
+    private TPlace place;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.mapbox);
+
+        place = getIntent().getExtras().getParcelable("placeMapbox");
+        Toast.makeText(this, "lugar"+place.getName(), Toast.LENGTH_SHORT).show();
+
         getSupportActionBar().setTitle("Lugar al que ir");
         mapView = (MapView) findViewById(R.id.mapboxMap);
         mapView.onCreate(savedInstanceState);
@@ -174,12 +183,13 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
                     return;
                 }
 
-// Create a Toast which displays the new location's coordinates
+                // Create a Toast which displays the new location's coordinates
+                /*
                 Toast.makeText(activity, String.format(activity.getString(R.string.mapbox_new_location),
                         String.valueOf(result.getLastLocation().getLatitude()), String.valueOf(result.getLastLocation().getLongitude())),
                         Toast.LENGTH_SHORT).show();
-
-// Pass the new location to the Maps SDK's LocationComponent
+                */
+                // Pass the new location to the Maps SDK's LocationComponent
                 if (activity.mapboxMap != null && result.getLastLocation() != null) {
                     activity.mapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
                 }
@@ -290,10 +300,10 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
 
     @SuppressWarnings( {"MissingPermission"})
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
-// Check if permissions are enabled and if not request
+        // Check if permissions are enabled and if not request
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
 
-// Get an instance of the component
+            // Get an instance of the component
             locationComponent = mapboxMap.getLocationComponent();
 
             //Options to make animation of the pulse
@@ -304,16 +314,16 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
             LocationComponentActivationOptions activationOptions = LocationComponentActivationOptions.builder(this, loadedMapStyle)
                     .locationComponentOptions(locationComponentOptions)
                     .build();
-// Activate with options
+            // Activate with options
             locationComponent.activateLocationComponent(activationOptions);
 
-// Enable to make component visible
+            // Enable to make component visible
             locationComponent.setLocationComponentEnabled(true);
 
-// Set the component's camera mode
+            // Set the component's camera mode
             locationComponent.setCameraMode(CameraMode.TRACKING);
 
-// Set the component's render mode
+            // Set the component's render mode
             locationComponent.setRenderMode(RenderMode.COMPASS);
 
             initLocationEngine();

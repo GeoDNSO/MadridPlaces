@@ -21,6 +21,10 @@ public class CategoryPlaceViewModel extends BaseViewModel {
         placeRepository.listPlacesCategories(page, quant, nickname, category, searchText);
     }
 
+    public void listNearestCategories(int page, int quant, String nickname, String searchText, List<Double> points) {
+        placeRepository.listNearestCategories(page, quant, nickname, category, searchText, points);
+    }
+
     public void setCategory(String category) {
         this.category = category;
     }

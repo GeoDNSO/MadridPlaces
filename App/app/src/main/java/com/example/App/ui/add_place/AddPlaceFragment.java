@@ -2,7 +2,6 @@ package com.example.App.ui.add_place;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -11,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +29,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.App.App;
 import com.example.App.R;
 import com.example.App.ui.browser.BrowserViewModel;
 import com.example.App.ui.map.MapboxActivity;
@@ -39,21 +36,12 @@ import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.Validator;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 
 public class AddPlaceFragment extends Fragment {
 
