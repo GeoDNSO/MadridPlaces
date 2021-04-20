@@ -72,6 +72,7 @@ public class AppConstants {
     public static final Integer ERROR_DELETE_COMMENT = -340;
 
 
+
     public static String TAB_RATING = "W";
     public static String TAB_NEAREST = "W";
     public static String TAB_TWITTER = "W";
@@ -102,4 +103,7 @@ public class AppConstants {
     public static final Integer SEND_REC_OK = 0;
     public static final Integer SEND_REC_FAIL = 1;
     public static final int RESULT_SPEECH = 1;
+
+    public static final int STATIC_INTEGER_MAPBOX_ADD = 5;
+    public static final String STATIC_STRING_MAPBOX_ADD_DATA = "10";
 }

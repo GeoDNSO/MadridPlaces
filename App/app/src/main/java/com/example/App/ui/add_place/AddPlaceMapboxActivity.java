@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -15,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.App.R;
+import com.example.App.utilities.AppConstants;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.api.geocoding.v5.GeocodingCriteria;
@@ -272,6 +275,11 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
                                         Toast.makeText(AddPlaceMapboxActivity.this,
                                                 String.format(getString(R.string.location_picker_place_name_result),
                                                         feature.placeName()), Toast.LENGTH_SHORT).show();
+                                        Intent resultIntent = new Intent();
+                                        resultIntent.putExtra(AppConstants.STATIC_STRING_MAPBOX_ADD_DATA, feature.placeName());
+                                        // resultIntent.putExtra(AppConstants.STATIC_STRING_MAPBOX_ADD_DATA, point.toString());
+                                        setResult(Activity.RESULT_OK, resultIntent);
+                                        finish();
                                     }
                                 }
                             });

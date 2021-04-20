@@ -153,9 +153,13 @@ public class AddPlaceFragment extends Fragment {
 
                 //Le pasamos el bundle
                 //Navigation.findNavController(root).navigate(R.id.mapFragment, bundle);
-                Intent mapboxIntent = new Intent(getActivity(), AddPlaceMapboxActivity.class);
+                Intent i = new Intent(getActivity(), AddPlaceMapboxActivity.class);
+                startActivityForResult(i, AppConstants.STATIC_INTEGER_MAPBOX_ADD);
+
+
+                /*Intent mapboxIntent = new Intent(getActivity(), AddPlaceMapboxActivity.class);
                 // mapboxIntent.putExtra("key", "value"); //Optional parameters
-                getActivity().startActivity(mapboxIntent);
+                getActivity().startActivity(mapboxIntent);*/
             }
         });
     }
@@ -211,34 +215,43 @@ public class AddPlaceFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 0){
-            if(resultCode == Activity.RESULT_OK){
-                uriList = new ArrayList<>();
-                bitmapList = new ArrayList<>();
-                removeImages();
-                if(data.getClipData() != null) {
-                    numberOfImages = data.getClipData().getItemCount(); //devuelve el numero de imagenes seleccionadas
-                    for (int i = 0; i < numberOfImages; ++i) {
+        switch(requestCode) {
+            case (AppConstants.STATIC_INTEGER_MAPBOX_ADD) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    String newText = data.getStringExtra(AppConstants.STATIC_STRING_MAPBOX_ADD_DATA);
+                    Toast.makeText(getContext(), newText, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+            case(0) : {
+                if(resultCode == Activity.RESULT_OK){
+                    uriList = new ArrayList<>();
+                    bitmapList = new ArrayList<>();
+                    removeImages();
+                    if(data.getClipData() != null) {
+                        numberOfImages = data.getClipData().getItemCount(); //devuelve el numero de imagenes seleccionadas
+                        for (int i = 0; i < numberOfImages; ++i) {
+                            try {
+                                Uri uri = data.getClipData().getItemAt(i).getUri();
+                                bitmapList.add(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri));
+                                uriList.add(uri);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    else{
                         try {
-                            Uri uri = data.getClipData().getItemAt(i).getUri();
-                            bitmapList.add(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri));
+                            Uri uri = data.getData();
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                            bitmapList.add(bitmap);
                             uriList.add(uri);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
+                    showImages();
                 }
-                else{
-                    try {
-                        Uri uri = data.getData();
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                        bitmapList.add(bitmap);
-                        uriList.add(uri);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                showImages();
             }
         }
     }
