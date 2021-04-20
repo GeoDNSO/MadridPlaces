@@ -22,9 +22,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.map.MapboxActivity"
-            android:theme="@style/Theme.Mapbox"/>
-
+        <activity android:name=".ui.add_place.AddPlaceMapboxActivity"></activity>
+        <activity
+            android:name=".ui.map.MapboxActivity"
+            android:theme="@style/Theme.Mapbox" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/SplashTheme">

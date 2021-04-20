@@ -111,4 +111,8 @@
         android:name="com.example.App.ui.sendRecomendation.SendRecomendationFragment"
         android:label="send_recomendation_fragment"
         tools:layout="@layout/send_recomendation_fragment" />
+    <activity
+        android:id="@+id/addPlaceMapboxActivity"
+        android:name="com.example.App.ui.add_place.AddPlaceMapboxActivity"
+        android:label="AddPlaceMapboxActivity" />
 </navigation>

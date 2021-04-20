@@ -30,6 +30,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.App.R;
+import com.example.App.ui.browser.BrowserViewModel;
+import com.example.App.ui.map.MapboxActivity;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.Validator;
 import com.google.android.material.chip.Chip;
@@ -58,6 +60,7 @@ public class AddPlaceFragment extends Fragment {
     private List<Uri> uriList;
     List<Bitmap> bitmapList;
     private List<String> imageStringBase64;
+    private ImageButton mapboxAddPlace;
 
     public static AddPlaceFragment newInstance() {
         return new AddPlaceFragment();
@@ -107,6 +110,7 @@ public class AddPlaceFragment extends Fragment {
         button = root.findViewById(R.id.button_add_place);
         et_placeName = root.findViewById(R.id.name_place_add_place);
         tiet_placeDescription = root.findViewById(R.id.description_place_add_place);
+        mapboxAddPlace = root.findViewById(R.id.image_button_add_place_map);
         uriList = new ArrayList<>();
     }
 
@@ -126,6 +130,24 @@ public class AddPlaceFragment extends Fragment {
             public void onClick(View v) {
                 addPlaceOnClickAction(v);
                 //Toast.makeText(getActivity(), finalTypePlace, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mapboxAddPlace.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                /*Bundle bundle = new Bundle();
+                bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);*/
+
+                //Le pasamos el bundle
+                //Navigation.findNavController(root).navigate(R.id.mapFragment, bundle);
+                Intent i = new Intent(getActivity(), AddPlaceMapboxActivity.class);
+                startActivityForResult(i, AppConstants.STATIC_INTEGER_MAPBOX_ADD);
+
+
+                /*Intent mapboxIntent = new Intent(getActivity(), AddPlaceMapboxActivity.class);
+                // mapboxIntent.putExtra("key", "value"); //Optional parameters
+                getActivity().startActivity(mapboxIntent);*/
             }
         });
     }
@@ -181,34 +203,43 @@ public class AddPlaceFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 0){
-            if(resultCode == Activity.RESULT_OK){
-                uriList = new ArrayList<>();
-                bitmapList = new ArrayList<>();
-                removeImages();
-                if(data.getClipData() != null) {
-                    numberOfImages = data.getClipData().getItemCount(); //devuelve el numero de imagenes seleccionadas
-                    for (int i = 0; i < numberOfImages; ++i) {
+        switch(requestCode) {
+            case (AppConstants.STATIC_INTEGER_MAPBOX_ADD) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    String newText = data.getStringExtra(AppConstants.STATIC_STRING_MAPBOX_ADD_DATA);
+                    Toast.makeText(getContext(), newText, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+            case(0) : {
+                if(resultCode == Activity.RESULT_OK){
+                    uriList = new ArrayList<>();
+                    bitmapList = new ArrayList<>();
+                    removeImages();
+                    if(data.getClipData() != null) {
+                        numberOfImages = data.getClipData().getItemCount(); //devuelve el numero de imagenes seleccionadas
+                        for (int i = 0; i < numberOfImages; ++i) {
+                            try {
+                                Uri uri = data.getClipData().getItemAt(i).getUri();
+                                bitmapList.add(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri));
+                                uriList.add(uri);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    else{
                         try {
-                            Uri uri = data.getClipData().getItemAt(i).getUri();
-                            bitmapList.add(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri));
+                            Uri uri = data.getData();
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                            bitmapList.add(bitmap);
                             uriList.add(uri);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
+                    showImages();
                 }
-                else{
-                    try {
-                        Uri uri = data.getData();
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                        bitmapList.add(bitmap);
-                        uriList.add(uri);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                showImages();
             }
         }
     }
