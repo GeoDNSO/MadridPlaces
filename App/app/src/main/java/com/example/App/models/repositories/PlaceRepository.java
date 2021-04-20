@@ -44,6 +44,7 @@ public class PlaceRepository extends Repository{
     private MutableLiveData<List<TPlace>> mPlacesPendingToVisit = new MutableLiveData<>();
 
     private MutableLiveData<Integer> mFavSuccess = new MutableLiveData<Integer>();
+    private MutableLiveData<Integer> mVisitedSuccess = new MutableLiveData<Integer>();
 
     public LiveData<Boolean> getBooleanPlace(){ return mBooleanPlace; }
     public LiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
@@ -58,6 +59,7 @@ public class PlaceRepository extends Repository{
 
 
     public MutableLiveData<Integer> getFavSuccess() { return mFavSuccess; }
+    public MutableLiveData<Integer> getVisitedSuccess() { return mVisitedSuccess; }
 
 
     //Callback personalizado tanto para List como para Append
@@ -355,17 +357,6 @@ public class PlaceRepository extends Repository{
         call.enqueue(new PlaceListCallBack(simpleRequest, mPlacesList));
     }
 
-    public void historyListPlaces(int page, int quantity, String nickname) {
-        //TODO devuelve la lista de lugares. Solo es necesario la lista visitada.
-        String postBodyString = pageAndQuantToSTring(page, quantity, nickname, "");
-        SimpleRequest simpleRequest = new SimpleRequest();
-        Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/location/readHistory");
-        Call call = simpleRequest.createCall(request);
-
-        call.enqueue(new PlaceListCallBack(simpleRequest, mHistoryPlacesList));
-    }
-
     public void listPlacesCategories(int page, int quantity, String nickname, String category, String searchText) {
 
         String postBodyString = paramsToGetCategoriePlace(page, quantity, nickname, category, searchText);
@@ -450,6 +441,7 @@ public class PlaceRepository extends Repository{
         call.enqueue(new PlaceListCallBack(simpleRequest, mCategoriesPlacesList));
     }
 
+
     public void listVisitedPlaces(int page, int quantity, String nickname, String searchText) {
 
         String postBodyString = pageAndQuantToSTring(page, quantity, nickname, searchText);
@@ -511,6 +503,58 @@ public class PlaceRepository extends Repository{
                     mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
                 }
 
+            }
+        });
+    }
+
+    public void setVisitedOnPlace(TPlace place, String username) {
+
+        String postBodyString = jsonInfoForFav(place, username);
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = null;
+        if(!place.getTimeVisited().equals("")){
+            request = simpleRequest.buildRequest(
+                    postBodyString,
+                    AppConstants.METHOD_DELETE, "/location/deletePlaceVisited"
+            );
+        }
+        else{
+            request = simpleRequest.buildRequest(
+                    postBodyString,
+                    AppConstants.METHOD_POST, "/location/newPLaceVisited"
+            );
+        }
+
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mVisitedSuccess.postValue(AppConstants.VISITED_POST_FAIL);
+                mSuccess.postValue(AppConstants.VISITED_POST_FAIL);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    mVisitedSuccess.postValue(AppConstants.VISITED_POST_FAIL);
+                    mSuccess.postValue(AppConstants.VISITED_POST_FAIL);
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if (success){
+                    mVisitedSuccess.postValue(AppConstants.VISITED_POST_OK);//Importante que este despues del postValue de mUser
+                }
+                else{
+                    mVisitedSuccess.postValue(AppConstants.VISITED_POST_FAIL);//Importante que este despues del postValue de mUser
+                }
             }
         });
     }
@@ -619,8 +663,7 @@ public class PlaceRepository extends Repository{
 
             double distanceToUser = ((float) loc1.distanceTo(loc2));
             Integer numberOfRatings = jsonObject.getInt("n_comments");
-            //String dateVisited = jsonObject.getString("date_visited");
-            String dateVisited = "12-04-2021";
+            String dateVisited = jsonObject.getString("visited");
 
             return new TPlace(
                     jsonObject.getString("name"),

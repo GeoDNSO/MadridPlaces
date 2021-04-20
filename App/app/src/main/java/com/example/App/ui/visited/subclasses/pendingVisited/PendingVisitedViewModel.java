@@ -11,12 +11,12 @@ import java.util.List;
 public class PendingVisitedViewModel extends BaseViewModel {
     @Override
     protected LiveData<List<TPlace>> getPlaceListToParent() {
-        return null;
+        return placeRepository.getPendingToVisitList();
     }
 
     @Override
     public void listPlaceToParent(int page, int quant, String nickname, String serchText) {
-
+        placeRepository.listPendingToVisit(page, quant, nickname, serchText);
     }
     // TODO: Implement the ViewModel
 }
