@@ -2,37 +2,27 @@ package com.example.App.ui.visited.subclasses.pendingVisited;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import android.os.Bundle;
+import com.example.App.App;
+import com.example.App.ui.places_list.subclasses.BasePlaces;
+import com.example.App.ui.places_list.subclasses.BaseViewModel;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import java.util.ArrayList;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+public class PendingVisitedFragment extends BasePlaces {
 
-import com.example.App.R;
-
-public class PendingVisitedFragment extends Fragment {
-
-    private PendingVisitedViewModel mViewModel;
-
-    public static PendingVisitedFragment newInstance() {
-        return new PendingVisitedFragment();
+    public PendingVisitedFragment(){
+        super();
+        placeList = new ArrayList<>();
+    }
+    @Override
+    public void listPlaces() {
+        super.mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername(), search_text);
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.pending_visited_fragment, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(PendingVisitedViewModel.class);
-        // TODO: Use the ViewModel
+    public BaseViewModel getViewModelToParent() {
+        PendingVisitedViewModel rvm = new ViewModelProvider(this).get(PendingVisitedViewModel.class);
+        return rvm;
     }
 
 }

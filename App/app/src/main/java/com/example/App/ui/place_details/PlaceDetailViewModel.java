@@ -17,6 +17,7 @@ public class PlaceDetailViewModel extends ViewModelParent {
     private MutableLiveData<Boolean> mPlaceDetailActionInProgress = new MutableLiveData<>();
     private LiveData<Integer> mActionPlaceDetailSuccess = new MutableLiveData<>();
     protected LiveData<Integer> mFavSuccess = new MutableLiveData<>();
+    protected LiveData<Integer> mVisitedSuccess = new MutableLiveData<>();
 
     public void init(){
         placeRepository = new PlaceRepository();
@@ -28,12 +29,22 @@ public class PlaceDetailViewModel extends ViewModelParent {
                 placeRepository.getFavSuccess(),
                 success -> setFavSuccess(success) //Creo que se puede usar el mismo setSuccess... PROBAR
         );
+
+        mVisitedSuccess = Transformations.switchMap(
+                placeRepository.getVisitedSuccess(),
+                success -> setFavSuccess(success) //Creo que se puede usar el mismo setSuccess... PROBAR
+        );
     }
 
     public void deletePlace(String placeName){
         mPlaceDetailActionInProgress.setValue(true);
         placeRepository.deletePlace(placeName);
     }
+
+    public void setVisitedOnPlace(TPlace place, String username){
+        placeRepository.setVisitedOnPlace(place, username);
+    }
+
 
     private LiveData<Integer> setPlaceDetailActionInProgress(Integer success) {
         mPlaceDetailActionInProgress.setValue(false); //progress bar visible
@@ -61,4 +72,5 @@ public class PlaceDetailViewModel extends ViewModelParent {
     }
 
     public LiveData<Integer> getFavSuccess(){return mFavSuccess; }
+    public LiveData<Integer> getVisitedSuccess(){return mVisitedSuccess; }
 }

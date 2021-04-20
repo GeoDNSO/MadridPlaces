@@ -70,6 +70,8 @@ public class AppConstants {
     public static final String BUNDLE_CATEGORY_TYPE = "CATEGORIA";
     public static final Integer DELETE_COMMENT_OK = 340;
     public static final Integer ERROR_DELETE_COMMENT = -340;
+    public static final Integer VISITED_POST_FAIL = -341;
+    public static final Integer VISITED_POST_OK = 341;
 
 
 

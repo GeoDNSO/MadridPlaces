@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -50,6 +51,10 @@ import com.smarteist.autoimageslider.SliderView;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
@@ -161,6 +166,13 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
             }
         });
 
+        ivVisited.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.setVisitedOnPlace(place, App.getInstance().getUsername());
+            }
+        });
+
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -213,6 +225,33 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
             }
         });
 
+
+        mViewModel.getVisitedSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_flag_grey);
+
+                ivVisited.setImageDrawable(drawable);
+
+                if (integer.equals(AppConstants.VISITED_POST_OK)){
+
+                    if(place.getTimeVisited() != null && !place.getTimeVisited().equals("")){
+                        ivVisited.setImageDrawable(drawable);
+                        return;
+                    }
+                    drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_flag);
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                    Date date = new Date();
+                    place.setTimeVisited(formatter.format(date));
+                    ivVisited.setImageDrawable(drawable);
+
+                    return ;
+                }
+
+                Toast.makeText(getActivity(), "Error al hacer favorito", Toast.LENGTH_SHORT);
+            }
+        });
+
     }
 
     private void fillFields() {
@@ -239,8 +278,11 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
         ViewListenerUtilities.makeTextViewExpandable(tvPlaceDescription, true);
 
+        Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_flag_grey);
         if(place.getTimeVisited() != null && !place.getTimeVisited().equals(""))
-            ivVisited.setImageResource(R.drawable.ic_flag);
+            drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_flag);
+
+        ivVisited.setImageDrawable(drawable);
 
     }
 
