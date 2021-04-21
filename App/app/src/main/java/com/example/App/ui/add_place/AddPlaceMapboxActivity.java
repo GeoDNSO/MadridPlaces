@@ -284,8 +284,8 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
                                         bundle.putString("r_classAndName", feature.text());
                                         bundle.putString("r_number", feature.address());
                                         bundle.putString("zipcode", feature.context().get(0).text());
-                                        bundle.putDouble("latitude", point.coordinates().get(0));
-                                        bundle.putDouble("longitude", point.coordinates().get(1));
+                                        bundle.putDouble("longitude", point.coordinates().get(0));
+                                        bundle.putDouble("latitude", point.coordinates().get(1));
                                         Intent resultIntent = new Intent();
                                         resultIntent.putExtras(bundle);
                                         // resultIntent.putExtra(AppConstants.STATIC_STRING_MAPBOX_ADD_DATA, point.toString());

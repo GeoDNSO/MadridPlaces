@@ -63,10 +63,11 @@ public class AddPlaceViewModel extends ViewModelParent {
         return mAux;
     }
 
-    public void addPlace(String placeName, String placeDescription, String typePlace, List<String> listImages){
+    public void addPlace(String placeName, String placeDescription, String typePlace, List<String> listImages, Double latitude, Double longitude,
+                         String road_class, String road_name, String road_number, String zipcode){
         mProgressBar.setValue(true); //progress bar visible
-        TPlace place = new TPlace(placeName, placeDescription, 0.0, 0.0, listImages, typePlace, "Madrid",
-                "", "", "10", "", "", 0.0, false, 100.0, 50, "Sin Fecha");
+        TPlace place = new TPlace(placeName, placeDescription, latitude, longitude, listImages, typePlace, "Madrid",
+                road_class, road_name, road_number, zipcode, "", 0.0, false, 100.0, 50, "Sin Fecha");
         //TODO en type of place no devolvemos elnombre del lugar sino el numero asignado en la base de datos
         placeRepository.addPlace(place);
         //placeRepository.addPlace(placeName, placeDescription, typePlace);

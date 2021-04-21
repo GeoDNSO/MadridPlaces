@@ -99,7 +99,7 @@
     <string name="typeOfPlaces">Tipo de lugares</string>
     <string name="add_place">Añadir Lugar</string>
     <string name="add_place_title">Añadir imagenes </string>
-    <string name="add_place_coordinates">Pulsar el lugar donde se encuentra</string>
+    <string name="add_place_coordinates">Pulsar el lugar donde se encuentra (Requerido)</string>
 
     <string name="modify_place">Modificar Lugar</string>
     <string name="modify_place_title">Cambiar imagenes </string>
@@ -167,6 +167,8 @@
     <string name="my_recommendation_text_state_accept"> </string>
     <string name="my_recommendation_text_state_not"> no</string>
     <string name="my_recommendation_text_state_still">aún no se ha decidido</string>
+    <string name="entire_place_name">Calle</string>
+    <string name="not_assigned">Sin asignar</string>
 
 
 </resources>
