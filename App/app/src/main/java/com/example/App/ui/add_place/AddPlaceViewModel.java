@@ -67,7 +67,7 @@ public class AddPlaceViewModel extends ViewModelParent {
                          String road_class, String road_name, String road_number, String zipcode){
         mProgressBar.setValue(true); //progress bar visible
         TPlace place = new TPlace(placeName, placeDescription, latitude, longitude, listImages, typePlace, "Madrid",
-                road_class, road_name, road_number, zipcode, "", 0.0, false, 100.0, 50, "Sin Fecha");
+                road_class, road_name, road_number, zipcode, "", 0.0, false, 100.0, 0, "Sin Fecha");
         //TODO en type of place no devolvemos elnombre del lugar sino el numero asignado en la base de datos
         placeRepository.addPlace(place);
         //placeRepository.addPlace(placeName, placeDescription, typePlace);
