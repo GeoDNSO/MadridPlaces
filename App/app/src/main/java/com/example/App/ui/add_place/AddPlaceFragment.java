@@ -205,8 +205,19 @@ public class AddPlaceFragment extends Fragment {
         switch(requestCode) {
             case (AppConstants.STATIC_INTEGER_MAPBOX_ADD) : {
                 if (resultCode == Activity.RESULT_OK) {
-                    String newText = data.getStringExtra(AppConstants.STATIC_STRING_MAPBOX_ADD_DATA);
-                    Toast.makeText(getContext(), newText, Toast.LENGTH_SHORT).show();
+                    //String newText = data.getStringExtra(AppConstants.STATIC_STRING_MAPBOX_ADD_DATA);
+                    Bundle bundle = data.getExtras();
+                    String classAndName = bundle.getString("r_classAndName");
+                    String r_number = bundle.getString("r_number");
+                    String zipcode = bundle.getString("zipcode");
+                    Double latitude = bundle.getDouble("latitude");
+                    Double longitude = bundle.getDouble("longitude");
+                    Toast.makeText(getContext(), classAndName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), r_number, Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(getContext(), zipcode, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), String.valueOf(latitude), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), String.valueOf(longitude), Toast.LENGTH_SHORT).show();
                 }
                 break;
             }

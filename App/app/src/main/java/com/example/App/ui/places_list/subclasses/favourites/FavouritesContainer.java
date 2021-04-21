@@ -13,11 +13,16 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.App.App;
 import com.example.App.R;
+import com.example.App.ui.admin.AdminFragment;
 
 public class FavouritesContainer extends Fragment {
     private View root;
     private FrameLayout frameLayout;
     private FavouritesPlacesFragment favouritesListFragment;
+
+    public static FavouritesContainer newInstance() {
+        return new FavouritesContainer();
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -27,7 +32,7 @@ public class FavouritesContainer extends Fragment {
 
         favouritesListFragment = new FavouritesPlacesFragment();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.place_list_container, favouritesListFragment).commit();
+        transaction.replace(R.id.favourites_list_container, favouritesListFragment).commit();
 
         return root;
     }

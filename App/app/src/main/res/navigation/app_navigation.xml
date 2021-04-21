@@ -100,7 +100,7 @@
     <fragment
         android:id="@+id/addPlaceFragment"
         android:name="com.example.App.ui.add_place.AddPlaceFragment"
-        android:label="AddPlaceFragment" />
+        android:label="@string/add_place" />
     <fragment
         android:id="@+id/modifyPlaceFragment"
         android:name="com.example.App.ui.modify_place.ModifyPlaceFragment"
@@ -115,4 +115,8 @@
         android:id="@+id/addPlaceMapboxActivity"
         android:name="com.example.App.ui.add_place.AddPlaceMapboxActivity"
         android:label="AddPlaceMapboxActivity" />
+    <fragment
+        android:id="@+id/favouritesPlacesFragment"
+        android:name="com.example.App.ui.places_list.subclasses.favourites.FavouritesPlacesFragment"
+        android:label="@string/menu_favourites_text" />
 </navigation>
