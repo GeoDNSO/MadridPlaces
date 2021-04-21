@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,14 +69,14 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-// Mapbox access token is configured here. This needs to be called either in your application
-// object or in the same activity which contains the mapview.
+        // Mapbox access token is configured here. This needs to be called either in your application
+        // object or in the same activity which contains the mapview.
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
 
-// This contains the MapView in XML and needs to be called after the access token is configured.
+        // This contains the MapView in XML and needs to be called after the access token is configured.
         setContentView(R.layout.activity_add_place_mapbox);
 
-// Initialize the mapboxMap view
+        // Initialize the mapboxMap view
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
@@ -89,14 +90,14 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
             public void onStyleLoaded(@NonNull final Style style) {
                 enableLocationPlugin(style);
 
-// Toast instructing user to tap on the mapboxMap
+                // Toast instructing user to tap on the mapboxMap
                 Toast.makeText(
                         AddPlaceMapboxActivity.this,
                         getString(R.string.move_map_instruction), Toast.LENGTH_SHORT).show();
 
-// When user is still picking a location, we hover a marker above the mapboxMap in the center.
-// This is done by using an image view with the default marker found in the SDK. You can
-// swap out for your own marker image, just make sure it matches up with the dropped marker.
+                // When user is still picking a location, we hover a marker above the mapboxMap in the center.
+                // This is done by using an image view with the default marker found in the SDK. You can
+                // swap out for your own marker image, just make sure it matches up with the dropped marker.
                 hoveringMarker = new ImageView(AddPlaceMapboxActivity.this);
                 hoveringMarker.setImageResource(R.drawable.mapbox_marker_icon_default);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
@@ -105,28 +106,28 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
                 hoveringMarker.setLayoutParams(params);
                 mapView.addView(hoveringMarker);
 
-// Initialize, but don't show, a SymbolLayer for the marker icon which will represent a selected location.
+                // Initialize, but don't show, a SymbolLayer for the marker icon which will represent a selected location.
                 initDroppedMarker(style);
 
-// Button for user to drop marker or to pick marker back up.
+                // Button for user to drop marker or to pick marker back up.
                 selectLocationButton = findViewById(R.id.select_location_button);
                 selectLocationButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (hoveringMarker.getVisibility() == View.VISIBLE) {
 
-// Use the map target's coordinates to make a reverse geocoding search
+                            // Use the map target's coordinates to make a reverse geocoding search
                             final LatLng mapTargetLatLng = mapboxMap.getCameraPosition().target;
 
-// Hide the hovering red hovering ImageView marker
+                            // Hide the hovering red hovering ImageView marker
                             hoveringMarker.setVisibility(View.INVISIBLE);
 
-// Transform the appearance of the button to become the cancel button
+                            // Transform the appearance of the button to become the cancel button
                             selectLocationButton.setBackgroundColor(
                                     ContextCompat.getColor(AddPlaceMapboxActivity.this, R.color.colorAccent));
                             selectLocationButton.setText(getString(R.string.location_picker_select_location_button_cancel));
 
-// Show the SymbolLayer icon to represent the selected map location
+                            // Show the SymbolLayer icon to represent the selected map location
                             if (style.getLayer(DROPPED_MARKER_LAYER_ID) != null) {
                                 GeoJsonSource source = style.getSourceAs("dropped-marker-source-id");
                                 if (source != null) {
@@ -138,20 +139,19 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
                                 }
                             }
 
-// Use the map camera target's coordinates to make a reverse geocoding search
+                            // Use the map camera target's coordinates to make a reverse geocoding search
                             reverseGeocode(Point.fromLngLat(mapTargetLatLng.getLongitude(), mapTargetLatLng.getLatitude()));
 
                         } else {
 
-// Switch the button appearance back to select a location.
+                            // Switch the button appearance back to select a location.
                             selectLocationButton.setBackgroundColor(
                                     ContextCompat.getColor(AddPlaceMapboxActivity.this, R.color.colorPrimary));
                             selectLocationButton.setText(getString(R.string.location_picker_select_location_button_select));
-
-// Show the red hovering ImageView marker
+                            // Show the red hovering ImageView marker
                             hoveringMarker.setVisibility(View.VISIBLE);
 
-// Hide the selected location SymbolLayer
+                            // Hide the selected location SymbolLayer
                             droppedMarkerLayer = style.getLayer(DROPPED_MARKER_LAYER_ID);
                             if (droppedMarkerLayer != null) {
                                 droppedMarkerLayer.setProperties(visibility(NONE));
@@ -164,7 +164,7 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
     }
 
     private void initDroppedMarker(@NonNull Style loadedMapStyle) {
-// Add the marker image to map
+        // Add the marker image to map
         loadedMapStyle.addImage("dropped-icon-image", BitmapFactory.decodeResource(
                 getResources(), R.drawable.mapbox_marker_icon_default));
         loadedMapStyle.addSource(new GeoJsonSource("dropped-marker-source-id"));
@@ -267,7 +267,7 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
                         if (results.size() > 0) {
                             CarmenFeature feature = results.get(0);
 
-// If the geocoder returns a result, we take the first in the list and show a Toast with the place name.
+                            // If the geocoder returns a result, we take the first in the list and show a Toast with the place name.
                             mapboxMap.getStyle(new Style.OnStyleLoaded() {
                                 @Override
                                 public void onStyleLoaded(@NonNull Style style) {
@@ -275,8 +275,19 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
                                         Toast.makeText(AddPlaceMapboxActivity.this,
                                                 String.format(getString(R.string.location_picker_place_name_result),
                                                         feature.placeName()), Toast.LENGTH_SHORT).show();
+                                        Bundle bundle = new Bundle();
+                                        /*Log.i("BundleLatitudeLongitude", String.valueOf(point.coordinates().get(0))); //lati
+                                        Log.i("BundleLatitudeLongitude", String.valueOf(point.coordinates().get(1))); //longi
+                                        Log.i("BundleLatitudeLongitude", feature.address()); //Número de la calle
+                                        Log.i("BundleLatitudeLongitude", feature.text()); //calle y nombre
+                                        Log.i("BundleLatitudeLongitude", feature.context().get(0).text());*/ //Código postal
+                                        bundle.putString("r_classAndName", feature.text());
+                                        bundle.putString("r_number", feature.address());
+                                        bundle.putString("zipcode", feature.context().get(0).text());
+                                        bundle.putDouble("longitude", point.coordinates().get(0));
+                                        bundle.putDouble("latitude", point.coordinates().get(1));
                                         Intent resultIntent = new Intent();
-                                        resultIntent.putExtra(AppConstants.STATIC_STRING_MAPBOX_ADD_DATA, feature.placeName());
+                                        resultIntent.putExtras(bundle);
                                         // resultIntent.putExtra(AppConstants.STATIC_STRING_MAPBOX_ADD_DATA, point.toString());
                                         setResult(Activity.RESULT_OK, resultIntent);
                                         finish();

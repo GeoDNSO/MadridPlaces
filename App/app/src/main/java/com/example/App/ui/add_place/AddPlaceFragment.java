@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -55,11 +56,18 @@ public class AddPlaceFragment extends Fragment {
     private ChipGroup chipGroupView;
     private EditText et_placeName;
     private TextInputEditText tiet_placeDescription;
+    private Double latitude;
+    private Double longitude;
+    private String r_number;
+    private String r_class;
+    private String r_name;
+    private String zipcode;
 
     private List<Uri> uriList;
     List<Bitmap> bitmapList;
     private List<String> imageStringBase64;
     private ImageButton mapboxAddPlace;
+    private TextView tv_road_entire_name;
 
     public static AddPlaceFragment newInstance() {
         return new AddPlaceFragment();
@@ -110,6 +118,11 @@ public class AddPlaceFragment extends Fragment {
         et_placeName = root.findViewById(R.id.name_place_add_place);
         tiet_placeDescription = root.findViewById(R.id.description_place_add_place);
         mapboxAddPlace = root.findViewById(R.id.image_button_add_place_map);
+        tv_road_entire_name = root.findViewById(R.id.add_place_entire_place_name_text);
+        r_number = "";
+        r_name = "";
+        r_class= "";
+        zipcode = "";
         uriList = new ArrayList<>();
     }
 
@@ -205,8 +218,17 @@ public class AddPlaceFragment extends Fragment {
         switch(requestCode) {
             case (AppConstants.STATIC_INTEGER_MAPBOX_ADD) : {
                 if (resultCode == Activity.RESULT_OK) {
-                    String newText = data.getStringExtra(AppConstants.STATIC_STRING_MAPBOX_ADD_DATA);
-                    Toast.makeText(getContext(), newText, Toast.LENGTH_SHORT).show();
+                    //String newText = data.getStringExtra(AppConstants.STATIC_STRING_MAPBOX_ADD_DATA);
+                    Bundle bundle = data.getExtras();
+                    String classAndName = bundle.getString("r_classAndName");
+                    String[] className = classAndName.split(" ", 2);
+                    r_class = className[0];
+                    r_name = className[1];
+                    r_number = bundle.getString("r_number");
+                    zipcode = bundle.getString("zipcode");
+                    latitude = bundle.getDouble("latitude");
+                    longitude = bundle.getDouble("longitude");
+                    tv_road_entire_name.setText(String.format("%s %s %s %s", r_class, r_name, r_number, zipcode));
                 }
                 break;
             }
@@ -276,14 +298,14 @@ public class AddPlaceFragment extends Fragment {
         String placeName = et_placeName.getText().toString();
         String placeDescription = tiet_placeDescription.getText().toString();
 
-        if (Validator.argumentsEmpty(placeName, placeDescription, finalTypePlace)) {
+        if (Validator.argumentsEmpty(placeName, placeDescription, finalTypePlace, r_class, r_name, r_number, zipcode)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
         else if(Validator.placeAlredyExists(placeName)){
             et_placeName.setError(getString(R.string.place_exists));
         }
         else {
-            mViewModel.addPlace(placeName, placeDescription, finalTypePlace, imageStringBase64);
+            mViewModel.addPlace(placeName, placeDescription, finalTypePlace, imageStringBase64, latitude, longitude, r_class, r_name, r_number, zipcode);
         }
     }
 }
