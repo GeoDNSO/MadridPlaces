@@ -31,26 +31,28 @@ def newLocation():
     zipcode = json_data["zipcode"]
     listImg = json_data["imagesList"]
     #affluence = json_data["affluence"]
+
+    lcQuery = modules.location.query.filter_by(name = name).first()
+    if(lcQuery is not None):
+    	print("Ya existe el lugar")
+    	return jsonify(exito = "false")
     typeofplace = LocationFunct.mapCategoryToInt(type_of_place)
     createLocation = modules.location(name = name, description = description, coordinate_latitude = coordinate_latitude, 
         coordinate_longitude = coordinate_longitude, type_of_place = typeofplace, road_class = road_class, road_name = road_name,
         road_number = road_number, zipcode = zipcode)
-    
     try:
         modules.sqlAlchemy.session.add(createLocation)
         modules.sqlAlchemy.session.commit()
         i = 0
-        #for decodedImg in listImg:
-        list = listImg.replace("[", "").replace("]", "").split(",")
-        for codedec in list:
-            image = LocationFunct.decode64Img(codedec, i) #image = imgTemp1.jpg
-            url = LocationFunct.uploadImg(image) # url = https://www.imgur.com/imgTemp1.jpg
-            
-            createLocationImage = modules.location_images(location_name = name, image=url)
-            modules.sqlAlchemy.session.add(createLocationImage)
-
-            LocationFunct.delImgTemp(image) #Elimina la imagen temporal almacenada
-            i = i + 1
+        lista = listImg.replace("[", "").replace("]", "").split(",")
+        for codedec in lista:
+            if(codedec != ""):
+                image = LocationFunct.decode64Img(codedec, i) #image = imgTemp1.jpg
+                url = LocationFunct.uploadImg(image) # url = https://www.imgur.com/imgTemp1.jpg
+                createLocationImage = modules.location_images(location_name = name, image=url)
+                modules.sqlAlchemy.session.add(createLocationImage)
+                LocationFunct.delImgTemp(image) #Elimina la imagen temporal almacenada
+                i = i + 1
 
         modules.sqlAlchemy.session.commit()
         return LocationFunct.jsonifiedPlace(createLocation)
@@ -75,13 +77,16 @@ def modifyLocation():
     affluence = json_data["affluence"]
     listImg = json_data["imagesList"]
     try:
+        lcQuery = modules.location.query.filter_by(name = name).first()
+        if(lcQuery is not None):
+            print("Ya existe el lugar")
+            return jsonify(exito = "false")
+
         i = 0
-        print(listImg)
         l = listImg.replace("[", "").replace("]", "").split(", ")
-        print(l)
         listUrl = []
         for img in l:
-            if("http" not in img):
+            if("http" not in img and img != ""):
                 image = LocationFunct.decode64Img(img, i) #image = imgTemp1.jpg
                 url = LocationFunct.uploadImg(image) # url = https://www.imgur.com/imgTemp1.jpg
                 listUrl.append(url)
