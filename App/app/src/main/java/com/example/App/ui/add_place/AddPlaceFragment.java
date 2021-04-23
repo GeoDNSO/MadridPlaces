@@ -265,21 +265,6 @@ public class AddPlaceFragment extends Fragment {
         }
     }
 
-    private String convertUriToPath (Uri uri){
-        Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        String cursorString = cursor.getString(0);
-        cursorString = cursorString.substring(cursorString.lastIndexOf(":") + 1);
-        cursor.close();
-
-        cursor = getContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null,
-                MediaStore.Images.Media._ID + " = ? ", new String[]{cursorString}, null);
-        cursor.moveToFirst();
-        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-        cursor.close();
-        return path;
-    }
-
     public static String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 90, byteArrayOutputStream);

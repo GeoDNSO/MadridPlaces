@@ -23,6 +23,7 @@
         android:theme="@style/Theme.App.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity android:name=".ui.add_place.AddPlaceMapboxActivity"></activity>
+        <activity android:name=".ui.modify_place.ModifyPlaceMapboxActivity"></activity>
         <activity
             android:name=".ui.map.MapboxActivity"
             android:theme="@style/Theme.Mapbox" />

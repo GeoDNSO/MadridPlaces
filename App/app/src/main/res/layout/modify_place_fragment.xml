@@ -125,11 +125,13 @@
 
         <TextView
             android:id="@+id/tv_modify_place_coordinates"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="20dp"
             android:text="@string/add_place_coordinates"
-            android:textSize="20dp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.392"
             app:layout_constraintStart_toStartOf="parent"
@@ -145,6 +147,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_baseline_map_24"
             tools:layout_editor_absoluteY="362dp" />
+
+        <TextView
+            android:id="@+id/modify_place_entire_place_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/entire_place_name"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.095"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_button_modify_place_map" />
+
+        <TextView
+            android:id="@+id/modify_place_entire_place_name_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/not_assigned"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.127"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/modify_place_entire_place_name"/>
+
 
         <TextView
             android:id="@+id/type_of_place_modify_place"
@@ -174,13 +204,13 @@
             android:id="@+id/button_modify_place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="16dp"
             android:text="@string/modify_place"
             android:layout_marginBottom="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image_button_modify_place_map" />
+            app:layout_constraintTop_toBottomOf="@+id/modify_place_entire_place_name_text" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
