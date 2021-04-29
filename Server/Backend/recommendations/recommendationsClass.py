@@ -1,7 +1,6 @@
 from flask import Blueprint
 from flask import request
 from flask import jsonify
-from pprint import pprint
 import modules
 
 import recommendations.recommendationsFunct as RecommendationsFunct
@@ -44,9 +43,9 @@ def deleteRecommendation():
     userSrc, userDst, location = RecommendationsFunct.initParameters()
     try:
         rcQuery = modules.recommendations.query.filter_by(userSrc = userSrc, userDst = userDst, location = location).delete()
-        modules.sqlAlchemy.session.commit()
         if (rcQuery == 0):
             return jsonify(exito = "false", mensaje = "No existe dicha recomendación")
+        modules.sqlAlchemy.session.commit()
         return jsonify(exito = "true", mensaje = "Se ha eliminado la recomendación")
     except Exception as e:
         print("Ha habido algún error: ", repr(e))

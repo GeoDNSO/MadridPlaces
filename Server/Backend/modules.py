@@ -95,3 +95,11 @@ class recommendations(sqlAlchemy.Model):
     location = sqlAlchemy.Column(sqlAlchemy.String(255))
     state = sqlAlchemy.Column(sqlAlchemy.String(255))
     created =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now(), onupdate = sqlAlchemy.func.now())
+
+class friends(sqlAlchemy.Model):
+    __tablename__ = 'friends'
+    id_friendRelation = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
+    userSrc = sqlAlchemy.Column(sqlAlchemy.String(255))
+    userDst = sqlAlchemy.Column(sqlAlchemy.String(255))
+    state = sqlAlchemy.Column(sqlAlchemy.String(255))
+    created =  sqlAlchemy.Column(sqlAlchemy.DateTime, default = sqlAlchemy.func.now(), onupdate = sqlAlchemy.func.now())
