@@ -170,6 +170,14 @@
     <string name="entire_place_name">Calle</string>
     <string name="not_assigned">Sin asignar</string>
     <string name="recommend_place_menu_text">Recomendar Lugar</string>
+    <string name="friends_text">Amigos</string>
+    <string name="account_options">Opciones de cuenta</string>
+    <string name="admin_options">Administración</string>
+    <string name="user_list">Lista de Usuarios</string>
+    <string name="other">Otros</string>
+    <string name="friend_list">Lista de Amigos</string>
+    <string name="friend_request">Peticiones de Amistad</string>
+    <string name="add_friend">Añadir Amigo</string>
 
 
 </resources>

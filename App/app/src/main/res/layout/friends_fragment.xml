@@ -4,16 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="?actionBarSize"
-    android:id="@+id/visitedFragment_LLayout"
     android:orientation="vertical"
-    tools:context=".ui.visited.VisitedFragment">
-
+    android:id="@+id/friendsLLayout"
+    tools:context=".ui.friends.FriendsFragment">
 
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        android:id="@+id/recommendations_tab_layout"
+        android:id="@+id/friends_tab_layout"
         android:background="@color/white"
         app:tabInlineLabel="true"
         app:tabMode="scrollable"
@@ -26,8 +24,6 @@
     <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recommendations_view_pager"/>
-
-
+        android:id="@+id/friends_view_pager"/>
 
 </LinearLayout>

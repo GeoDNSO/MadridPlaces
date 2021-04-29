@@ -119,4 +119,9 @@
         android:id="@+id/favouritesPlacesFragment"
         android:name="com.example.App.ui.places_list.subclasses.favourites.FavouritesPlacesFragment"
         android:label="@string/menu_favourites_text" />
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="com.example.App.ui.friends.FriendsFragment"
+        android:label="@string/friends_text"
+        tools:layout="@layout/friends_fragment" />
 </navigation>
