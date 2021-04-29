@@ -6,6 +6,7 @@ import android.util.Pair;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.models.dao.SimpleRequest;
+import com.example.App.models.repositories.helpers.UserRespositoryHelper;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.models.transfer.TUser;
 import com.example.App.utilities.AppConstants;
@@ -65,7 +66,7 @@ public class UserRepository {
 
     public void loginUser(String nickname, String password) {
 
-        String postBodyString = loginInfoToString(nickname, password);
+        String postBodyString = UserRespositoryHelper.loginInfoToString(nickname, password);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -92,7 +93,7 @@ public class UserRepository {
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if (success){
-                    mUser.postValue(jsonStringToUser(res));
+                    mUser.postValue(UserRespositoryHelper.jsonStringToUser(res));
                 }
                 else{
                     mUser.postValue(null);
@@ -136,7 +137,7 @@ public class UserRepository {
                     throw new IOException("Unexpected code " + response);
                 }
                 mSuccess.postValue(simpleRequest.isSuccessful(response));
-                TUser user = jsonStringToUser(response.body().string());
+                TUser user = UserRespositoryHelper.jsonStringToUser(response.body().string());
                 mUser.postValue(user);
             }
         });
@@ -212,7 +213,7 @@ public class UserRepository {
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if (success){
-                    mUser.postValue(jsonStringToUser(res));
+                    mUser.postValue(UserRespositoryHelper.jsonStringToUser(res));
                     Log.d("Caca", res);
                     mProfileSuccess.postValue(AppConstants.MODIFY_PROFILE);//Importante que este despues del postValue de mUser
                 }
@@ -226,7 +227,7 @@ public class UserRepository {
     }
 
     public void listUsers(int page, int quantum, String searchText, int sortType) {
-        String postBodyString = paramsToString(page, quantum, searchText, sortType);
+        String postBodyString = UserRespositoryHelper.paramsToString(page, quantum, searchText, sortType);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -319,34 +320,12 @@ public class UserRepository {
                     throw new IOException("Unexpected code " + response);
                 }
                 else {
-                    Pair<Integer, Integer> pair = jsonPair(res);
+                    Pair<Integer, Integer> pair = UserRespositoryHelper.jsonPair(res);
                     mCountProfileCommentsAndHistory.postValue(pair);
                 }
             }
 
         });
-    }
-
-    private Pair<Integer, Integer> jsonPair(String string) {
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(string);
-            Integer countComments = jsonObject.getInt("nFavorites");
-            Integer countHistoryPlaces = jsonObject.getInt("nVisited");
-
-            return new Pair<>(countComments, countHistoryPlaces);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private void sleep(long milis){
-        try {
-            Thread.sleep(milis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     private List<TUser> getListFromResponse(String response){
@@ -358,7 +337,7 @@ public class UserRepository {
             List<TUser> listUsers = new ArrayList<TUser>();
             JSONArray arrayUsers = jresponse.getJSONArray("users");
             for (int i = 0; i < arrayUsers.length(); i++) {
-                TUser tUser = jsonStringToUser(arrayUsers.getString(i));
+                TUser tUser = UserRespositoryHelper.jsonStringToUser(arrayUsers.getString(i));
                 listUsers.add(tUser);
             }
             return listUsers;
@@ -384,64 +363,9 @@ public class UserRepository {
         return mUser;
     }
 
-    public void setmUser(MutableLiveData<TUser> mUser) {
-        this.mUser = mUser;
-    }
 
     public MutableLiveData<Pair<Integer, Integer>> getmCountProfileCommentsAndHistory() {
         return mCountProfileCommentsAndHistory;
-    }
-
-    //Métodos Privados para JSONs
-
-    //Crea un JSON con la información necesaria para el login: nickname y password
-    private String loginInfoToString(String nickname, String password){
-        JSONObject jsonUser = new JSONObject();
-        String infoString;
-        try {
-            jsonUser.put("nickname", nickname);
-            jsonUser.put("password", password);
-        }catch (JSONException e) {
-            e.printStackTrace();
-            infoString = "error";
-        }
-        infoString = jsonUser.toString();
-
-        return infoString;
-    }
-
-    //Convierte String con formato json en usuario
-    private TUser jsonStringToUser(String jsonString){
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(jsonString);
-            String image_profile = jsonObject.getString("profile_image");
-            if(image_profile.equals("null")){
-                image_profile = null;
-            }
-            return new TUser(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"), image_profile);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private String paramsToString(int page, int quantity, String searchText, int sortType) {
-        JSONObject params = new JSONObject();
-        String infoString;
-        try {
-            params.put("page", page);
-            params.put("quant", quantity);
-            params.put("search", searchText);
-            params.put("filter_by", sortType);
-
-        }catch (JSONException e) {
-            e.printStackTrace();
-            infoString = "error";
-        }
-        infoString = params.toString();
-
-        return infoString;
     }
 
     public void clearListUsers() {

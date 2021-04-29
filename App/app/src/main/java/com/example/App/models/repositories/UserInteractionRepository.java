@@ -8,6 +8,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.App;
 import com.example.App.models.dao.SimpleRequest;
+import com.example.App.models.repositories.helpers.PlaceRepositoryHelper;
+import com.example.App.models.repositories.helpers.UserInteractionRepositoryHelper;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.models.transfer.TRecomendation;
 import com.example.App.services.LocationTrack;
@@ -100,7 +102,7 @@ public class UserInteractionRepository extends Repository{
             }
             //si no hubo problemas...
             List<TRecomendation> listaAux = recomList.getValue();
-            List<TRecomendation> listaFromResponse = getListFromResponse(res);
+            List<TRecomendation> listaFromResponse = UserInteractionRepositoryHelper.getListFromResponse(res);
             if(listaFromResponse == null){
                 Log.d("PLACE_REPO", "La lista JSON convertida es NULO, MIRAR...");
                 return;
@@ -109,7 +111,7 @@ public class UserInteractionRepository extends Repository{
                 return;
             }
             if (listaAux == null){
-                recomList.postValue(getListFromResponse(res));
+                recomList.postValue(UserInteractionRepositoryHelper.getListFromResponse(res));
             }
             else{
                 listaAux.addAll(listaFromResponse);
@@ -123,7 +125,7 @@ public class UserInteractionRepository extends Repository{
     // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
     public void listRecom(int page, int quantity, String nickname) {
 
-        String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
+        String postBodyString = UserInteractionRepositoryHelper.pageAndQuantToSTring(page, quantity, nickname);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/recommendations/listRecommendationsSent");
@@ -133,7 +135,7 @@ public class UserInteractionRepository extends Repository{
     }
 
     public void acceptPendingRecom(String placeName, String userOrigin, String userDest){
-        String postBodyString = jsonInfoForSendRecomendation(userOrigin, userDest, placeName);
+        String postBodyString = UserInteractionRepositoryHelper.jsonInfoForSendRecomendation(userOrigin, userDest, placeName);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -173,7 +175,7 @@ public class UserInteractionRepository extends Repository{
     }
 
     public void denyPendingRecom(String placeName, String userOrigin, String userDest){
-        String postBodyString = jsonInfoForSendRecomendation(userOrigin, userDest, placeName);
+        String postBodyString = UserInteractionRepositoryHelper.jsonInfoForSendRecomendation(userOrigin, userDest, placeName);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -214,7 +216,7 @@ public class UserInteractionRepository extends Repository{
 
     public void listPendingRecom(int page, int quantity, String nickname) {
 
-        String postBodyString = pageAndQuantToSTring(page, quantity, nickname);
+        String postBodyString = UserInteractionRepositoryHelper.pageAndQuantToSTring(page, quantity, nickname);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/recommendations/listPendingRecommendations");
@@ -223,24 +225,8 @@ public class UserInteractionRepository extends Repository{
         call.enqueue(new UserInteractionRepository.RecommendationsListCallBack(simpleRequest, mPendingRecommendationsList));
     }
 
-    private String pageAndQuantToSTring(int page, int quantity, String nickname) {
-        JSONObject jsonPageQuant = new JSONObject();
-        String infoString;
-        try {
-            jsonPageQuant.put("page", page);
-            jsonPageQuant.put("quant", quantity);
-            jsonPageQuant.put("user", nickname);
-        }catch (JSONException e) {
-            e.printStackTrace();
-            infoString = "error";
-        }
-        infoString = jsonPageQuant.toString();
-
-        return infoString;
-    }
-
     public void sendRecomendation(String userOrigin, String userDest, String place) {
-        String postBodyString = jsonInfoForSendRecomendation(userOrigin, userDest, place);
+        String postBodyString = UserInteractionRepositoryHelper.jsonInfoForSendRecomendation(userOrigin, userDest, place);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -278,134 +264,5 @@ public class UserInteractionRepository extends Repository{
             }
         });
     }
-
-    private List<TRecomendation> getListFromResponse(String res) {
-        JSONObject jresponse = null;
-        try {
-            jresponse = new JSONObject(res);
-
-            List<TRecomendation> recomendations = new ArrayList<>();
-            JSONArray arrayPlaces = jresponse.getJSONArray("list");
-            for (int i = 0; i < arrayPlaces.length(); i++) {
-                TRecomendation tRecommendation = jsonStringToRecom(arrayPlaces.getString(i));
-                recomendations.add(tRecommendation);
-            }
-            return recomendations;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return  null;
-        }
-    }
-
-    private TRecomendation jsonStringToRecom(String jsonString) {
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(jsonString);
-            TPlace place = jsonStringToPlace(jsonObject.toString());
-            return new TRecomendation(
-                    jsonObject.getString("userSrc"),
-                    jsonObject.getString("userDst"),
-                    place,
-                    jsonObject.getString("state"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private String jsonInfoForSendRecomendation(String userOrigin, String userDest, String place) {
-        JSONObject json = new JSONObject();
-        String infoString;
-        try {
-            json.put("userSrc", userOrigin); //TODO Está a pelo
-            json.put("userDst", userDest);
-            json.put("location", place);
-        }catch (JSONException e) {
-            e.printStackTrace();
-            infoString = "error";
-        }
-        infoString = json.toString();
-
-        return infoString;
-    }
-
-
-    //TODO esta repetido
-    private TPlace jsonStringToPlace(String jsonString) {
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(jsonString);
-            String a = jsonObject.getString("road_number");
-
-            List<String> jsonImagesList = jsonArrayImagesToStringList(jsonObject.getJSONArray("imageList"));
-            Boolean placeIsFav = jsonObject.getString("favorite").equals("true");
-
-
-            Double latitude = jsonObject.getDouble("coordinate_latitude");
-            Double longitude = jsonObject.getDouble("coordinate_longitude");
-
-            Location loc1 = new Location("");
-            loc1.setLatitude(latitude);
-            loc1.setLongitude(longitude);
-
-            LocationTrack locationTrack = App.getInstance().getLocationTrack();
-
-            Location loc2 = new Location("");
-            loc2.setLatitude(locationTrack.getLatitude());
-            loc2.setLongitude(locationTrack.getLongitude());
-
-            double distanceToUser = ((float) loc1.distanceTo(loc2));
-            Integer numberOfRatings = jsonObject.getInt("n_comments");
-            //String dateVisited = jsonObject.getString("date_visited");
-            String dateVisited = "12-04-2021";
-
-            return new TPlace(
-                    jsonObject.getString("name"),
-                    jsonObject.getString("description"),
-                    jsonObject.getDouble("coordinate_latitude"),
-                    jsonObject.getDouble("coordinate_longitude"),
-                    jsonImagesList,
-                    jsonObject.getString("type_of_place"),
-                    jsonObject.getString("city"),
-                    jsonObject.getString("road_class"),
-                    jsonObject.getString("road_name"),
-                    jsonObject.getString("road_number"),
-                    jsonObject.getString("zipcode"),
-                    jsonObject.getString("affluence"),
-                    jsonObject.getDouble("rate"),
-                    placeIsFav,
-                    distanceToUser,
-                    numberOfRatings,
-                    dateVisited);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    //TODO esta repetido
-    private List<String> jsonArrayImagesToStringList(JSONArray jsonImageList) {
-        ArrayList<String> lista = new ArrayList<>();
-
-
-        for (int i=0;i<jsonImageList.length();i++){
-            try {
-                String imageURL = jsonImageList.getJSONObject(i).getString("image");
-                String imageURLCorrected = jsonUrlCorrector(imageURL);
-                lista.add(imageURLCorrected);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Log.d("ERROR", "jsonArrayImagesToStringList: Error al procesar array");
-            }
-        }
-        return lista;
-    }
-
-    //TODO esta repetido
-    private String jsonUrlCorrector(String json_data) {
-        json_data = json_data.replace("\\", "");
-        return json_data;
-    }
-
 
 }
