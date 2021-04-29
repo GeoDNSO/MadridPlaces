@@ -37,6 +37,7 @@ import com.example.App.utilities.Validator;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -54,7 +55,7 @@ public class AddPlaceFragment extends Fragment {
     private List<String> listTypesPlaces;
     private String finalTypePlace;
     private ChipGroup chipGroupView;
-    private EditText et_placeName;
+    private TextInputEditText et_placeName;
     private TextInputEditText tiet_placeDescription;
     private Double latitude;
     private Double longitude;
@@ -280,10 +281,12 @@ public class AddPlaceFragment extends Fragment {
                 //imageUri.add(convertUriToPath(uriList.get(i)));
             }
         }
+
         String placeName = et_placeName.getText().toString();
         String placeDescription = tiet_placeDescription.getText().toString();
 
-        if (Validator.argumentsEmpty(placeName, placeDescription, finalTypePlace, r_class, r_name, r_number, zipcode)) {
+        if (!validatePlaceName(placeName) || !validatePlaceDescription(placeDescription) ||
+                Validator.argumentsEmpty(finalTypePlace, r_class, r_name, r_number, zipcode)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
         else if(Validator.placeAlredyExists(placeName)){
@@ -293,4 +296,28 @@ public class AddPlaceFragment extends Fragment {
             mViewModel.addPlace(placeName, placeDescription, finalTypePlace, imageStringBase64, latitude, longitude, r_class, r_name, r_number, zipcode);
         }
     }
+
+    private boolean validatePlaceName(String placeName){
+        if(placeName.isEmpty()){
+            et_placeName.setError("Campo obligatorio");
+            return false;
+        }
+        else{
+            et_placeName.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validatePlaceDescription(String placeDescription){
+        if(placeDescription.isEmpty()){
+            tiet_placeDescription.setError("Campo obligatorio");
+            return false;
+        }
+        else{
+            tiet_placeDescription.setError(null);
+            return true;
+        }
+    }
+
+
 }
