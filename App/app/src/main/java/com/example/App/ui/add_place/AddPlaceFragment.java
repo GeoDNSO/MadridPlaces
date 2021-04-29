@@ -49,7 +49,7 @@ public class AddPlaceFragment extends Fragment {
     private AddPlaceViewModel mViewModel;
     private View root;
     private LinearLayout linearLayout;
-    private ImageButton imageButton;
+    private Button imageButton;
     private Button button;
     private int numberOfImages;
     private List<String> listTypesPlaces;

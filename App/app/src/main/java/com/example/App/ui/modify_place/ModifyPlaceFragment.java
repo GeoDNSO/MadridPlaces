@@ -56,13 +56,13 @@ public class ModifyPlaceFragment extends Fragment {
     private ModifyPlaceViewModel mViewModel;
 
     private LinearLayout linearLayout;
-    private ImageButton imageButton;
+    private Button imageButton;
     private Button button;
     private int numberOfImages;
     private List<String> listTypesPlaces;
     private String finalTypePlace;
     private ChipGroup chipGroupView;
-    private EditText et_placeName;
+    private TextInputEditText et_placeName;
     private TextInputEditText tiet_placeDescription;
     private TPlace place;
 

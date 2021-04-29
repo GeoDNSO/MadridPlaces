@@ -15,48 +15,6 @@
     android:orientation="vertical"
     >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:gravity="start|center"
-        android:orientation="horizontal">
-
-    <TextView
-        android:id="@+id/tv_place_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingStart="30dp"
-        android:paddingEnd="0dp"
-        android:text="@string/add_place_title"
-        android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/image_button_add_place"
-            android:layout_width="match_parent"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_height="wrap_content"
-            android:text="@string/add_place_title" />
-    </LinearLayout>
-
-    <HorizontalScrollView
-        android:id="@+id/hor_scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:id="@+id/linearLayout_images_from_gallery"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"></LinearLayout>
-    </HorizontalScrollView>
-
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
@@ -64,7 +22,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         app:endIconMode="clear_text"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="36dp"
         app:startIconDrawable="@drawable/ic_baseline_place_24"
         android:hint="@string/place_default_name"
         app:errorEnabled="true">
@@ -84,7 +42,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         app:counterEnabled="true"
-        app:counterMaxLength="500"
+        app:counterMaxLength="2000"
         app:endIconMode="clear_text"
         android:layout_marginTop="10dp"
         android:hint="@string/place_default_desc"
@@ -94,9 +52,9 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:autofillHints=""
-        android:maxLength="500"
+        android:maxLength="2000"
         android:inputType="textMultiLine"
-        android:maxLines="8"
+        android:maxLines="12"
         android:ems="10"
         android:gravity="top|start"
         android:singleLine="false"
@@ -126,6 +84,48 @@
 
     </com.google.android.material.chip.ChipGroup>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="start|center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_place_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="30dp"
+            android:paddingEnd="0dp"
+            android:text="@string/add_place_title"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/image_button_add_place"
+            android:layout_width="match_parent"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_height="wrap_content"
+            android:text="@string/add_place_title" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/hor_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/linearLayout_images_from_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"></LinearLayout>
+    </HorizontalScrollView>
+
     <TextView
         android:id="@+id/tv_place_coordinates"
         android:layout_width="match_parent"
@@ -134,11 +134,7 @@
         android:paddingStart="30dp"
         android:paddingEnd="0dp"
         android:text="@string/add_place_coordinates"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.392"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/type_of_place_list_add_place" />
+        android:textSize="20sp" />
 
     <ImageButton
         android:id="@+id/image_button_add_place_map"
