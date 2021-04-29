@@ -169,6 +169,7 @@
     <string name="my_recommendation_text_state_still">aún no se ha decidido</string>
     <string name="entire_place_name">Calle</string>
     <string name="not_assigned">Sin asignar</string>
+    <string name="recommend_place_menu_text">Recomendar Lugar</string>
 
 
 </resources>

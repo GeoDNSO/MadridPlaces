@@ -87,7 +87,6 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
     private MenuItem toPendingVisited;
 
     private Fragment childFragment;
-    private Button recomButton;
 
 
     public static PlaceDetailFragment newInstance() {
@@ -137,13 +136,6 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
     }
 
     private void listeners() {
-
-        recomButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onRecomClick();
-            }
-        });
 
         favIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,7 +284,6 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         tvPlaceName = root.findViewById(R.id.tvPlaceDetailsName);
         ivMapIcon = root.findViewById(R.id.placeDetailsMapIcon);
         favIcon = root.findViewById(R.id.favDetailsImage);
-        recomButton = root.findViewById(R.id.go_to_rec_form);
         tvPlaceDescription = root.findViewById(R.id.placeDetailsDescription);
         tvPlaceRating = root.findViewById(R.id.tvPlaceDetailsRating);
 
@@ -352,6 +343,17 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
             }
         });
 
+
+        MenuItem recommendPlace = menu.findItem(R.id.recommend_place_menu_item);
+        recommendPlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                onRecomClick();
+                return false;
+            }
+        });
+
+        //Gestión de Botones si eres admin o no
         if(App.getInstance(getActivity()).isLogged()){
             modifyPlace.setVisible(true);
             if(App.getInstance(getActivity()).isAdmin()){

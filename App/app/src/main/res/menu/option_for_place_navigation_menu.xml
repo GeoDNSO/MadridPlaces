@@ -18,4 +18,10 @@
         android:title="@string/pending_visited_menu_text"
        />
 
+    <item
+        android:id="@+id/recommend_place_menu_item"
+        android:icon="@drawable/ic_baseline_share_24"
+        android:title="@string/recommend_place_menu_text"
+        />
+
 </menu>
