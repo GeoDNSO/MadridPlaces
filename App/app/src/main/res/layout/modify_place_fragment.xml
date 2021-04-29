@@ -102,7 +102,7 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
                 android:layout_height="wrap_content"
-                android:text="@string/add_place_title" />
+                android:text="@string/modify_place_title" />
 
         </LinearLayout>
 
