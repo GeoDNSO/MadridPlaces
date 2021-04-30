@@ -186,6 +186,7 @@
     <string name="add_friend_text_help">Escribe el nombre de usuario de tu amigo para añadirlo a tus lista de amigos</string>
     <string name="friend_request_sent_success">Petición de Amigo enviado satisfactoriamente</string>
     <string name="friend_request_sent_fail">No se puedo enviar la petición de amistad, intentalo más tarde</string>
+    <string name="delete_friend">Borrar amigo</string>
 
 
 </resources>

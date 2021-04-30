@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import com.example.App.R;
 
-public class FriendListFragment extends Fragment {
+public class FriendListFragment extends Fragment implements FriendListAdapter.FriendActionListener{
 
     private FriendListViewModel mViewModel;
 
@@ -35,4 +35,13 @@ public class FriendListFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
+    @Override
+    public void onListClick(int position) {
+        //TODO --> vacio si no se va redirigir al perfil de un amigo
+    }
+
+    @Override
+    public void onDeleteFriend(int position) {
+        //TODO
+    }
 }

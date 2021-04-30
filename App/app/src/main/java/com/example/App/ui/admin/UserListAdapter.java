@@ -1,13 +1,9 @@
 package com.example.App.ui.admin;
 
 import android.app.Activity;
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -115,9 +111,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
 
         public MyViewHolder(View itemView, OnListListener onListListener) {
             super(itemView);
-            iv_imgProfile = (ImageView) itemView.findViewById(R.id.imageViewUser);
+            iv_imgProfile = (ImageView) itemView.findViewById(R.id.imageViewFriend);
             tv_nameProfile = (TextView) itemView.findViewById(R.id.nameTextViewProfile);
-            tv_entireNameProfile = (TextView) itemView.findViewById(R.id.completeNameTextViewProfile);
+            tv_entireNameProfile = (TextView) itemView.findViewById(R.id.completeNameTextViewFriend);
             tv_emailProfile = (TextView) itemView.findViewById(R.id.emailTextViewProfile);
             tv_birthdayProfile = (TextView) itemView.findViewById(R.id.birthdayTextViewProfile);
             tv_genderProfile = (TextView) itemView.findViewById(R.id.genderTextViewProfile);
