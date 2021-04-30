@@ -13,6 +13,18 @@ public class TCategory implements Parcelable {
         this.drawableId = drawableId;
     }
 
+    public static final Creator<TCategory> CREATOR = new Creator<TCategory>() {
+        @Override
+        public TCategory createFromParcel(Parcel in) {
+            return new TCategory(in);
+        }
+
+        @Override
+        public TCategory[] newArray(int size) {
+            return new TCategory[size];
+        }
+    };
+
     public String getName() {
         return name;
     }

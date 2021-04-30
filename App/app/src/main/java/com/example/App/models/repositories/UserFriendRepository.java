@@ -26,6 +26,7 @@ import okhttp3.Response;
 public class UserFriendRepository extends Repository{
     private MutableLiveData<Integer> mAcceptFriend = new MutableLiveData<>();
     private MutableLiveData<Integer> mDeclineFriend = new MutableLiveData<>();
+    private MutableLiveData<Integer> mFriendRequest = new MutableLiveData<>();
     private MutableLiveData<List<TRequestFriend>> mFriendRequestList = new MutableLiveData<>();
 
     class FriendListCallBack implements Callback {
@@ -184,6 +185,42 @@ public class UserFriendRepository extends Repository{
         call.enqueue(new UserFriendRepository.FriendListCallBack(simpleRequest, mFriendRequestList));
     }
 
+    public void sendFriendRequest(String username){
+        String postBodyString = jsonInfoSendFriendList(username);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "friends/sendRequest");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mFriendRequest.postValue(AppConstants.REQ_FRIEND_FAIL);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(!response.isSuccessful()) {
+                    mFriendRequest.postValue(AppConstants.REQ_FRIEND_FAIL);
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if(success) {
+                    mFriendRequest.postValue(AppConstants.REQ_FRIEND_OK);
+                }
+                else {
+                    mFriendRequest.postValue(AppConstants.REQ_FRIEND_FAIL);
+                }
+            }
+        });
+    }
+
+    //Helpers
     private String jsonInfoSendFriendList(String username) {
         JSONObject json = new JSONObject();
         String infoString;
@@ -264,6 +301,7 @@ public class UserFriendRepository extends Repository{
         }
     }
 
+    //Mutables getter
     public MutableLiveData<Integer> getmAcceptFriend() {
         return mAcceptFriend;
     }
@@ -276,5 +314,7 @@ public class UserFriendRepository extends Repository{
         return mFriendRequestList;
     }
 
-
+    public MutableLiveData<Integer> getmFriendRequest() {
+        return mFriendRequest;
+    }
 }

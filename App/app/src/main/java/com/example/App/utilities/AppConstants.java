@@ -78,6 +78,9 @@ public class AppConstants {
     public static final Integer LIST_REQ_FRIEND_OK = 10;
     public static final Integer LIST_REQ_FRIEND_FAIL = 11;
 
+    public static final Integer REQ_FRIEND_FAIL = 0;
+    public static final Integer REQ_FRIEND_OK = 1;
+
 
     public static String TAB_RATING = "W";
     public static String TAB_NEAREST = "W";

@@ -17,6 +17,7 @@ public class FriendsViewModel extends ViewModelParent {
     private LiveData<List<TRequestFriend>> mFriendRequestList = new MutableLiveData<>();
     private LiveData<Integer> mAcceptFriend = new MutableLiveData<>();
     private LiveData<Integer> mDeclineFriend = new MutableLiveData<>();
+    private LiveData<Integer> mFriendRequest = new MutableLiveData<>();
 
     public void init() {
         friendRepository = new UserFriendRepository();
@@ -33,6 +34,10 @@ public class FriendsViewModel extends ViewModelParent {
                 friendRepository.getmDeclineFriend(),
                 denyRecom -> setDeclineFriend(denyRecom)
         );
+        mFriendRequest = Transformations.switchMap(
+                friendRepository.getmFriendRequest(),
+                requestFriend -> setDeclineFriend(requestFriend)
+        );
     }
 
     private LiveData<List<TRequestFriend>> setFriendRequestList(List<TRequestFriend> listFriend) {
@@ -46,6 +51,13 @@ public class FriendsViewModel extends ViewModelParent {
         mProgressBar.setValue(false);
         MutableLiveData<Integer> mAux = new MutableLiveData<>();
         mAux.setValue(denyRecom);
+        return mAux;
+    }
+
+    private LiveData<Integer> setRequestFriend(Integer requestFriend) {
+        mProgressBar.setValue(false);
+        MutableLiveData<Integer> mAux = new MutableLiveData<>();
+        mAux.setValue(requestFriend);
         return mAux;
     }
 
@@ -80,6 +92,8 @@ public class FriendsViewModel extends ViewModelParent {
         return mFriendRequestList;
     }
 
+    public LiveData<Integer> getmFriendRequest() {
+        return mFriendRequest;
+    }
 
-    // TODO: Implement the ViewModel
 }
