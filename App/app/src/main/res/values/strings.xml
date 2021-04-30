@@ -178,6 +178,8 @@
     <string name="friend_list">Lista de Amigos</string>
     <string name="friend_request">Peticiones de Amistad</string>
     <string name="add_friend">Añadir Amigo</string>
+    <string name="accept">Aceptar</string>
+    <string name="decline">Rechazar</string>
 
 
 </resources>
