@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.App.App;
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TRequestFriend;
 import com.example.App.models.transfer.TUser;
@@ -275,10 +276,10 @@ public class UserFriendRepository extends Repository{
     private TRequestFriend jsonStringToRequestFriend(String jsonString) {
         JSONObject jsonObject = null;
         try {
-            jsonObject = new JSONObject(jsonString);
+            jsonObject = new JSONObject(jsonString).getJSONObject("user");
             TUser userSrc = jsonStringToUser(jsonObject.toString());
-            TUser userDst = jsonStringToUser(jsonObject.toString());
-
+            //TUser userDst = jsonStringToUser(jsonObject.toString());
+            TUser userDst = App.getInstance().getSessionUser();
             return new TRequestFriend(
                     userSrc,
                     userDst,
