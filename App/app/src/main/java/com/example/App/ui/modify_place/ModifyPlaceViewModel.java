@@ -41,19 +41,21 @@ public class ModifyPlaceViewModel extends ViewModelParent {
         placeRepository.getCategories();
     }
 
-    public void modifyPlace(String placeName, String placeDescription, String typePlace, List<String> listImages, TPlace p) throws JSONException {
+    public void modifyPlace(String placeName, String placeDescription, String typePlace, List<String> listImages, TPlace p, Double latitude, Double longitude,
+                            String road_class, String road_name, String road_number, String zipcode) throws JSONException {
         mProgressBar.setValue(true); //progress bar visible
-        TPlace place = new TPlace(placeName, placeDescription, p.getLatitude(), p.getLongitude(), listImages, typePlace, p.getCity(),
-                p.getRoad_class(), p.getRoad_name(), p.getRoad_number(), p.getZipcode(), p.getAffluence(), p.getRating(), p.isUserFav(), 100.0, 100, "Sin Fecha");
+        TPlace place = new TPlace(placeName, placeDescription, latitude, longitude, listImages, typePlace, p.getCity(),
+                road_class, road_name, road_number, zipcode, p.getAffluence(), p.getRating(), p.isUserFav(), 100.0, 100, "Sin Fecha");
         //TODO en type of place no devolvemos elnombre del lugar sino el numero asignado en la base de datos
         placeRepository.modifyPlace(place, p.getName());
 
     }
 
-    public void modifyPlace(String placeName, String placeDescription, String typePlace, TPlace p) throws JSONException {
+    public void modifyPlace(String placeName, String placeDescription, String typePlace, TPlace p, Double latitude, Double longitude,
+                            String road_class, String road_name, String road_number, String zipcode) throws JSONException {
         mProgressBar.setValue(true); //progress bar visible
-        TPlace place = new TPlace(placeName, placeDescription, p.getLatitude(), p.getLongitude(), p.getImagesList(), typePlace, p.getCity(),
-                p.getRoad_class(), p.getRoad_name(), p.getRoad_number(), p.getZipcode(), p.getAffluence(), p.getRating(), p.isUserFav(), 100.0, 100, "Sin Fecha Modificado");
+        TPlace place = new TPlace(placeName, placeDescription, latitude, longitude, p.getImagesList(), typePlace, p.getCity(),
+                road_class, road_name, road_number, zipcode, p.getAffluence(), p.getRating(), p.isUserFav(), 100.0, 100, "Sin Fecha Modificado");
         //TODO en type of place no devolvemos elnombre del lugar sino el numero asignado en la base de datos
         placeRepository.modifyPlace(place, p.getName());
     }

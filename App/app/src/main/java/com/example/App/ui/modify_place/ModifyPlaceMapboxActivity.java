@@ -1,8 +1,4 @@
-package com.example.App.ui.add_place;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+package com.example.App.ui.modify_place;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,7 +13,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import com.example.App.R;
+import com.example.App.models.transfer.TPlace;
+import com.example.App.ui.add_place.AddPlaceMapboxActivity;
 import com.example.App.utilities.AppConstants;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
@@ -26,6 +28,8 @@ import com.mapbox.api.geocoding.v5.MapboxGeocoding;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
 import com.mapbox.core.exceptions.ServicesException;
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -55,7 +59,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacem
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
-public class AddPlaceMapboxActivity extends AppCompatActivity implements PermissionsListener, OnMapReadyCallback {
+public class ModifyPlaceMapboxActivity extends AppCompatActivity implements PermissionsListener, OnMapReadyCallback {
 
     private static final String DROPPED_MARKER_LAYER_ID = "DROPPED_MARKER_LAYER_ID";
     private MapView mapView;
@@ -64,10 +68,14 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
     private PermissionsManager permissionsManager;
     private ImageView hoveringMarker;
     private Layer droppedMarkerLayer;
+    private TPlace place;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //TODO posicionar el marcador en las corrdenadas.
+        place = getIntent().getExtras().getParcelable(AppConstants.BUNDLE_MODIFY_PLACE_DETAILS);
 
         // Mapbox access token is configured here. This needs to be called either in your application
         // object or in the same activity which contains the mapview.
@@ -84,7 +92,8 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
 
     @Override
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
-        AddPlaceMapboxActivity.this.mapboxMap = mapboxMap;
+        ModifyPlaceMapboxActivity.this.mapboxMap = mapboxMap;
+
         mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull final Style style) {
@@ -92,13 +101,13 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
 
                 // Toast instructing user to tap on the mapboxMap
                 Toast.makeText(
-                        AddPlaceMapboxActivity.this,
+                        ModifyPlaceMapboxActivity.this,
                         getString(R.string.move_map_instruction), Toast.LENGTH_SHORT).show();
 
                 // When user is still picking a location, we hover a marker above the mapboxMap in the center.
                 // This is done by using an image view with the default marker found in the SDK. You can
                 // swap out for your own marker image, just make sure it matches up with the dropped marker.
-                hoveringMarker = new ImageView(AddPlaceMapboxActivity.this);
+                hoveringMarker = new ImageView(ModifyPlaceMapboxActivity.this);
                 hoveringMarker.setImageResource(R.drawable.mapbox_marker_icon_default);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -119,12 +128,14 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
                             // Use the map target's coordinates to make a reverse geocoding search
                             final LatLng mapTargetLatLng = mapboxMap.getCameraPosition().target;
 
+
+
                             // Hide the hovering red hovering ImageView marker
                             hoveringMarker.setVisibility(View.INVISIBLE);
 
                             // Transform the appearance of the button to become the cancel button
                             selectLocationButton.setBackgroundColor(
-                                    ContextCompat.getColor(AddPlaceMapboxActivity.this, R.color.colorAccent));
+                                    ContextCompat.getColor(ModifyPlaceMapboxActivity.this, R.color.colorAccent));
                             selectLocationButton.setText(getString(R.string.location_picker_select_location_button_cancel));
 
                             // Show the SymbolLayer icon to represent the selected map location
@@ -146,7 +157,7 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
 
                             // Switch the button appearance back to select a location.
                             selectLocationButton.setBackgroundColor(
-                                    ContextCompat.getColor(AddPlaceMapboxActivity.this, R.color.colorPrimary));
+                                    ContextCompat.getColor(ModifyPlaceMapboxActivity.this, R.color.colorPrimary));
                             selectLocationButton.setText(getString(R.string.location_picker_select_location_button_select));
                             // Show the red hovering ImageView marker
                             hoveringMarker.setVisibility(View.VISIBLE);
@@ -272,7 +283,7 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
                                 @Override
                                 public void onStyleLoaded(@NonNull Style style) {
                                     if (style.getLayer(DROPPED_MARKER_LAYER_ID) != null) {
-                                        Toast.makeText(AddPlaceMapboxActivity.this,
+                                        Toast.makeText(ModifyPlaceMapboxActivity.this,
                                                 String.format(getString(R.string.location_picker_place_name_result),
                                                         feature.placeName()), Toast.LENGTH_SHORT).show();
                                         Bundle bundle = new Bundle();
@@ -304,7 +315,7 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
                             });
 
                         } else {
-                            Toast.makeText(AddPlaceMapboxActivity.this,
+                            Toast.makeText(ModifyPlaceMapboxActivity.this,
                                     getString(R.string.location_picker_dropped_marker_snippet_no_results), Toast.LENGTH_SHORT).show();
                         }
                     }

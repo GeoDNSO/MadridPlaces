@@ -74,7 +74,6 @@ public class AppConstants {
     public static final Integer VISITED_POST_OK = 341;
 
 
-
     public static String TAB_RATING = "W";
     public static String TAB_NEAREST = "W";
     public static String TAB_TWITTER = "W";
@@ -115,6 +114,8 @@ public class AppConstants {
     public static final int RESULT_SPEECH = 1;
 
     public static final int STATIC_INTEGER_MAPBOX_ADD = 5;
+    public static final String BUNDLE_MODIFY_PLACE_DETAILS = "DETAILS_PLACE_MODIFY_BUNDLE";
+    public static final int STATIC_INTEGER_MAPBOX_MODIFY = 6;
     public static final String STATIC_STRING_MAPBOX_ADD_DATA = "10";
     public static final String STATE_PENDING = "P";
     public static final String STATE_ACCEPTED = "A";

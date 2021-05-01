@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,7 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
+import com.example.App.ui.add_place.AddPlaceMapboxActivity;
 import com.example.App.ui.add_place.AddPlaceViewModel;
 import com.example.App.ui.place_details.PlaceDetailFragment;
 import com.example.App.ui.place_details.PlaceDetailViewModel;
@@ -54,19 +56,28 @@ public class ModifyPlaceFragment extends Fragment {
     private ModifyPlaceViewModel mViewModel;
 
     private LinearLayout linearLayout;
-    private ImageButton imageButton;
+    private Button imageButton;
     private Button button;
     private int numberOfImages;
     private List<String> listTypesPlaces;
     private String finalTypePlace;
     private ChipGroup chipGroupView;
-    private EditText et_placeName;
+    private TextInputEditText et_placeName;
     private TextInputEditText tiet_placeDescription;
     private TPlace place;
+
+    private Double latitude;
+    private Double longitude;
+    private String r_number;
+    private String r_class;
+    private String r_name;
+    private String zipcode;
 
     private List<Uri> uriList;
     List<Bitmap> bitmapList;
     private List<String> imageStringBase64;
+    private ImageButton mapboxModifyPlace;
+    private TextView tv_road_entire_name;
 
     public static ModifyPlaceFragment newInstance() {
         return new ModifyPlaceFragment();
@@ -118,12 +129,21 @@ public class ModifyPlaceFragment extends Fragment {
         button = root.findViewById(R.id.button_modify_place);
         et_placeName = root.findViewById(R.id.name_place_modify_place);
         tiet_placeDescription = root.findViewById(R.id.description_place_modify_place);
+        mapboxModifyPlace = root.findViewById(R.id.image_button_modify_place_map);
+        tv_road_entire_name = root.findViewById(R.id.modify_place_entire_place_name_text);
         uriList = new ArrayList<>();
     }
 
     private void setValues(){
         et_placeName.setText(place.getName());
         tiet_placeDescription.setText(place.getDescription());
+        r_number = place.getRoad_number();
+        r_name = place.getRoad_name();
+        r_class= place.getRoad_class();
+        zipcode = place.getZipcode();
+        latitude = place.getLatitude();
+        longitude = place.getLongitude();
+        tv_road_entire_name.setText(String.format("%s %s %s %s", r_class, r_name, r_number, zipcode));
         //habra que hacer el de tipo de lugar
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         for (int i = 0; i < place.getImagesList().size(); ++i) {
@@ -199,34 +219,51 @@ public class ModifyPlaceFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 0){
-            if(resultCode == Activity.RESULT_OK){
-                uriList = new ArrayList<>();
-                bitmapList = new ArrayList<>();
-                removeImages();
-                if(data.getClipData() != null) {
-                    numberOfImages = data.getClipData().getItemCount(); //devuelve el numero de imagenes seleccionadas
-                    for (int i = 0; i < numberOfImages; ++i) {
+        switch(requestCode) {
+            case (AppConstants.STATIC_INTEGER_MAPBOX_MODIFY): {
+                if (resultCode == Activity.RESULT_OK) {
+                    //String newText = data.getStringExtra(AppConstants.STATIC_STRING_MAPBOX_ADD_DATA);
+                    Bundle bundle = data.getExtras();
+                    String classAndName = bundle.getString("r_classAndName");
+                    String[] className = classAndName.split(" ", 2);
+                    r_class = className[0];
+                    r_name = className[1];
+                    r_number = bundle.getString("r_number");
+                    zipcode = bundle.getString("zipcode");
+                    latitude = bundle.getDouble("latitude");
+                    longitude = bundle.getDouble("longitude");
+                    tv_road_entire_name.setText(String.format("%s %s %s %s", r_class, r_name, r_number, zipcode));
+                }
+                break;
+            }
+            case (0): {
+                if (resultCode == Activity.RESULT_OK) {
+                    uriList = new ArrayList<>();
+                    bitmapList = new ArrayList<>();
+                    removeImages();
+                    if (data.getClipData() != null) {
+                        numberOfImages = data.getClipData().getItemCount(); //devuelve el numero de imagenes seleccionadas
+                        for (int i = 0; i < numberOfImages; ++i) {
+                            try {
+                                Uri uri = data.getClipData().getItemAt(i).getUri();
+                                bitmapList.add(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri));
+                                uriList.add(uri);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } else {
                         try {
-                            Uri uri = data.getClipData().getItemAt(i).getUri();
-                            bitmapList.add(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri));
+                            Uri uri = data.getData();
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                            bitmapList.add(bitmap);
                             uriList.add(uri);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
+                    showImages();
                 }
-                else{
-                    try {
-                        Uri uri = data.getData();
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                        bitmapList.add(bitmap);
-                        uriList.add(uri);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                showImages();
             }
         }
     }
@@ -253,6 +290,15 @@ public class ModifyPlaceFragment extends Fragment {
                 //Toast.makeText(getActivity(), finalTypePlace, Toast.LENGTH_SHORT).show();
             }
         });
+        mapboxModifyPlace.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent(getActivity(), ModifyPlaceMapboxActivity.class);
+                i.putExtra(AppConstants.BUNDLE_MODIFY_PLACE_DETAILS, place); //Optional parameters
+                startActivityForResult(i, AppConstants.STATIC_INTEGER_MAPBOX_MODIFY);
+            }
+        });
     }
 
 
@@ -273,7 +319,7 @@ public class ModifyPlaceFragment extends Fragment {
         String placeName = et_placeName.getText().toString();
         String placeDescription = tiet_placeDescription.getText().toString();
 
-        if (Validator.argumentsEmpty(placeName, placeDescription, finalTypePlace)) {
+        if (Validator.argumentsEmpty(placeName, placeDescription, finalTypePlace, r_class, r_name, r_number, zipcode)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
         }
         else if(Validator.placeAlredyExists(placeName)){
@@ -281,10 +327,10 @@ public class ModifyPlaceFragment extends Fragment {
         }
         else {
             if(uriList.size() > 0) {
-                mViewModel.modifyPlace(placeName, placeDescription, finalTypePlace, imageStringBase64, place);
+                mViewModel.modifyPlace(placeName, placeDescription, finalTypePlace, imageStringBase64, place, latitude, longitude, r_class, r_name, r_number, zipcode);
             }
             else{
-                mViewModel.modifyPlace(placeName, placeDescription, finalTypePlace, place);
+                mViewModel.modifyPlace(placeName, placeDescription, finalTypePlace, place, latitude, longitude, r_class, r_name, r_number, zipcode);
             }
         }
     }
