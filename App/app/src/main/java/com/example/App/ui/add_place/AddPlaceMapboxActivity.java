@@ -283,7 +283,15 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
                                         Log.i("BundleLatitudeLongitude", feature.context().get(0).text());*/ //Código postal
                                         bundle.putString("r_classAndName", feature.text());
                                         bundle.putString("r_number", feature.address());
-                                        bundle.putString("zipcode", feature.context().get(0).text());
+                                        boolean encountered = false;
+                                        int i = 0;
+                                        while(!encountered && i < feature.context().size()){
+                                            if(feature.context().get(i).id().contains("postcode")) {
+                                                bundle.putString("zipcode", feature.context().get(i).text());
+                                                encountered = true;
+                                            }
+                                            ++i;
+                                        }
                                         bundle.putDouble("longitude", point.coordinates().get(0));
                                         bundle.putDouble("latitude", point.coordinates().get(1));
                                         Intent resultIntent = new Intent();

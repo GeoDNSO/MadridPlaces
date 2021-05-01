@@ -105,7 +105,7 @@
     <string name="modify_place_title">Cambiar imagenes </string>
 
     <string name="profile_delete_place">Borrar Lugar</string>
-    <string name="profile_delete_place_message">¿Estás seguro de que quieres borrar la cuenta?</string>
+    <string name="profile_delete_place_message">¿Estás seguro de que quieres borrar el lugar?</string>
 
     <string name="search">Buscar</string>
     <string name="no_internet">No se pudieron obtener datos, inténtelo más tarde</string>
