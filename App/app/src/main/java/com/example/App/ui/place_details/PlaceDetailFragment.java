@@ -103,16 +103,27 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         mViewModel.init();
 
         initUI();
-
-        place = (TPlace) getArguments().getParcelable(AppConstants.BUNDLE_PLACE_DETAILS);
-
-        fillFields();
-
         listeners();
-
         observers();
 
         App.getInstance(getActivity()).addLogoutObserver(this);
+
+        String bundlePlaceName = getArguments().getString(AppConstants.BUNDLE_PLACE_NAME_PLACE_DETAILS);
+        if(bundlePlaceName != null){
+            mViewModel.getPlaceByName(bundlePlaceName);
+            return root;
+        }
+
+        place = (TPlace) getArguments().getParcelable(AppConstants.BUNDLE_PLACE_DETAILS);
+
+        initConfig();
+
+        return root;
+    }
+
+    private void initConfig(){
+
+        fillFields();
 
         //Poner el nombre del lugar en la toolbar
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
@@ -131,8 +142,6 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
         sliderView.setSliderTransformAnimation(SliderAnimations.DEPTHTRANSFORMATION);
         sliderView.startAutoCycle();
-
-        return root;
     }
 
     private void listeners() {
@@ -184,6 +193,17 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
     }
 
     private void observers(){
+
+        mViewModel.getmPlace().observe(getViewLifecycleOwner(), new Observer<TPlace>() {
+            @Override
+            public void onChanged(TPlace place) {
+
+                PlaceDetailFragment .this.place = place;
+                PlaceDetailFragment placeDetailFragment = PlaceDetailFragment.this;
+                initConfig();
+            }
+        });
+
         mViewModel.getPlaceDetailProfileSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer aInteger) {

@@ -18,6 +18,21 @@ public class PlaceRepositoryHelper {
 
     //Utilidades JSON
 
+    public static String placeNameJson(String placeName, String username) {
+        JSONObject json = new JSONObject();
+        String infoString = null;
+        try {
+            json.put("location", placeName);
+            json.put("user", username);
+        }catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = json.toString();
+
+        return infoString;
+    }
+
     public static String jsonToSendFrom(Double longitude, Double latitude, Double radius, Integer nPlaces, String nickname, String searchText, String category) {
         JSONObject json = new JSONObject();
         String infoString = null;
@@ -36,7 +51,6 @@ public class PlaceRepositoryHelper {
         infoString = json.toString();
 
         return infoString;
-
     }
 
     public static String jsonToSendFrom(Double longitude, Double latitude, Double radius, Integer nPlaces, String nickname, String search) {

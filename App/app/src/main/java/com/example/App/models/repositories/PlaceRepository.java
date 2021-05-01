@@ -62,6 +62,10 @@ public class PlaceRepository extends Repository{
     public MutableLiveData<Integer> getFavSuccess() { return mFavSuccess; }
     public MutableLiveData<Integer> getVisitedSuccess() { return mVisitedSuccess; }
 
+    public MutableLiveData<TPlace> getmPlace() {
+        return mPlace;
+    }
+
 
     //Callback personalizado tanto para List como para Append
     class PlaceListCallBack implements Callback{
@@ -131,6 +135,41 @@ public class PlaceRepository extends Repository{
             mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
         }
     }
+
+    public void getPlaceByName(String placeName, String username) {
+        String postBodyString = PlaceRepositoryHelper.placeNameJson(placeName, username);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/location/readLocation");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mPlace.postValue(null);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+                String responseString = response.body().string();
+                boolean sucess = simpleRequest.isSuccessful(responseString);
+
+                if(sucess){
+                    mPlace.postValue(PlaceRepositoryHelper.jsonStringToPlace(responseString));
+                }
+                else{
+                    mPlace.postValue(null);
+                }
+            }
+        });
+    }
+
 
     public void addPlace(TPlace place){
         String postBodyString = place.jsonToString();
