@@ -18,6 +18,7 @@ public class FriendsViewModel extends ViewModelParent {
     private LiveData<Integer> mAcceptFriend = new MutableLiveData<>();
     private LiveData<Integer> mDeclineFriend = new MutableLiveData<>();
     private LiveData<Integer> mFriendRequest = new MutableLiveData<>();
+    private LiveData<Integer> mDeleteFriend = new MutableLiveData<>();
 
     public void init() {
         friendRepository = new UserFriendRepository();
@@ -38,6 +39,17 @@ public class FriendsViewModel extends ViewModelParent {
                 friendRepository.getmFriendRequest(),
                 requestFriend -> setDeclineFriend(requestFriend)
         );
+        mDeleteFriend = Transformations.switchMap(
+                friendRepository.getmFriendRequest(),
+                deleteFriend -> setDeleteFriend(deleteFriend)
+        );
+    }
+
+    private LiveData<Integer> setDeleteFriend(Integer deleteFriend) {
+        mProgressBar.setValue(false);
+        MutableLiveData<Integer> mAux = new MutableLiveData<>();
+        mAux.setValue(deleteFriend);
+        return mAux;
     }
 
     private LiveData<List<TRequestFriend>> setFriendRequestList(List<TRequestFriend> listFriend) {
@@ -76,6 +88,10 @@ public class FriendsViewModel extends ViewModelParent {
         friendRepository.acceptFriendRequest(userOrigin,userDest);
     }
 
+    public void deleteFriend(String username) {
+        friendRepository.deleteFriend(username);
+    }
+
     public void friendRequestList(String username) {
         friendRepository.friendRequestList(username);
     }
@@ -96,4 +112,7 @@ public class FriendsViewModel extends ViewModelParent {
         return mFriendRequest;
     }
 
+    public LiveData<Integer> getmDeleteFriend() {
+        return mDeleteFriend;
+    }
 }

@@ -29,6 +29,7 @@ public class UserFriendRepository extends Repository{
     private MutableLiveData<Integer> mFriendRequest = new MutableLiveData<>();
     private MutableLiveData<List<TRequestFriend>> mFriendRequestList = new MutableLiveData<>();
 
+
     class FriendListCallBack implements Callback {
 
         private SimpleRequest simpleRequest;
@@ -93,6 +94,9 @@ public class UserFriendRepository extends Repository{
             }
             mSuccess.postValue(AppConstants.LIST_REQ_FRIEND_OK);//Importante que este despues del postValue de friendList
         }
+    }
+
+    public void deleteFriend(String username) {
     }
 
     public void declineFriendRequest(String userOrigin, String userDest) {
@@ -179,7 +183,7 @@ public class UserFriendRepository extends Repository{
         String postBodyString = jsonInfoSendFriendList(username);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/recommendations/listRecommendationsSent");
+                AppConstants.METHOD_POST, "/friends/listFriendRequests");
         Call call = simpleRequest.createCall(request);
 
         call.enqueue(new UserFriendRepository.FriendListCallBack(simpleRequest, mFriendRequestList));
@@ -225,7 +229,7 @@ public class UserFriendRepository extends Repository{
         JSONObject json = new JSONObject();
         String infoString;
         try {
-            json.put("username", username);
+            json.put("user", username);
         }catch (JSONException e) {
             e.printStackTrace();
             infoString = "error";
@@ -256,7 +260,7 @@ public class UserFriendRepository extends Repository{
             jresponse = new JSONObject(res);
 
             List<TRequestFriend> requestFriendList = new ArrayList<>();
-            JSONArray arrayPlaces = jresponse.getJSONArray("list");
+            JSONArray arrayPlaces = jresponse.getJSONArray("requestList");
             for (int i = 0; i < arrayPlaces.length(); i++) {
                 TRequestFriend requestFriend = jsonStringToRequestFriend(arrayPlaces.getString(i));
                 requestFriendList.add(requestFriend);

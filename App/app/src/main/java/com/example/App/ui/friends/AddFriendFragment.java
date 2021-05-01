@@ -34,10 +34,20 @@ public class AddFriendFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(FriendsViewModel.class);
 
         initUI();
-        
+        listeners();
         observers();
 
         return root;
+    }
+
+    private void listeners() {
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String username = editText.getText().toString();
+                mViewModel.friendRequestList(username);
+            }
+        });
     }
 
     private void initUI() {

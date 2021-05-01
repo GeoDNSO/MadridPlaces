@@ -18,6 +18,8 @@ public class FriendListFragment extends Fragment implements FriendListAdapter.Fr
 
     private FriendListViewModel mViewModel;
 
+    private View root;
+
     public static FriendListFragment newInstance() {
         return new FriendListFragment();
     }
@@ -25,7 +27,8 @@ public class FriendListFragment extends Fragment implements FriendListAdapter.Fr
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.friend_list_fragment, container, false);
+        root = inflater.inflate(R.layout.friend_list_fragment, container, false);
+        return root;
     }
 
     @Override
@@ -42,6 +45,6 @@ public class FriendListFragment extends Fragment implements FriendListAdapter.Fr
 
     @Override
     public void onDeleteFriend(int position) {
-        //TODO
+
     }
 }
