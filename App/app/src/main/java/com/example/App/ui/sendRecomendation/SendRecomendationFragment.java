@@ -90,8 +90,8 @@ public class SendRecomendationFragment extends Fragment {
     }
 
     private void initializeUI() {
-        et_usuarioDestino = (EditText) root.findViewById(R.id.userRecomDest);
-        sendRecomendationButton = (Button) root.findViewById(R.id.sendRecButton);
+        et_usuarioDestino = (EditText) root.findViewById(R.id.add_friend_input);
+        sendRecomendationButton = (Button) root.findViewById(R.id.addFriendButton);
     }
 
     private void sendRecomendationAction(View v){

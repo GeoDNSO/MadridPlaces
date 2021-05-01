@@ -17,6 +17,7 @@
         app:tabMode="scrollable"
         app:tabTextColor="@color/grey"
         app:tabIndicator="@color/purple_700"
+        app:tabIndicatorHeight="3dp"
         app:tabSelectedTextColor="@color/purple_700"
         app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"/>
 

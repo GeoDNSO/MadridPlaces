@@ -33,10 +33,12 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
+
 import com.example.App.ui.add_place.AddPlaceMapboxActivity;
 import com.example.App.ui.add_place.AddPlaceViewModel;
 import com.example.App.ui.place_details.PlaceDetailFragment;
 import com.example.App.ui.place_details.PlaceDetailViewModel;
+
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.Validator;
 import com.google.android.material.chip.Chip;
@@ -148,7 +150,7 @@ public class ModifyPlaceFragment extends Fragment {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         for (int i = 0; i < place.getImagesList().size(); ++i) {
             View view = layoutInflater.inflate(R.layout.image_item_fragment, linearLayout, false);
-            ImageView imageView = view.findViewById(R.id.imageViewUser);
+            ImageView imageView = view.findViewById(R.id.imageViewFriend);
             //imageView.setImage(uriList.get(i));
             try{
                 Glide.with(getActivity()).load(place.getImagesList().get(i))
@@ -205,7 +207,7 @@ public class ModifyPlaceFragment extends Fragment {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         for (int i = 0; i < uriList.size(); ++i){
             View view = layoutInflater.inflate(R.layout.image_item_fragment, linearLayout, false);
-            ImageView imageView = view.findViewById(R.id.imageViewUser);
+            ImageView imageView = view.findViewById(R.id.imageViewFriend);
             imageView.setImageURI(uriList.get(i));
             imageView.setPadding(10,0,10,0);
             linearLayout.addView(view);

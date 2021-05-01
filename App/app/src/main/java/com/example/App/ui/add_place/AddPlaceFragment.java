@@ -31,7 +31,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.App.R;
-import com.example.App.ui.map.MapboxActivity;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.Validator;
 import com.google.android.material.chip.Chip;
@@ -202,7 +201,7 @@ public class AddPlaceFragment extends Fragment {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         for (int i = 0; i < uriList.size(); ++i){
             View view = layoutInflater.inflate(R.layout.image_item_fragment, linearLayout, false);
-            ImageView imageView = view.findViewById(R.id.imageViewUser);
+            ImageView imageView = view.findViewById(R.id.imageViewFriend);
             imageView.setImageURI(uriList.get(i));
             imageView.setPadding(10,0,10,0);
             linearLayout.addView(view);

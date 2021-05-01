@@ -72,7 +72,14 @@ public class AppConstants {
     public static final Integer ERROR_DELETE_COMMENT = -340;
     public static final Integer VISITED_POST_FAIL = -341;
     public static final Integer VISITED_POST_OK = 341;
+    public static final Integer PENDING_REQ_FRIEND_FAIL = 0;
+    public static final Integer ACCEPT_REQ_FRIEND_OK = 1;
+    public static final Integer DECLINE_REQ_FRIEND_OK = 2;
+    public static final Integer LIST_REQ_FRIEND_OK = 10;
+    public static final Integer LIST_REQ_FRIEND_FAIL = 11;
 
+    public static final Integer REQ_FRIEND_FAIL = 0;
+    public static final Integer REQ_FRIEND_OK = 1;
 
     public static String TAB_RATING = "W";
     public static String TAB_NEAREST = "W";

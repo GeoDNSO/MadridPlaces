@@ -1,15 +1,16 @@
-package com.example.App.ui.admin;
+package com.example.App.ui.friends.subclasses.friends_list;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import com.bumptech.glide.Glide;
 import com.example.App.R;
@@ -18,28 +19,29 @@ import com.example.App.models.transfer.TUser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyViewHolder> /*implements Filterable*/ {
+public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.MyViewHolder> /*implements Filterable*/ {
+
     private Activity activity;
     private List<TUser> listUser;
     private List<TUser> listUserComplete;
-    private OnListListener onListListener;
+    private FriendActionListener friendActionListener;
 
-    public UserListAdapter(Activity activity, List<TUser> listUser, OnListListener onListListener) {
+    public FriendListAdapter(Activity activity, List<TUser> listUser, FriendActionListener friendActionListener) {
         this.activity = activity;
         this.listUser = listUser;
-        this.onListListener = onListListener;
+        this.friendActionListener = friendActionListener;
         listUserComplete = new ArrayList<>(listUser); //Se crea un nuevo array para que no apunten a la misma lista
     }
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_user_item_row, parent, false);
-        return new MyViewHolder(view, onListListener);
+    public FriendListAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_friend_item_row, parent, false);
+        return new FriendListAdapter.MyViewHolder(view, friendActionListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FriendListAdapter.MyViewHolder holder, int position) {
         TUser user = listUser.get(position);
 
         if(user.getImage_profile() == null || user.getImage_profile() == ""){
@@ -48,10 +50,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
         else {
             Glide.with(activity).load(user.getImage_profile()).circleCrop().into(holder.iv_imgProfile);
         }
-        holder.tv_birthdayProfile.setText(user.getBirthDate());
-        holder.tv_emailProfile.setText(user.getEmail());
-        holder.tv_entireNameProfile.setText(user.getName() + " " + user.getSurname());
-        holder.tv_genderProfile.setText(user.getGender());
+
         holder.tv_nameProfile.setText(user.getUsername());
     }
 
@@ -62,6 +61,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
         }
         return 0;
     }
+
     /*
     @Override
     public Filter getFilter() {
@@ -100,36 +100,55 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
         }
     };*/
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView iv_imgProfile;
-        TextView tv_nameProfile;
-        TextView tv_entireNameProfile;
-        TextView tv_emailProfile;
-        TextView tv_birthdayProfile;
-        TextView tv_genderProfile;
-        OnListListener onListListener;
+    private PopupMenu createPopMenu(@NonNull MyViewHolder holder, int position){
+        PopupMenu popupMenu = new PopupMenu(activity.getApplicationContext(), holder.ivOptions);
 
-        public MyViewHolder(View itemView, OnListListener onListListener) {
+        popupMenu.inflate(R.menu.friend_item_menu);
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                switch (item.getItemId()){
+                    case R.id.delete_friend_item_menu:
+                        friendActionListener.onDeleteFriend(position);
+                        break;
+                    default:
+                        break;
+
+                }
+                return false;
+            }
+        });
+        return popupMenu;
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private ImageView iv_imgProfile;
+        private TextView tv_nameProfile;
+        private ImageView ivOptions;
+        private FriendActionListener friendActionListener;
+
+        public MyViewHolder(View itemView, FriendActionListener friendActionListener) {
             super(itemView);
             iv_imgProfile = (ImageView) itemView.findViewById(R.id.imageViewFriend);
-            tv_nameProfile = (TextView) itemView.findViewById(R.id.nameTextViewProfile);
-            tv_entireNameProfile = (TextView) itemView.findViewById(R.id.completeNameTextViewFriend);
-            tv_emailProfile = (TextView) itemView.findViewById(R.id.emailTextViewProfile);
-            tv_birthdayProfile = (TextView) itemView.findViewById(R.id.birthdayTextViewProfile);
-            tv_genderProfile = (TextView) itemView.findViewById(R.id.genderTextViewProfile);
-            this.onListListener = onListListener;
+            tv_nameProfile = (TextView) itemView.findViewById(R.id.completeNameTextViewFriend);
+            ivOptions = itemView.findViewById(R.id.friend_more_options);
+
+            this.friendActionListener = friendActionListener;
 
             itemView.setOnClickListener(this); //this referencia a la interfaz que se implementa en el constructor
         }
 
         @Override
         public void onClick(View v) {
-            onListListener.OnListClick(getAdapterPosition());
+            friendActionListener.onListClick(getAdapterPosition());
         }
     }
 
-    public interface OnListListener {
-        void OnListClick(int position);
+    public interface FriendActionListener {
+        void onListClick(int position);
+        void onDeleteFriend(int position);
     }
 
     public void setListUser(List<TUser> listUser){

@@ -10,3 +10,5 @@ https://www.flaticon.com/free-icon/shop_287623?term=shop&page=1&position=4&page=
 https://www.flaticon.com/free-icon/hotel_2906709?term=hotel&page=1&position=5&page=1&position=5&related_id=2906709&origin=search
 https://www.flaticon.com/free-icon/pin_484167?term=location%20pin&page=1&position=2&page=1&position=2&related_id=484167&origin=search
 https://www.flaticon.com/free-icon/flag_3409565?term=visit&page=1&position=34&page=1&position=34&related_id=3409565&origin=tag
+https://www.flaticon.com/free-icon/friends_1441180?term=friend&page=1&position=2&page=1&position=2&related_id=1441180&origin=tag
+https://www.flaticon.com/free-icon/add-friend_2583118?term=add%20friend&page=1&position=1&page=1&position=1&related_id=2583118&origin=tag
