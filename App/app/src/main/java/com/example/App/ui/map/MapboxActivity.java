@@ -58,7 +58,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 
-public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallback, PermissionsListener, MapboxMap.OnMapClickListener {
+public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallback, PermissionsListener {
 
     private MapView mapView;
     private MapboxMap mapboxMap;
@@ -92,6 +92,7 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
         mapView = (MapView) findViewById(R.id.mapboxMap);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
     }
 
     @Override
@@ -147,6 +148,7 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
                     enableLocationComponent(style);
                 }
             });
+
         } else {
             Toast.makeText(this, R.string.user_location_permission_not_granted, Toast.LENGTH_LONG).show();
             finish();
@@ -223,7 +225,9 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
                     public void onStyleLoaded(@NonNull Style style) {
                         enableLocationComponent(style);
                         addDestinationIconSymbolLayer(style);
-                        mapboxMap.addOnMapClickListener(MapboxActivity.this);
+                        Point destPoint = Point.fromLngLat(place.getLongitude(), place.getLatitude());
+                        putDestPoint(destPoint);
+
                     }
                 });
 
@@ -243,20 +247,17 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
         loadedMapStyle.addLayer(destinationSymbolLayer);
     }
 
-    @SuppressWarnings( {"MissingPermission"})
-    @Override
-    public boolean onMapClick(@NonNull LatLng point) {
+    public boolean putDestPoint(@NonNull Point destinationPoint) {
 
-        Point destinationPoint = Point.fromLngLat(point.getLongitude(), point.getLatitude());
-        Point originPoint = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
-                locationComponent.getLastKnownLocation().getLatitude());
+        //Point originPoint = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
+        //        locationComponent.getLastKnownLocation().getLatitude());
 
         GeoJsonSource source = mapboxMap.getStyle().getSourceAs("destination-source-id");
         if (source != null) {
             source.setGeoJson(Feature.fromGeometry(destinationPoint));
         }
 
-        getRoute(originPoint, destinationPoint);
+        //getRoute(originPoint, destinationPoint);
         return true;
     }
 
@@ -327,6 +328,7 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
             locationComponent.setRenderMode(RenderMode.COMPASS);
 
             initLocationEngine();
+
         } else {
             permissionsManager = new PermissionsManager(this);
             permissionsManager.requestLocationPermissions(this);
