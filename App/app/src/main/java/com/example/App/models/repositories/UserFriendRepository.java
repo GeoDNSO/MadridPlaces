@@ -28,8 +28,9 @@ public class UserFriendRepository extends Repository{
     private MutableLiveData<Integer> mAcceptFriend = new MutableLiveData<>();
     private MutableLiveData<Integer> mDeclineFriend = new MutableLiveData<>();
     private MutableLiveData<Integer> mFriendRequest = new MutableLiveData<>();
+    private MutableLiveData<Integer> mDeleteFriend = new MutableLiveData<>();
     private MutableLiveData<List<TRequestFriend>> mFriendRequestList = new MutableLiveData<>();
-
+    private MutableLiveData<List<TRequestFriend>> mFriendList = new MutableLiveData<>();
 
     class FriendListCallBack implements Callback {
 
@@ -97,7 +98,54 @@ public class UserFriendRepository extends Repository{
         }
     }
 
-    public void deleteFriend(String username) {
+    public void deleteFriend(String userToDelete, String currentUser) {
+        String postBodyString = jsonInfoForSendFriend(userToDelete, currentUser);
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_DELETE, "/friends/deleteFriend"
+        );
+
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mDeleteFriend.postValue(AppConstants.DELETE_FRIEND_FAIL);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(!response.isSuccessful()) {
+                    mDeleteFriend.postValue(AppConstants.DELETE_FRIEND_FAIL);
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if(success) {
+                    mDeleteFriend.postValue(AppConstants.DELETE_FRIEND_SUCCESS);
+                }
+                else {
+                    mDeleteFriend.postValue(AppConstants.DELETE_FRIEND_FAIL);
+                }
+            }
+        });
+    }
+
+    public void friendList(String username) {
+        String postBodyString = jsonInfoSendFriendList(username);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/friends/listFriends");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new UserFriendRepository.FriendListCallBack(simpleRequest, mFriendList));
     }
 
     public void declineFriendRequest(String userOrigin, String userDest) {
@@ -333,6 +381,10 @@ public class UserFriendRepository extends Repository{
 
     public MutableLiveData<List<TRequestFriend>> getmFriendRequestList() {
         return mFriendRequestList;
+    }
+
+    public MutableLiveData<List<TRequestFriend>> getmFriendList() {
+        return mFriendList;
     }
 
     public MutableLiveData<Integer> getmFriendRequest() {

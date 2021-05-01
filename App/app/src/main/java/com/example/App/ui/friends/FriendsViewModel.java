@@ -15,6 +15,7 @@ public class FriendsViewModel extends ViewModelParent {
     private UserFriendRepository friendRepository;
 
     private LiveData<List<TRequestFriend>> mFriendRequestList = new MutableLiveData<>();
+    private LiveData<List<TRequestFriend>> mFriendList = new MutableLiveData<>();
     private LiveData<Integer> mAcceptFriend = new MutableLiveData<>();
     private LiveData<Integer> mDeclineFriend = new MutableLiveData<>();
     private LiveData<Integer> mFriendRequest = new MutableLiveData<>();
@@ -24,6 +25,10 @@ public class FriendsViewModel extends ViewModelParent {
     public void init() {
         friendRepository = new UserFriendRepository();
 
+        mFriendList = Transformations.switchMap(
+                friendRepository.getmFriendList(),
+                listFriend -> setFriendList(listFriend)
+        );
         mFriendRequestList = Transformations.switchMap(
                 friendRepository.getmFriendRequestList(),
                 listFriend -> setFriendRequestList(listFriend)
@@ -71,6 +76,13 @@ public class FriendsViewModel extends ViewModelParent {
         return mAux;
     }
 
+    private LiveData<List<TRequestFriend>> setFriendList(List<TRequestFriend> listFriend) {
+        mProgressBar.setValue(false);
+        MutableLiveData<List<TRequestFriend>> mAux = new MutableLiveData<>();
+        mAux.setValue(listFriend);
+        return mAux;
+    }
+
     private LiveData<Integer> setDeclineFriend(Integer denyRecom) {
         mProgressBar.setValue(false);
         MutableLiveData<Integer> mAux = new MutableLiveData<>();
@@ -100,13 +112,18 @@ public class FriendsViewModel extends ViewModelParent {
         friendRepository.acceptFriendRequest(userOrigin,userDest);
     }
 
-    public void deleteFriend(String username) {
-        friendRepository.deleteFriend(username);
+    public void deleteFriend(String userToDelete, String currentUser) {
+        friendRepository.deleteFriend(userToDelete, currentUser);
     }
 
     public void friendRequestList(String username) {
         friendRepository.friendRequestList(username);
     }
+
+    public void friendList(String username) {
+        friendRepository.friendList(username);
+    }
+
 
     public LiveData<Integer> getmDeclineFriend() {
         return mDeclineFriend;
@@ -134,5 +151,9 @@ public class FriendsViewModel extends ViewModelParent {
 
     public void sendFriendRequest(String username) {
         friendRepository.sendFriendRequest(username);
+    }
+
+    public LiveData<List<TRequestFriend>> getmFriendList() {
+        return mFriendList;
     }
 }
