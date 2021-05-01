@@ -23,7 +23,8 @@ def countFriends(user):
 	return cont
 
 def completeFriendList(user, state, date):
-	obj = UserFunct.friendData(modules.user.query.filter_by(nickname = user).first())
+	obj = {}
+	obj["user"] = UserFunct.friendData(modules.user.query.filter_by(nickname = user).first())
 	obj["state"] = state
 	obj["date"] = date
 	return obj

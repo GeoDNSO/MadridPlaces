@@ -78,14 +78,21 @@ def jsonifiedList2(usuario):
     rol=usuario.rol,
     profile_image=usuario.profile_image) #Se devuelve en binario
 
-def friendData(user):
-  obj = {
-  "nickname":user.nickname,
-  "name":user.name,
-  "surname":user.surname,
-  "profile_image": user.profile_image
+def friendData(usuario):
+  u = {
+  "nickname":usuario.nickname,
+  "name":usuario.name,
+  "surname":usuario.surname,
+  "email":usuario.email,
+  "password": "",
+  "gender":usuario.gender,
+  "birth_date":usuario.birth_date.strftime("%Y-%m-%d"),
+  "city":usuario.city,
+  "rol":usuario.rol,
+  "profile_image": usuario.profile_image
   }
-  return obj
+  return u
+  
 def decode64Img(codedImg): #i para enumerar todas las imágenes
   image = base64.b64decode(str(codedImg))       
   img = Image.open(io.BytesIO(image))
