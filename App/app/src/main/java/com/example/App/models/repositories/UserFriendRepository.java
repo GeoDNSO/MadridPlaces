@@ -99,7 +99,7 @@ public class UserFriendRepository extends Repository{
     }
 
     public void deleteFriend(String userToDelete, String currentUser) {
-        String postBodyString = jsonInfoForSendFriend(userToDelete, currentUser);
+        String postBodyString = jsonInfoForDeleteFriend(userToDelete, currentUser);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -319,13 +319,28 @@ public class UserFriendRepository extends Repository{
         return infoString;
     }
 
+    private String jsonInfoForDeleteFriend(String userOrigin, String userDest) {
+        JSONObject json = new JSONObject();
+        String infoString;
+        try {
+            json.put("user", userOrigin);
+            json.put("friend", userDest);
+        }catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = json.toString();
+
+        return infoString;
+    }
+
     private List<TRequestFriend> getListFromResponse(String res) {
         JSONObject jresponse = null;
         try {
             jresponse = new JSONObject(res);
 
             List<TRequestFriend> requestFriendList = new ArrayList<>();
-            JSONArray arrayPlaces = jresponse.getJSONArray("requestList");
+            JSONArray arrayPlaces = jresponse.getJSONArray("list");
             for (int i = 0; i < arrayPlaces.length(); i++) {
                 TRequestFriend requestFriend = jsonStringToRequestFriend(arrayPlaces.getString(i));
                 requestFriendList.add(requestFriend);
@@ -389,5 +404,9 @@ public class UserFriendRepository extends Repository{
 
     public MutableLiveData<Integer> getmFriendRequest() {
         return mFriendRequest;
+    }
+
+    public MutableLiveData<Integer> getmDeleteFriend() {
+        return mDeleteFriend;
     }
 }

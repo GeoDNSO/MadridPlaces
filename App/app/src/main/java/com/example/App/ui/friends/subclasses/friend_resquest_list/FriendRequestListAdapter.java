@@ -37,7 +37,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     public void onBindViewHolder(@NonNull FriendRequestListAdapter.FriendRequestViewHolder holder, int position) {
         TRequestFriend user = listFriends.get(position);
 
-        holder.tv_completeName_user.setText(String.format("%s: %s", user.getUserOrigin().getName(), user.getUserOrigin().getSurname()));
+        holder.tv_completeName_user.setText(String.format("%s %s", user.getUserOrigin().getName(), user.getUserOrigin().getSurname()));
         holder.tv_username_user.setText(user.getUserOrigin().getUsername());
     }
 

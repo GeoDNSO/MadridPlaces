@@ -54,6 +54,13 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.My
 
         holder.tv_nameProfile.setText(String.format("%s %s", user.getUserOrigin().getName(), user.getUserOrigin().getSurname()));
         holder.tv_nicknameProfile.setText(user.getUserOrigin().getUsername());
+
+        holder.ivOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createPopMenu(holder, position).show();
+            }
+        });
     }
 
     @Override

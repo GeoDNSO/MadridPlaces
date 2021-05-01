@@ -46,7 +46,7 @@ public class FriendsViewModel extends ViewModelParent {
                 requestFriend -> setDeclineFriend(requestFriend)
         );
         mDeleteFriend = Transformations.switchMap(
-                friendRepository.getmFriendRequest(),
+                friendRepository.getmDeleteFriend(),
                 deleteFriend -> setDeleteFriend(deleteFriend)
         );
         mSendRequestFriend = Transformations.switchMap(
