@@ -107,6 +107,15 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
             }
         });
 
+        mViewModel.getmFriendRequestList().observe(getViewLifecycleOwner(), new Observer<List<TRequestFriend>>() {
+            @Override
+            public void onChanged(List<TRequestFriend> tRequestFriends) {
+                friendsList = tRequestFriends;
+                friendRequestListAdapter = new FriendRequestListAdapter(tRequestFriends, FriendRequestListFragment.this);
+                recyclerView.setAdapter(friendRequestListAdapter);
+            }
+        });
+
     }
 
     private void initUI() {

@@ -3,6 +3,7 @@ package com.example.App.ui.friends.subclasses.friend_resquest_list;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -48,8 +49,8 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     public class FriendRequestViewHolder extends RecyclerView.ViewHolder {
         private TextView tv_completeName_user;
         private TextView tv_username_user;
-        private ImageButton ib_accept_user;
-        private ImageButton ib_decline_user;
+        private Button ib_accept_user;
+        private Button ib_decline_user;
 
         public FriendRequestViewHolder(@NonNull View itemView, OnFriendRequestListener onFriendRequestListener) {
             super(itemView);

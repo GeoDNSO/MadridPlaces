@@ -191,10 +191,10 @@ public class UserFriendRepository extends Repository{
     }
 
     public void sendFriendRequest(String username){
-        String postBodyString = jsonInfoSendFriendList(username);
+        String postBodyString = jsonInfoSendRequest(username);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "friends/sendRequest");
+                AppConstants.METHOD_POST, "/friends/sendRequest");
         Call call = simpleRequest.createCall(request);
 
         call.enqueue(new Callback() {
@@ -240,6 +240,22 @@ public class UserFriendRepository extends Repository{
         return infoString;
     }
 
+
+    private String jsonInfoSendRequest(String username) {
+        JSONObject json = new JSONObject();
+        String infoString;
+        try {
+            json.put("userSrc", App.getInstance().getUsername());
+            json.put("userDst", username);
+        }catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = json.toString();
+
+        return infoString;
+    }
+
     private String jsonInfoForSendFriend(String userOrigin, String userDest) {
         JSONObject json = new JSONObject();
         String infoString;
@@ -276,8 +292,8 @@ public class UserFriendRepository extends Repository{
     private TRequestFriend jsonStringToRequestFriend(String jsonString) {
         JSONObject jsonObject = null;
         try {
-            jsonObject = new JSONObject(jsonString).getJSONObject("user");
-            TUser userSrc = jsonStringToUser(jsonObject.toString());
+            jsonObject = new JSONObject(jsonString);
+            TUser userSrc = jsonStringToUser(jsonObject.getJSONObject("user").toString());
             //TUser userDst = jsonStringToUser(jsonObject.toString());
             TUser userDst = App.getInstance().getSessionUser();
             return new TRequestFriend(

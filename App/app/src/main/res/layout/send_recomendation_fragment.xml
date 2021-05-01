@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <EditText
-        android:id="@+id/add_friend_input"
+        android:id="@+id/send_reco"
         android:layout_width="332dp"
         android:layout_height="50dp"
         android:layout_marginTop="24dp"
@@ -51,7 +51,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_friend_input" />
+        app:layout_constraintTop_toBottomOf="@+id/send_reco" />
 
 
 

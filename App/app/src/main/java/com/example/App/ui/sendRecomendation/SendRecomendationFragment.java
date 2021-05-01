@@ -90,7 +90,7 @@ public class SendRecomendationFragment extends Fragment {
     }
 
     private void initializeUI() {
-        et_usuarioDestino = (EditText) root.findViewById(R.id.add_friend_input);
+        et_usuarioDestino = (EditText) root.findViewById(R.id.send_reco);
         sendRecomendationButton = (Button) root.findViewById(R.id.addFriendButton);
     }
 
