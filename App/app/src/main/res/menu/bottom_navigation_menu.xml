@@ -9,12 +9,12 @@
 
     <item
         android:id="@+id/recommendationsFragment"
-        android:icon="@drawable/ic_baseline_search_24"
+        android:icon="@drawable/ic_recomendacion"
         android:title="@string/menu_recomendations_text" />
 
     <item
         android:id="@+id/visitedFragment"
-        android:icon="@drawable/ic_baseline_history_24"
+        android:icon="@drawable/ic_pin"
         android:title="@string/menu_visited_text" />
 
 </menu>
