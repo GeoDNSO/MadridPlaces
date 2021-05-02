@@ -17,13 +17,13 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.utilities.UserInterfaceUtils;
 import com.facebook.shimmer.ShimmerDrawable;
 
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,20 +76,18 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         holder.tvPlaceAddress.setText(place.getAddress());
         holder.ratingBar.setRating((float)place.getRating());
 
-        //Para adapter
-        DecimalFormat df = new DecimalFormat("#.#");
-        df.setRoundingMode(RoundingMode.CEILING);
-
-
-        holder.tvPlaceNumberOfRatings.setText(place.getNumberOfRatings() + " Valoraciones");
+        String numberOfRatings = place.getNumberOfRatings() + " " + App.getInstance().getAppString(R.string.ratings_text);
+        holder.tvPlaceNumberOfRatings.setText(numberOfRatings);
 
 
         //TODO revisar si son metros o km o es segun el valor...
-        holder.tvPlaceDistance.setText(df.format(place.getDistanceToUser()) +"m");
+        String distance = UserInterfaceUtils.formatDistance(place.getDistanceToUser());
+        holder.tvPlaceDistance.setText(distance);
 
 
         //Rating del lugar
-        holder.tvRatingValue.setText(df.format(place.getRating()));
+        String ratingValue = UserInterfaceUtils.rating2UIString(place.getRating());
+        holder.tvRatingValue.setText(ratingValue);
 
         int favTint = ContextCompat.getColor(activity, R.color.grey);
         if(place.isUserFav()){

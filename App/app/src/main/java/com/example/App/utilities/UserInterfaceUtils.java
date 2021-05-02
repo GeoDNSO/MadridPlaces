@@ -54,6 +54,18 @@ public class UserInterfaceUtils {
         DecimalFormat df = new DecimalFormat("#.#");
         df.setRoundingMode(RoundingMode.CEILING);
         return df.format(number);
+    }
 
+
+    public static String formatDistance(double distance){
+        String unit = "m";
+        if(distance >= 1000){
+            distance /= 10;
+            unit = "km";
+        }
+        DecimalFormat df = new DecimalFormat("#.#");
+        df.setRoundingMode(RoundingMode.CEILING);
+
+        return String.format("%s %s", df.format(distance), unit);
     }
 }

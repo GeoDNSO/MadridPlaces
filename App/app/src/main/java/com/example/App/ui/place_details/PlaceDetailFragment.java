@@ -43,17 +43,14 @@ import com.example.App.ui.map.MapboxActivity;
 import com.example.App.ui.profile.ProfileViewModel;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.TextViewExpandableUtil;
+import com.example.App.utilities.UserInterfaceUtils;
 import com.example.App.utilities.ViewListenerUtilities;
 import com.google.android.material.navigation.NavigationView;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class PlaceDetailFragment extends Fragment implements LogoutObserver {
@@ -75,6 +72,7 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
     private ImageView favIcon;
     private TextView tvPlaceDescription;
     private TextView tvPlaceRating;
+    private TextView tvDistance2Place;
 
     private RatingBar ratingBar;
     private TextView tvAddress;
@@ -273,13 +271,14 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
         tvAddress.setText(place.getAddress());
 
-        tvNumberOfRatings.setText(500 + " Calificaciones");
+        String numberOfRatings = place.getNumberOfRatings() + " " + App.getInstance().getAppString(R.string.ratings_text);
+        tvNumberOfRatings.setText(numberOfRatings);
 
         ratingBar.setRating((float) place.getRating());
 
-        DecimalFormat df = new DecimalFormat("#.#");
-        df.setRoundingMode(RoundingMode.CEILING);
-        tvPlaceRating.setText(df.format(place.getRating()));
+
+        String rating = UserInterfaceUtils.rating2UIString(place.getRating());
+        tvPlaceRating.setText(rating);
 
         int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
         if(place.isUserFav()){
@@ -296,6 +295,9 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
         ivVisited.setImageDrawable(drawable);
 
+
+        String distance = UserInterfaceUtils.formatDistance(place.getDistanceToUser());
+        tvDistance2Place.setText(distance);
     }
 
     private void initUI() {
@@ -316,6 +318,8 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         sliderView = root.findViewById(R.id.placeDetail_slide_view);
 
         ivVisited = root.findViewById(R.id.ivVisitedFlag);
+
+        tvDistance2Place = root.findViewById(R.id.tvPlaceDetailDistance);
 
         isDescCollapsed = true;
     }
