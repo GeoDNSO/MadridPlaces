@@ -6,54 +6,38 @@
     android:layout_height="match_parent"
     tools:context=".ui.login.LoginFragment">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_send_recomendation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <TextView
-        android:id="@+id/tv_add_friend"
+        android:id="@+id/tv_send_recomendation_no_results"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:text="@string/recom_text"
-        android:textColor="@color/black"
-        android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <EditText
-        android:id="@+id/send_reco"
-        android:layout_width="332dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="24dp"
         android:autofillHints=""
-        android:backgroundTint="@color/grey"
-        android:drawableStart="@drawable/ic_username"
-        android:drawableTint="@color/grey"
-        android:ems="10"
         android:gravity="center"
-        android:hint="@string/app_user_name"
-        android:inputType="textPersonName"
-        android:singleLine="false"
-        android:textColorHint="@color/grey"
+        android:visibility="gone"
+        android:text="@string/no_results"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_add_friend" />
-
-
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView_send_recomendation" />
 
     <Button
-        android:id="@+id/addFriendButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/send_recomendation_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:text="@string/sendRecButton_text"
         app:backgroundTint="#03A9F4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/send_reco" />
-
-
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

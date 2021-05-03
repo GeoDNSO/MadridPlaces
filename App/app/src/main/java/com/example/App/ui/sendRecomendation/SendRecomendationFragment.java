@@ -8,12 +8,14 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.App.App;
@@ -23,17 +25,17 @@ import com.example.App.models.transfer.TRecomendation;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.Validator;
 
-public class SendRecomendationFragment extends Fragment {
+public class SendRecomendationFragment extends Fragment implements SendRecomendationAdapter.SendRecomendationActionListener {
 
     private View root;
     private SendRecomendationViewModel mViewModel;
     private TPlace place;
 
     //Elementos visuales
-    private EditText et_usuarioDestino;
+    private TextView no_results;
     private Button sendRecomendationButton;
+    private RecyclerView sendRecomendationRecycleView;
 
-    private TRecomendation recomendation;
     private App app;
 
     public static SendRecomendationFragment newInstance() {
@@ -90,8 +92,9 @@ public class SendRecomendationFragment extends Fragment {
     }
 
     private void initializeUI() {
-        et_usuarioDestino = (EditText) root.findViewById(R.id.send_reco);
-        sendRecomendationButton = (Button) root.findViewById(R.id.addFriendButton);
+        no_results = root.findViewById(R.id.tv_send_recomendation_no_results);
+        sendRecomendationButton = root.findViewById(R.id.send_recomendation_button);
+        sendRecomendationRecycleView = root.findViewById(R.id.recyclerView_send_recomendation);
     }
 
     private void sendRecomendationAction(View v){
@@ -108,5 +111,10 @@ public class SendRecomendationFragment extends Fragment {
             mViewModel.sendRecomendation(userOrigin, userDest, placeName);
             //Toast.makeText(getActivity(), "Recom enviada", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onListClick(int position) {
+
     }
 }
