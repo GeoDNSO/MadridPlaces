@@ -8,8 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,152 +22,69 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.App.R;
-import com.example.App.models.transfer.TUser;
-import com.example.App.ui.friends.subclasses.friends_list.FriendListAdapter;
+import com.example.App.models.transfer.TRequestFriend;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SendRecomendationAdapter extends RecyclerView.Adapter<SendRecomendationAdapter.MyViewHolder> {
     private Activity activity;
-    private List<TUser> listUser;
+    private List<TRequestFriend> listUser;
     private List<String> selectedList;
     private SendRecomendationAdapter.SendRecomendationActionListener sendRecomendationActionListener;
-    private boolean isChecked = false;
-    private boolean isSelectAll = false;
-    private SendRecomendationViewModel sendRecomendationViewModel;
+    private Button button;
 
-    public SendRecomendationAdapter(Activity activity, List<TUser> listUser, SendRecomendationAdapter.SendRecomendationActionListener sendRecomendationActionListener) {
+    public SendRecomendationAdapter(Activity activity, List<TRequestFriend> listUser, SendRecomendationAdapter.SendRecomendationActionListener sendRecomendationActionListener, Button button) {
         this.activity = activity;
         this.listUser = listUser;
         this.sendRecomendationActionListener = sendRecomendationActionListener;
+        this.button = button;
+        selectedList = new ArrayList<>();
     }
 
     @NonNull
     @Override
     public SendRecomendationAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_friend_item_row, parent, false);
-        sendRecomendationViewModel = ViewModelProviders.of((FragmentActivity) activity).get(SendRecomendationViewModel.class);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.send_recomendation_item_view, parent, false);
         return new MyViewHolder(view, sendRecomendationActionListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SendRecomendationAdapter.MyViewHolder holder, int position) {
-        TUser user = listUser.get(position);
+        TRequestFriend user = listUser.get(position);
 
-        if(user.getImage_profile() == null || user.getImage_profile() == ""){
-            holder.iv_imgProfile.setImageResource(R.drawable.ic_username);
+        if(user.getUserOrigin().getImage_profile() == null || user.getUserOrigin().getImage_profile() == ""){
+            holder.iv_img.setImageResource(R.drawable.ic_username);
         }
         else {
-            Glide.with(activity).load(user.getImage_profile()).circleCrop().into(holder.iv_imgProfile);
+            Glide.with(activity).load(user.getUserOrigin().getImage_profile()).circleCrop().into(holder.iv_img);
         }
 
-        holder.tv_nameProfile.setText(user.getUsername());
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if(!isChecked){
-                    ActionMode.Callback callback = new ActionMode.Callback() {
-                        @Override
-                        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                            //Initializate menu inflater
-                            MenuInflater menuInflater = mode.getMenuInflater();
-                            //Inflate menu
-                            menuInflater.inflate(R.menu.send_recomendation_menu, menu);
-                            return true;
-                        }
-
-                        @Override
-                        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                            //when action mode is prepared
-                            isChecked = true;
-
-                            clickItem(holder);
-
-                            sendRecomendationViewModel.getmSelectedItems().observe((LifecycleOwner) activity, new Observer<String>() {
-                                @Override
-                                public void onChanged(String s) {
-                                    mode.setTitle(String.format("%s seleccionados", s));
-                                }
-                            });
-
-                            return true;
-                        }
-
-                        @Override
-                        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                            //when click on mode item
-                            int i = item.getItemId();
-
-                            if(i == R.id.send_recomendation_select_all){
-                                if(selectedList.size() == listUser.size()){
-                                    //when all item selected
-                                    isSelectAll = false;
-                                    selectedList.clear();
-                                }
-                                else{
-                                    isSelectAll = true;
-                                    selectedList.clear();
-                                    for(TUser user: listUser) {
-                                        selectedList.add(user.getUsername());
-                                    }
-                                }
-                                sendRecomendationViewModel.setmSelectedItems(String.valueOf(selectedList.size()));
-                                notifyDataSetChanged();
-                            }
-
-                            return true;
-                        }
-
-                        @Override
-                        public void onDestroyActionMode(ActionMode mode) {
-                            isChecked = false;
-                            isSelectAll = false;
-                            selectedList.clear();
-                            notifyDataSetChanged();
-                        }
-                    };
-                    ((AppCompatActivity) v.getContext()).startActionMode(callback);
-                }
-                else{
-                    //when action is already checked
-                    clickItem(holder);
-                }
-                return true;
-            }
-        });
+        holder.tv_name.setText(String.format("%s %s", user.getUserOrigin().getName(), user.getUserOrigin().getSurname()));
+        holder.tv_userName.setText(user.getUserOrigin().getUsername());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isChecked){
-                    clickItem(holder);
-                }
+                clickItem(holder);
             }
         });
 
-        if(isSelectAll){
-            holder.iv_check.setVisibility(View.VISIBLE);
-        }
-        else {
-            holder.iv_check.setVisibility(View.GONE);
-
-        }
     }
 
     private void clickItem(MyViewHolder holder) {
-        TUser user = listUser.get(holder.getAdapterPosition());
+        TRequestFriend user = listUser.get(holder.getAdapterPosition());
 
         if(holder.iv_check.getVisibility() == View.GONE){
             holder.iv_check.setVisibility(View.VISIBLE);
 
-            selectedList.add(user.getUsername());
+            selectedList.add(user.getUserOrigin().getUsername());
         }
         else {
             holder.iv_check.setVisibility(View.GONE);
-            selectedList.remove(user.getUsername());
+            selectedList.remove(user.getUserOrigin().getUsername());
         }
-        sendRecomendationViewModel.setmSelectedItems(String.valueOf(selectedList.size()));
+        enableButtons();
     }
 
     @Override
@@ -176,6 +93,23 @@ public class SendRecomendationAdapter extends RecyclerView.Adapter<SendRecomenda
             return listUser.size();
         }
         return 0;
+    }
+
+    public int getSelectedCount() {
+        return selectedList.size();
+    }
+
+    public List<String> getListSelected() {
+        return selectedList;
+    }
+
+    private void enableButtons() {
+        if(selectedList.size() == 0){
+            button.setVisibility(View.GONE);
+        }
+        else{
+            button.setVisibility(View.VISIBLE);
+        }
     }
 
     /*
@@ -217,16 +151,18 @@ public class SendRecomendationAdapter extends RecyclerView.Adapter<SendRecomenda
     };*/
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private ImageView iv_imgProfile;
-        private TextView tv_nameProfile;
+        private ImageView iv_img;
+        private TextView tv_name;
+        private TextView tv_userName;
         private ImageView iv_check;
         private SendRecomendationAdapter.SendRecomendationActionListener sendRecomendationActionListener;
 
         public MyViewHolder(View itemView, SendRecomendationAdapter.SendRecomendationActionListener sendRecomendationActionListener) {
             super(itemView);
-            iv_imgProfile = itemView.findViewById(R.id.imageView_send_recomendation);
-            tv_nameProfile = itemView.findViewById(R.id.completeName_send_recomendation);
+            iv_img = itemView.findViewById(R.id.imageView_send_recomendation);
+            tv_name = itemView.findViewById(R.id.completeName_send_recomendation);
             iv_check = itemView.findViewById(R.id.iv_check_send_recomendation);
+            tv_userName = itemView.findViewById(R.id.send_recomendation_textView_username_item);
 
             this.sendRecomendationActionListener = sendRecomendationActionListener;
 

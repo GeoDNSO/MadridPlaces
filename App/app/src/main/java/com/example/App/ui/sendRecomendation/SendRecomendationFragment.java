@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -22,8 +23,15 @@ import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.transfer.TPlace;
 import com.example.App.models.transfer.TRecomendation;
+import com.example.App.models.transfer.TRequestFriend;
+import com.example.App.models.transfer.TUser;
+import com.example.App.ui.friends.subclasses.friends_list.FriendListAdapter;
+import com.example.App.ui.friends.subclasses.friends_list.FriendListFragment;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.Validator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SendRecomendationFragment extends Fragment implements SendRecomendationAdapter.SendRecomendationActionListener {
 
@@ -31,10 +39,14 @@ public class SendRecomendationFragment extends Fragment implements SendRecomenda
     private SendRecomendationViewModel mViewModel;
     private TPlace place;
 
+    private SendRecomendationAdapter sendRecomendationAdapter;
+
     //Elementos visuales
     private TextView no_results;
     private Button sendRecomendationButton;
     private RecyclerView sendRecomendationRecycleView;
+
+    private List<TRequestFriend> friendList;
 
     private App app;
 
@@ -56,9 +68,17 @@ public class SendRecomendationFragment extends Fragment implements SendRecomenda
 
         initializeUI();
 
+
         place = (TPlace) getArguments().getParcelable(AppConstants.BUNDLE_PLACE_DETAILS);
 
         initializeListeners();
+
+        friendList = new ArrayList<>();
+        sendRecomendationAdapter = new SendRecomendationAdapter(getActivity(), friendList, this, sendRecomendationButton); //getActivity = MainActivity.this
+        sendRecomendationRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        sendRecomendationRecycleView.setAdapter(sendRecomendationAdapter);
+
+        mViewModel.friendList(App.getInstance().getUsername());
 
         return root;
     }
@@ -70,8 +90,19 @@ public class SendRecomendationFragment extends Fragment implements SendRecomenda
                 if (integer.equals(AppConstants.SEND_REC_OK)){
                     Toast.makeText(getActivity(), "ENVIADA!", Toast.LENGTH_SHORT).show();
                 }
+                //TODO Si pones un else, no entra
             }
         });
+
+        mViewModel.getmFriendList().observe(getViewLifecycleOwner(), new Observer<List<TRequestFriend>>() {
+            @Override
+            public void onChanged(List<TRequestFriend> tRequestFriends) {
+                friendList = tRequestFriends;
+                sendRecomendationAdapter = new SendRecomendationAdapter(getActivity(), tRequestFriends, SendRecomendationFragment.this, sendRecomendationButton);
+                sendRecomendationRecycleView.setAdapter(sendRecomendationAdapter);
+            }
+        });
+
     }
 
     @Override
@@ -88,7 +119,6 @@ public class SendRecomendationFragment extends Fragment implements SendRecomenda
                 sendRecomendationAction(v);
             }
         });
-
     }
 
     private void initializeUI() {
@@ -99,17 +129,11 @@ public class SendRecomendationFragment extends Fragment implements SendRecomenda
 
     private void sendRecomendationAction(View v){
         app = App.getInstance(getActivity());
-        String userDest = et_usuarioDestino.getText().toString();
+        List<String> userList = sendRecomendationAdapter.getListSelected();
         String userOrigin = app.getUsername();
-        String placeName = "tu pasta";
-        if (Validator.argumentsEmpty(userDest)) {
-            Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
-        }
-        else {
-            placeName = place.getName();
-            Toast.makeText(getActivity(), placeName, Toast.LENGTH_SHORT).show();
+        String placeName = place.getName();
+        for(String userDest: userList) {
             mViewModel.sendRecomendation(userOrigin, userDest, placeName);
-            //Toast.makeText(getActivity(), "Recom enviada", Toast.LENGTH_SHORT).show();
         }
     }
 

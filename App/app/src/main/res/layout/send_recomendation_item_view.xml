@@ -41,11 +41,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="12dp"
                 android:text="Pepe Martinez"
                 android:textSize="26sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView_send_recomendation"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/send_recomendation_textView_username_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/completeName_send_recomendation"
+                app:layout_constraintTop_toBottomOf="@+id/completeName_send_recomendation" />
 
 
             <ImageView
@@ -53,7 +62,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginEnd="4dp"
-                android:src="@drawable/ic_baseline_check_24"
+                android:src="@drawable/ic_baseline_check_circle_24"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
