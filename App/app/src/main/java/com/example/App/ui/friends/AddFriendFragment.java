@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +33,27 @@ public class AddFriendFragment extends Fragment {
 
         root = inflater.inflate(R.layout.fragment_add_friend, container, false);
         mViewModel = new ViewModelProvider(this).get(FriendsViewModel.class);
+        mViewModel.init();
 
         initUI();
-        
+        listeners();
         observers();
 
         return root;
+    }
+
+    private void listeners() {
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String username = editText.getText().toString();
+                if(mViewModel == null)
+                    Log.d("TAG", "onClick: "+ "Null");
+                if(username == null)
+                    Log.d("TAG", "onClick: "+ "String Null");
+                mViewModel.sendFriendRequest(username);
+            }
+        });
     }
 
     private void initUI() {

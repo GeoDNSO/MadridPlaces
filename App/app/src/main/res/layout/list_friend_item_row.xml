@@ -41,12 +41,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="10dp"
                 android:text="Pepe Martinez"
                 android:textSize="26sp"
                 app:layout_constraintStart_toEndOf="@+id/imageViewFriend"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+            <TextView
+                android:id="@+id/friend_textView_username_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/completeNameTextViewFriend"
+                app:layout_constraintTop_toBottomOf="@+id/completeNameTextViewFriend" />
 
             <ImageView
                 android:id="@+id/friend_more_options"

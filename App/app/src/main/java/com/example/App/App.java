@@ -237,6 +237,10 @@ public class App {
         this.locationTrack = locationTrack;
     }
 
+    public TUser getSessionUser(){
+        return sessionManager.getSesionUser();
+    }
+
     public LocationTrack getLocationTrack() {
         return locationTrack;
     }

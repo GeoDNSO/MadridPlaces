@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
@@ -99,7 +100,7 @@ public class FriendsFragment extends Fragment {
         addFriendMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                //TODO --> mandar a fragment de añadir amigo...
+                Navigation.findNavController(root).navigate(R.id.addFriendFragment);
                 return false;
             }
         });

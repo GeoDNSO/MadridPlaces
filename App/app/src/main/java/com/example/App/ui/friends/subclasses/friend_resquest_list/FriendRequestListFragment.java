@@ -38,7 +38,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
     private NestedScrollView nestedScrollView;
     private FriendRequestListAdapter friendRequestListAdapter;
     private List<TRequestFriend> friendsList;
-    int listPosition = -1;
+    int lastPosition = -1;
 
     public static FriendRequestListFragment newInstance() {
         return new FriendRequestListFragment();
@@ -80,14 +80,14 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
         mViewModel.getmAcceptFriend().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                if(AppConstants.ACCEPT_REQ_FRIEND_OK.equals(integer) && listPosition != -1){
+                if(AppConstants.ACCEPT_REQ_FRIEND_OK.equals(integer) && lastPosition != -1){
                     Toast.makeText(getContext(), "Se ha aceptado la recomendación", Toast.LENGTH_SHORT).show();
-                    TRequestFriend friends = friendsList.get(listPosition);
+                    TRequestFriend friends = friendsList.get(lastPosition);
                     friendsList.remove(friends);
                     friendRequestListAdapter = new FriendRequestListAdapter(friendsList, FriendRequestListFragment.this);
                     recyclerView.setAdapter(friendRequestListAdapter);
                     progressBar.setVisibility(View.GONE);
-                    listPosition = -1;
+                    lastPosition = -1;
                 }
             }
         });
@@ -95,15 +95,24 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
         mViewModel.getmDeclineFriend().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                if(AppConstants.DECLINE_REQ_FRIEND_OK.equals(integer) && listPosition != -1){
+                if(AppConstants.DECLINE_REQ_FRIEND_OK.equals(integer) && lastPosition != -1){
                     Toast.makeText(getContext(), "Se ha rechazado la recomendación", Toast.LENGTH_SHORT).show();
-                    TRequestFriend friends = friendsList.get(listPosition);
+                    TRequestFriend friends = friendsList.get(lastPosition);
                     friendsList.remove(friends);
                     friendRequestListAdapter = new FriendRequestListAdapter(friendsList, FriendRequestListFragment.this);
                     recyclerView.setAdapter(friendRequestListAdapter);
                     progressBar.setVisibility(View.GONE);
-                    listPosition = -1;
+                    lastPosition = -1;
                 }
+            }
+        });
+
+        mViewModel.getmFriendRequestList().observe(getViewLifecycleOwner(), new Observer<List<TRequestFriend>>() {
+            @Override
+            public void onChanged(List<TRequestFriend> tRequestFriends) {
+                friendsList = tRequestFriends;
+                friendRequestListAdapter = new FriendRequestListAdapter(tRequestFriends, FriendRequestListFragment.this);
+                recyclerView.setAdapter(friendRequestListAdapter);
             }
         });
 
@@ -126,7 +135,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
     public void onFriendRequestDeclineClick(int position) {
         String userOrigin = friendsList.get(position).getUserOrigin().getUsername();
         String userDest = friendsList.get(position).getUserDest().getUsername();
-        listPosition = position;
+        lastPosition = position;
         progressBar.setVisibility(View.VISIBLE);
         mViewModel.declineFriendRequest(userOrigin, userDest);
     }
@@ -135,7 +144,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
     public void onFriendRequestAcceptClick(int position) {
         String userOrigin = friendsList.get(position).getUserOrigin().getUsername();
         String userDest = friendsList.get(position).getUserDest().getUsername();
-        listPosition = position;
+        lastPosition = position;
         progressBar.setVisibility(View.VISIBLE);
         mViewModel.acceptFriendRequest(userOrigin, userDest);
     }
