@@ -145,7 +145,7 @@
     <string name="pending_visited_text">Pendientes por Visitar</string>
 
     <string name="recom_text">Recomendar</string>
-    <string name="sendRecButton_text">Enviar</string>
+    <string name="sendRecButton_text">Enviar recomendación</string>
 
     <string name="move_map_instruction">Pulse en el mapa</string>
     <string name="location_picker_select_location_button_cancel">Cancelar</string>
@@ -187,6 +187,8 @@
     <string name="friend_request_sent_success">Petición de Amigo enviado satisfactoriamente</string>
     <string name="friend_request_sent_fail">No se puedo enviar la petición de amistad, intentalo más tarde</string>
     <string name="delete_friend">Borrar amigo</string>
+    <string name="no_results">Sin resultados</string>
+    <string name="select_all">Seleccionar todo</string>
 
 
 </resources>

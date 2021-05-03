@@ -12,6 +12,7 @@ public class SendRecomendationViewModel extends ViewModelParent {
     private UserInteractionRepository userInteractionRepository;
     private MutableLiveData<Boolean> mSendingInProcess = new MutableLiveData<>();
     private LiveData<Integer> mSendingSuccess = new MutableLiveData<>();
+    private MutableLiveData<String> mSelectedItems = new MutableLiveData<>();
 
     @Override
     public void init() {
@@ -44,5 +45,13 @@ public class SendRecomendationViewModel extends ViewModelParent {
 
     public LiveData<Integer> getSendingSuccess() {
         return mSendingSuccess;
+    }
+
+    public MutableLiveData<String> getmSelectedItems() {
+        return mSelectedItems;
+    }
+
+    public void setmSelectedItems(String s) {
+        mSelectedItems.setValue(s);
     }
 }
