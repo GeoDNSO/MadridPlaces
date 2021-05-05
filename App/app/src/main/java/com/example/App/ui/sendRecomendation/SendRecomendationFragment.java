@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -43,8 +46,8 @@ public class SendRecomendationFragment extends Fragment implements SendRecomenda
 
     //Elementos visuales
     private TextView no_results;
-    private Button sendRecomendationButton;
     private RecyclerView sendRecomendationRecycleView;
+    private MenuItem sendRecommendation;
 
     private List<TRequestFriend> friendList;
 
@@ -59,7 +62,7 @@ public class SendRecomendationFragment extends Fragment implements SendRecomenda
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.send_recomendation_fragment, container, false);
 
-        // setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
 
         mViewModel = new ViewModelProvider(this).get(SendRecomendationViewModel.class);
         mViewModel.init();
@@ -71,10 +74,8 @@ public class SendRecomendationFragment extends Fragment implements SendRecomenda
 
         place = (TPlace) getArguments().getParcelable(AppConstants.BUNDLE_PLACE_DETAILS);
 
-        initializeListeners();
-
         friendList = new ArrayList<>();
-        sendRecomendationAdapter = new SendRecomendationAdapter(getActivity(), friendList, this, sendRecomendationButton); //getActivity = MainActivity.this
+        sendRecomendationAdapter = new SendRecomendationAdapter(getActivity(), friendList, this, sendRecommendation); //getActivity = MainActivity.this
         sendRecomendationRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         sendRecomendationRecycleView.setAdapter(sendRecomendationAdapter);
 
@@ -98,7 +99,13 @@ public class SendRecomendationFragment extends Fragment implements SendRecomenda
             @Override
             public void onChanged(List<TRequestFriend> tRequestFriends) {
                 friendList = tRequestFriends;
-                sendRecomendationAdapter = new SendRecomendationAdapter(getActivity(), tRequestFriends, SendRecomendationFragment.this, sendRecomendationButton);
+                if(friendList.size() == 0){
+                    no_results.setVisibility(View.VISIBLE);
+                }
+                else{
+                    no_results.setVisibility(View.GONE);
+                }
+                sendRecomendationAdapter = new SendRecomendationAdapter(getActivity(), tRequestFriends, SendRecomendationFragment.this, sendRecommendation);
                 sendRecomendationRecycleView.setAdapter(sendRecomendationAdapter);
             }
         });
@@ -112,22 +119,28 @@ public class SendRecomendationFragment extends Fragment implements SendRecomenda
         // TODO: Use the ViewModel
     }
 
-    private void initializeListeners() {
-        sendRecomendationButton.setOnClickListener(new View.OnClickListener() {
+    private void initializeUI() {
+        no_results = root.findViewById(R.id.tv_send_recomendation_no_results);
+        sendRecomendationRecycleView = root.findViewById(R.id.recyclerView_send_recomendation);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.recommendations_menu, menu);
+
+        sendRecommendation = menu.findItem(R.id.add_recommendation_menu_item);
+
+
+        sendRecommendation.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
-            public void onClick(View v) {
-                sendRecomendationAction(v);
+            public boolean onMenuItemClick(MenuItem item) {
+                sendRecomendationAction();
+                return true;
             }
         });
     }
 
-    private void initializeUI() {
-        no_results = root.findViewById(R.id.tv_send_recomendation_no_results);
-        sendRecomendationButton = root.findViewById(R.id.send_recomendation_button);
-        sendRecomendationRecycleView = root.findViewById(R.id.recyclerView_send_recomendation);
-    }
-
-    private void sendRecomendationAction(View v){
+    private void sendRecomendationAction(){
         app = App.getInstance(getActivity());
         List<String> userList = sendRecomendationAdapter.getListSelected();
         String userOrigin = app.getUsername();

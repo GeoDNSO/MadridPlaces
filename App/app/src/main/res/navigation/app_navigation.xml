@@ -109,7 +109,7 @@
     <fragment
         android:id="@+id/sendRecomendationFragment"
         android:name="com.example.App.ui.sendRecomendation.SendRecomendationFragment"
-        android:label="send_recomendation_fragment"
+        android:label="@string/send_recomendation"
         tools:layout="@layout/send_recomendation_fragment" />
     <activity
         android:id="@+id/addPlaceMapboxActivity"

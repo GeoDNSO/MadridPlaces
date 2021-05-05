@@ -84,22 +84,6 @@ public class RecommendationsFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.recommendations_menu, menu);
-
-        MenuItem sendRecommendation = menu.findItem(R.id.add_recommendation_menu_item);
-
-
-        sendRecommendation.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                return false;
-            }
-        });
-    }
-
     private void prepareViewPager() {
         RecommendationsTabAdapter recoTabAdapter = new RecommendationsTabAdapter(getChildFragmentManager());
 

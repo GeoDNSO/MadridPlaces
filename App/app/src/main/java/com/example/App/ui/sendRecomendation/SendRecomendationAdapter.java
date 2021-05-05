@@ -1,6 +1,8 @@
 package com.example.App.ui.sendRecomendation;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,9 +34,9 @@ public class SendRecomendationAdapter extends RecyclerView.Adapter<SendRecomenda
     private List<TRequestFriend> listUser;
     private List<String> selectedList;
     private SendRecomendationAdapter.SendRecomendationActionListener sendRecomendationActionListener;
-    private Button button;
+    private MenuItem button;
 
-    public SendRecomendationAdapter(Activity activity, List<TRequestFriend> listUser, SendRecomendationAdapter.SendRecomendationActionListener sendRecomendationActionListener, Button button) {
+    public SendRecomendationAdapter(Activity activity, List<TRequestFriend> listUser, SendRecomendationAdapter.SendRecomendationActionListener sendRecomendationActionListener, MenuItem button) {
         this.activity = activity;
         this.listUser = listUser;
         this.sendRecomendationActionListener = sendRecomendationActionListener;
@@ -77,11 +79,13 @@ public class SendRecomendationAdapter extends RecyclerView.Adapter<SendRecomenda
 
         if(holder.iv_check.getVisibility() == View.GONE){
             holder.iv_check.setVisibility(View.VISIBLE);
+            holder.iv_check.setColorFilter(Color.GREEN);
 
             selectedList.add(user.getUserOrigin().getUsername());
         }
         else {
             holder.iv_check.setVisibility(View.GONE);
+            holder.iv_check.setColorFilter(Color.TRANSPARENT);
             selectedList.remove(user.getUserOrigin().getUsername());
         }
         enableButtons();
@@ -105,10 +109,10 @@ public class SendRecomendationAdapter extends RecyclerView.Adapter<SendRecomenda
 
     private void enableButtons() {
         if(selectedList.size() == 0){
-            button.setVisibility(View.GONE);
+            button.setVisible(false);
         }
         else{
-            button.setVisibility(View.VISIBLE);
+            button.setVisible(true);
         }
     }
 
