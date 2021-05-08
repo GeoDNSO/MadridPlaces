@@ -339,6 +339,7 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 //TODO
+                //mViewModel.
                 return true;
             }
         });
