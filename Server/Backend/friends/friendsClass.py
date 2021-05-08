@@ -90,7 +90,7 @@ def listFriendRequests():
     user = json_data["user"]
     state = "P"
     requestList = []
-    requestsFriend = modules.friends.query.filter(((modules.friends.userSrc == user) | (modules.friends.userDst == user)) & (modules.friends.state == state)).all()
+    requestsFriend = modules.friends.query.filter((modules.friends.userDst == user) & (modules.friends.state == state)).all()
     for req in requestsFriend:
         userFriend = req.userDst if (req.userSrc == user) else req.userSrc
         obj = FriendsFunct.completeFriendList(userFriend, state, req.created)

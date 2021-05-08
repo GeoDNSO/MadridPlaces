@@ -8,14 +8,14 @@ import user.userFunct as UserFunct
 
 def initParameters():
     json_data = request.get_json()
-    userSrc = json_data["userSrc"] #El user que te ha enviado la recomendación
-    userDst = json_data["userDst"] #Este user es el user logueado
+    userSrc = json_data["userSrc"]
+    userDst = json_data["userDst"]
     return userSrc, userDst
 
 def initParametersFriends():
     json_data = request.get_json()
-    user = json_data["user"] #El user que te ha enviado la recomendación
-    friend = json_data["friend"] #Este user es el user logueado
+    user = json_data["user"]
+    friend = json_data["friend"]
     return user, friend
 
 def countFriends(user):
