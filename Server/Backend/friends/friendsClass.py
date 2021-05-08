@@ -82,7 +82,7 @@ def listFriends():
         userFriend = friend.userDst if (friend.userSrc == user) else friend.userSrc
         obj = FriendsFunct.completeFriendList(userFriend, state, friend.created)
         friendList.append(obj)
-    return jsonify(exito = "true", friendList = friendList)
+    return jsonify(exito = "true", list = friendList)
 
 @friendsClass.route('/friends/listFriendRequests', methods=['POST']) #Crea una recomendación
 def listFriendRequests():
@@ -95,5 +95,5 @@ def listFriendRequests():
         userFriend = req.userDst if (req.userSrc == user) else req.userSrc
         obj = FriendsFunct.completeFriendList(userFriend, state, req.created)
         requestList.append(obj)
-    return jsonify(exito = "true", requestList = requestList)
+    return jsonify(exito = "true", list = requestList)
     

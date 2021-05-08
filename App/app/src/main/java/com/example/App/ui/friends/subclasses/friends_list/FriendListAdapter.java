@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.App.R;
+import com.example.App.models.transfer.TRequestFriend;
 import com.example.App.models.transfer.TUser;
 
 import java.util.ArrayList;
@@ -22,11 +23,11 @@ import java.util.List;
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.MyViewHolder> /*implements Filterable*/ {
 
     private Activity activity;
-    private List<TUser> listUser;
-    private List<TUser> listUserComplete;
+    private List<TRequestFriend> listUser;
+    private List<TRequestFriend> listUserComplete;
     private FriendActionListener friendActionListener;
 
-    public FriendListAdapter(Activity activity, List<TUser> listUser, FriendActionListener friendActionListener) {
+    public FriendListAdapter(Activity activity, List<TRequestFriend> listUser, FriendActionListener friendActionListener) {
         this.activity = activity;
         this.listUser = listUser;
         this.friendActionListener = friendActionListener;
@@ -42,16 +43,24 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.My
 
     @Override
     public void onBindViewHolder(@NonNull FriendListAdapter.MyViewHolder holder, int position) {
-        TUser user = listUser.get(position);
+        TRequestFriend user = listUser.get(position);
 
-        if(user.getImage_profile() == null || user.getImage_profile() == ""){
+        if(user.getUserOrigin().getImage_profile() == null || user.getUserOrigin().getImage_profile() == ""){
             holder.iv_imgProfile.setImageResource(R.drawable.ic_username);
         }
         else {
-            Glide.with(activity).load(user.getImage_profile()).circleCrop().into(holder.iv_imgProfile);
+            Glide.with(activity).load(user.getUserOrigin().getImage_profile()).circleCrop().into(holder.iv_imgProfile);
         }
 
-        holder.tv_nameProfile.setText(user.getUsername());
+        holder.tv_nameProfile.setText(String.format("%s %s", user.getUserOrigin().getName(), user.getUserOrigin().getSurname()));
+        holder.tv_nicknameProfile.setText(user.getUserOrigin().getUsername());
+
+        holder.ivOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createPopMenu(holder, position).show();
+            }
+        });
     }
 
     @Override
@@ -123,35 +132,27 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.My
         return popupMenu;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         private ImageView iv_imgProfile;
         private TextView tv_nameProfile;
+        private TextView tv_nicknameProfile;
         private ImageView ivOptions;
-        private FriendActionListener friendActionListener;
 
         public MyViewHolder(View itemView, FriendActionListener friendActionListener) {
             super(itemView);
             iv_imgProfile = (ImageView) itemView.findViewById(R.id.imageViewFriend);
             tv_nameProfile = (TextView) itemView.findViewById(R.id.completeNameTextViewFriend);
+            tv_nicknameProfile = (TextView) itemView.findViewById(R.id.friend_textView_username_item);
             ivOptions = itemView.findViewById(R.id.friend_more_options);
-
-            this.friendActionListener = friendActionListener;
-
-            itemView.setOnClickListener(this); //this referencia a la interfaz que se implementa en el constructor
         }
 
-        @Override
-        public void onClick(View v) {
-            friendActionListener.onListClick(getAdapterPosition());
-        }
     }
 
     public interface FriendActionListener {
-        void onListClick(int position);
         void onDeleteFriend(int position);
     }
 
-    public void setListUser(List<TUser> listUser){
+    public void setListUser(List<TRequestFriend> listUser){
         this.listUser = listUser;
         notifyDataSetChanged();
     }

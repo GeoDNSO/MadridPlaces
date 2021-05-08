@@ -32,6 +32,8 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
@@ -97,7 +99,7 @@ public class ModifyPlaceMapboxActivity extends AppCompatActivity implements Perm
         mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull final Style style) {
-                enableLocationPlugin(style);
+                //enableLocationPlugin(style);
 
                 // Toast instructing user to tap on the mapboxMap
                 Toast.makeText(
@@ -172,6 +174,12 @@ public class ModifyPlaceMapboxActivity extends AppCompatActivity implements Perm
                 });
             }
         });
+        CameraPosition position = new CameraPosition.Builder()
+                .target(new LatLng(place.getLatitude(), place.getLongitude())) // Sets the new camera position
+                .zoom(17) // Sets the zoom
+                .tilt(30) // Set the camera tilt
+                .build(); // Creates a CameraPosition from the builder
+        mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
     }
 
     private void initDroppedMarker(@NonNull Style loadedMapStyle) {
@@ -247,7 +255,7 @@ public class ModifyPlaceMapboxActivity extends AppCompatActivity implements Perm
         if (granted && mapboxMap != null) {
             Style style = mapboxMap.getStyle();
             if (style != null) {
-                enableLocationPlugin(style);
+                //enableLocationPlugin(style);
             }
         } else {
             Toast.makeText(this, R.string.user_location_permission_not_granted, Toast.LENGTH_LONG).show();

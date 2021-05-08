@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.App.App;
 import com.example.App.models.dao.SimpleRequest;
 import com.example.App.models.transfer.TRequestFriend;
 import com.example.App.models.transfer.TUser;
@@ -27,7 +28,9 @@ public class UserFriendRepository extends Repository{
     private MutableLiveData<Integer> mAcceptFriend = new MutableLiveData<>();
     private MutableLiveData<Integer> mDeclineFriend = new MutableLiveData<>();
     private MutableLiveData<Integer> mFriendRequest = new MutableLiveData<>();
+    private MutableLiveData<Integer> mDeleteFriend = new MutableLiveData<>();
     private MutableLiveData<List<TRequestFriend>> mFriendRequestList = new MutableLiveData<>();
+    private MutableLiveData<List<TRequestFriend>> mFriendList = new MutableLiveData<>();
 
     class FriendListCallBack implements Callback {
 
@@ -93,6 +96,56 @@ public class UserFriendRepository extends Repository{
             }
             mSuccess.postValue(AppConstants.LIST_REQ_FRIEND_OK);//Importante que este despues del postValue de friendList
         }
+    }
+
+    public void deleteFriend(String userToDelete, String currentUser) {
+        String postBodyString = jsonInfoForDeleteFriend(userToDelete, currentUser);
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_DELETE, "/friends/deleteFriend"
+        );
+
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mDeleteFriend.postValue(AppConstants.DELETE_FRIEND_FAIL);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(!response.isSuccessful()) {
+                    mDeleteFriend.postValue(AppConstants.DELETE_FRIEND_FAIL);
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if(success) {
+                    mDeleteFriend.postValue(AppConstants.DELETE_FRIEND_SUCCESS);
+                }
+                else {
+                    mDeleteFriend.postValue(AppConstants.DELETE_FRIEND_FAIL);
+                }
+            }
+        });
+    }
+
+    public void friendList(String username) {
+        String postBodyString = jsonInfoSendFriendList(username);
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_POST, "/friends/listFriends");
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new UserFriendRepository.FriendListCallBack(simpleRequest, mFriendList));
     }
 
     public void declineFriendRequest(String userOrigin, String userDest) {
@@ -179,17 +232,17 @@ public class UserFriendRepository extends Repository{
         String postBodyString = jsonInfoSendFriendList(username);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "/recommendations/listRecommendationsSent");
+                AppConstants.METHOD_POST, "/friends/listFriendRequests");
         Call call = simpleRequest.createCall(request);
 
         call.enqueue(new UserFriendRepository.FriendListCallBack(simpleRequest, mFriendRequestList));
     }
 
     public void sendFriendRequest(String username){
-        String postBodyString = jsonInfoSendFriendList(username);
+        String postBodyString = jsonInfoSendRequest(username);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_POST, "friends/sendRequest");
+                AppConstants.METHOD_POST, "/friends/sendRequest");
         Call call = simpleRequest.createCall(request);
 
         call.enqueue(new Callback() {
@@ -225,7 +278,23 @@ public class UserFriendRepository extends Repository{
         JSONObject json = new JSONObject();
         String infoString;
         try {
-            json.put("username", username);
+            json.put("user", username);
+        }catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = json.toString();
+
+        return infoString;
+    }
+
+
+    private String jsonInfoSendRequest(String username) {
+        JSONObject json = new JSONObject();
+        String infoString;
+        try {
+            json.put("userSrc", App.getInstance().getUsername());
+            json.put("userDst", username);
         }catch (JSONException e) {
             e.printStackTrace();
             infoString = "error";
@@ -241,6 +310,21 @@ public class UserFriendRepository extends Repository{
         try {
             json.put("userSrc", userOrigin);
             json.put("userDst", userDest);
+        }catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = json.toString();
+
+        return infoString;
+    }
+
+    private String jsonInfoForDeleteFriend(String userOrigin, String userDest) {
+        JSONObject json = new JSONObject();
+        String infoString;
+        try {
+            json.put("user", userOrigin);
+            json.put("friend", userDest);
         }catch (JSONException e) {
             e.printStackTrace();
             infoString = "error";
@@ -272,9 +356,9 @@ public class UserFriendRepository extends Repository{
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(jsonString);
-            TUser userSrc = jsonStringToUser(jsonObject.toString());
-            TUser userDst = jsonStringToUser(jsonObject.toString());
-
+            TUser userSrc = jsonStringToUser(jsonObject.getJSONObject("user").toString());
+            //TUser userDst = jsonStringToUser(jsonObject.toString());
+            TUser userDst = App.getInstance().getSessionUser();
             return new TRequestFriend(
                     userSrc,
                     userDst,
@@ -314,7 +398,15 @@ public class UserFriendRepository extends Repository{
         return mFriendRequestList;
     }
 
+    public MutableLiveData<List<TRequestFriend>> getmFriendList() {
+        return mFriendList;
+    }
+
     public MutableLiveData<Integer> getmFriendRequest() {
         return mFriendRequest;
+    }
+
+    public MutableLiveData<Integer> getmDeleteFriend() {
+        return mDeleteFriend;
     }
 }

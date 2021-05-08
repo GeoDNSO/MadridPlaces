@@ -5,6 +5,7 @@
     <item
         android:id="@+id/add_recommendation_menu_item"
         android:icon="@drawable/ic_baseline_send_24"
+        android:visible="false"
         app:showAsAction="always"
         android:title="@string/add_recommendation"
         />
