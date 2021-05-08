@@ -12,6 +12,7 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.Toast;
@@ -43,6 +44,8 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.services.android.navigation.ui.v5.NavigationLauncher;
+import com.mapbox.services.android.navigation.ui.v5.NavigationLauncherOptions;
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute;
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
 
@@ -58,7 +61,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 
-public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallback, PermissionsListener, MapboxMap.OnMapClickListener {
+public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallback, PermissionsListener {
 
     private MapView mapView;
     private MapboxMap mapboxMap;
@@ -78,6 +81,8 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
     private MapboxLocationCallback callback = new MapboxLocationCallback(this);
     private LocationComponent locationComponent;
     private TPlace place;
+    private Button buttonRoute;
+    private Point destPoint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +97,7 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
         mapView = (MapView) findViewById(R.id.mapboxMap);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
     }
 
     @Override
@@ -147,6 +153,7 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
                     enableLocationComponent(style);
                 }
             });
+
         } else {
             Toast.makeText(this, R.string.user_location_permission_not_granted, Toast.LENGTH_LONG).show();
             finish();
@@ -223,7 +230,36 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
                     public void onStyleLoaded(@NonNull Style style) {
                         enableLocationComponent(style);
                         addDestinationIconSymbolLayer(style);
-                        mapboxMap.addOnMapClickListener(MapboxActivity.this);
+
+                        destPoint = Point.fromLngLat(place.getLongitude(), place.getLatitude());
+
+                        button = findViewById(R.id.startButton);
+                        buttonRoute = findViewById(R.id.routeButton);
+                        buttonRoute.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+                                Point originPoint = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
+                                        locationComponent.getLastKnownLocation().getLatitude());
+                                getRoute(originPoint, destPoint);
+                                button.setEnabled(true);
+                                //button.setBackgroundResource(R.color.mapboxBlue);
+                            }
+                        });
+                        button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                boolean simulateRoute = true;
+                                NavigationLauncherOptions options = NavigationLauncherOptions.builder()
+                                        .directionsRoute(currentRoute)
+                                        .shouldSimulateRoute(simulateRoute)
+                                        .build();
+                                // Call this method with Context from within an Activity
+                                NavigationLauncher.startNavigation(MapboxActivity.this, options);
+                            }
+                        });
+                        putDestPoint(destPoint);
+
                     }
                 });
 
@@ -243,20 +279,19 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
         loadedMapStyle.addLayer(destinationSymbolLayer);
     }
 
-    @SuppressWarnings( {"MissingPermission"})
-    @Override
-    public boolean onMapClick(@NonNull LatLng point) {
+    public boolean putDestPoint(@NonNull Point destinationPoint) {
 
-        Point destinationPoint = Point.fromLngLat(point.getLongitude(), point.getLatitude());
-        Point originPoint = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
-                locationComponent.getLastKnownLocation().getLatitude());
+        //Point originPoint = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
+        //        locationComponent.getLastKnownLocation().getLatitude());
 
         GeoJsonSource source = mapboxMap.getStyle().getSourceAs("destination-source-id");
         if (source != null) {
             source.setGeoJson(Feature.fromGeometry(destinationPoint));
         }
 
-        getRoute(originPoint, destinationPoint);
+        //getRoute(originPoint, destinationPoint);
+        //button.setEnabled(true);
+        //button.setBackgroundResource(R.color.mapboxBlue);
         return true;
     }
 
@@ -327,6 +362,7 @@ public class MapboxActivity extends AppCompatActivity implements OnMapReadyCallb
             locationComponent.setRenderMode(RenderMode.COMPASS);
 
             initLocationEngine();
+
         } else {
             permissionsManager = new PermissionsManager(this);
             permissionsManager.requestLocationPermissions(this);
