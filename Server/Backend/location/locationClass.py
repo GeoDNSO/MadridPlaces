@@ -152,6 +152,7 @@ def deleteLocation():
         print("Error borrando la fila :", repr(e))
         return jsonify(exito = "false")   
 
+
 @locationClass.route('/location/listLocations', methods=['GET', 'POST'])
 def listLocations():
     json_data = request.get_json()
@@ -159,18 +160,19 @@ def listLocations():
     try:
         if(LocationFunct.checkPagination(page, quant, search) is False):
             return jsonify(exito = "true", list = [])
-        #places = modules.location.query.join(modules.comments, modules.location.name == modules.comments.location, isouter = True).filter(modules.location.name.like(search)).order_by(modules.comments.rate.desc()).paginate(per_page=quant, page=page)
-        places = modules.location.query.filter(modules.location.name.like(search)).paginate(per_page=quant, page=page)
+
+        places = modules.sqlAlchemy.session.query(modules.location).outerjoin(modules.comments, modules.location.name == modules.comments.location).filter(modules.location.name.like(search)).group_by(modules.location.name).order_by(modules.sqlAlchemy.func.avg(modules.comments.rate).desc()).paginate(per_page=quant, page=page)
+
         if(places is not None):
-	        all_items = places.items
-	        lista = []
-	        for place in all_items:
-		        obj = LocationFunct.completeList(place, user)
-		        lista.append(obj)
-	        print("success")
-	        return jsonify(
-	                exito = "true",
-	                list = lista)
+            all_items = places.items
+            lista = []
+            for place in all_items:
+                obj = LocationFunct.completeList(place, user)
+                lista.append(obj)
+            print("success")
+            return jsonify(
+                    exito = "true",
+                    list = lista)
 
         print("failure")
         return jsonify(exito = "false")   

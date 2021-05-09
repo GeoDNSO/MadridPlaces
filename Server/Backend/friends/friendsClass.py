@@ -3,8 +3,6 @@ from flask import request
 from flask import jsonify
 import modules
 import friends.friendsFunct as FriendsFunct
-from sqlalchemy import or_
-from sqlalchemy import and_
 
 friendsClass = Blueprint("friendsClass", __name__)
 
