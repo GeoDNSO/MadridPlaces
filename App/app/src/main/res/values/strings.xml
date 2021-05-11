@@ -192,6 +192,6 @@
     <string name="send_recomendation">Enviar recomendación</string>
     <string name="saved_on_pending_visited_list">Guardado en la lista de lugares pendientes por visitar</string>
     <string name="saved_on_pending_visited_list_error">Se produjo un error, intentelo más tarde</string>
-
+    <string name="ratings_text">Valoraciones</string>
 
 </resources>

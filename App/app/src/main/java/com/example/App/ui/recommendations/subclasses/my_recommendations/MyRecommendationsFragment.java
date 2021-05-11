@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,9 +18,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
+import com.example.App.models.transfer.TPlace;
 import com.example.App.models.transfer.TRecomendation;
 import com.example.App.ui.place_details.PlaceDetailViewModel;
 import com.example.App.ui.recommendations.RecommendationsViewModel;
@@ -28,7 +31,7 @@ import com.example.App.utilities.AppConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyRecommendationsFragment extends Fragment {
+public class MyRecommendationsFragment extends Fragment implements MyRecommendationsAdapter.RecommendationAdapterListener{
 
     private View root;
     private RecommendationsViewModel mViewModel;
@@ -62,7 +65,7 @@ public class MyRecommendationsFragment extends Fragment {
         initObservers();
 
         recommendationList = new ArrayList<>();
-        myRecommendationsAdapter = new MyRecommendationsAdapter(getActivity(), recommendationList);
+        myRecommendationsAdapter = new MyRecommendationsAdapter(getActivity(), recommendationList, this);
 
         //Set layout
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -93,7 +96,7 @@ public class MyRecommendationsFragment extends Fragment {
                     return;
                 }
                 recommendationList = tRecomendations;
-                myRecommendationsAdapter = new MyRecommendationsAdapter(getActivity(), recommendationList);
+                myRecommendationsAdapter = new MyRecommendationsAdapter(getActivity(), recommendationList, MyRecommendationsFragment.this);
                 recyclerView.setAdapter(myRecommendationsAdapter);
                 progressBar.setVisibility(View.GONE);
             }
@@ -138,5 +141,16 @@ public class MyRecommendationsFragment extends Fragment {
     }
 
 
+    @Override
+    public void onSpanClick(String placeName) {
+        Toast.makeText(getContext(), "Funciona", Toast.LENGTH_SHORT).show();
 
+        //Enviar datos del objeto con posicion position de la lista al otro fragment
+
+        Bundle bundle = new Bundle();
+        bundle.putString(AppConstants.BUNDLE_PLACE_NAME_PLACE_DETAILS, placeName);
+
+        //Le pasamos el bundle
+        Navigation.findNavController(root).navigate(R.id.placeDetailFragment, bundle);
+    }
 }
