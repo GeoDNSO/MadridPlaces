@@ -5,22 +5,22 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.example.App.components.ViewModelParent;
 import com.example.App.repositories.UserRepository;
 import com.example.App.models.TUser;
 
-public class RegisterViewModel extends ViewModel {
+public class RegisterViewModel extends ViewModelParent {
 
     private UserRepository userRepository;
     private MutableLiveData<Boolean> mRegisterInProcess = new MutableLiveData<>(); //true indica progress bar activo
     private LiveData<Boolean> mRegisterSuccess = new MutableLiveData<>();
 
     //observamos los objetos del repositorio, en este caso, el success devuelto por la llamada okhttp
+    @Override
     public void init(){
         userRepository = new UserRepository();
-        mRegisterSuccess = Transformations.switchMap(
-                userRepository.getmSuccess(),
-                success -> setRegisterInProcess(success));
 
+        mRegisterSuccess = super.updateOnChange(mRegisterSuccess, userRepository.getmSuccess());
     }
 
     //envia datos al servidor para registrar el nuevo usuario, en la primera linea se activa el progressBar
@@ -28,14 +28,6 @@ public class RegisterViewModel extends ViewModel {
         mRegisterInProcess.setValue(true); //progress bar visible
         TUser user = new TUser(username, pass, name, surname, email, gender, birthDate, city, rol, profileImage);
         userRepository.registerUser(user);
-    }
-
-    //funcion que se usa en el switchMap, asocia un liveData cuando cambia el valor de mSuccess en DAOUserImp
-    private LiveData<Boolean> setRegisterInProcess(Boolean success) {
-        mRegisterInProcess.setValue(false); //progress bar visible
-        MutableLiveData<Boolean> mAux = new MutableLiveData<>();
-        mAux.setValue(success);
-        return mAux;
     }
 
     //devuelve el liveData para poder observarlo desde la vista

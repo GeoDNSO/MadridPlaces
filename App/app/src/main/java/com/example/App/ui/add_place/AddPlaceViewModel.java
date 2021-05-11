@@ -22,30 +22,11 @@ public class AddPlaceViewModel extends ViewModelParent {
     public void init(){
         placeRepository = new PlaceRepository();
         mListTypesOfPlace = new ArrayList<>();
-        mSuccess = Transformations.switchMap(
-                placeRepository.getSuccess(),
-                success -> setSuccess(success)
-        );
-        mAddPlaceSuccess = Transformations.switchMap(
-                placeRepository.getBooleanPlace(),
-                success -> setAndGetAddPlace(success));
 
-        mCategoriesSuccess = Transformations.switchMap(
-                placeRepository.getCategoriesList(),
-                success -> setAndGetCategoriesPlace(success));
-    }
+        mSuccess = super.updateOnChange(mSuccess, placeRepository.getSuccess());
+        mAddPlaceSuccess = super.updateOnChange(mAddPlaceSuccess, placeRepository.getBooleanPlace());
+        mCategoriesSuccess = super.updateOnChange(mCategoriesSuccess, placeRepository.getCategoriesList());
 
-    private LiveData<Boolean> setAndGetAddPlace(Boolean success) {
-        MutableLiveData<Boolean> mAux = new MutableLiveData<>();
-        mAux.setValue(success);
-        return mAux;
-    }
-
-    private LiveData<Integer> setSuccess(Integer success) {
-        mlv_isLoading.setValue(false); //progress bar visible
-        MutableLiveData<Integer> mAux = new MutableLiveData<>();
-        mAux.setValue(success);
-        return mAux;
     }
 
     public void getTypesOfPlaces(){
@@ -53,23 +34,13 @@ public class AddPlaceViewModel extends ViewModelParent {
         placeRepository.getCategories();
     }
 
-    private LiveData<List<String>> setAndGetCategoriesPlace(List<String> categories){
-        mlv_isLoading.setValue(false); //progress bar visible
-        MutableLiveData<List<String>> mAux = new MutableLiveData<>();
-        mAux.setValue(categories);
-        return mAux;
-    }
-
     public void addPlace(String placeName, String placeDescription, String typePlace, List<String> listImages, Double latitude, Double longitude,
                          String road_class, String road_name, String road_number, String zipcode){
         mlv_isLoading.setValue(true); //progress bar visible
         TPlace place = new TPlace(placeName, placeDescription, latitude, longitude, listImages, typePlace, "Madrid",
                 road_class, road_name, road_number, zipcode, "", 0.0, false, 100.0, 0, "Sin Fecha");
-        //TODO en type of place no devolvemos elnombre del lugar sino el numero asignado en la base de datos
+        //TODO en type of place no devolvemos el nombre del lugar sino el numero asignado en la base de datos
         placeRepository.addPlace(place);
-        //placeRepository.addPlace(placeName, placeDescription, typePlace);
-        //placeRepository.addPlaceImages(placeName, listImages);
-
     }
 
     public LiveData<Boolean> getmAddPlaceSuccess(){

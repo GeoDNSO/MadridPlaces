@@ -15,6 +15,7 @@ public class SendRecomendationViewModel extends ViewModelParent {
 
     private UserInteractionRepository userInteractionRepository;
     private UserFriendRepository userFriendRepository;
+
     private MutableLiveData<Boolean> mSendingInProcess = new MutableLiveData<>();
     private LiveData<Integer> mSendingSuccess = new MutableLiveData<>();
     private MutableLiveData<String> mSelectedItems = new MutableLiveData<>();
@@ -25,33 +26,12 @@ public class SendRecomendationViewModel extends ViewModelParent {
         userInteractionRepository = new UserInteractionRepository();
         userFriendRepository = new UserFriendRepository();
 
-        mSendingSuccess = Transformations.switchMap(
-                userInteractionRepository.getSuccess(),
-                success -> setSendingSuccess(success)
-        );
-
-        mFriendList = Transformations.switchMap(
-                userFriendRepository.getmFriendList(),
-                listFriend -> setFriendList(listFriend)
-        );
+        mSendingSuccess = super.updateOnChange(mSendingSuccess, userInteractionRepository.getSuccess());
+        mFriendList = super.updateOnChange(mFriendList, userFriendRepository.getmFriendList());
     }
 
     public void friendList(String username) {
         userFriendRepository.friendList(username);
-    }
-
-    private LiveData<List<TRequestFriend>> setFriendList(List<TRequestFriend> listFriend) {
-        mlv_isLoading.setValue(false);
-        MutableLiveData<List<TRequestFriend>> mAux = new MutableLiveData<>();
-        mAux.setValue(listFriend);
-        return mAux;
-    }
-
-    private LiveData<Integer> setSendingSuccess(Integer success) {
-        mSendingInProcess.setValue(false);
-        MutableLiveData<Integer> mAux = new MutableLiveData<>();
-        mAux.setValue(success);
-        return mAux;
     }
 
 

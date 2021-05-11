@@ -82,7 +82,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
             }
         });
 
-        mViewModel.getmCategoriesSuccess().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+        mViewModel.getmCategoriesStringList().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> categoriesList) {
                 categoriesTitles = categoriesList;

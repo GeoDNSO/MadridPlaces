@@ -19,13 +19,9 @@ public class AdminViewModel extends ViewModelParent {
     public void init(){
         userRepository = new UserRepository();
 
-        mListSuccess = Transformations.switchMap(
-                userRepository.getProfileSuccess(),
-                success -> getListInProcess(success));
+        mListSuccess = super.updateOnChange(mListSuccess, userRepository.getProfileSuccess());
+        mListUsers = super.updateOnChange(mListUsers, userRepository.getListUsers());
 
-        mListUsers = Transformations.switchMap(
-                userRepository.getListUsers(),
-                user -> setAndGetListUsers(user));
     }
 
     //TODO envia datos al servidor para registrar el nuevo usuario, en la primera linea se activa el progressBar
@@ -35,19 +31,6 @@ public class AdminViewModel extends ViewModelParent {
 
     public void clearList(){
         userRepository.clearListUsers();
-    }
-
-    //funcion que se usa en el switchMap, asocia un liveData cuando cambia el valor de mSuccess en DAOUserImp
-    private LiveData<Integer> getListInProcess(Integer success) {
-        MutableLiveData<Integer> mAux = new MutableLiveData<>();
-        mAux.setValue(success);
-        return mAux;
-    }
-
-    private LiveData<List<TUser>> setAndGetListUsers(List<TUser> user) {
-        MutableLiveData<List<TUser>> mAux = new MutableLiveData<>();
-        mAux.setValue(user);
-        return mAux;
     }
 
     public LiveData<Integer> getListSuccess(){

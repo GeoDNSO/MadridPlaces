@@ -25,83 +25,15 @@ public class FriendsViewModel extends ViewModelParent {
     public void init() {
         friendRepository = new UserFriendRepository();
 
-        mFriendList = Transformations.switchMap(
-                friendRepository.getmFriendList(),
-                listFriend -> setFriendList(listFriend)
-        );
-        mFriendRequestList = Transformations.switchMap(
-                friendRepository.getmFriendRequestList(),
-                listFriend -> setFriendRequestList(listFriend)
-        );
-        mAcceptFriend = Transformations.switchMap(
-                friendRepository.getmAcceptFriend(),
-                acceptRecom -> setAcceptFriend(acceptRecom)
-        );
-        mDeclineFriend = Transformations.switchMap(
-                friendRepository.getmDeclineFriend(),
-                denyRecom -> setDeclineFriend(denyRecom)
-        );
-        mFriendRequest = Transformations.switchMap(
-                friendRepository.getmFriendRequest(),
-                requestFriend -> setDeclineFriend(requestFriend)
-        );
-        mDeleteFriend = Transformations.switchMap(
-                friendRepository.getmDeleteFriend(),
-                deleteFriend -> setDeleteFriend(deleteFriend)
-        );
-        mSendRequestFriend = Transformations.switchMap(
-                friendRepository.getmFriendRequest(),
-                sendRequestFriend -> setSendRequestFriend(sendRequestFriend)
-        );
-    }
+        mFriendList = super.updateOnChange(mFriendList, friendRepository.getmFriendList());
 
-    private LiveData<Integer> setSendRequestFriend(Integer sendRequestFriend) {
-        mlv_isLoading.setValue(false);
-        MutableLiveData<Integer> mAux = new MutableLiveData<>();
-        mAux.setValue(sendRequestFriend);
-        return mAux;
-    }
-
-    private LiveData<Integer> setDeleteFriend(Integer deleteFriend) {
-        mlv_isLoading.setValue(false);
-        MutableLiveData<Integer> mAux = new MutableLiveData<>();
-        mAux.setValue(deleteFriend);
-        return mAux;
-    }
-
-    private LiveData<List<TRequestFriend>> setFriendRequestList(List<TRequestFriend> listFriend) {
-        mlv_isLoading.setValue(false);
-        MutableLiveData<List<TRequestFriend>> mAux = new MutableLiveData<>();
-        mAux.setValue(listFriend);
-        return mAux;
-    }
-
-    private LiveData<List<TRequestFriend>> setFriendList(List<TRequestFriend> listFriend) {
-        mlv_isLoading.setValue(false);
-        MutableLiveData<List<TRequestFriend>> mAux = new MutableLiveData<>();
-        mAux.setValue(listFriend);
-        return mAux;
-    }
-
-    private LiveData<Integer> setDeclineFriend(Integer denyRecom) {
-        mlv_isLoading.setValue(false);
-        MutableLiveData<Integer> mAux = new MutableLiveData<>();
-        mAux.setValue(denyRecom);
-        return mAux;
-    }
-
-    private LiveData<Integer> setRequestFriend(Integer requestFriend) {
-        mlv_isLoading.setValue(false);
-        MutableLiveData<Integer> mAux = new MutableLiveData<>();
-        mAux.setValue(requestFriend);
-        return mAux;
-    }
-
-    private LiveData<Integer> setAcceptFriend(Integer acceptRecom) {
-        mlv_isLoading.setValue(false);
-        MutableLiveData<Integer> mAux = new MutableLiveData<>();
-        mAux.setValue(acceptRecom);
-        return mAux;
+        mFriendList = super.updateOnChange(mFriendList, friendRepository.getmFriendList());
+        mFriendRequestList = super.updateOnChange(mFriendRequestList, friendRepository.getmFriendRequestList());
+        mAcceptFriend = super.updateOnChange(mAcceptFriend, friendRepository.getmAcceptFriend());
+        mDeclineFriend = super.updateOnChange(mDeclineFriend, friendRepository.getmDeclineFriend());
+        mFriendRequest = super.updateOnChange(mFriendRequest, friendRepository.getmFriendRequest());
+        mDeleteFriend = super.updateOnChange(mDeleteFriend, friendRepository.getmDeleteFriend());
+        mSendRequestFriend = super.updateOnChange(mSendRequestFriend, friendRepository.getmFriendRequest());
     }
 
     public void declineFriendRequest(String userOrigin, String userDest) {
@@ -124,35 +56,27 @@ public class FriendsViewModel extends ViewModelParent {
         friendRepository.friendList(username);
     }
 
-
     public LiveData<Integer> getmDeclineFriend() {
         return mDeclineFriend;
     }
-
     public LiveData<Integer> getmAcceptFriend() {
         return mAcceptFriend;
     }
-
     public LiveData<List<TRequestFriend>> getmFriendRequestList() {
         return mFriendRequestList;
     }
-
     public LiveData<Integer> getmFriendRequest() {
         return mFriendRequest;
     }
-
     public LiveData<Integer> getmDeleteFriend() {
         return mDeleteFriend;
     }
-
     public LiveData<Integer> getmSendRequestFriend() {
         return mSendRequestFriend;
     }
-
     public void sendFriendRequest(String username) {
         friendRepository.sendFriendRequest(username);
     }
-
     public LiveData<List<TRequestFriend>> getmFriendList() {
         return mFriendList;
     }

@@ -11,6 +11,7 @@ public abstract class ViewModelParent extends ViewModel {
 
     protected MutableLiveData<Boolean> mlv_isLoading = new MutableLiveData<>(); //true indica progress bar activo
     protected LiveData<Integer> mSuccess = new MutableLiveData<>();
+
     public abstract void init();
 
     public LiveData<Integer> getSuccess(){
@@ -20,9 +21,8 @@ public abstract class ViewModelParent extends ViewModel {
         return mlv_isLoading;
     }
 
-
-    /***
-     * Actualiza el valor del liveData al valor del MutableLiveData cuando este cambia de valor
+    /**
+     * Devuelve un liveData que se actualiza cada vez que el valor de observed cambia
      */
     public <T> LiveData<T> updateOnChange(LiveData<T> liveData, MutableLiveData<T> observed){
         liveData = Transformations.switchMap(
@@ -33,8 +33,8 @@ public abstract class ViewModelParent extends ViewModel {
     }
 
     private <T> LiveData<T> getLiveDataFromNewValue(T value) {
-        MutableLiveData<T> mAux = new MutableLiveData<>();
-        //MutableLiveData<T> mAux = new MutableLiveData<>(value); //Sobraria el setValue
+        //MutableLiveData<T> mAux = new MutableLiveData<>();
+        MutableLiveData<T> mAux = new MutableLiveData<>(value); //Sobraria el setValue
         mAux.setValue(value);
         return mAux;
     }

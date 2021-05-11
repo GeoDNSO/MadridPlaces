@@ -7,40 +7,26 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.example.App.components.ViewModelParent;
 import com.example.App.repositories.UserRepository;
 import com.example.App.models.TUser;
 
-public class ProfileViewModel extends ViewModel {
+public class ProfileViewModel extends ViewModelParent {
 
-    UserRepository userRepository;
+    private UserRepository userRepository;
     private MutableLiveData<Boolean> mProfileActionInProgress = new MutableLiveData<>(); //true indica progress bar activo
     private LiveData<Integer> mActionProfileSuccess = new MutableLiveData<>();
 
     private LiveData<Pair<Integer, Integer>> mProfilePairMutableLiveData = new MutableLiveData<>();
     private LiveData<TUser> mUser = new MutableLiveData<>();
 
+    @Override
     public void init(){
         userRepository = new UserRepository();
 
-        mActionProfileSuccess = Transformations.switchMap(
-                userRepository.getProfileSuccess(),
-                success -> setProfileActionInProgress(success));
-
-        mProfilePairMutableLiveData = Transformations.switchMap(
-                userRepository.getmCountProfileCommentsAndHistory(),
-                success -> setProfileActionInProgress(success));
-
-        mUser = Transformations.switchMap(
-                userRepository.getmUser(),
-                user -> setAndGetUser(user));
-
-    }
-
-    private LiveData<TUser> setAndGetUser(TUser user) {
-        mProfileActionInProgress.setValue(false); //progress bar visible
-        MutableLiveData<TUser> mAux = new MutableLiveData<>();
-        mAux.setValue(user);
-        return mAux;
+        mActionProfileSuccess = super.updateOnChange(mActionProfileSuccess, userRepository.getProfileSuccess());
+        mProfilePairMutableLiveData = super.updateOnChange(mProfilePairMutableLiveData, userRepository.getmCountProfileCommentsAndHistory());
+        mUser = super.updateOnChange(mUser, userRepository.getmUser());
     }
 
     public void deleteUser(String username){
@@ -58,21 +44,6 @@ public class ProfileViewModel extends ViewModel {
         userRepository.getCommentsAndHistoryCount(nickname);
     }
 
-    private LiveData<Pair<Integer, Integer>> setProfileActionInProgress(Pair<Integer, Integer> pair) {
-        MutableLiveData<Pair<Integer, Integer>> mAux = new MutableLiveData<>();
-        mAux.setValue(pair);
-        return mAux;
-    }
-
-    //Para delete
-    private LiveData<Integer> setProfileActionInProgress(Integer success) {
-        mProfileActionInProgress.setValue(false); //progress bar visible
-        MutableLiveData<Integer> mAux = new MutableLiveData<>();
-        mAux.setValue(success);
-        return mAux;
-    }
-
-
     public LiveData<Boolean> getProfileActionInProgress(){
         return mProfileActionInProgress;
     }
@@ -85,5 +56,4 @@ public class ProfileViewModel extends ViewModel {
     public LiveData<Pair<Integer, Integer>> getProfilePairMutableLiveData() {
         return mProfilePairMutableLiveData;
     }
-
 }

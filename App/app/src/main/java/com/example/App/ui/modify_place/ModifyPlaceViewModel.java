@@ -22,17 +22,10 @@ public class ModifyPlaceViewModel extends ViewModelParent {
     public void init(){
         placeRepository = new PlaceRepository();
         mListTypesOfPlace = new ArrayList<>();
-        mSuccess = Transformations.switchMap(
-                placeRepository.getSuccess(),
-                success -> setSuccess(success)
-        );
-        mModifyPlaceSuccess = Transformations.switchMap(
-                placeRepository.getBooleanPlace(),
-                success -> setAndGetModifyPlace(success));
 
-        mCategoriesSuccess = Transformations.switchMap(
-                placeRepository.getCategoriesList(),
-                success -> setAndGetCategoriesPlace(success));
+        mSuccess = super.updateOnChange(mSuccess, placeRepository.getSuccess());
+        mModifyPlaceSuccess = super.updateOnChange(mModifyPlaceSuccess, placeRepository.getBooleanPlace());
+        mCategoriesSuccess = super.updateOnChange(mCategoriesSuccess, placeRepository.getCategoriesList());
     }
 
     public void getTypesOfPlaces(){
@@ -57,26 +50,6 @@ public class ModifyPlaceViewModel extends ViewModelParent {
                 road_class, road_name, road_number, zipcode, p.getAffluence(), p.getRating(), p.isUserFav(), 100.0, 100, "Sin Fecha Modificado");
         //TODO en type of place no devolvemos elnombre del lugar sino el numero asignado en la base de datos
         placeRepository.modifyPlace(place, p.getName());
-    }
-
-    private LiveData<Boolean> setAndGetModifyPlace(Boolean success) {
-        MutableLiveData<Boolean> mAux = new MutableLiveData<>();
-        mAux.setValue(success);
-        return mAux;
-    }
-
-    private LiveData<List<String>> setAndGetCategoriesPlace(List<String> categories){
-        mlv_isLoading.setValue(false); //progress bar visible
-        MutableLiveData<List<String>> mAux = new MutableLiveData<>();
-        mAux.setValue(categories);
-        return mAux;
-    }
-
-    private LiveData<Integer> setSuccess(Integer success) {
-        mlv_isLoading.setValue(false); //progress bar visible
-        MutableLiveData<Integer> mAux = new MutableLiveData<>();
-        mAux.setValue(success);
-        return mAux;
     }
 
     public LiveData<Boolean> getmModifyPlaceSuccess(){

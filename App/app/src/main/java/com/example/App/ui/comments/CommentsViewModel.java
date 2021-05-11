@@ -15,17 +15,11 @@ public class CommentsViewModel extends ViewModelParent {
     @Override
     public void init() {
         commentRepository = new CommentRepository();
-        mSuccess = Transformations.switchMap(
-                commentRepository.getSuccess(),
-                success -> setSuccess(success)
-        );
 
-        mCommentsList = Transformations.switchMap(
-                commentRepository.getCommentsList(),
-                comments -> setAndGetCommentsList(comments));
+        mSuccess = super.updateOnChange(mSuccess, commentRepository.getSuccess());
+        mCommentsList = super.updateOnChange(mCommentsList, commentRepository.getCommentsList());
     }
 
-    // TODO: Por ahora, no esta paginado los comentarios
     public void showComments(String placeName, int page, int quant){
         mlv_isLoading.postValue(true);
         commentRepository.listComments(placeName, page, quant);
@@ -38,23 +32,10 @@ public class CommentsViewModel extends ViewModelParent {
         mlv_isLoading.postValue(true);
         commentRepository.newComment(userName, content, placeName, rate);
     }
-    private LiveData<List<TComment>> setAndGetCommentsList(List<TComment> comments) {
-        MutableLiveData<List<TComment>> mAux = new MutableLiveData<>();
-        mAux.setValue(comments);
-        return mAux;
-    }
-
-    private LiveData<Integer> setSuccess(Integer success) {
-        mlv_isLoading.setValue(false); //progress bar visible
-        MutableLiveData<Integer> mAux = new MutableLiveData<>();
-        mAux.setValue(success);
-        return mAux;
-    }
-
-    public LiveData<List<TComment>> getmCommentsList(){ return mCommentsList; }
-
     public void deleteComment(TComment comment, int position) {
         mlv_isLoading.setValue(true);
         commentRepository.deleteComment(comment, position);
     }
+
+    public LiveData<List<TComment>> getmCommentsList(){ return mCommentsList; }
 }

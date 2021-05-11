@@ -27,7 +27,7 @@ public class CommentRepository extends Repository {
 
     private MutableLiveData<List<TComment>> mCommentList = new MutableLiveData<>();
 
-    public LiveData<List<TComment>> getCommentsList() {
+    public MutableLiveData<List<TComment>> getCommentsList() {
         return mCommentList;
     }
 

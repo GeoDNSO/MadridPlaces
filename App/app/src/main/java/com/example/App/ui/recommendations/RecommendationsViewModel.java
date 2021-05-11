@@ -21,58 +21,15 @@ public class RecommendationsViewModel extends ViewModelParent {
     @Override
     public void init() {
         recomRepository = new UserInteractionRepository();
-        mListRecom = Transformations.switchMap(
-                recomRepository.getmRecommendationsList(),
-                listRecom -> setListRecom(listRecom)
-        );
-        mListPendingRecom = Transformations.switchMap(
-                recomRepository.getmPendingRecommendationsList(),
-                listPendingRecom -> setListPendingRecom(listPendingRecom)
-        );
-        mAcceptRecom = Transformations.switchMap(
-                recomRepository.getmAcceptRecommendation(),
-                acceptRecom -> setAcceptRecom(acceptRecom)
-        );
-        mDenyRecom = Transformations.switchMap(
-                recomRepository.getmDenyRecommendation(),
-                denyRecom -> setDenyRecom(denyRecom)
-        );
+
+        mListRecom = super.updateOnChange(mListRecom, recomRepository.getmRecommendationsList());
+        mListPendingRecom = super.updateOnChange(mListPendingRecom, recomRepository.getmPendingRecommendationsList());
+        mAcceptRecom = super.updateOnChange(mAcceptRecom, recomRepository.getmAcceptRecommendation());
+        mDenyRecom = super.updateOnChange(mDenyRecom, recomRepository.getmDenyRecommendation());
     }
 
     public void listUserRecommendations(int page,int quant, String username){
         recomRepository.listRecom(page, quant, username);
-    }
-
-    private LiveData<List<TRecommendation>> setListRecom(List<TRecommendation> listRecom){
-        mlv_isLoading.setValue(false);
-        MutableLiveData<List<TRecommendation>> mAux = new MutableLiveData<>();
-        mAux.setValue(listRecom);
-        return mAux;
-    }
-
-    private LiveData<List<TRecommendation>> setListPendingRecom(List<TRecommendation> listPendingRecom){
-        mlv_isLoading.setValue(false);
-        MutableLiveData<List<TRecommendation>> mAux = new MutableLiveData<>();
-        mAux.setValue(listPendingRecom);
-        return mAux;
-    }
-
-    private LiveData<Integer> setAcceptRecom(int listPendingRecom){
-        mlv_isLoading.setValue(false);
-        MutableLiveData<Integer> mAux = new MutableLiveData<>();
-        mAux.setValue(listPendingRecom);
-        return mAux;
-    }
-
-    private LiveData<Integer> setDenyRecom(int listPendingRecom){
-        mlv_isLoading.setValue(false);
-        MutableLiveData<Integer> mAux = new MutableLiveData<>();
-        mAux.setValue(listPendingRecom);
-        return mAux;
-    }
-
-    public void setmListRecom(LiveData<List<TRecommendation>> mListRecom) {
-        this.mListRecom = mListRecom;
     }
 
     public void listUserPendingRecommendations(int page, int quantum, String username) {
