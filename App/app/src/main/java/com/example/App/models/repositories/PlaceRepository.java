@@ -45,6 +45,7 @@ public class PlaceRepository extends Repository{
 
     private MutableLiveData<Integer> mFavSuccess = new MutableLiveData<Integer>();
     private MutableLiveData<Integer> mVisitedSuccess = new MutableLiveData<Integer>();
+    private MutableLiveData<Integer> mPendingToVisitedSuccess = new MutableLiveData<Integer>();
 
     public LiveData<Boolean> getBooleanPlace(){ return mBooleanPlace; }
     public LiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
@@ -56,7 +57,9 @@ public class PlaceRepository extends Repository{
     public MutableLiveData<List<TPlace>> getFavouritesPlacesList() { return mFavouritesPlacesList; }
     public MutableLiveData<List<TPlace>> getPlaceVisitedList() { return mPlaceVisited; }
     public MutableLiveData<List<TPlace>> getPendingToVisitList() { return mPlacesPendingToVisit; }
-
+    public MutableLiveData<Integer> getmPendingToVisitedSuccess() {
+        return mPendingToVisitedSuccess;
+    }
 
     public MutableLiveData<Integer> getFavSuccess() { return mFavSuccess; }
     public MutableLiveData<Integer> getVisitedSuccess() { return mVisitedSuccess; }
@@ -168,10 +171,44 @@ public class PlaceRepository extends Repository{
         });
     }
 
+    public void setPlaceToPendingVisited(TPlace place, String username) {
+        String postBodyString = jsonInfoForFav(place, username);
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_POST, "/location/newPendingToVisit"
+        );
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mPendingToVisitedSuccess.postValue(AppConstants.PLACE_TO_PENDING_VISITED_FAIL);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+                boolean success = simpleRequest.isSuccessful(response);
+                if(success){
+                    mPendingToVisitedSuccess.postValue(AppConstants.PLACE_TO_PENDING_VISITED_OK);
+                }
+                else{
+                    mPendingToVisitedSuccess.postValue(AppConstants.PLACE_TO_PENDING_VISITED_FAIL);
+                }
+            }
+        });
+    }
+
     public void modifyPlace(TPlace place, String oldName) throws JSONException {
         String postBodyString = place.json().put("oldName", oldName).toString();
 
-        Log.d ("aaa", postBodyString);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(
                 postBodyString,
@@ -761,4 +798,5 @@ public class PlaceRepository extends Repository{
 
         return infoString;
     }
+
 }

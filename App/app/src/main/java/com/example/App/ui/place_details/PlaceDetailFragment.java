@@ -240,7 +240,18 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
                     return ;
                 }
 
-                Toast.makeText(getActivity(), "Error al hacer favorito", Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(), "Error al hacer favorito", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mViewModel.getmPendingToVisitedSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if (integer.equals(AppConstants.PLACE_TO_PENDING_VISITED_OK)){
+                    Toast.makeText(getActivity(), getString(R.string.saved_on_pending_visited_list), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Toast.makeText(getActivity(), getString(R.string.saved_on_pending_visited_list_error), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -338,8 +349,7 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         toPendingVisited.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                //TODO
-                //mViewModel.
+                mViewModel.placeToPendingVisited(place, App.getInstance().getUsername());
                 return true;
             }
         });

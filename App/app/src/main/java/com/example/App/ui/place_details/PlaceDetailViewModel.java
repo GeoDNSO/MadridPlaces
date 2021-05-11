@@ -18,6 +18,7 @@ public class PlaceDetailViewModel extends ViewModelParent {
     private LiveData<Integer> mActionPlaceDetailSuccess = new MutableLiveData<>();
     protected LiveData<Integer> mFavSuccess = new MutableLiveData<>();
     protected LiveData<Integer> mVisitedSuccess = new MutableLiveData<>();
+    protected LiveData<Integer> mPendingToVisitedSuccess = new MutableLiveData<>();
 
     public void init(){
         placeRepository = new PlaceRepository();
@@ -32,6 +33,11 @@ public class PlaceDetailViewModel extends ViewModelParent {
 
         mVisitedSuccess = Transformations.switchMap(
                 placeRepository.getVisitedSuccess(),
+                success -> setFavSuccess(success) //Creo que se puede usar el mismo setSuccess... PROBAR
+        );
+
+        mPendingToVisitedSuccess = Transformations.switchMap(
+                placeRepository.getmPendingToVisitedSuccess(),
                 success -> setFavSuccess(success) //Creo que se puede usar el mismo setSuccess... PROBAR
         );
     }
@@ -73,4 +79,12 @@ public class PlaceDetailViewModel extends ViewModelParent {
 
     public LiveData<Integer> getFavSuccess(){return mFavSuccess; }
     public LiveData<Integer> getVisitedSuccess(){return mVisitedSuccess; }
+
+    public void placeToPendingVisited(TPlace place, String username) {
+        placeRepository.setPlaceToPendingVisited(place, username);
+    }
+
+    public LiveData<Integer> getmPendingToVisitedSuccess() {
+        return mPendingToVisitedSuccess;
+    }
 }
