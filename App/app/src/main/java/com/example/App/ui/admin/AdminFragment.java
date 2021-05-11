@@ -93,7 +93,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
             }
         });
 
-        mViewModel.getProgressBar().observe(getViewLifecycleOwner(), aBoolean ->
+        mViewModel.getMLV_IsLoading().observe(getViewLifecycleOwner(), aBoolean ->
                 ViewListenerUtilities.setVisibility(progressBar, aBoolean));
 
         adminManagement();

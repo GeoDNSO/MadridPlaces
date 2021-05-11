@@ -6,7 +6,7 @@ import androidx.lifecycle.Transformations;
 
 import com.example.App.repositories.UserFriendRepository;
 import com.example.App.models.TRequestFriend;
-import com.example.App.ui.ViewModelParent;
+import com.example.App.components.ViewModelParent;
 
 import java.util.List;
 
@@ -56,49 +56,49 @@ public class FriendsViewModel extends ViewModelParent {
     }
 
     private LiveData<Integer> setSendRequestFriend(Integer sendRequestFriend) {
-        mProgressBar.setValue(false);
+        mlv_isLoading.setValue(false);
         MutableLiveData<Integer> mAux = new MutableLiveData<>();
         mAux.setValue(sendRequestFriend);
         return mAux;
     }
 
     private LiveData<Integer> setDeleteFriend(Integer deleteFriend) {
-        mProgressBar.setValue(false);
+        mlv_isLoading.setValue(false);
         MutableLiveData<Integer> mAux = new MutableLiveData<>();
         mAux.setValue(deleteFriend);
         return mAux;
     }
 
     private LiveData<List<TRequestFriend>> setFriendRequestList(List<TRequestFriend> listFriend) {
-        mProgressBar.setValue(false);
+        mlv_isLoading.setValue(false);
         MutableLiveData<List<TRequestFriend>> mAux = new MutableLiveData<>();
         mAux.setValue(listFriend);
         return mAux;
     }
 
     private LiveData<List<TRequestFriend>> setFriendList(List<TRequestFriend> listFriend) {
-        mProgressBar.setValue(false);
+        mlv_isLoading.setValue(false);
         MutableLiveData<List<TRequestFriend>> mAux = new MutableLiveData<>();
         mAux.setValue(listFriend);
         return mAux;
     }
 
     private LiveData<Integer> setDeclineFriend(Integer denyRecom) {
-        mProgressBar.setValue(false);
+        mlv_isLoading.setValue(false);
         MutableLiveData<Integer> mAux = new MutableLiveData<>();
         mAux.setValue(denyRecom);
         return mAux;
     }
 
     private LiveData<Integer> setRequestFriend(Integer requestFriend) {
-        mProgressBar.setValue(false);
+        mlv_isLoading.setValue(false);
         MutableLiveData<Integer> mAux = new MutableLiveData<>();
         mAux.setValue(requestFriend);
         return mAux;
     }
 
     private LiveData<Integer> setAcceptFriend(Integer acceptRecom) {
-        mProgressBar.setValue(false);
+        mlv_isLoading.setValue(false);
         MutableLiveData<Integer> mAux = new MutableLiveData<>();
         mAux.setValue(acceptRecom);
         return mAux;

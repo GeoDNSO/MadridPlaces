@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import com.example.App.repositories.CommentRepository;
 import com.example.App.models.TComment;
-import com.example.App.ui.ViewModelParent;
+import com.example.App.components.ViewModelParent;
 import java.util.List;
 
 public class CommentsViewModel extends ViewModelParent {
@@ -27,15 +27,15 @@ public class CommentsViewModel extends ViewModelParent {
 
     // TODO: Por ahora, no esta paginado los comentarios
     public void showComments(String placeName, int page, int quant){
-        mProgressBar.postValue(true);
+        mlv_isLoading.postValue(true);
         commentRepository.listComments(placeName, page, quant);
     }
     public void appendComments(String placeName, int page, int quant){
-        mProgressBar.postValue(true);
+        mlv_isLoading.postValue(true);
         commentRepository.appendComments(placeName, page, quant);
     }
     public void newComment(String userName, String content, String placeName, float rate){
-        mProgressBar.postValue(true);
+        mlv_isLoading.postValue(true);
         commentRepository.newComment(userName, content, placeName, rate);
     }
     private LiveData<List<TComment>> setAndGetCommentsList(List<TComment> comments) {
@@ -45,7 +45,7 @@ public class CommentsViewModel extends ViewModelParent {
     }
 
     private LiveData<Integer> setSuccess(Integer success) {
-        mProgressBar.setValue(false); //progress bar visible
+        mlv_isLoading.setValue(false); //progress bar visible
         MutableLiveData<Integer> mAux = new MutableLiveData<>();
         mAux.setValue(success);
         return mAux;
@@ -54,7 +54,7 @@ public class CommentsViewModel extends ViewModelParent {
     public LiveData<List<TComment>> getmCommentsList(){ return mCommentsList; }
 
     public void deleteComment(TComment comment, int position) {
-        mProgressBar.setValue(true);
+        mlv_isLoading.setValue(true);
         commentRepository.deleteComment(comment, position);
     }
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.Transformations;
 
 import com.example.App.repositories.UserRepository;
 import com.example.App.models.TUser;
-import com.example.App.ui.ViewModelParent;
+import com.example.App.components.ViewModelParent;
 
 import java.util.List;
 

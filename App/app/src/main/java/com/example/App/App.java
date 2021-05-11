@@ -15,7 +15,7 @@ import androidx.core.app.ActivityCompat;
 import com.example.App.networking.SimpleRequest;
 import com.example.App.models.TUser;
 import com.example.App.services.LocationTrack;
-import com.example.App.ui.LogoutObserver;
+import com.example.App.components.LogoutObserver;
 import com.example.App.utilities.AppConstants;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;

@@ -1,6 +1,7 @@
 package com.example.App.ui.visited.subclasses.visitedPlaces;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.models.TPlace;
 import com.example.App.ui.places_list.subclasses.BaseViewModel;
@@ -11,7 +12,7 @@ public class VisitedPlacesViewModel extends BaseViewModel {
 
 
     @Override
-    protected LiveData<List<TPlace>> getPlaceListToParent() {
+    protected MutableLiveData<List<TPlace>> getPlaceListToParent() {
         return placeRepository.getPlaceVisitedList();
     }
 

@@ -1,6 +1,7 @@
 package com.example.App.ui.visited.subclasses.pendingVisited;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.models.TPlace;
 import com.example.App.ui.places_list.subclasses.BaseViewModel;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class PendingVisitedViewModel extends BaseViewModel {
     @Override
-    protected LiveData<List<TPlace>> getPlaceListToParent() {
+    protected MutableLiveData<List<TPlace>> getPlaceListToParent() {
         return placeRepository.getPendingToVisitList();
     }
 

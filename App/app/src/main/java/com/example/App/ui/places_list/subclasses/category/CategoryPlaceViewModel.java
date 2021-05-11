@@ -1,6 +1,7 @@
 package com.example.App.ui.places_list.subclasses.category;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.models.TPlace;
 import com.example.App.ui.places_list.subclasses.BaseViewModel;
@@ -12,7 +13,7 @@ public class CategoryPlaceViewModel extends BaseViewModel {
     protected String category;
 
     @Override
-    protected LiveData<List<TPlace>> getPlaceListToParent() {
+    protected MutableLiveData<List<TPlace>> getPlaceListToParent() {
         return placeRepository.getCategoriesPlacesList();
     }
 

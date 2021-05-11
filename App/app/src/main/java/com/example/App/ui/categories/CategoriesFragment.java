@@ -75,7 +75,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     }
 
     private void initObservers() {
-        mViewModel.getProgressBar().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mViewModel.getMLV_IsLoading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 ViewListenerUtilities.setVisibility(progressBar, aBoolean);

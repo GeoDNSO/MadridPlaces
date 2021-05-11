@@ -41,11 +41,11 @@ public class PlaceRepository extends Repository{
     private MutableLiveData<Integer> mVisitedSuccess = new MutableLiveData<Integer>();
     private MutableLiveData<Integer> mPendingToVisitedSuccess = new MutableLiveData<Integer>();
 
-    public LiveData<Boolean> getBooleanPlace(){ return mBooleanPlace; }
-    public LiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
-    public LiveData<List<TPlace>> getTwitterPlacesList(){ return mTwitterPlacesList; }
-    public LiveData<List<TPlace>> getHistoryPlacesList(){ return mHistoryPlacesList; }
-    public LiveData<List<String>> getCategoriesList(){ return mCategoriesList; }
+    public MutableLiveData<Boolean> getBooleanPlace(){ return mBooleanPlace; }
+    public MutableLiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
+    public MutableLiveData<List<TPlace>> getTwitterPlacesList(){ return mTwitterPlacesList; }
+    public MutableLiveData<List<TPlace>> getHistoryPlacesList(){ return mHistoryPlacesList; }
+    public MutableLiveData<List<String>> getCategoriesList(){ return mCategoriesList; }
     public MutableLiveData<List<TPlace>> getCategoriesPlacesList() { return mCategoriesPlacesList; }
     public MutableLiveData<List<TPlace>> getNearestPlacesList() { return mNearestPlacesList; }
     public MutableLiveData<List<TPlace>> getFavouritesPlacesList() { return mFavouritesPlacesList; }

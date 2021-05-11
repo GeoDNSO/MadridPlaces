@@ -34,7 +34,7 @@ import com.example.App.App;
 import com.example.App.R;
 import com.example.App.networking.SimpleRequest;
 import com.example.App.models.TPlace;
-import com.example.App.ui.LogoutObserver;
+import com.example.App.components.LogoutObserver;
 import com.example.App.ui.places_list.PlaceListAdapter;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ViewListenerUtilities;
@@ -160,7 +160,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
             }
         });
 
-        mViewModel.getProgressBar().observe(getViewLifecycleOwner(), aBoolean ->
+        mViewModel.getMLV_IsLoading().observe(getViewLifecycleOwner(), aBoolean ->
                 ViewListenerUtilities.setVisibility(progressBar, aBoolean));
     }
 

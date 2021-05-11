@@ -7,7 +7,7 @@ import androidx.lifecycle.Transformations;
 import com.example.App.App;
 import com.example.App.repositories.PlaceRepository;
 import com.example.App.models.TPlace;
-import com.example.App.ui.ViewModelParent;
+import com.example.App.components.ViewModelParent;
 
 
 public class PlaceDetailViewModel extends ViewModelParent {

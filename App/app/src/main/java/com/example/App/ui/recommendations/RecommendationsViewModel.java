@@ -6,7 +6,7 @@ import androidx.lifecycle.Transformations;
 
 import com.example.App.repositories.UserInteractionRepository;
 import com.example.App.models.TRecommendation;
-import com.example.App.ui.ViewModelParent;
+import com.example.App.components.ViewModelParent;
 
 import java.util.List;
 
@@ -44,28 +44,28 @@ public class RecommendationsViewModel extends ViewModelParent {
     }
 
     private LiveData<List<TRecommendation>> setListRecom(List<TRecommendation> listRecom){
-        mProgressBar.setValue(false);
+        mlv_isLoading.setValue(false);
         MutableLiveData<List<TRecommendation>> mAux = new MutableLiveData<>();
         mAux.setValue(listRecom);
         return mAux;
     }
 
     private LiveData<List<TRecommendation>> setListPendingRecom(List<TRecommendation> listPendingRecom){
-        mProgressBar.setValue(false);
+        mlv_isLoading.setValue(false);
         MutableLiveData<List<TRecommendation>> mAux = new MutableLiveData<>();
         mAux.setValue(listPendingRecom);
         return mAux;
     }
 
     private LiveData<Integer> setAcceptRecom(int listPendingRecom){
-        mProgressBar.setValue(false);
+        mlv_isLoading.setValue(false);
         MutableLiveData<Integer> mAux = new MutableLiveData<>();
         mAux.setValue(listPendingRecom);
         return mAux;
     }
 
     private LiveData<Integer> setDenyRecom(int listPendingRecom){
-        mProgressBar.setValue(false);
+        mlv_isLoading.setValue(false);
         MutableLiveData<Integer> mAux = new MutableLiveData<>();
         mAux.setValue(listPendingRecom);
         return mAux;

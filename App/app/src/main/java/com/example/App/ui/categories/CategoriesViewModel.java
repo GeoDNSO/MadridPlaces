@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.example.App.repositories.PlaceRepository;
-import com.example.App.ui.ViewModelParent;
+import com.example.App.components.ViewModelParent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class CategoriesViewModel extends ViewModelParent {
     }
 
     private LiveData<Integer> setSuccess(Integer success) {
-        mProgressBar.setValue(false); //progress bar visible
+        mlv_isLoading.setValue(false); //progress bar visible
         MutableLiveData<Integer> mAux = new MutableLiveData<>();
         mAux.setValue(success);
         return mAux;
@@ -41,12 +41,12 @@ public class CategoriesViewModel extends ViewModelParent {
 
 
     public void getTypesOfPlaces(){
-        mProgressBar.setValue(true); //progress bar visible
+        mlv_isLoading.setValue(true); //progress bar visible
         placeRepository.getCategories();
     }
 
     private LiveData<List<String>> setAndGetCategoriesPlace(List<String> categories){
-        mProgressBar.setValue(false); //progress bar visible
+        mlv_isLoading.setValue(false); //progress bar visible
         MutableLiveData<List<String>> mAux = new MutableLiveData<>();
         mAux.setValue(categories);
         return mAux;

@@ -7,7 +7,7 @@ import androidx.lifecycle.Transformations;
 import com.example.App.repositories.UserFriendRepository;
 import com.example.App.repositories.UserInteractionRepository;
 import com.example.App.models.TRequestFriend;
-import com.example.App.ui.ViewModelParent;
+import com.example.App.components.ViewModelParent;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class SendRecomendationViewModel extends ViewModelParent {
     }
 
     private LiveData<List<TRequestFriend>> setFriendList(List<TRequestFriend> listFriend) {
-        mProgressBar.setValue(false);
+        mlv_isLoading.setValue(false);
         MutableLiveData<List<TRequestFriend>> mAux = new MutableLiveData<>();
         mAux.setValue(listFriend);
         return mAux;
