@@ -17,21 +17,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.models.transfer.TPlace;
-import com.example.App.models.transfer.TRecomendation;
-import com.example.App.models.transfer.TRequestFriend;
-import com.example.App.models.transfer.TUser;
-import com.example.App.ui.friends.subclasses.friends_list.FriendListAdapter;
-import com.example.App.ui.friends.subclasses.friends_list.FriendListFragment;
+import com.example.App.models.TPlace;
+import com.example.App.models.TRequestFriend;
 import com.example.App.utilities.AppConstants;
-import com.example.App.utilities.Validator;
 
 import java.util.ArrayList;
 import java.util.List;

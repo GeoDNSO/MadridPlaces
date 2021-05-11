@@ -14,8 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.App.R;
-import com.example.App.ui.recommendations.RecommendationsTabAdapter;
-import com.example.App.ui.recommendations.subclasses.RecommendationsFragmentFactory;
+import com.example.App.components.BaseTabAdapter;
 import com.example.App.ui.visited.subclasses.VisitedFragmentFactory;
 import com.google.android.material.tabs.TabLayout;
 
@@ -66,7 +65,7 @@ public class VisitedFragment extends Fragment{
     }
 
     private void prepareViewPager() {
-        RecommendationsTabAdapter visitedTabAdapter = new RecommendationsTabAdapter(getChildFragmentManager());
+        BaseTabAdapter visitedTabAdapter = new BaseTabAdapter(getChildFragmentManager());
 
         VisitedFragmentFactory visitedFragmentFactory = new VisitedFragmentFactory();
 

@@ -3,8 +3,8 @@ package com.example.App.ui.comments;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
-import com.example.App.models.repositories.CommentRepository;
-import com.example.App.models.transfer.TComment;
+import com.example.App.repositories.CommentRepository;
+import com.example.App.models.TComment;
 import com.example.App.ui.ViewModelParent;
 import java.util.List;
 

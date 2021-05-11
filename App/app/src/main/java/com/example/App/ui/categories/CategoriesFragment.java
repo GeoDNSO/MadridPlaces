@@ -12,7 +12,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.App.R;
-import com.example.App.models.transfer.TCategory;
-import com.example.App.ui.add_place.AddPlaceViewModel;
+import com.example.App.models.TCategory;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ViewListenerUtilities;
 

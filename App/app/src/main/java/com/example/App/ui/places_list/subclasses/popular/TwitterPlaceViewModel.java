@@ -2,7 +2,7 @@ package com.example.App.ui.places_list.subclasses.popular;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.App.models.transfer.TPlace;
+import com.example.App.models.TPlace;
 import com.example.App.ui.places_list.subclasses.BaseViewModel;
 
 import java.util.List;

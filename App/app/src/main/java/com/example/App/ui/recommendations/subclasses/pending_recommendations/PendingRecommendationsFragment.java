@@ -17,18 +17,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.models.transfer.TPlace;
-import com.example.App.models.transfer.TRecomendation;
-import com.example.App.ui.places_list.PlaceListAdapter;
+import com.example.App.models.TPlace;
+import com.example.App.models.TRecommendation;
 import com.example.App.ui.recommendations.RecommendationsViewModel;
-import com.example.App.ui.recommendations.subclasses.my_recommendations.MyRecommendationsAdapter;
 import com.example.App.utilities.AppConstants;
 
 import java.util.ArrayList;
@@ -42,7 +38,7 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
     private ProgressBar progressBar;
     private NestedScrollView nestedScrollView;
     private PendingRecommendationsListAdapter pendingRecommendationsListAdapter;
-    private List<TRecomendation> recommendationsList;
+    private List<TRecommendation> recommendationsList;
     private int page = 1, quantum = 3;
     private int listPosition = -1;
 
@@ -115,9 +111,9 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
             }
         });
 
-        mViewModel.getmListPendingRecom().observe(getViewLifecycleOwner(), new Observer<List<TRecomendation>>() {
+        mViewModel.getmListPendingRecom().observe(getViewLifecycleOwner(), new Observer<List<TRecommendation>>() {
             @Override
-            public void onChanged(List<TRecomendation> tRecomendations) {
+            public void onChanged(List<TRecommendation> tRecomendations) {
                 if(tRecomendations == null){
                     Log.d("MY_RECO", "Lista de recomendaciones nula");
                     return;
@@ -134,7 +130,7 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
             public void onChanged(Integer integer) {
                 if(AppConstants.ACCEPT_REC_OK.equals(integer) && listPosition != -1){
                     Toast.makeText(getContext(), "Se ha aceptado la recomendación", Toast.LENGTH_SHORT).show();
-                    TRecomendation recomendation = recommendationsList.get(listPosition);
+                    TRecommendation recomendation = recommendationsList.get(listPosition);
                     recommendationsList.remove(recomendation);
                     pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, PendingRecommendationsFragment.this);
                     recyclerView.setAdapter(pendingRecommendationsListAdapter);
@@ -149,7 +145,7 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
             public void onChanged(Integer integer) {
                 if(AppConstants.DENY_REC_OK.equals(integer) && listPosition != -1){
                     Toast.makeText(getContext(), "Se ha rechazado la recomendación", Toast.LENGTH_SHORT).show();
-                    TRecomendation recomendation = recommendationsList.get(listPosition);
+                    TRecommendation recomendation = recommendationsList.get(listPosition);
                     recommendationsList.remove(recomendation);
                     pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, PendingRecommendationsFragment.this);
                     recyclerView.setAdapter(pendingRecommendationsListAdapter);

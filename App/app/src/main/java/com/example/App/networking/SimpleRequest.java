@@ -1,4 +1,4 @@
-package com.example.App.models.dao;
+package com.example.App.networking;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

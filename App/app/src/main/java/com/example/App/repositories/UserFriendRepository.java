@@ -1,13 +1,14 @@
-package com.example.App.models.repositories;
+package com.example.App.repositories;
 
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.App;
-import com.example.App.models.dao.SimpleRequest;
-import com.example.App.models.transfer.TRequestFriend;
-import com.example.App.models.transfer.TUser;
+import com.example.App.networking.SimpleRequest;
+import com.example.App.models.TRequestFriend;
+import com.example.App.models.TUser;
+import com.example.App.repositories.helpers.UserFriendRepositoryHelper;
 import com.example.App.utilities.AppConstants;
 
 import org.jetbrains.annotations.NotNull;
@@ -79,7 +80,7 @@ public class UserFriendRepository extends Repository{
             }
             //si no hubo problemas...
             List<TRequestFriend> listaAux = friendList.getValue();
-            List<TRequestFriend> listaFromResponse = getListFromResponse(res);
+            List<TRequestFriend> listaFromResponse = UserFriendRepositoryHelper.getListFromResponse(res);
             if(listaFromResponse == null){
                 Log.d("PLACE_REPO", "La lista JSON convertida es NULO, MIRAR...");
                 return;
@@ -88,7 +89,7 @@ public class UserFriendRepository extends Repository{
                 return;
             }
             if (listaAux == null){
-                friendList.postValue(getListFromResponse(res));
+                friendList.postValue(UserFriendRepositoryHelper.getListFromResponse(res));
             }
             else{
                 listaAux.addAll(listaFromResponse);
@@ -99,7 +100,7 @@ public class UserFriendRepository extends Repository{
     }
 
     public void deleteFriend(String userToDelete, String currentUser) {
-        String postBodyString = jsonInfoForDeleteFriend(userToDelete, currentUser);
+        String postBodyString = UserFriendRepositoryHelper.jsonInfoForDeleteFriend(userToDelete, currentUser);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -139,7 +140,7 @@ public class UserFriendRepository extends Repository{
     }
 
     public void friendList(String username) {
-        String postBodyString = jsonInfoSendFriendList(username);
+        String postBodyString = UserFriendRepositoryHelper.jsonInfoSendFriendList(username);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/friends/listFriends");
@@ -149,7 +150,7 @@ public class UserFriendRepository extends Repository{
     }
 
     public void declineFriendRequest(String userOrigin, String userDest) {
-        String postBodyString = jsonInfoForSendFriend(userOrigin, userDest);
+        String postBodyString = UserFriendRepositoryHelper.jsonInfoForSendFriend(userOrigin, userDest);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -189,7 +190,7 @@ public class UserFriendRepository extends Repository{
     }
 
     public void acceptFriendRequest(String userOrigin, String userDest) {
-        String postBodyString = jsonInfoForSendFriend(userOrigin, userDest);
+        String postBodyString = UserFriendRepositoryHelper.jsonInfoForSendFriend(userOrigin, userDest);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -229,7 +230,7 @@ public class UserFriendRepository extends Repository{
     }
 
     public void friendRequestList(String username) {
-        String postBodyString = jsonInfoSendFriendList(username);
+        String postBodyString = UserFriendRepositoryHelper.jsonInfoSendFriendList(username);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/friends/listFriendRequests");
@@ -239,7 +240,7 @@ public class UserFriendRepository extends Repository{
     }
 
     public void sendFriendRequest(String username){
-        String postBodyString = jsonInfoSendRequest(username);
+        String postBodyString = UserFriendRepositoryHelper.jsonInfoSendRequest(username);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/friends/sendRequest");
@@ -271,118 +272,6 @@ public class UserFriendRepository extends Repository{
                 }
             }
         });
-    }
-
-    //Helpers
-    private String jsonInfoSendFriendList(String username) {
-        JSONObject json = new JSONObject();
-        String infoString;
-        try {
-            json.put("user", username);
-        }catch (JSONException e) {
-            e.printStackTrace();
-            infoString = "error";
-        }
-        infoString = json.toString();
-
-        return infoString;
-    }
-
-
-    private String jsonInfoSendRequest(String username) {
-        JSONObject json = new JSONObject();
-        String infoString;
-        try {
-            json.put("userSrc", App.getInstance().getUsername());
-            json.put("userDst", username);
-        }catch (JSONException e) {
-            e.printStackTrace();
-            infoString = "error";
-        }
-        infoString = json.toString();
-
-        return infoString;
-    }
-
-    private String jsonInfoForSendFriend(String userOrigin, String userDest) {
-        JSONObject json = new JSONObject();
-        String infoString;
-        try {
-            json.put("userSrc", userOrigin);
-            json.put("userDst", userDest);
-        }catch (JSONException e) {
-            e.printStackTrace();
-            infoString = "error";
-        }
-        infoString = json.toString();
-
-        return infoString;
-    }
-
-    private String jsonInfoForDeleteFriend(String userOrigin, String userDest) {
-        JSONObject json = new JSONObject();
-        String infoString;
-        try {
-            json.put("user", userOrigin);
-            json.put("friend", userDest);
-        }catch (JSONException e) {
-            e.printStackTrace();
-            infoString = "error";
-        }
-        infoString = json.toString();
-
-        return infoString;
-    }
-
-    private List<TRequestFriend> getListFromResponse(String res) {
-        JSONObject jresponse = null;
-        try {
-            jresponse = new JSONObject(res);
-
-            List<TRequestFriend> requestFriendList = new ArrayList<>();
-            JSONArray arrayPlaces = jresponse.getJSONArray("list");
-            for (int i = 0; i < arrayPlaces.length(); i++) {
-                TRequestFriend requestFriend = jsonStringToRequestFriend(arrayPlaces.getString(i));
-                requestFriendList.add(requestFriend);
-            }
-            return requestFriendList;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return  null;
-        }
-    }
-
-    private TRequestFriend jsonStringToRequestFriend(String jsonString) {
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(jsonString);
-            TUser userSrc = jsonStringToUser(jsonObject.getJSONObject("user").toString());
-            //TUser userDst = jsonStringToUser(jsonObject.toString());
-            TUser userDst = App.getInstance().getSessionUser();
-            return new TRequestFriend(
-                    userSrc,
-                    userDst,
-                    jsonObject.getString("state"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    //TODO ESTA REPETIDO
-    private TUser jsonStringToUser(String jsonString){
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(jsonString);
-            String image_profile = jsonObject.getString("profile_image");
-            if(image_profile.equals("null")){
-                image_profile = null;
-            }
-            return new TUser(jsonObject.getString("nickname"), jsonObject.getString("password")/*antes estaba con ""*/, jsonObject.getString("name"), jsonObject.getString("surname"), jsonObject.getString("email"), jsonObject.getString("gender"), jsonObject.getString("birth_date"), jsonObject.getString("city"), jsonObject.getString("rol"), image_profile);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     //Mutables getter

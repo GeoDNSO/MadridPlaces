@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.example.App.models.repositories.UserRepository;
-import com.example.App.models.transfer.TUser;
+import com.example.App.repositories.UserRepository;
+import com.example.App.models.TUser;
 
 public class RegisterViewModel extends ViewModel {
 

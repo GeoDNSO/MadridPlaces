@@ -1,6 +1,5 @@
 package com.example.App.ui.comments;
 
-import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,7 +22,7 @@ import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.models.transfer.TComment;
+import com.example.App.models.TComment;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ViewListenerUtilities;
 import com.facebook.shimmer.ShimmerFrameLayout;

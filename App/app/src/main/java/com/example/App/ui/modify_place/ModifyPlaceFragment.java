@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,12 +31,7 @@ import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.example.App.R;
-import com.example.App.models.transfer.TPlace;
-
-import com.example.App.ui.add_place.AddPlaceMapboxActivity;
-import com.example.App.ui.add_place.AddPlaceViewModel;
-import com.example.App.ui.place_details.PlaceDetailFragment;
-import com.example.App.ui.place_details.PlaceDetailViewModel;
+import com.example.App.models.TPlace;
 
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.Validator;

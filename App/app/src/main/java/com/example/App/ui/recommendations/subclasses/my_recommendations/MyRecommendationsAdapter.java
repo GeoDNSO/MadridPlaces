@@ -2,7 +2,6 @@ package com.example.App.ui.recommendations.subclasses.my_recommendations;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -19,26 +18,22 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.models.transfer.TPlace;
-import com.example.App.models.transfer.TRecomendation;
-import com.example.App.ui.places_list.PlaceListAdapter;
+import com.example.App.models.TRecommendation;
 import com.example.App.utilities.AppConstants;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyRecommendationsAdapter extends RecyclerView.Adapter<MyRecommendationsAdapter.ViewHolder> {
 
     private Activity activity;
-    private List<TRecomendation> recommendationList;
+    private List<TRecommendation> recommendationList;
     private RecommendationAdapterListener listener;
 
-    public MyRecommendationsAdapter(Activity activity, List<TRecomendation> recommendationList, RecommendationAdapterListener listener) {
+    public MyRecommendationsAdapter(Activity activity, List<TRecommendation> recommendationList, RecommendationAdapterListener listener) {
         this.activity = activity;
         this.recommendationList = recommendationList;
         this.listener = listener;
@@ -59,7 +54,7 @@ public class MyRecommendationsAdapter extends RecyclerView.Adapter<MyRecommendat
     public void onBindViewHolder(@NonNull MyRecommendationsAdapter.ViewHolder holder, int position) {
 
         App app = App.getInstance();
-        TRecomendation recommendation = recommendationList.get(position);
+        TRecommendation recommendation = recommendationList.get(position);
 
         String state = recommendation.getState();
         String userDest = recommendation.getUserDest();

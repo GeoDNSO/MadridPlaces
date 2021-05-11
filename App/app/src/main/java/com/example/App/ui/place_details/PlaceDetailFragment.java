@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -28,7 +27,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -36,16 +34,13 @@ import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.models.transfer.TPlace;
+import com.example.App.models.TPlace;
 import com.example.App.ui.LogoutObserver;
 import com.example.App.ui.comments.CommentsFragment;
 import com.example.App.ui.map.MapboxActivity;
-import com.example.App.ui.profile.ProfileViewModel;
 import com.example.App.utilities.AppConstants;
-import com.example.App.utilities.TextViewExpandableUtil;
 import com.example.App.utilities.UserInterfaceUtils;
 import com.example.App.utilities.ViewListenerUtilities;
-import com.google.android.material.navigation.NavigationView;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -64,7 +59,7 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
     private NestedScrollView nestedScrollView;
 
     private SliderView sliderView;
-    private SliderAdp sliderAdp;
+    private SliderAdapter sliderAdp;
 
     private boolean isDescCollapsed;
     private TextView tvPlaceName;
@@ -135,7 +130,7 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
 
         //Gestion del Slider View
-        sliderAdp = new SliderAdp(place, getActivity());
+        sliderAdp = new SliderAdapter(place, getActivity());
         sliderView.setSliderAdapter(sliderAdp);
         sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
         sliderView.setSliderTransformAnimation(SliderAnimations.DEPTHTRANSFORMATION);

@@ -1,7 +1,7 @@
-package com.example.App.models.repositories.helpers;
+package com.example.App.repositories.helpers;
 
-import com.example.App.models.transfer.TPlace;
-import com.example.App.models.transfer.TRecomendation;
+import com.example.App.models.TPlace;
+import com.example.App.models.TRecommendation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,15 +12,15 @@ import java.util.List;
 
 public class UserInteractionRepositoryHelper {
 
-    public static List<TRecomendation> getListFromResponse(String res) {
+    public static List<TRecommendation> getListFromResponse(String res) {
         JSONObject jresponse = null;
         try {
             jresponse = new JSONObject(res);
 
-            List<TRecomendation> recomendations = new ArrayList<>();
+            List<TRecommendation> recomendations = new ArrayList<>();
             JSONArray arrayPlaces = jresponse.getJSONArray("list");
             for (int i = 0; i < arrayPlaces.length(); i++) {
-                TRecomendation tRecommendation = jsonStringToRecom(arrayPlaces.getString(i));
+                TRecommendation tRecommendation = jsonStringToRecom(arrayPlaces.getString(i));
                 recomendations.add(tRecommendation);
             }
             return recomendations;
@@ -46,12 +46,12 @@ public class UserInteractionRepositoryHelper {
         return infoString;
     }
 
-    public static TRecomendation jsonStringToRecom(String jsonString) {
+    public static TRecommendation jsonStringToRecom(String jsonString) {
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(jsonString);
             TPlace place = PlaceRepositoryHelper.jsonStringToPlace(jsonObject.toString());
-            return new TRecomendation(
+            return new TRecommendation(
                     jsonObject.getString("userSrc"),
                     jsonObject.getString("userDst"),
                     place,

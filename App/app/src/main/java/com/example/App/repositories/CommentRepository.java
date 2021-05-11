@@ -1,18 +1,16 @@
-    package com.example.App.models.repositories;
+    package com.example.App.repositories;
 
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.App.models.dao.SimpleRequest;
-import com.example.App.models.repositories.helpers.CommentRepositoryHelper;
-import com.example.App.models.transfer.TComment;
-import com.example.App.models.transfer.TPlace;
+import com.example.App.networking.SimpleRequest;
+import com.example.App.repositories.helpers.CommentRepositoryHelper;
+import com.example.App.models.TComment;
 import com.example.App.utilities.AppConstants;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

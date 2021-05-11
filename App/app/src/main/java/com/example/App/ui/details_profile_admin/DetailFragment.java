@@ -24,7 +24,7 @@ import com.bumptech.glide.Glide;
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.SessionManager;
-import com.example.App.models.transfer.TUser;
+import com.example.App.models.TUser;
 import com.example.App.utilities.AppConstants;
 
 public class DetailFragment extends Fragment{

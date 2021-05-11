@@ -4,15 +4,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.App.R;
-import com.example.App.models.transfer.TRequestFriend;
-import com.example.App.models.transfer.TUser;
+import com.example.App.models.TRequestFriend;
 
 import java.util.List;
 

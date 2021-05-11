@@ -1,4 +1,4 @@
-package com.example.App.models.transfer;
+package com.example.App.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,20 +6,20 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class TRecomendation implements JSONSerializable, Parcelable {
+public class TRecommendation implements JSONSerializable, Parcelable {
 
     private String userOrigin;
     private String userDest;
     private TPlace place;
     private String state;
 
-    public TRecomendation(String userOrigin, String userDest, TPlace place, String state){
+    public TRecommendation(String userOrigin, String userDest, TPlace place, String state){
         this.userOrigin = userOrigin;
         this.userDest = userDest;
         this.place = place;
         this.state = state;
     }
-    public TRecomendation(Parcel in) {
+    public TRecommendation(Parcel in) {
         this.userOrigin = in.readString();
         this.userDest = in.readString();
         this.place = in.readParcelable(TPlace.class.getClassLoader());
@@ -69,12 +69,12 @@ public class TRecomendation implements JSONSerializable, Parcelable {
     @Override
     public int describeContents() { return 0; }
 
-    public static final Creator<TRecomendation> CREATOR = new Creator<TRecomendation>() {
+    public static final Creator<TRecommendation> CREATOR = new Creator<TRecommendation>() {
         @Override
-        public TRecomendation createFromParcel(Parcel in) { return new TRecomendation(in); }
+        public TRecommendation createFromParcel(Parcel in) { return new TRecommendation(in); }
 
         @Override
-        public TRecomendation[] newArray(int size) { return new TRecomendation[size]; }
+        public TRecommendation[] newArray(int size) { return new TRecommendation[size]; }
     };
 
     @Override

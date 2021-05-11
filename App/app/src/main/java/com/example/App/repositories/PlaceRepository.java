@@ -1,24 +1,17 @@
-package com.example.App.models.repositories;
+package com.example.App.repositories;
 
-import android.location.Location;
 import android.os.Looper;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.App.App;
-import com.example.App.models.dao.SimpleRequest;
-import com.example.App.models.repositories.helpers.PlaceRepositoryHelper;
-import com.example.App.models.transfer.TPlace;
-import com.example.App.models.transfer.TUser;
-import com.example.App.services.LocationTrack;
+import com.example.App.networking.SimpleRequest;
+import com.example.App.repositories.helpers.PlaceRepositoryHelper;
+import com.example.App.models.TPlace;
 import com.example.App.utilities.AppConstants;
-import com.mapbox.geojson.CoordinateContainer;
-import com.mapbox.geojson.Point;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

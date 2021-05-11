@@ -1,10 +1,10 @@
-package com.example.App.models.repositories.helpers;
+package com.example.App.repositories.helpers;
 
 import android.location.Location;
 import android.util.Log;
 
 import com.example.App.App;
-import com.example.App.models.transfer.TPlace;
+import com.example.App.models.TPlace;
 import com.example.App.services.LocationTrack;
 
 import org.json.JSONArray;

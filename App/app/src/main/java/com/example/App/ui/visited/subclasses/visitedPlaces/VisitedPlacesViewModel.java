@@ -1,11 +1,8 @@
 package com.example.App.ui.visited.subclasses.visitedPlaces;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.example.App.models.repositories.PlaceRepository;
-import com.example.App.models.transfer.TPlace;
+import com.example.App.models.TPlace;
 import com.example.App.ui.places_list.subclasses.BaseViewModel;
 
 import java.util.List;

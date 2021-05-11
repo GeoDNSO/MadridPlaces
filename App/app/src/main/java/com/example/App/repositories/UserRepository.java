@@ -1,14 +1,13 @@
-package com.example.App.models.repositories;
+package com.example.App.repositories;
 
 import android.util.Log;
 import android.util.Pair;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.App.models.dao.SimpleRequest;
-import com.example.App.models.repositories.helpers.UserRespositoryHelper;
-import com.example.App.models.transfer.TPlace;
-import com.example.App.models.transfer.TUser;
+import com.example.App.networking.SimpleRequest;
+import com.example.App.repositories.helpers.UserRepositoryHelper;
+import com.example.App.models.TUser;
 import com.example.App.utilities.AppConstants;
 
 import org.json.JSONArray;
@@ -66,7 +65,7 @@ public class UserRepository {
 
     public void loginUser(String nickname, String password) {
 
-        String postBodyString = UserRespositoryHelper.loginInfoToString(nickname, password);
+        String postBodyString = UserRepositoryHelper.loginInfoToString(nickname, password);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -93,7 +92,7 @@ public class UserRepository {
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if (success){
-                    mUser.postValue(UserRespositoryHelper.jsonStringToUser(res));
+                    mUser.postValue(UserRepositoryHelper.jsonStringToUser(res));
                 }
                 else{
                     mUser.postValue(null);
@@ -137,7 +136,7 @@ public class UserRepository {
                     throw new IOException("Unexpected code " + response);
                 }
                 mSuccess.postValue(simpleRequest.isSuccessful(response));
-                TUser user = UserRespositoryHelper.jsonStringToUser(response.body().string());
+                TUser user = UserRepositoryHelper.jsonStringToUser(response.body().string());
                 mUser.postValue(user);
             }
         });
@@ -213,7 +212,7 @@ public class UserRepository {
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if (success){
-                    mUser.postValue(UserRespositoryHelper.jsonStringToUser(res));
+                    mUser.postValue(UserRepositoryHelper.jsonStringToUser(res));
                     Log.d("Caca", res);
                     mProfileSuccess.postValue(AppConstants.MODIFY_PROFILE);//Importante que este despues del postValue de mUser
                 }
@@ -227,7 +226,7 @@ public class UserRepository {
     }
 
     public void listUsers(int page, int quantum, String searchText, int sortType) {
-        String postBodyString = UserRespositoryHelper.paramsToString(page, quantum, searchText, sortType);
+        String postBodyString = UserRepositoryHelper.paramsToString(page, quantum, searchText, sortType);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -320,7 +319,7 @@ public class UserRepository {
                     throw new IOException("Unexpected code " + response);
                 }
                 else {
-                    Pair<Integer, Integer> pair = UserRespositoryHelper.jsonPair(res);
+                    Pair<Integer, Integer> pair = UserRepositoryHelper.jsonPair(res);
                     mCountProfileCommentsAndHistory.postValue(pair);
                 }
             }
@@ -337,7 +336,7 @@ public class UserRepository {
             List<TUser> listUsers = new ArrayList<TUser>();
             JSONArray arrayUsers = jresponse.getJSONArray("users");
             for (int i = 0; i < arrayUsers.length(); i++) {
-                TUser tUser = UserRespositoryHelper.jsonStringToUser(arrayUsers.getString(i));
+                TUser tUser = UserRepositoryHelper.jsonStringToUser(arrayUsers.getString(i));
                 listUsers.add(tUser);
             }
             return listUsers;

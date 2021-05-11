@@ -1,6 +1,6 @@
-package com.example.App.models.repositories.helpers;
+package com.example.App.repositories.helpers;
 
-import com.example.App.models.transfer.TComment;
+import com.example.App.models.TComment;
 
 import org.json.JSONArray;
 import org.json.JSONException;

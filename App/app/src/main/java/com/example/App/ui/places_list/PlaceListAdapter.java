@@ -19,11 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.models.transfer.TPlace;
+import com.example.App.models.TPlace;
 import com.example.App.utilities.UserInterfaceUtils;
 import com.facebook.shimmer.ShimmerDrawable;
 
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 

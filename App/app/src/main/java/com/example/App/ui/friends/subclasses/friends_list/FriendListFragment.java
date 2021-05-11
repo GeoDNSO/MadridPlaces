@@ -19,10 +19,8 @@ import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.models.transfer.TRequestFriend;
+import com.example.App.models.TRequestFriend;
 import com.example.App.ui.friends.FriendsViewModel;
-import com.example.App.ui.friends.subclasses.friend_resquest_list.FriendRequestListAdapter;
-import com.example.App.ui.friends.subclasses.friend_resquest_list.FriendRequestListFragment;
 import com.example.App.utilities.AppConstants;
 
 import java.util.ArrayList;

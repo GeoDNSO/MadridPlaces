@@ -1,4 +1,4 @@
-package com.example.App.models.repositories;
+package com.example.App.repositories;
 
 import androidx.lifecycle.MutableLiveData;
 

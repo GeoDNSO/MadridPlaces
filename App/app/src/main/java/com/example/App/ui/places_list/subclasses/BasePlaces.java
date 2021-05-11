@@ -32,8 +32,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.models.dao.SimpleRequest;
-import com.example.App.models.transfer.TPlace;
+import com.example.App.networking.SimpleRequest;
+import com.example.App.models.TPlace;
 import com.example.App.ui.LogoutObserver;
 import com.example.App.ui.places_list.PlaceListAdapter;
 import com.example.App.utilities.AppConstants;

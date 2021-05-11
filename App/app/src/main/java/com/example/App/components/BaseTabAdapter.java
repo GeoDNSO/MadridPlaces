@@ -1,4 +1,4 @@
-package com.example.App.ui.recommendations;
+package com.example.App.components;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,14 +9,14 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecommendationsTabAdapter extends FragmentPagerAdapter {
+public class BaseTabAdapter extends FragmentPagerAdapter {
 
     private FragmentManager fragmentManager;
     private List<Fragment> fragmentList;
     private List<String> titleList;
 
 
-    public RecommendationsTabAdapter(@NonNull FragmentManager fm) {
+    public BaseTabAdapter(@NonNull FragmentManager fm) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.fragmentManager = fm;
         this.fragmentList = new ArrayList<>();

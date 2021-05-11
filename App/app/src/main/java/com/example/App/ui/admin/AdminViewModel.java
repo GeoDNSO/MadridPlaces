@@ -3,10 +3,9 @@ package com.example.App.ui.admin;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModel;
 
-import com.example.App.models.repositories.UserRepository;
-import com.example.App.models.transfer.TUser;
+import com.example.App.repositories.UserRepository;
+import com.example.App.models.TUser;
 import com.example.App.ui.ViewModelParent;
 
 import java.util.List;

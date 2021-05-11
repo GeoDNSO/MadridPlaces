@@ -1,13 +1,13 @@
-package com.example.App.models.repositories.helpers;
+package com.example.App.repositories.helpers;
 
 import android.util.Pair;
 
-import com.example.App.models.transfer.TUser;
+import com.example.App.models.TUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UserRespositoryHelper {
+public class UserRepositoryHelper {
 
     //Métodos Privados para JSONs
 

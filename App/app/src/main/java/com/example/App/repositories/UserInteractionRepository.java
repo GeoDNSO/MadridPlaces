@@ -1,27 +1,18 @@
-package com.example.App.models.repositories;
+package com.example.App.repositories;
 
 
-import android.location.Location;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.App.App;
-import com.example.App.models.dao.SimpleRequest;
-import com.example.App.models.repositories.helpers.PlaceRepositoryHelper;
-import com.example.App.models.repositories.helpers.UserInteractionRepositoryHelper;
-import com.example.App.models.transfer.TPlace;
-import com.example.App.models.transfer.TRecomendation;
-import com.example.App.services.LocationTrack;
+import com.example.App.networking.SimpleRequest;
+import com.example.App.repositories.helpers.UserInteractionRepositoryHelper;
+import com.example.App.models.TRecommendation;
 import com.example.App.utilities.AppConstants;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -31,17 +22,17 @@ import okhttp3.Response;
 
 public class UserInteractionRepository extends Repository{
 
-    private MutableLiveData<List<TRecomendation>> mRecommendationsList = new MutableLiveData<>();
-    private MutableLiveData<List<TRecomendation>> mPendingRecommendationsList = new MutableLiveData<>();
+    private MutableLiveData<List<TRecommendation>> mRecommendationsList = new MutableLiveData<>();
+    private MutableLiveData<List<TRecommendation>> mPendingRecommendationsList = new MutableLiveData<>();
     private MutableLiveData<Integer> mAcceptRecommendation = new MutableLiveData<Integer>();
     private MutableLiveData<Integer> mDenyRecommendation = new MutableLiveData<Integer>();
 
 
-    public MutableLiveData<List<TRecomendation>> getmRecommendationsList() {
+    public MutableLiveData<List<TRecommendation>> getmRecommendationsList() {
         return mRecommendationsList;
     }
 
-    public MutableLiveData<List<TRecomendation>> getmPendingRecommendationsList() {
+    public MutableLiveData<List<TRecommendation>> getmPendingRecommendationsList() {
         return mPendingRecommendationsList;
     }
 
@@ -56,10 +47,10 @@ public class UserInteractionRepository extends Repository{
     class RecommendationsListCallBack implements Callback {
 
         private SimpleRequest simpleRequest;
-        private MutableLiveData<List<TRecomendation>> recomList;
+        private MutableLiveData<List<TRecommendation>> recomList;
 
 
-        public RecommendationsListCallBack(SimpleRequest simpleRequest, MutableLiveData<List<TRecomendation>> recomList){
+        public RecommendationsListCallBack(SimpleRequest simpleRequest, MutableLiveData<List<TRecommendation>> recomList){
             this.simpleRequest = simpleRequest;
             this.recomList = recomList;
         }
@@ -101,8 +92,8 @@ public class UserInteractionRepository extends Repository{
                 return;
             }
             //si no hubo problemas...
-            List<TRecomendation> listaAux = recomList.getValue();
-            List<TRecomendation> listaFromResponse = UserInteractionRepositoryHelper.getListFromResponse(res);
+            List<TRecommendation> listaAux = recomList.getValue();
+            List<TRecommendation> listaFromResponse = UserInteractionRepositoryHelper.getListFromResponse(res);
             if(listaFromResponse == null){
                 Log.d("PLACE_REPO", "La lista JSON convertida es NULO, MIRAR...");
                 return;

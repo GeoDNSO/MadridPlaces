@@ -1,7 +1,5 @@
 package com.example.App.ui.admin;
 
-import androidx.appcompat.widget.PopupMenu;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -9,23 +7,18 @@ import androidx.lifecycle.ViewModelProvider;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.speech.RecognizerIntent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,16 +31,12 @@ import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.MainActivity;
-import com.example.App.MainActivityInterface;
 import com.example.App.R;
-import com.example.App.models.transfer.TUser;
+import com.example.App.models.TUser;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ViewListenerUtilities;
-import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class AdminFragment extends Fragment implements UserListAdapter.OnListListener {

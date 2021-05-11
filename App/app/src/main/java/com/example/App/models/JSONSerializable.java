@@ -1,4 +1,4 @@
-package com.example.App.models.transfer;
+package com.example.App.models;
 
 import org.json.JSONObject;
 

@@ -3,10 +3,9 @@ package com.example.App.ui.modify_place;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModel;
 
-import com.example.App.models.repositories.PlaceRepository;
-import com.example.App.models.transfer.TPlace;
+import com.example.App.repositories.PlaceRepository;
+import com.example.App.models.TPlace;
 import com.example.App.ui.ViewModelParent;
 
 import org.json.JSONException;

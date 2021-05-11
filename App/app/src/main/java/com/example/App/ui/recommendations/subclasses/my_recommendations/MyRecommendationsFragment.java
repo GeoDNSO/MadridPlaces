@@ -22,9 +22,7 @@ import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.models.transfer.TPlace;
-import com.example.App.models.transfer.TRecomendation;
-import com.example.App.ui.place_details.PlaceDetailViewModel;
+import com.example.App.models.TRecommendation;
 import com.example.App.ui.recommendations.RecommendationsViewModel;
 import com.example.App.utilities.AppConstants;
 
@@ -40,7 +38,7 @@ public class MyRecommendationsFragment extends Fragment implements MyRecommendat
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
 
-    private List<TRecomendation> recommendationList;
+    private List<TRecommendation> recommendationList;
 
     private MyRecommendationsAdapter myRecommendationsAdapter;
 
@@ -88,9 +86,9 @@ public class MyRecommendationsFragment extends Fragment implements MyRecommendat
                 progressBar.setVisibility(View.GONE);
             }
         });
-        mViewModel.getmListRecom().observe(getViewLifecycleOwner(), new Observer<List<TRecomendation>>() {
+        mViewModel.getmListRecom().observe(getViewLifecycleOwner(), new Observer<List<TRecommendation>>() {
             @Override
-            public void onChanged(List<TRecomendation> tRecomendations) {
+            public void onChanged(List<TRecommendation> tRecomendations) {
                 if(tRecomendations == null){
                     Log.d("MY_RECO", "Lista de recomendaciones nula");
                     return;
