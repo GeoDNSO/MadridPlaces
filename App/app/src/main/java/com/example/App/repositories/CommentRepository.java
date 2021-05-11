@@ -2,7 +2,6 @@
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.networking.SimpleRequest;
@@ -43,7 +42,7 @@ public class CommentRepository extends Repository {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_LIST_COMMENTS);
+                mSuccess.postValue(AppConstants.LIST_COMMENTS_FAILED);
                 mCommentList.postValue(null);
                 call.cancel();
             }
@@ -52,7 +51,7 @@ public class CommentRepository extends Repository {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_LIST_COMMENTS);
+                    mSuccess.postValue(AppConstants.LIST_COMMENTS_FAILED);
                     throw new IOException("Unexpected code " + response);
                 }
                 String res = response.body().string();
@@ -64,7 +63,7 @@ public class CommentRepository extends Repository {
                 } else {
                     Log.d("BBB", "not success");
                     mCommentList.postValue(null);
-                    mSuccess.postValue(AppConstants.ERROR_LIST_COMMENTS);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(AppConstants.LIST_COMMENTS_FAILED);//Importante que este despues del postValue de mUser
                 }
             }
         });
@@ -82,7 +81,7 @@ public class CommentRepository extends Repository {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_LIST_COMMENTS);
+                mSuccess.postValue(AppConstants.LIST_COMMENTS_FAILED);
                 mCommentList.postValue(null);
                 call.cancel();
             }
@@ -91,7 +90,7 @@ public class CommentRepository extends Repository {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_LIST_COMMENTS);
+                    mSuccess.postValue(AppConstants.LIST_COMMENTS_FAILED);
                     throw new IOException("Unexpected code " + response);
                 }
                 String res = response.body().string();
@@ -111,7 +110,7 @@ public class CommentRepository extends Repository {
                 }
                 else{
                     mCommentList.postValue(null);
-                    mSuccess.postValue(AppConstants.ERROR_LIST_COMMENTS);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(AppConstants.LIST_COMMENTS_FAILED);//Importante que este despues del postValue de mUser
                 }
             }
         });
@@ -129,7 +128,7 @@ public class CommentRepository extends Repository {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_LIST_COMMENTS);
+                mSuccess.postValue(AppConstants.LIST_COMMENTS_FAILED);
                 mCommentList.postValue(null);
                 call.cancel();
             }
@@ -138,7 +137,7 @@ public class CommentRepository extends Repository {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_NEW_COMMENT);
+                    mSuccess.postValue(AppConstants.NEW_COMMENT_FAILED);
                     throw new IOException("Unexpected code " + response);
                 }
                 String res = response.body().string();
@@ -161,7 +160,7 @@ public class CommentRepository extends Repository {
                 }
                 else{
                     mCommentList.postValue(null);
-                    mSuccess.postValue(AppConstants.ERROR_NEW_COMMENT);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(AppConstants.NEW_COMMENT_FAILED);//Importante que este despues del postValue de mUser
                 }
             }
         });

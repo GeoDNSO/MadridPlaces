@@ -3,7 +3,6 @@ package com.example.App.repositories;
 import android.os.Looper;
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.networking.SimpleRequest;
@@ -87,7 +86,7 @@ public class PlaceRepository extends Repository{
         public void onFailure(@NotNull Call call, @NotNull IOException e) {
             e.printStackTrace();
             Log.d("PLACE_REPOSITORY", "FAILURE, error above");
-            mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
+            mSuccess.postValue(AppConstants.LIST_PLACES_FAILED);
             placeList.postValue(null);
             call.cancel();
         }
@@ -98,7 +97,7 @@ public class PlaceRepository extends Repository{
             this.sleep(500);//Para simular la carga...
 
             if (!response.isSuccessful()) {
-                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);
+                mSuccess.postValue(AppConstants.LIST_PLACES_FAILED);
                 throw new IOException("Unexpected code " + response);
             }
             String res = response.body().string();
@@ -107,7 +106,7 @@ public class PlaceRepository extends Repository{
             if(!success){
                 Log.d("PlaceListCallback", "Not success");
                 placeList.postValue(null);
-                mSuccess.postValue(AppConstants.ERROR_LIST_PLACES);//Importante que este despues del postValue de mUser
+                mSuccess.postValue(AppConstants.LIST_PLACES_FAILED);//Importante que este despues del postValue de mUser
 
                 return;
             }
@@ -180,7 +179,7 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_ADD_PLACE);
+                mSuccess.postValue(AppConstants.ADD_PLACE_FAILED);
                 mBooleanPlace.postValue(false);
                 call.cancel();
             }
@@ -197,7 +196,7 @@ public class PlaceRepository extends Repository{
                     mBooleanPlace.postValue(true);
                 }
                 else{
-                    mSuccess.postValue(AppConstants.ERROR_ADD_PLACE);
+                    mSuccess.postValue(AppConstants.ADD_PLACE_FAILED);
                     mBooleanPlace.postValue(false);
                 }
             }
@@ -253,7 +252,7 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_MODIFY_PLACE);
+                mSuccess.postValue(AppConstants.MODIFY_PLACE_FAILED);
                 mBooleanPlace.postValue(false);
                 call.cancel();
             }
@@ -270,7 +269,7 @@ public class PlaceRepository extends Repository{
                     mBooleanPlace.postValue(true);
                 }
                 else{
-                    mSuccess.postValue(AppConstants.ERROR_MODIFY_PLACE);
+                    mSuccess.postValue(AppConstants.MODIFY_PLACE_FAILED);
                     mBooleanPlace.postValue(false);
                 }
             }
@@ -298,14 +297,14 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                mSuccess.postValue(AppConstants.DETAIL_PLACE_FAILED);
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                    mSuccess.postValue(AppConstants.DETAIL_PLACE_FAILED);
                     throw new IOException("Unexpected code " + response);
                 }
                 Boolean success = simpleRequest.isSuccessful(response);
@@ -313,7 +312,7 @@ public class PlaceRepository extends Repository{
                     mSuccess.postValue(AppConstants.DELETE_PLACE);
                 }
                 else{
-                    mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                    mSuccess.postValue(AppConstants.DETAIL_PLACE_FAILED);
                 }
 
             }
@@ -332,7 +331,7 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_GET_CATEGORIES);
+                mSuccess.postValue(AppConstants.GET_CATEGORIES_FAILED);
                 mCategoriesList.postValue(null);
                 call.cancel();
             }
@@ -340,7 +339,7 @@ public class PlaceRepository extends Repository{
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_GET_CATEGORIES);
+                    mSuccess.postValue(AppConstants.GET_CATEGORIES_FAILED);
                     mCategoriesList.postValue(null);
                     throw new IOException("Unexpected code " + response);
                 }
@@ -352,7 +351,7 @@ public class PlaceRepository extends Repository{
                     mCategoriesList.postValue(PlaceRepositoryHelper.getCategoriesFromResponse(res));
                 }
                 else{
-                    mSuccess.postValue(AppConstants.ERROR_GET_CATEGORIES);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(AppConstants.GET_CATEGORIES_FAILED);//Importante que este despues del postValue de mUser
                     mCategoriesList.postValue(null);
                 }
             }
@@ -555,14 +554,14 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                mSuccess.postValue(AppConstants.DETAIL_PLACE_FAILED);
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                    mSuccess.postValue(AppConstants.DETAIL_PLACE_FAILED);
                     throw new IOException("Unexpected code " + response);
                 }
                 Boolean success = simpleRequest.isSuccessful(response);
@@ -570,7 +569,7 @@ public class PlaceRepository extends Repository{
                     mSuccess.postValue(AppConstants.DELETE_PLACE);
                 }
                 else{
-                    mSuccess.postValue(AppConstants.ERROR_DETAIL_PLACE);
+                    mSuccess.postValue(AppConstants.DETAIL_PLACE_FAILED);
                 }
 
             }

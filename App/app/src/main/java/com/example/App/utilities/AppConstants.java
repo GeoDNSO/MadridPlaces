@@ -30,30 +30,30 @@ public class AppConstants {
 
     public static final String RETURN_OK = "ok";
 
-    public static final Integer ERROR_PROFILE = -1;
+    public static final Integer PROFILE_FAILED = -1;
     public static final Integer DELETE_PROFILE = 1;
     public static final Integer MODIFY_PROFILE = 2;
     public static final Integer LIST_USERS = 3;
-    public static final Integer ERROR_LIST_USERS = -3;
+    public static final Integer LIST_USERS_FAILED = -3;
 
-    public static final Integer ERROR_LIST_PLACES = -4;
+    public static final Integer LIST_PLACES_FAILED = -4;
     public static final Integer LIST_PLACES = 4;
 
-    public static final Integer ERROR_LIST_COMMENTS = -5;
+    public static final Integer LIST_COMMENTS_FAILED = -5;
     public static final Integer LIST_COMMENTS = 5;
-    public static final Integer ERROR_NEW_COMMENT = -6;
+    public static final Integer NEW_COMMENT_FAILED = -6;
     public static final Integer NEW_COMMENT = 6;
 
-    public static final Integer ERROR_ADD_PLACE = -7;
+    public static final Integer ADD_PLACE_FAILED = -7;
     public static final Integer ADD_PLACE = 7;
 
-    public static final Integer ERROR_DETAIL_PLACE = -8;
+    public static final Integer DETAIL_PLACE_FAILED = -8;
     public static final Integer DELETE_PLACE = 8;
 
-    public static final Integer ERROR_MODIFY_PLACE = -9;
+    public static final Integer MODIFY_PLACE_FAILED = -9;
     public static final Integer MODIFY_PLACE = 9;
 
-    public static final Integer ERROR_GET_CATEGORIES = -10;
+    public static final Integer GET_CATEGORIES_FAILED = -10;
     public static final Integer GET_CATEGORIES = 10;
 
     public static final Integer REQUEST_STORAGE = 1;

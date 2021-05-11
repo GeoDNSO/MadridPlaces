@@ -163,14 +163,14 @@ public class UserRepository {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mProfileSuccess.postValue(AppConstants.ERROR_PROFILE);
+                mProfileSuccess.postValue(AppConstants.PROFILE_FAILED);
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mProfileSuccess.postValue(AppConstants.ERROR_PROFILE);
+                    mProfileSuccess.postValue(AppConstants.PROFILE_FAILED);
                     throw new IOException("Unexpected code " + response);
                 }
                 Boolean success = simpleRequest.isSuccessful(response);
@@ -178,7 +178,7 @@ public class UserRepository {
                     mProfileSuccess.postValue(AppConstants.DELETE_PROFILE);
                 }
                 else{
-                    mProfileSuccess.postValue(AppConstants.ERROR_PROFILE);
+                    mProfileSuccess.postValue(AppConstants.PROFILE_FAILED);
                 }
 
             }
@@ -198,14 +198,14 @@ public class UserRepository {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mProfileSuccess.postValue(AppConstants.ERROR_PROFILE);
+                mProfileSuccess.postValue(AppConstants.PROFILE_FAILED);
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mProfileSuccess.postValue(AppConstants.ERROR_PROFILE);
+                    mProfileSuccess.postValue(AppConstants.PROFILE_FAILED);
                     throw new IOException("Unexpected code " + response);
                 }
                 String res = response.body().string();
@@ -218,7 +218,7 @@ public class UserRepository {
                 }
                 else{
                     mUser.postValue(null);
-                    mProfileSuccess.postValue(AppConstants.ERROR_PROFILE);//Importante que este despues del postValue de mUser
+                    mProfileSuccess.postValue(AppConstants.PROFILE_FAILED);//Importante que este despues del postValue de mUser
                 }
             }
         });
@@ -239,7 +239,7 @@ public class UserRepository {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mProfileSuccess.postValue(AppConstants.ERROR_LIST_USERS);
+                mProfileSuccess.postValue(AppConstants.LIST_USERS_FAILED);
                 mListUsers.postValue(null);
                 call.cancel();
             }
@@ -248,7 +248,7 @@ public class UserRepository {
             public void onResponse(Call call, final Response response) throws IOException {
 
                 if (!response.isSuccessful()) {
-                    mProfileSuccess.postValue(AppConstants.ERROR_LIST_USERS);
+                    mProfileSuccess.postValue(AppConstants.LIST_USERS_FAILED);
                     throw new IOException("Unexpected code " + response);
                 }
                 String res = response.body().string();
@@ -272,7 +272,7 @@ public class UserRepository {
                 }
                 else{
                     mListUsers.postValue(null);
-                    mProfileSuccess.postValue(AppConstants.ERROR_LIST_USERS);//Importante que este despues del postValue de mUser
+                    mProfileSuccess.postValue(AppConstants.LIST_USERS_FAILED);//Importante que este despues del postValue de mUser
                 }
 
             }
