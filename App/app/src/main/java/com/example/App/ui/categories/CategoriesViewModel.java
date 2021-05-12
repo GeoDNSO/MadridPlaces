@@ -24,7 +24,6 @@ public class CategoriesViewModel extends ViewModelParent {
     }
 
     public void getTypesOfPlaces(){
-        mlv_isLoading.setValue(true); //progress bar visible
         placeRepository.getCategories();
     }
 

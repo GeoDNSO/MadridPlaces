@@ -21,19 +21,15 @@ public class CommentsViewModel extends ViewModelParent {
     }
 
     public void showComments(String placeName, int page, int quant){
-        mlv_isLoading.postValue(true);
         commentRepository.listComments(placeName, page, quant);
     }
     public void appendComments(String placeName, int page, int quant){
-        mlv_isLoading.postValue(true);
         commentRepository.appendComments(placeName, page, quant);
     }
     public void newComment(String userName, String content, String placeName, float rate){
-        mlv_isLoading.postValue(true);
         commentRepository.newComment(userName, content, placeName, rate);
     }
     public void deleteComment(TComment comment, int position) {
-        mlv_isLoading.setValue(true);
         commentRepository.deleteComment(comment, position);
     }
 

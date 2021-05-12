@@ -19,7 +19,7 @@ public class AdminViewModel extends ViewModelParent {
     public void init(){
         userRepository = new UserRepository();
 
-        mListSuccess = super.updateOnChange(mListSuccess, userRepository.getProfileSuccess());
+        mSuccess = super.updateOnChange(mSuccess, userRepository.getmSuccess());
         mListUsers = super.updateOnChange(mListUsers, userRepository.getListUsers());
 
     }

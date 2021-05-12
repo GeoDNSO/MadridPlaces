@@ -193,5 +193,11 @@
     <string name="saved_on_pending_visited_list">Guardado en la lista de lugares pendientes por visitar</string>
     <string name="saved_on_pending_visited_list_error">Se produjo un error, intentelo más tarde</string>
     <string name="ratings_text">Valoraciones</string>
+    <string name="place_created_msg">Se ha creado el lugar</string>
+    <string name="couldnt_create_place_msg">No se ha podido crear el lugar</string>
+    <string name="get_categories_error">Error al cargar categorias</string>
+    <string name="get_categories_ok">Se han cargado las categorias</string>
+    <string name="delete_comment_failed_msg">Error al borrar comentario</string>
+    <string name="delete_comment_ok_msg">Comentario borrado con exito</string>
 
 </resources>

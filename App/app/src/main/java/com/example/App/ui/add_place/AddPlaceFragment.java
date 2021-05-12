@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,30 +30,38 @@ import androidx.navigation.Navigation;
 
 import com.example.App.R;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 import com.example.App.utilities.Validator;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AddPlaceFragment extends Fragment {
 
     private AddPlaceViewModel mViewModel;
     private View root;
+    private HashMap<Integer, OnResultAction> actionHashMap;
+
     private LinearLayout linearLayout;
+
     private Button imageButton;
     private Button button;
-    private int numberOfImages;
+
     private List<String> listTypesPlaces;
+    private int numberOfImages;
     private String finalTypePlace;
     private ChipGroup chipGroupView;
+
     private TextInputEditText et_placeName;
     private TextInputEditText tiet_placeDescription;
+
     private Double latitude;
     private Double longitude;
     private String r_number;
@@ -64,7 +70,7 @@ public class AddPlaceFragment extends Fragment {
     private String zipcode;
 
     private List<Uri> uriList;
-    List<Bitmap> bitmapList;
+    private List<Bitmap> bitmapList;
     private List<String> imageStringBase64;
     private ImageButton mapboxAddPlace;
     private TextView tv_road_entire_name;
@@ -80,23 +86,25 @@ public class AddPlaceFragment extends Fragment {
         root = inflater.inflate(R.layout.add_place_fragment, container, false);
         init();
         initListeners();
+        configOnResultActions();
+        observers();
 
         mViewModel.init();
 
-        mViewModel.getmAddPlaceSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        return root;
+    }
+
+    private void observers() {
+        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    Toast.makeText(getActivity(), "Se ha creado el lugar", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(root).navigate(R.id.homeFragment);
-                }
-                else {
-                    Toast.makeText(getActivity(),  "No se ha podido crear el lugar", Toast.LENGTH_SHORT).show();
-                }
+            public void onChanged(Integer integer) {
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
             }
         });
 
-        mViewModel.getmCategoriesSuccess().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+
+        mViewModel.getmCategoriesList().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> categoriesList) {
                 listTypesPlaces = new ArrayList<>();
@@ -104,10 +112,16 @@ public class AddPlaceFragment extends Fragment {
                 addChips();
             }
         });
+    }
 
-
-
-        return root;
+    public void configOnResultActions(){
+        actionHashMap.put(ControlValues.ADD_PLACE, () -> {
+            Toast.makeText(getActivity(), getString(R.string.place_created_msg), Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(root).navigate(R.id.homeFragment);
+        });
+        actionHashMap.put(ControlValues.ADD_PLACE_FAILED, () -> {
+            Toast.makeText(getActivity(),  getString(R.string.couldnt_create_place_msg), Toast.LENGTH_SHORT).show();
+        });
     }
 
     public void init(){

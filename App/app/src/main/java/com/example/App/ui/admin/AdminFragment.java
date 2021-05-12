@@ -29,30 +29,36 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.App.App;
 import com.example.App.MainActivity;
 import com.example.App.R;
 import com.example.App.models.TUser;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.OnResultAction;
 import com.example.App.utilities.ViewListenerUtilities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AdminFragment extends Fragment implements UserListAdapter.OnListListener {
 
     private View root;
     private AdminViewModel mViewModel;
-    private NestedScrollView nestedScrollView;
-    private App app;
+    private HashMap<Integer, OnResultAction> actionHashMap;
+
+
     private List<TUser> listUser;
+
+    private NestedScrollView nestedScrollView;
     private ProgressBar progressBar;
     private UserListAdapter adapter;
     private RecyclerView recyclerView;
     private UserListAdapter.OnListListener onListListener;
+
     private Integer sortUsernameboolean; /*0 == no sort, 1 == sort up (A-Z), 2 == sort down (Z-A)*/
     private Integer sortNameboolean; /*0 == no sort, 1 == sort up (A-Z), 2 == sort down (Z-A)*/
     private Integer finalsort;
+
     private int page = 1, quantum = 8;
     private SearchView searchView;
 
@@ -69,10 +75,22 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
         mViewModel.init();
 
-        init();
-
+        initUI();
         listeners();
+        configOnResultActions();
 
+        observers();
+
+        adminManagement();
+
+        return root;
+    }
+
+    private void configOnResultActions() {
+        //TODO hacer algo con ej: actionHashMap.put(INTEGER, new Action(...))
+    }
+
+    private void observers() {
         mViewModel.getListUsers().observe(getViewLifecycleOwner(), new Observer<List<TUser>>() {
             @Override
             public void onChanged(List<TUser> tUsers) {
@@ -89,16 +107,12 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         mViewModel.getListSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-
+                //TODO --> No se hace nada con la respuesta
             }
         });
 
         mViewModel.getMLV_IsLoading().observe(getViewLifecycleOwner(), aBoolean ->
                 ViewListenerUtilities.setVisibility(progressBar, aBoolean));
-
-        adminManagement();
-
-        return root;
     }
 
     private void adminManagement() {
@@ -114,7 +128,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         recyclerView.setAdapter(adapter);
     }
 
-    private void init(){
+    private void initUI(){
         nestedScrollView = root.findViewById(R.id.list_user_nestedScrollView);
         progressBar = root.findViewById(R.id.user_list_progressBar);
         sortNameboolean = AppConstants.NO_SORT;
@@ -142,16 +156,12 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
-        //progressBar.setVisibility(View.VISIBLE); //progress bar visible
     }
 
     @Override
     public void OnListClick(int position) {
         Bundle bundle = new Bundle();
-
         TUser user = listUser.get(position);
-
         bundle.putParcelable(AppConstants.BUNDLE_PROFILE_LIST_DETAILS, user);
 
         //Le pasamos el bundle
@@ -305,7 +315,6 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
                 return true;
             }
         });
-
     }
 
     @Override
@@ -323,7 +332,5 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
                 break;
         }
     }
-
-
 
 }

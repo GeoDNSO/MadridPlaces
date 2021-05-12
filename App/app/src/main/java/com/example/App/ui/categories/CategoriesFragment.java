@@ -12,6 +12,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,23 +22,26 @@ import android.widget.Toast;
 import com.example.App.R;
 import com.example.App.models.TCategory;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 import com.example.App.utilities.ViewListenerUtilities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class CategoriesFragment extends Fragment implements CategoriesAdapter.CategoryListener {
 
+    private View root;
+    private CategoriesViewModel mViewModel;
+    private HashMap<Integer, OnResultAction> actionHashMap;
 
     private List<String> categoriesTitles;
     private List<Integer> categoriesIcons;
     private List<TCategory> categoryList;
     private CategoriesAdapter categoriesAdapter;
-
-
-    private View root;
-
-    private CategoriesViewModel mViewModel;
 
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
@@ -67,6 +71,8 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(categoriesAdapter);
 
+        configOnResultActions();
+        
         initObservers();
 
         mViewModel.getTypesOfPlaces();
@@ -74,13 +80,16 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         return root;
     }
 
+    private void configOnResultActions() {
+        actionHashMap.put(ControlValues.GET_CATEGORIES_FAILED, () ->
+                Toast.makeText(getActivity(), getString(R.string.get_categories_error), Toast.LENGTH_SHORT).show());
+
+        actionHashMap.put(ControlValues.GET_CATEGORIES_OK, () ->
+                Log.d("CategoriesFragment", "configOnResultActions: "+ getString(R.string.get_categories_ok)));
+    }
+
+
     private void initObservers() {
-        mViewModel.getMLV_IsLoading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                ViewListenerUtilities.setVisibility(progressBar, aBoolean);
-            }
-        });
 
         mViewModel.getmCategoriesStringList().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override

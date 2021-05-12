@@ -5,19 +5,19 @@ public class ControlValues {
     public static final Integer PROFILE_OK = 100;
     public static final Integer PROFILE_FAILED = -100;
 
-    public static final Integer DELETE_PROFILE = 101;
+    public static final Integer DELETE_PROFILE_OK = 101;
     public static final Integer DELETE_PROFILE_FAILED = -101;
 
-    public static final Integer LIST_USERS = 102;
+    public static final Integer LIST_USERS_OK = 102;
     public static final Integer LIST_USERS_FAILED = -102;
 
     public static final Integer LIST_PLACES = 103;
     public static final Integer LIST_PLACES_FAILED = -103;
 
-    public static final Integer LIST_COMMENTS = 104;
+    public static final Integer LIST_COMMENTS_OK = 104;
     public static final Integer LIST_COMMENTS_FAILED = -104;
 
-    public static final Integer NEW_COMMENT = 105;
+    public static final Integer NEW_COMMENT_OK = 105;
     public static final Integer NEW_COMMENT_FAILED = -105;
 
     public static final Integer ADD_PLACE = 106;
@@ -29,8 +29,8 @@ public class ControlValues {
     public static final Integer MODIFY_PLACE = 108;
     public static final Integer MODIFY_PLACE_FAILED = -108;
 
-    public static final Integer GET_CATEGORIES_FAILED = 109;
-    public static final Integer GET_CATEGORIES = -109;
+    public static final Integer GET_CATEGORIES_OK = 109;
+    public static final Integer GET_CATEGORIES_FAILED = -109;
 
     public static final Integer DELETE_COMMENT_OK = 110;
     public static final Integer DELETE_COMMENT_FAILED = -110;
@@ -74,5 +74,20 @@ public class ControlValues {
     public static final Integer DENY_REC_OK = 123;
     public static final Integer DENY_REC_FAIL = -123;
 
+    public static final Integer REGISTER_USER_OK = 124 ;
+    public static final Integer REGISTER_USER_FAIL = -124;
 
+    public static final Integer LOGIN_OK = 125;
+    public static final Integer LOGIN_FAIL = -125;
+
+    public static final Integer GET_USER_OK = 126;
+    public static final Integer GET_USER_FAIL = -126;
+
+    public static final Integer MODIFY_USER_OK = 127;
+    public static final Integer MODIFY_USER_FAIL = -127;
+
+    public static final Integer GET_COMMENT_AND_HISTORY_OK = 128;
+    public static final Integer GET_COMMENT_AND_HISTORY_FAIL = -128;
+
+    public static final Integer LOGIN_WRONG_CREDENTIALS = 1000;
 }

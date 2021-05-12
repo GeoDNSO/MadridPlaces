@@ -4,8 +4,12 @@ import android.util.Pair;
 
 import com.example.App.models.TUser;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserRepositoryHelper {
 
@@ -72,6 +76,25 @@ public class UserRepositoryHelper {
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static List<TUser> getListFromResponse(String response){
+        JSONObject jresponse = null;
+        try {
+            jresponse = new JSONObject(response);
+
+            //dentro de get("users") contiene una lista de nicknames ["poti", "aaa", "pepe"]
+            List<TUser> listUsers = new ArrayList<TUser>();
+            JSONArray arrayUsers = jresponse.getJSONArray("users");
+            for (int i = 0; i < arrayUsers.length(); i++) {
+                TUser tUser = UserRepositoryHelper.jsonStringToUser(arrayUsers.getString(i));
+                listUsers.add(tUser);
+            }
+            return listUsers;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return  null;
         }
     }
 }

@@ -24,17 +24,22 @@ import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.TComment;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 import com.example.App.utilities.ViewListenerUtilities;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CommentsFragment extends Fragment implements CommentListAdapter.CommentObserver {
     private String placeName;
     private View root;
     private CommentsViewModel mViewModel;
+
+    private HashMap<Integer, OnResultAction> actionHashMap;
 
     private App app; //global variable
 
@@ -64,7 +69,6 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(CommentsViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     @Override
@@ -79,7 +83,53 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
 
         initUI();
 
+        observers();
 
+        configOnResultActions();
+
+        listeners();
+        commentListManagement();
+
+        return root;
+    }
+
+    private void configOnResultActions() {
+        actionHashMap.put(ControlValues.LIST_COMMENTS_OK, () -> {
+            progressBar.setVisibility(View.GONE);
+        });
+        actionHashMap.put(ControlValues.LIST_COMMENTS_FAILED, () -> {
+            progressBar.setVisibility(View.GONE);
+        });
+
+        actionHashMap.put(ControlValues.NEW_COMMENT_OK, () -> {
+            progressBar.setVisibility(View.GONE);
+        });
+        actionHashMap.put(ControlValues.NEW_COMMENT_FAILED, () -> {
+            progressBar.setVisibility(View.GONE);
+        });
+
+        actionHashMap.put(ControlValues.DELETE_COMMENT_OK, () -> {
+            progressBar.setVisibility(View.GONE);
+            Toast.makeText(getActivity(), getString(R.string.delete_comment_ok_msg), Toast.LENGTH_SHORT ).show();
+            prepareRecyclerViewAndShimmer();
+        });
+        actionHashMap.put(ControlValues.DELETE_COMMENT_FAILED, () -> {
+            progressBar.setVisibility(View.GONE);
+            Toast.makeText(getActivity(), getString(R.string.delete_comment_failed_msg), Toast.LENGTH_SHORT ).show();
+            prepareRecyclerViewAndShimmer();
+        });
+    }
+
+    private void prepareRecyclerViewAndShimmer(){
+        //Mostrar el recyclerView
+        recyclerView.setVisibility(View.VISIBLE);
+        //Parar el efecto shimmer
+        shimmerFrameLayout.stopShimmer();
+        //Esconder al frameLayout de shimmer
+        shimmerFrameLayout.setVisibility(View.GONE);
+    }
+
+    private void observers() {
         mViewModel.getmCommentsList().observe(getViewLifecycleOwner(), new Observer<List<TComment>>() {
             @Override
             public void onChanged(List<TComment> tComments) {
@@ -90,40 +140,6 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
                 recyclerView.setAdapter(commentListAdapter);
             }
         });
-
-        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-
-                if(integer.equals(AppConstants.ERROR_DELETE_COMMENT)){
-                    Toast.makeText(getActivity(), "Error al borrar comentario", Toast.LENGTH_SHORT ).show();
-                    return;
-                }
-                else if(integer.equals(AppConstants.DELETE_COMMENT_OK)){
-                    Toast.makeText(getActivity(), "Comentario borrado con exito", Toast.LENGTH_SHORT ).show();
-                    return;
-                }
-
-                //Mostrar el recyclerView
-                recyclerView.setVisibility(View.VISIBLE);
-                //Parar el efecto shimmer
-                shimmerFrameLayout.stopShimmer();
-                //Esconder al frameLayout de shimmer
-                shimmerFrameLayout.setVisibility(View.GONE);
-            }
-        });
-
-        mViewModel.getMLV_IsLoading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                ViewListenerUtilities.setVisibility(progressBar, aBoolean);
-            }
-        });
-
-        listeners();
-        commentListManagement();
-
-        return root;
     }
 
     private void listeners() {

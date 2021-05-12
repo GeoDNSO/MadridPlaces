@@ -2,7 +2,6 @@ package com.example.App.ui.add_place;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
 import com.example.App.repositories.PlaceRepository;
 import com.example.App.models.TPlace;
@@ -14,18 +13,14 @@ import java.util.List;
 public class AddPlaceViewModel extends ViewModelParent {
 
     private PlaceRepository placeRepository;
-    List<String> mListTypesOfPlace;
-    private LiveData<Boolean> mAddPlaceSuccess = new MutableLiveData<>();
-    private LiveData<List<String>> mCategoriesSuccess = new MutableLiveData<>();
+    private LiveData<List<String>> mCategoriesList = new MutableLiveData<>();
 
     //observamos los objetos del repositorio, en este caso, el success devuelto por la llamada okhttp
     public void init(){
         placeRepository = new PlaceRepository();
-        mListTypesOfPlace = new ArrayList<>();
 
         mSuccess = super.updateOnChange(mSuccess, placeRepository.getSuccess());
-        mAddPlaceSuccess = super.updateOnChange(mAddPlaceSuccess, placeRepository.getBooleanPlace());
-        mCategoriesSuccess = super.updateOnChange(mCategoriesSuccess, placeRepository.getCategoriesList());
+        mCategoriesList = super.updateOnChange(mCategoriesList, placeRepository.getCategoriesList());
 
     }
 
@@ -43,10 +38,7 @@ public class AddPlaceViewModel extends ViewModelParent {
         placeRepository.addPlace(place);
     }
 
-    public LiveData<Boolean> getmAddPlaceSuccess(){
-        return mAddPlaceSuccess;
-    }
-    public LiveData<List<String>> getmCategoriesSuccess(){
-        return mCategoriesSuccess;
+    public LiveData<List<String>> getmCategoriesList(){
+        return mCategoriesList;
     }
 }

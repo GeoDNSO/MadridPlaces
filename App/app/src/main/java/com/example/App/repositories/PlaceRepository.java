@@ -1,6 +1,7 @@
 package com.example.App.repositories;
 
 import android.os.Looper;
+import android.service.controls.Control;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -9,6 +10,7 @@ import com.example.App.networking.SimpleRequest;
 import com.example.App.repositories.helpers.PlaceRepositoryHelper;
 import com.example.App.models.TPlace;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -24,7 +26,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class PlaceRepository extends Repository{
-    private MutableLiveData<Boolean> mBooleanPlace = new MutableLiveData<>();
+    private MutableLiveData<Integer> mBooleanPlace = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mTwitterPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mHistoryPlacesList = new MutableLiveData<>();
@@ -40,7 +42,7 @@ public class PlaceRepository extends Repository{
     private MutableLiveData<Integer> mVisitedSuccess = new MutableLiveData<Integer>();
     private MutableLiveData<Integer> mPendingToVisitedSuccess = new MutableLiveData<Integer>();
 
-    public MutableLiveData<Boolean> getBooleanPlace(){ return mBooleanPlace; }
+    public MutableLiveData<Integer> getBooleanPlace(){ return mBooleanPlace; }
     public MutableLiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
     public MutableLiveData<List<TPlace>> getTwitterPlacesList(){ return mTwitterPlacesList; }
     public MutableLiveData<List<TPlace>> getHistoryPlacesList(){ return mHistoryPlacesList; }
@@ -179,8 +181,7 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.ADD_PLACE_FAILED);
-                mBooleanPlace.postValue(false);
+                mSuccess.postValue(ControlValues.ADD_PLACE_FAILED);
                 call.cancel();
             }
 
@@ -192,12 +193,10 @@ public class PlaceRepository extends Repository{
                 }
                 boolean sucess = simpleRequest.isSuccessful(response);
                 if(sucess){
-                    mSuccess.postValue(AppConstants.ADD_PLACE);
-                    mBooleanPlace.postValue(true);
+                    mSuccess.postValue(ControlValues.ADD_PLACE);
                 }
                 else{
-                    mSuccess.postValue(AppConstants.ADD_PLACE_FAILED);
-                    mBooleanPlace.postValue(false);
+                    mSuccess.postValue(ControlValues.ADD_PLACE_FAILED);
                 }
             }
         });
@@ -252,8 +251,7 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.MODIFY_PLACE_FAILED);
-                mBooleanPlace.postValue(false);
+                mSuccess.postValue(ControlValues.MODIFY_PLACE_FAILED);
                 call.cancel();
             }
 
@@ -265,12 +263,10 @@ public class PlaceRepository extends Repository{
                 }
                 boolean sucess = simpleRequest.isSuccessful(response);
                 if(sucess){
-                    mSuccess.postValue(AppConstants.MODIFY_PLACE);
-                    mBooleanPlace.postValue(true);
+                    mSuccess.postValue(ControlValues.MODIFY_PLACE);
                 }
                 else{
-                    mSuccess.postValue(AppConstants.MODIFY_PLACE_FAILED);
-                    mBooleanPlace.postValue(false);
+                    mSuccess.postValue(ControlValues.MODIFY_PLACE_FAILED);
                 }
             }
         });
@@ -331,7 +327,7 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.GET_CATEGORIES_FAILED);
+                mSuccess.postValue(ControlValues.GET_CATEGORIES_FAILED);
                 mCategoriesList.postValue(null);
                 call.cancel();
             }
@@ -339,7 +335,7 @@ public class PlaceRepository extends Repository{
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.GET_CATEGORIES_FAILED);
+                    mSuccess.postValue(ControlValues.GET_CATEGORIES_FAILED);
                     mCategoriesList.postValue(null);
                     throw new IOException("Unexpected code " + response);
                 }
@@ -347,11 +343,11 @@ public class PlaceRepository extends Repository{
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if (success){
-                    mSuccess.postValue(AppConstants.GET_CATEGORIES);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.GET_CATEGORIES_OK);//Importante que este despues del postValue de mUser
                     mCategoriesList.postValue(PlaceRepositoryHelper.getCategoriesFromResponse(res));
                 }
                 else{
-                    mSuccess.postValue(AppConstants.GET_CATEGORIES_FAILED);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.GET_CATEGORIES_FAILED);//Importante que este despues del postValue de mUser
                     mCategoriesList.postValue(null);
                 }
             }

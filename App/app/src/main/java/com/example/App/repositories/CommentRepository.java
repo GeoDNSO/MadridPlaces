@@ -8,6 +8,7 @@ import com.example.App.networking.SimpleRequest;
 import com.example.App.repositories.helpers.CommentRepositoryHelper;
 import com.example.App.models.TComment;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -42,7 +43,7 @@ public class CommentRepository extends Repository {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.LIST_COMMENTS_FAILED);
+                mSuccess.postValue(ControlValues.LIST_COMMENTS_FAILED);
                 mCommentList.postValue(null);
                 call.cancel();
             }
@@ -51,7 +52,7 @@ public class CommentRepository extends Repository {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.LIST_COMMENTS_FAILED);
+                    mSuccess.postValue(ControlValues.LIST_COMMENTS_FAILED);
                     throw new IOException("Unexpected code " + response);
                 }
                 String res = response.body().string();
@@ -61,9 +62,8 @@ public class CommentRepository extends Repository {
                     mCommentList.postValue(CommentRepositoryHelper.getListFromResponse(res));
                     mSuccess.postValue(AppConstants.LIST_COMMENTS);//Importante que este despues del postValue de mUser
                 } else {
-                    Log.d("BBB", "not success");
                     mCommentList.postValue(null);
-                    mSuccess.postValue(AppConstants.LIST_COMMENTS_FAILED);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.LIST_COMMENTS_FAILED);//Importante que este despues del postValue de mUser
                 }
             }
         });
@@ -81,7 +81,7 @@ public class CommentRepository extends Repository {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.LIST_COMMENTS_FAILED);
+                mSuccess.postValue(ControlValues.LIST_COMMENTS_FAILED);
                 mCommentList.postValue(null);
                 call.cancel();
             }
@@ -90,7 +90,7 @@ public class CommentRepository extends Repository {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.LIST_COMMENTS_FAILED);
+                    mSuccess.postValue(ControlValues.LIST_COMMENTS_FAILED);
                     throw new IOException("Unexpected code " + response);
                 }
                 String res = response.body().string();
@@ -106,11 +106,11 @@ public class CommentRepository extends Repository {
                         listaAux.addAll(CommentRepositoryHelper.getListFromResponse(res));
                         mCommentList.postValue(listaAux);
                     }
-                    mSuccess.postValue(AppConstants.LIST_COMMENTS);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.LIST_COMMENTS_OK);//Importante que este despues del postValue de mUser
                 }
                 else{
                     mCommentList.postValue(null);
-                    mSuccess.postValue(AppConstants.LIST_COMMENTS_FAILED);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.LIST_COMMENTS_FAILED);//Importante que este despues del postValue de mUser
                 }
             }
         });
@@ -128,7 +128,7 @@ public class CommentRepository extends Repository {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.LIST_COMMENTS_FAILED);
+                mSuccess.postValue(ControlValues.LIST_COMMENTS_FAILED);
                 mCommentList.postValue(null);
                 call.cancel();
             }
@@ -137,7 +137,7 @@ public class CommentRepository extends Repository {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.NEW_COMMENT_FAILED);
+                    mSuccess.postValue(ControlValues.NEW_COMMENT_FAILED);
                     throw new IOException("Unexpected code " + response);
                 }
                 String res = response.body().string();
@@ -156,11 +156,11 @@ public class CommentRepository extends Repository {
                         listaAux.add(0,newComment);
                         mCommentList.postValue(listaAux);
                     }
-                    mSuccess.postValue(AppConstants.NEW_COMMENT);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.NEW_COMMENT_OK);//Importante que este despues del postValue de mUser
                 }
                 else{
                     mCommentList.postValue(null);
-                    mSuccess.postValue(AppConstants.NEW_COMMENT_FAILED);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.NEW_COMMENT_FAILED);//Importante que este despues del postValue de mUser
                 }
             }
         });
@@ -179,7 +179,7 @@ public class CommentRepository extends Repository {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.ERROR_DELETE_COMMENT);
+                mSuccess.postValue(ControlValues.DELETE_COMMENT_FAILED);
                 call.cancel();
             }
 
@@ -187,7 +187,7 @@ public class CommentRepository extends Repository {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.ERROR_DELETE_COMMENT);
+                    mSuccess.postValue(ControlValues.DELETE_COMMENT_FAILED);
                     throw new IOException("Unexpected code " + response);
                 }
                 String res = response.body().string();
@@ -201,11 +201,11 @@ public class CommentRepository extends Repository {
                     mCommentList.postValue(listaAux); //El problema es que carga la lista de cero y se empieza al inicio
                     //searchAndDeleteList(listaAux,newComment);
 
-                    mSuccess.postValue(AppConstants.DELETE_COMMENT_OK);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.DELETE_COMMENT_OK);//Importante que este despues del postValue de mUser
                 }
                 else{
                     //mCommentList.postValue(null);
-                    mSuccess.postValue(AppConstants.ERROR_DELETE_COMMENT);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.DELETE_COMMENT_FAILED);//Importante que este despues del postValue de mUser
                 }
             }
         });
