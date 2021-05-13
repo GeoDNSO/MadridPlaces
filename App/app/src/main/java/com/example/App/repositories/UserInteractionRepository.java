@@ -9,6 +9,7 @@ import com.example.App.networking.SimpleRequest;
 import com.example.App.repositories.helpers.UserInteractionRepositoryHelper;
 import com.example.App.models.TRecommendation;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,8 +25,7 @@ public class UserInteractionRepository extends Repository{
 
     private MutableLiveData<List<TRecommendation>> mRecommendationsList = new MutableLiveData<>();
     private MutableLiveData<List<TRecommendation>> mPendingRecommendationsList = new MutableLiveData<>();
-    private MutableLiveData<Integer> mAcceptRecommendation = new MutableLiveData<Integer>();
-    private MutableLiveData<Integer> mDenyRecommendation = new MutableLiveData<Integer>();
+
 
 
     public MutableLiveData<List<TRecommendation>> getmRecommendationsList() {
@@ -36,13 +36,6 @@ public class UserInteractionRepository extends Repository{
         return mPendingRecommendationsList;
     }
 
-    public MutableLiveData<Integer> getmAcceptRecommendation(){
-        return mAcceptRecommendation;
-    }
-
-    public MutableLiveData<Integer> getmDenyRecommendation(){
-        return mDenyRecommendation;
-    }
 
     class RecommendationsListCallBack implements Callback {
 
@@ -67,7 +60,7 @@ public class UserInteractionRepository extends Repository{
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
             e.printStackTrace();
             Log.d("REC_REPOSITORY", "FAILURE, error above");
-            mSuccess.postValue(AppConstants.LIST_REC_FAIL);
+            mSuccess.postValue(ControlValues.LIST_REC_FAIL);
             recomList.postValue(null);
             call.cancel();
         }
@@ -78,7 +71,7 @@ public class UserInteractionRepository extends Repository{
             this.sleep(500);//Para simular la carga...
 
             if (!response.isSuccessful()) {
-                mSuccess.postValue(AppConstants.LIST_REC_FAIL);
+                mSuccess.postValue(ControlValues.LIST_REC_FAIL);
                 throw new IOException("Unexpected code " + response);
             }
             String res = response.body().string();
@@ -87,7 +80,7 @@ public class UserInteractionRepository extends Repository{
             if(!success){
                 Log.d("RecomListCallback", "Not success");
                 recomList.postValue(null);
-                mSuccess.postValue(AppConstants.LIST_REC_FAIL);//Importante que este despues del postValue de mUser
+                mSuccess.postValue(ControlValues.LIST_REC_FAIL);//Importante que este despues del postValue de mUser
 
                 return;
             }
@@ -108,7 +101,7 @@ public class UserInteractionRepository extends Repository{
                 listaAux.addAll(listaFromResponse);
                 recomList.postValue(listaAux);
             }
-            mSuccess.postValue(AppConstants.LIST_REC_OK);//Importante que este despues del postValue de recomList
+            mSuccess.postValue(ControlValues.LIST_REC_OK);//Importante que este despues del postValue de recomList
         }
     }
 
@@ -141,14 +134,14 @@ public class UserInteractionRepository extends Repository{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mAcceptRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                mSuccess.postValue(ControlValues.PENDING_REC_FAIL);
                 call.cancel();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(!response.isSuccessful()) {
-                    mAcceptRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                    mSuccess.postValue(ControlValues.PENDING_REC_FAIL);
                     throw new IOException("Unexpected code " + response);
                 }
 
@@ -156,10 +149,10 @@ public class UserInteractionRepository extends Repository{
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if(success) {
-                    mAcceptRecommendation.postValue(AppConstants.ACCEPT_REC_OK);
+                    mSuccess.postValue(ControlValues.ACCEPT_REC_OK);
                 }
                 else {
-                    mAcceptRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                    mSuccess.postValue(ControlValues.PENDING_REC_FAIL);
                 }
             }
         });
@@ -181,14 +174,14 @@ public class UserInteractionRepository extends Repository{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mDenyRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                mSuccess.postValue(ControlValues.PENDING_REC_FAIL);
                 call.cancel();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(!response.isSuccessful()) {
-                    mDenyRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                    mSuccess.postValue(ControlValues.PENDING_REC_FAIL);
                     throw new IOException("Unexpected code " + response);
                 }
 
@@ -196,10 +189,10 @@ public class UserInteractionRepository extends Repository{
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if(success) {
-                    mDenyRecommendation.postValue(AppConstants.DENY_REC_OK);
+                    mSuccess.postValue(ControlValues.DENY_REC_OK);
                 }
                 else {
-                    mDenyRecommendation.postValue(AppConstants.PENDING_REC_FAIL);
+                    mSuccess.postValue(ControlValues.PENDING_REC_FAIL);
                 }
             }
         });
@@ -232,14 +225,14 @@ public class UserInteractionRepository extends Repository{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.SEND_REC_FAIL);
+                mSuccess.postValue(ControlValues.SEND_REC_FAIL);
                 call.cancel();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.SEND_REC_FAIL);
+                    mSuccess.postValue(ControlValues.SEND_REC_FAIL);
                     throw new IOException("Unexpected code " + response);
                 }
 
@@ -247,10 +240,10 @@ public class UserInteractionRepository extends Repository{
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if(success) {
-                    mSuccess.postValue(AppConstants.SEND_REC_OK);
+                    mSuccess.postValue(ControlValues.SEND_REC_OK);
                 }
                 else {
-                    mSuccess.postValue(AppConstants.SEND_REC_FAIL);
+                    mSuccess.postValue(ControlValues.SEND_REC_FAIL);
                 }
             }
         });

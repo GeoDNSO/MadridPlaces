@@ -60,7 +60,7 @@ public class CommentRepository extends Repository {
 
                 if (success) {
                     mCommentList.postValue(CommentRepositoryHelper.getListFromResponse(res));
-                    mSuccess.postValue(AppConstants.LIST_COMMENTS);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.LIST_COMMENTS_OK);//Importante que este despues del postValue de mUser
                 } else {
                     mCommentList.postValue(null);
                     mSuccess.postValue(ControlValues.LIST_COMMENTS_FAILED);//Importante que este despues del postValue de mUser
@@ -179,7 +179,7 @@ public class CommentRepository extends Repository {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(ControlValues.DELETE_COMMENT_FAILED);
+                mSuccess.postValue(ControlValues.DELETE_COMMENT_FAIL);
                 call.cancel();
             }
 
@@ -187,7 +187,7 @@ public class CommentRepository extends Repository {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(ControlValues.DELETE_COMMENT_FAILED);
+                    mSuccess.postValue(ControlValues.DELETE_COMMENT_FAIL);
                     throw new IOException("Unexpected code " + response);
                 }
                 String res = response.body().string();
@@ -205,7 +205,7 @@ public class CommentRepository extends Repository {
                 }
                 else{
                     //mCommentList.postValue(null);
-                    mSuccess.postValue(ControlValues.DELETE_COMMENT_FAILED);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.DELETE_COMMENT_FAIL);//Importante que este despues del postValue de mUser
                 }
             }
         });

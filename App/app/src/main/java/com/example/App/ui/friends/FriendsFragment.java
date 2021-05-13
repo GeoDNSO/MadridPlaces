@@ -73,7 +73,6 @@ public class FriendsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(FriendsViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     private void prepareViewPager() {

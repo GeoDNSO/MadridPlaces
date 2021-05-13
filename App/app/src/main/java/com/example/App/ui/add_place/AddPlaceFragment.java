@@ -115,6 +115,7 @@ public class AddPlaceFragment extends Fragment {
     }
 
     public void configOnResultActions(){
+        actionHashMap = new HashMap<>();
         actionHashMap.put(ControlValues.ADD_PLACE, () -> {
             Toast.makeText(getActivity(), getString(R.string.place_created_msg), Toast.LENGTH_SHORT).show();
             Navigation.findNavController(root).navigate(R.id.homeFragment);

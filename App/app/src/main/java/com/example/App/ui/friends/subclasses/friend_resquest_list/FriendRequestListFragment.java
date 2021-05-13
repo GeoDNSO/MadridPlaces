@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,15 +24,18 @@ import com.example.App.R;
 import com.example.App.models.TRequestFriend;
 import com.example.App.ui.friends.FriendsViewModel;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class FriendRequestListFragment extends Fragment implements FriendRequestListAdapter.OnFriendRequestListener{
 
     private FriendsViewModel mViewModel;
-
     private View root;
+    private HashMap<Integer, OnResultAction> actionHashMap;
 
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
@@ -54,6 +58,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
 
         initUI();
         initObservers();
+        configOnResultActions();
 
         friendsList = new ArrayList<>();
         friendRequestListAdapter = new FriendRequestListAdapter(friendsList, this); //getActivity = MainActivity.this
@@ -65,45 +70,55 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
         return root;
     }
 
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.LIST_REQ_FRIEND_OK, () -> {
+            //Nothing..
+        });
+        actionHashMap.put(ControlValues.LIST_REQ_FRIEND_FAIL, () -> {
+            //Nothing
+        });
+
+        actionHashMap.put(ControlValues.ACCEPT_REQ_FRIEND_OK, () -> {
+            if(lastPosition != -1)
+                return;
+            Toast.makeText(getContext(), getString(R.string.friend_request_accepted), Toast.LENGTH_SHORT).show();
+            TRequestFriend friends = friendsList.get(lastPosition);
+            friendsList.remove(friends);
+            friendRequestListAdapter = new FriendRequestListAdapter(friendsList, FriendRequestListFragment.this);
+            recyclerView.setAdapter(friendRequestListAdapter);
+            progressBar.setVisibility(View.GONE);
+            lastPosition = -1;
+        });
+        actionHashMap.put(ControlValues.ACCEPT_REQ_FRIEND_FAIL, () -> {
+            //Nothing
+        });
+
+        actionHashMap.put(ControlValues.DECLINE_REQ_FRIEND_OK, () -> {
+            if(lastPosition != -1)
+                return;
+
+            TRequestFriend friends = friendsList.get(lastPosition);
+            Toast.makeText(getContext(), getString(R.string.decline_friend_request) +friends.getUserDest(), Toast.LENGTH_SHORT).show();
+            friendsList.remove(friends);
+            friendRequestListAdapter = new FriendRequestListAdapter(friendsList, FriendRequestListFragment.this);
+            recyclerView.setAdapter(friendRequestListAdapter);
+            progressBar.setVisibility(View.GONE);
+            lastPosition = -1;
+        });
+        actionHashMap.put(ControlValues.DECLINE_REQ_FRIEND_FAIL, () -> {
+           //Nothing
+        });
+    }
+
     private void initObservers() {
 
         mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                if(AppConstants.LIST_REQ_FRIEND_OK == integer){
-
-                }
+               if (actionHashMap.containsKey(integer))
+                   actionHashMap.get(integer).execute();
                 progressBar.setVisibility(View.GONE);
-            }
-        });
-
-        mViewModel.getmAcceptFriend().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                if(AppConstants.ACCEPT_REQ_FRIEND_OK.equals(integer) && lastPosition != -1){
-                    Toast.makeText(getContext(), "Se ha aceptado la recomendación", Toast.LENGTH_SHORT).show();
-                    TRequestFriend friends = friendsList.get(lastPosition);
-                    friendsList.remove(friends);
-                    friendRequestListAdapter = new FriendRequestListAdapter(friendsList, FriendRequestListFragment.this);
-                    recyclerView.setAdapter(friendRequestListAdapter);
-                    progressBar.setVisibility(View.GONE);
-                    lastPosition = -1;
-                }
-            }
-        });
-
-        mViewModel.getmDeclineFriend().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                if(AppConstants.DECLINE_REQ_FRIEND_OK.equals(integer) && lastPosition != -1){
-                    Toast.makeText(getContext(), "Se ha rechazado la recomendación", Toast.LENGTH_SHORT).show();
-                    TRequestFriend friends = friendsList.get(lastPosition);
-                    friendsList.remove(friends);
-                    friendRequestListAdapter = new FriendRequestListAdapter(friendsList, FriendRequestListFragment.this);
-                    recyclerView.setAdapter(friendRequestListAdapter);
-                    progressBar.setVisibility(View.GONE);
-                    lastPosition = -1;
-                }
             }
         });
 

@@ -26,10 +26,16 @@ import com.example.App.R;
 import com.example.App.SessionManager;
 import com.example.App.models.TUser;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
+
+import java.util.HashMap;
 
 public class DetailFragment extends Fragment{
     private View root;
     private DetailViewModel mViewModel;
+    private HashMap<Integer, OnResultAction> actionHashMap;
+
     private TUser user;
     private TextView tv_Username;
     private TextView tv_FullName;
@@ -56,7 +62,31 @@ public class DetailFragment extends Fragment{
 
         mViewModel = new ViewModelProvider(this).get(DetailViewModel.class);
         mViewModel.init();
+        
+        initUI();
 
+        fillProfileFields();
+        initializeListeners();
+        initializeObservers();
+
+        configOnResultActions();
+
+        return root;
+    }
+
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.DELETE_PROFILE_OK, () -> {
+            Toast.makeText(getActivity(), getString(R.string.profile_delete_msg), Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(root).navigate(R.id.adminFragment);
+        });
+
+        actionHashMap.put(ControlValues.DELETE_PROFILE_FAILED, () -> {
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void initUI() {
         deleteAccountButton = root.findViewById(R.id.deleteButton2);
 
         tv_Username = root.findViewById(R.id.tv_username2);
@@ -68,38 +98,15 @@ public class DetailFragment extends Fragment{
         //Maybe used in the future
         tv_Favourites = root.findViewById(R.id.tv_n_favourites_admin);
         tv_VisitedPlaces  = root.findViewById(R.id.tv_visited_places_admin);
-
-        fillProfileFields();
-        initializeListeners();
-        initializeObservers();
-
-        return root;
     }
 
     private void initializeObservers() {
 
-        mViewModel.getDetailProfileActionInProgress().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
-            public void onChanged(Boolean aBoolean) {
-                /*if (aBoolean) {
-                    showProgressBar();
-                }
-                else {
-                    hideProgressBar();
-                }*/
-            }
-        });
-
-        mViewModel.getActionDetailProfileSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer aInteger) {
-                if (aInteger.equals(AppConstants.DELETE_PROFILE)) {
-                    Toast.makeText(getActivity(), "Se ha eliminado el perfil seleccionado", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(root).navigate(R.id.adminFragment);
-                }
-                else {
-                    Toast.makeText(getActivity(), "Algo ha funcionado mal", Toast.LENGTH_SHORT).show();
-                }
+            public void onChanged(Integer integer) {
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
             }
         });
 

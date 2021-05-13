@@ -13,8 +13,7 @@ import java.util.List;
 public class RecommendationsViewModel extends ViewModelParent {
     private LiveData<List<TRecommendation>> mListRecom = new MutableLiveData<>();
     private LiveData<List<TRecommendation>> mListPendingRecom = new MutableLiveData<>();
-    private LiveData<Integer> mAcceptRecom = new MutableLiveData<>();
-    private LiveData<Integer> mDenyRecom = new MutableLiveData<>();
+
 
     private UserInteractionRepository recomRepository;
 
@@ -24,8 +23,7 @@ public class RecommendationsViewModel extends ViewModelParent {
 
         mListRecom = super.updateOnChange(mListRecom, recomRepository.getmRecommendationsList());
         mListPendingRecom = super.updateOnChange(mListPendingRecom, recomRepository.getmPendingRecommendationsList());
-        mAcceptRecom = super.updateOnChange(mAcceptRecom, recomRepository.getmAcceptRecommendation());
-        mDenyRecom = super.updateOnChange(mDenyRecom, recomRepository.getmDenyRecommendation());
+        mSuccess = super.updateOnChange(mSuccess, recomRepository.getSuccess());
     }
 
     public void listUserRecommendations(int page,int quant, String username){
@@ -49,12 +47,6 @@ public class RecommendationsViewModel extends ViewModelParent {
     }
     public LiveData<List<TRecommendation>> getmListPendingRecom() {
         return mListPendingRecom;
-    }
-    public LiveData<Integer> getmAcceptRecom() {
-        return mAcceptRecom;
-    }
-    public LiveData<Integer> getmDenyRecom() {
-        return mDenyRecom;
     }
 
 }

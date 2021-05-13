@@ -11,13 +11,11 @@ import com.example.App.components.ViewModelParent;
 
 import java.util.List;
 
-public class SendRecomendationViewModel extends ViewModelParent {
+public class SendRecommendationViewModel extends ViewModelParent {
 
     private UserInteractionRepository userInteractionRepository;
     private UserFriendRepository userFriendRepository;
 
-    private MutableLiveData<Boolean> mSendingInProcess = new MutableLiveData<>();
-    private LiveData<Integer> mSendingSuccess = new MutableLiveData<>();
     private MutableLiveData<String> mSelectedItems = new MutableLiveData<>();
     private LiveData<List<TRequestFriend>> mFriendList = new MutableLiveData<>();
 
@@ -26,7 +24,7 @@ public class SendRecomendationViewModel extends ViewModelParent {
         userInteractionRepository = new UserInteractionRepository();
         userFriendRepository = new UserFriendRepository();
 
-        mSendingSuccess = super.updateOnChange(mSendingSuccess, userInteractionRepository.getSuccess());
+        mSuccess  = super.updateOnChange(mSuccess, userInteractionRepository.getSuccess());
         mFriendList = super.updateOnChange(mFriendList, userFriendRepository.getmFriendList());
     }
 
@@ -36,16 +34,7 @@ public class SendRecomendationViewModel extends ViewModelParent {
 
 
     public void sendRecomendation(String userOrigin, String userDest, String place) {
-        mSendingInProcess.setValue(true);
         userInteractionRepository.sendRecomendation(userOrigin, userDest, place);
-    }
-
-    public LiveData<Boolean> getSendingInProgress() {
-        return mSendingInProcess;
-    }
-
-    public LiveData<Integer> getSendingSuccess() {
-        return mSendingSuccess;
     }
 
     public MutableLiveData<String> getmSelectedItems() {

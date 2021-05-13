@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,12 +18,17 @@ import android.widget.Toast;
 
 import com.example.App.R;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
+
+import java.util.HashMap;
 
 
 public class AddFriendFragment extends Fragment {
 
     private View root;
     private FriendsViewModel mViewModel;
+    private HashMap<Integer, OnResultAction> actionHashMap;
     
     private EditText editText;
     private Button addButton;
@@ -39,7 +45,19 @@ public class AddFriendFragment extends Fragment {
         listeners();
         observers();
 
+        configOnResultActions();
+
         return root;
+    }
+
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.REQ_FRIEND_OK, () -> {
+            Toast.makeText(getContext(), getString(R.string.friend_request_sent_success), Toast.LENGTH_SHORT).show();
+        });
+        actionHashMap.put(ControlValues.REQ_FRIEND_FAIL, () -> {
+            Toast.makeText(getContext(), getString(R.string.friend_request_sent_fail), Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void listeners() {
@@ -62,15 +80,11 @@ public class AddFriendFragment extends Fragment {
     }
 
     private void observers() {
-        mViewModel.getmFriendRequest().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                Context context = AddFriendFragment.this.getContext();
-                if(integer.equals(AppConstants.REQ_FRIEND_OK)){
-                    Toast.makeText(context, context.getString(R.string.friend_request_sent_success), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Toast.makeText(context, context.getString(R.string.friend_request_sent_fail), Toast.LENGTH_SHORT).show();
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
             }
         });
     }

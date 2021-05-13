@@ -25,29 +25,33 @@ import com.example.App.R;
 import com.example.App.models.TPlace;
 import com.example.App.models.TRequestFriend;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class SendRecomendationFragment extends Fragment implements SendRecomendationAdapter.SendRecomendationActionListener {
+public class SendRecommendationFragment extends Fragment implements SendRecommendationAdapter.SendRecomendationActionListener {
 
     private View root;
-    private SendRecomendationViewModel mViewModel;
+    private SendRecommendationViewModel mViewModel;
     private TPlace place;
+    private HashMap<Integer, OnResultAction> actionHashMap;
 
-    private SendRecomendationAdapter sendRecomendationAdapter;
+    private SendRecommendationAdapter sendRecomendationAdapter;
 
     //Elementos visuales
     private TextView no_results;
-    private RecyclerView sendRecomendationRecycleView;
+    private RecyclerView sendRecommendationRecycleView;
     private MenuItem sendRecommendation;
 
     private List<TRequestFriend> friendList;
 
     private App app;
 
-    public static SendRecomendationFragment newInstance() {
-        return new SendRecomendationFragment();
+    public static SendRecommendationFragment newInstance() {
+        return new SendRecommendationFragment();
     }
 
     @Override
@@ -57,36 +61,45 @@ public class SendRecomendationFragment extends Fragment implements SendRecomenda
 
         setHasOptionsMenu(true);
 
-        mViewModel = new ViewModelProvider(this).get(SendRecomendationViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(SendRecommendationViewModel.class);
         mViewModel.init();
 
-        viewModelListeners();
-
         initializeUI();
-
+        observers();
+        configOnResultActions();
 
         place = (TPlace) getArguments().getParcelable(AppConstants.BUNDLE_PLACE_DETAILS);
 
         friendList = new ArrayList<>();
-        sendRecomendationAdapter = new SendRecomendationAdapter(getActivity(), friendList, this, sendRecommendation); //getActivity = MainActivity.this
-        sendRecomendationRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        sendRecomendationRecycleView.setAdapter(sendRecomendationAdapter);
+        sendRecomendationAdapter = new SendRecommendationAdapter(getActivity(), friendList, this, sendRecommendation); //getActivity = MainActivity.this
+        sendRecommendationRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        sendRecommendationRecycleView.setAdapter(sendRecomendationAdapter);
 
         mViewModel.friendList(App.getInstance().getUsername());
 
         return root;
     }
 
-    private void viewModelListeners() {
-        mViewModel.getSendingSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.SEND_REC_OK, () -> {
+            Toast.makeText(getActivity(), getString(R.string.recommendation_sent), Toast.LENGTH_SHORT).show();
+        });
+
+        actionHashMap.put(ControlValues.SEND_REC_FAIL, () -> {
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void observers() {
+        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                if (integer.equals(AppConstants.SEND_REC_OK)){
-                    Toast.makeText(getActivity(), "ENVIADA!", Toast.LENGTH_SHORT).show();
-                }
-                //TODO Si pones un else, no entra
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
             }
         });
+
 
         mViewModel.getmFriendList().observe(getViewLifecycleOwner(), new Observer<List<TRequestFriend>>() {
             @Override
@@ -98,8 +111,8 @@ public class SendRecomendationFragment extends Fragment implements SendRecomenda
                 else{
                     no_results.setVisibility(View.GONE);
                 }
-                sendRecomendationAdapter = new SendRecomendationAdapter(getActivity(), tRequestFriends, SendRecomendationFragment.this, sendRecommendation);
-                sendRecomendationRecycleView.setAdapter(sendRecomendationAdapter);
+                sendRecomendationAdapter = new SendRecommendationAdapter(getActivity(), tRequestFriends, SendRecommendationFragment.this, sendRecommendation);
+                sendRecommendationRecycleView.setAdapter(sendRecomendationAdapter);
             }
         });
 
@@ -108,13 +121,13 @@ public class SendRecomendationFragment extends Fragment implements SendRecomenda
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(SendRecomendationViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(SendRecommendationViewModel.class);
         // TODO: Use the ViewModel
     }
 
     private void initializeUI() {
         no_results = root.findViewById(R.id.tv_send_recomendation_no_results);
-        sendRecomendationRecycleView = root.findViewById(R.id.recyclerView_send_recomendation);
+        sendRecommendationRecycleView = root.findViewById(R.id.recyclerView_send_recomendation);
     }
 
     @Override
@@ -122,7 +135,6 @@ public class SendRecomendationFragment extends Fragment implements SendRecomenda
         inflater.inflate(R.menu.recommendations_menu, menu);
 
         sendRecommendation = menu.findItem(R.id.add_recommendation_menu_item);
-
 
         sendRecommendation.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override

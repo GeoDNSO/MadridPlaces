@@ -4,20 +4,15 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.App.App;
 import com.example.App.networking.SimpleRequest;
 import com.example.App.models.TRequestFriend;
-import com.example.App.models.TUser;
 import com.example.App.repositories.helpers.UserFriendRepositoryHelper;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -26,10 +21,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class UserFriendRepository extends Repository{
-    private MutableLiveData<Integer> mAcceptFriend = new MutableLiveData<>();
-    private MutableLiveData<Integer> mDeclineFriend = new MutableLiveData<>();
-    private MutableLiveData<Integer> mFriendRequest = new MutableLiveData<>();
-    private MutableLiveData<Integer> mDeleteFriend = new MutableLiveData<>();
+
     private MutableLiveData<List<TRequestFriend>> mFriendRequestList = new MutableLiveData<>();
     private MutableLiveData<List<TRequestFriend>> mFriendList = new MutableLiveData<>();
 
@@ -55,7 +47,7 @@ public class UserFriendRepository extends Repository{
         @Override
         public void onFailure(@NotNull Call call, @NotNull IOException e) {
             e.printStackTrace();
-            mSuccess.postValue(AppConstants.LIST_REC_FAIL);
+            mSuccess.postValue(ControlValues.LIST_REC_FAIL);
             friendList.postValue(null);
             call.cancel();
         }
@@ -66,7 +58,7 @@ public class UserFriendRepository extends Repository{
             this.sleep(500);//Para simular la carga...
 
             if (!response.isSuccessful()) {
-                mSuccess.postValue(AppConstants.LIST_REC_FAIL);
+                mSuccess.postValue(ControlValues.LIST_REC_FAIL);
                 throw new IOException("Unexpected code " + response);
             }
             String res = response.body().string();
@@ -74,7 +66,7 @@ public class UserFriendRepository extends Repository{
 
             if(!success){
                 friendList.postValue(null);
-                mSuccess.postValue(AppConstants.LIST_REQ_FRIEND_FAIL);//Importante que este despues del postValue de mUser
+                mSuccess.postValue(ControlValues.LIST_REQ_FRIEND_FAIL);//Importante que este despues del postValue de mUser
 
                 return;
             }
@@ -95,7 +87,7 @@ public class UserFriendRepository extends Repository{
                 listaAux.addAll(listaFromResponse);
                 friendList.postValue(listaAux);
             }
-            mSuccess.postValue(AppConstants.LIST_REQ_FRIEND_OK);//Importante que este despues del postValue de friendList
+            mSuccess.postValue(ControlValues.LIST_REQ_FRIEND_OK);//Importante que este despues del postValue de friendList
         }
     }
 
@@ -115,14 +107,14 @@ public class UserFriendRepository extends Repository{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mDeleteFriend.postValue(AppConstants.DELETE_FRIEND_FAIL);
+                mSuccess.postValue(ControlValues.DELETE_FRIEND_FAIL);
                 call.cancel();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(!response.isSuccessful()) {
-                    mDeleteFriend.postValue(AppConstants.DELETE_FRIEND_FAIL);
+                    mSuccess.postValue(ControlValues.DELETE_FRIEND_FAIL);
                     throw new IOException("Unexpected code " + response);
                 }
 
@@ -130,10 +122,10 @@ public class UserFriendRepository extends Repository{
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if(success) {
-                    mDeleteFriend.postValue(AppConstants.DELETE_FRIEND_SUCCESS);
+                    mSuccess.postValue(ControlValues.DELETE_FRIEND_SUCCESS);
                 }
                 else {
-                    mDeleteFriend.postValue(AppConstants.DELETE_FRIEND_FAIL);
+                    mSuccess.postValue(ControlValues.DELETE_FRIEND_FAIL);
                 }
             }
         });
@@ -165,14 +157,14 @@ public class UserFriendRepository extends Repository{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mDeclineFriend.postValue(AppConstants.PENDING_REQ_FRIEND_FAIL);
+                mSuccess.postValue(ControlValues.ACCEPT_REQ_FRIEND_FAIL);
                 call.cancel();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(!response.isSuccessful()) {
-                    mDeclineFriend.postValue(AppConstants.PENDING_REQ_FRIEND_FAIL);
+                    mSuccess.postValue(ControlValues.ACCEPT_REQ_FRIEND_FAIL);
                     throw new IOException("Unexpected code " + response);
                 }
 
@@ -180,10 +172,10 @@ public class UserFriendRepository extends Repository{
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if(success) {
-                    mDeclineFriend.postValue(AppConstants.DECLINE_REQ_FRIEND_OK);
+                    mSuccess.postValue(ControlValues.DECLINE_REQ_FRIEND_OK);
                 }
                 else {
-                    mDeclineFriend.postValue(AppConstants.PENDING_REQ_FRIEND_FAIL);
+                    mSuccess.postValue(ControlValues.ACCEPT_REQ_FRIEND_FAIL);
                 }
             }
         });
@@ -205,14 +197,14 @@ public class UserFriendRepository extends Repository{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mAcceptFriend.postValue(AppConstants.PENDING_REQ_FRIEND_FAIL);
+                mSuccess.postValue(ControlValues.ACCEPT_REQ_FRIEND_FAIL);
                 call.cancel();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(!response.isSuccessful()) {
-                    mAcceptFriend.postValue(AppConstants.PENDING_REQ_FRIEND_FAIL);
+                    mSuccess.postValue(ControlValues.ACCEPT_REQ_FRIEND_FAIL);
                     throw new IOException("Unexpected code " + response);
                 }
 
@@ -220,10 +212,10 @@ public class UserFriendRepository extends Repository{
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if(success) {
-                    mAcceptFriend.postValue(AppConstants.ACCEPT_REQ_FRIEND_OK);
+                    mSuccess.postValue(ControlValues.ACCEPT_REQ_FRIEND_OK);
                 }
                 else {
-                    mAcceptFriend.postValue(AppConstants.PENDING_REQ_FRIEND_FAIL);
+                    mSuccess.postValue(ControlValues.ACCEPT_REQ_FRIEND_FAIL);
                 }
             }
         });
@@ -250,14 +242,14 @@ public class UserFriendRepository extends Repository{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mFriendRequest.postValue(AppConstants.REQ_FRIEND_FAIL);
+                mSuccess.postValue(ControlValues.REQ_FRIEND_FAIL);
                 call.cancel();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(!response.isSuccessful()) {
-                    mFriendRequest.postValue(AppConstants.REQ_FRIEND_FAIL);
+                    mSuccess.postValue(ControlValues.REQ_FRIEND_FAIL);
                     throw new IOException("Unexpected code " + response);
                 }
 
@@ -265,37 +257,21 @@ public class UserFriendRepository extends Repository{
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if(success) {
-                    mFriendRequest.postValue(AppConstants.REQ_FRIEND_OK);
+                    mSuccess.postValue(ControlValues.REQ_FRIEND_OK);
                 }
                 else {
-                    mFriendRequest.postValue(AppConstants.REQ_FRIEND_FAIL);
+                    mSuccess.postValue(ControlValues.REQ_FRIEND_FAIL);
                 }
             }
         });
     }
 
     //Mutables getter
-    public MutableLiveData<Integer> getmAcceptFriend() {
-        return mAcceptFriend;
-    }
-
-    public MutableLiveData<Integer> getmDeclineFriend() {
-        return mDeclineFriend;
-    }
-
     public MutableLiveData<List<TRequestFriend>> getmFriendRequestList() {
         return mFriendRequestList;
     }
 
     public MutableLiveData<List<TRequestFriend>> getmFriendList() {
         return mFriendList;
-    }
-
-    public MutableLiveData<Integer> getmFriendRequest() {
-        return mFriendRequest;
-    }
-
-    public MutableLiveData<Integer> getmDeleteFriend() {
-        return mDeleteFriend;
     }
 }

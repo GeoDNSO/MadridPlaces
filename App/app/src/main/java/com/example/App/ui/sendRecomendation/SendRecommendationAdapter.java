@@ -19,14 +19,14 @@ import com.example.App.models.TRequestFriend;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SendRecomendationAdapter extends RecyclerView.Adapter<SendRecomendationAdapter.MyViewHolder> {
+public class SendRecommendationAdapter extends RecyclerView.Adapter<SendRecommendationAdapter.MyViewHolder> {
     private Activity activity;
     private List<TRequestFriend> listUser;
     private List<String> selectedList;
-    private SendRecomendationAdapter.SendRecomendationActionListener sendRecomendationActionListener;
+    private SendRecommendationAdapter.SendRecomendationActionListener sendRecomendationActionListener;
     private MenuItem button;
 
-    public SendRecomendationAdapter(Activity activity, List<TRequestFriend> listUser, SendRecomendationAdapter.SendRecomendationActionListener sendRecomendationActionListener, MenuItem button) {
+    public SendRecommendationAdapter(Activity activity, List<TRequestFriend> listUser, SendRecommendationAdapter.SendRecomendationActionListener sendRecomendationActionListener, MenuItem button) {
         this.activity = activity;
         this.listUser = listUser;
         this.sendRecomendationActionListener = sendRecomendationActionListener;
@@ -36,13 +36,13 @@ public class SendRecomendationAdapter extends RecyclerView.Adapter<SendRecomenda
 
     @NonNull
     @Override
-    public SendRecomendationAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SendRecommendationAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.send_recomendation_item_view, parent, false);
         return new MyViewHolder(view, sendRecomendationActionListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SendRecomendationAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SendRecommendationAdapter.MyViewHolder holder, int position) {
         TRequestFriend user = listUser.get(position);
 
         if(user.getUserOrigin().getImage_profile() == null || user.getUserOrigin().getImage_profile() == ""){
@@ -149,9 +149,9 @@ public class SendRecomendationAdapter extends RecyclerView.Adapter<SendRecomenda
         private TextView tv_name;
         private TextView tv_userName;
         private ImageView iv_check;
-        private SendRecomendationAdapter.SendRecomendationActionListener sendRecomendationActionListener;
+        private SendRecommendationAdapter.SendRecomendationActionListener sendRecomendationActionListener;
 
-        public MyViewHolder(View itemView, SendRecomendationAdapter.SendRecomendationActionListener sendRecomendationActionListener) {
+        public MyViewHolder(View itemView, SendRecommendationAdapter.SendRecomendationActionListener sendRecomendationActionListener) {
             super(itemView);
             iv_img = itemView.findViewById(R.id.imageView_send_recomendation);
             tv_name = itemView.findViewById(R.id.completeName_send_recomendation);

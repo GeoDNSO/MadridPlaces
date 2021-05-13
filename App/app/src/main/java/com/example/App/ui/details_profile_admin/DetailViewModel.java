@@ -22,7 +22,7 @@ public class DetailViewModel extends ViewModelParent {
     public void init(){
         userRepository = new UserRepository();
 
-        mActionDetailProfileSuccess = super.updateOnChange(mActionDetailProfileSuccess, userRepository.getProfileSuccess());
+        mSuccess = super.updateOnChange(mSuccess, userRepository.getmSuccess());
         mProfilePairMutableLiveData = super.updateOnChange(mProfilePairMutableLiveData, userRepository.getmCountProfileCommentsAndHistory());
 
         mUser = super.updateOnChange(mUser, userRepository.getmUser());
@@ -37,14 +37,9 @@ public class DetailViewModel extends ViewModelParent {
         mDetailProfileActionInProgress.setValue(true);
         userRepository.getCommentsAndHistoryCount(nickname);
     }
-    public LiveData<Boolean> getDetailProfileActionInProgress(){
-        return mDetailProfileActionInProgress;
-    }
+
     public LiveData<TUser> getUser(){
         return mUser;
-    }
-    public LiveData<Integer> getActionDetailProfileSuccess(){
-        return mActionDetailProfileSuccess;
     }
     public LiveData<Pair<Integer, Integer>> getProfilePairMutableLiveData() {
         return mProfilePairMutableLiveData;

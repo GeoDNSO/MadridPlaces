@@ -2,7 +2,6 @@ package com.example.App.ui.modify_place;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
 import com.example.App.repositories.PlaceRepository;
 import com.example.App.models.TPlace;
@@ -15,17 +14,13 @@ import java.util.List;
 
 public class ModifyPlaceViewModel extends ViewModelParent {
     private PlaceRepository placeRepository;
-    List<String> mListTypesOfPlace;
-    private LiveData<Boolean> mModifyPlaceSuccess = new MutableLiveData<>();
-    private LiveData<List<String>> mCategoriesSuccess = new MutableLiveData<>();
+    private LiveData<List<String>> mCategoriesList = new MutableLiveData<>();
 
     public void init(){
         placeRepository = new PlaceRepository();
-        mListTypesOfPlace = new ArrayList<>();
 
         mSuccess = super.updateOnChange(mSuccess, placeRepository.getSuccess());
-        mModifyPlaceSuccess = super.updateOnChange(mModifyPlaceSuccess, placeRepository.getBooleanPlace());
-        mCategoriesSuccess = super.updateOnChange(mCategoriesSuccess, placeRepository.getCategoriesList());
+        mCategoriesList = super.updateOnChange(mCategoriesList, placeRepository.getCategoriesList());
     }
 
     public void getTypesOfPlaces(){
@@ -52,11 +47,8 @@ public class ModifyPlaceViewModel extends ViewModelParent {
         placeRepository.modifyPlace(place, p.getName());
     }
 
-    public LiveData<Boolean> getmModifyPlaceSuccess(){
-        return mModifyPlaceSuccess;
-    }
-    public LiveData<List<String>> getmCategoriesSuccess(){
-        return mCategoriesSuccess;
+    public LiveData<List<String>> getmCategoriesList(){
+        return mCategoriesList;
     }
 
 }

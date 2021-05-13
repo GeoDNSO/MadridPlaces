@@ -15,7 +15,6 @@ public class ProfileViewModel extends ViewModelParent {
 
     private UserRepository userRepository;
     private MutableLiveData<Boolean> mProfileActionInProgress = new MutableLiveData<>(); //true indica progress bar activo
-    private LiveData<Integer> mActionProfileSuccess = new MutableLiveData<>();
 
     private LiveData<Pair<Integer, Integer>> mProfilePairMutableLiveData = new MutableLiveData<>();
     private LiveData<TUser> mUser = new MutableLiveData<>();
@@ -24,7 +23,7 @@ public class ProfileViewModel extends ViewModelParent {
     public void init(){
         userRepository = new UserRepository();
 
-        mActionProfileSuccess = super.updateOnChange(mActionProfileSuccess, userRepository.getProfileSuccess());
+        mSuccess = super.updateOnChange(mSuccess, userRepository.getmSuccess());
         mProfilePairMutableLiveData = super.updateOnChange(mProfilePairMutableLiveData, userRepository.getmCountProfileCommentsAndHistory());
         mUser = super.updateOnChange(mUser, userRepository.getmUser());
     }
@@ -44,15 +43,10 @@ public class ProfileViewModel extends ViewModelParent {
         userRepository.getCommentsAndHistoryCount(nickname);
     }
 
-    public LiveData<Boolean> getProfileActionInProgress(){
-        return mProfileActionInProgress;
-    }
     public LiveData<TUser> getUser(){
         return mUser;
     }
-    public LiveData<Integer> getActionProfileSuccess(){
-        return mActionProfileSuccess;
-    }
+
     public LiveData<Pair<Integer, Integer>> getProfilePairMutableLiveData() {
         return mProfilePairMutableLiveData;
     }

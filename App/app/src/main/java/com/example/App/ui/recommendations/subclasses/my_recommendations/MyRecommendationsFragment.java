@@ -25,14 +25,18 @@ import com.example.App.R;
 import com.example.App.models.TRecommendation;
 import com.example.App.ui.recommendations.RecommendationsViewModel;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MyRecommendationsFragment extends Fragment implements MyRecommendationsAdapter.RecommendationAdapterListener{
 
     private View root;
     private RecommendationsViewModel mViewModel;
+    private HashMap<Integer, OnResultAction> actionHashMap;
 
     private NestedScrollView nestedScrollView;
     private ProgressBar progressBar;
@@ -61,6 +65,7 @@ public class MyRecommendationsFragment extends Fragment implements MyRecommendat
         initUI();
         initListeners();
         initObservers();
+        configOnResultActions();
 
         recommendationList = new ArrayList<>();
         myRecommendationsAdapter = new MyRecommendationsAdapter(getActivity(), recommendationList, this);
@@ -76,24 +81,35 @@ public class MyRecommendationsFragment extends Fragment implements MyRecommendat
         return root;
     }
 
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.LIST_REC_OK, () -> {
+            Toast.makeText(getActivity(), getString(R.string.recommendation_list_loaded_success), Toast.LENGTH_SHORT).show();
+        });
+
+        actionHashMap.put(ControlValues.LIST_REC_FAIL, () -> {
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+        });
+    }
+
     private void initObservers() {
         mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                if(AppConstants.LIST_REC_OK == integer){
-
-                }
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
                 progressBar.setVisibility(View.GONE);
             }
         });
+
         mViewModel.getmListRecom().observe(getViewLifecycleOwner(), new Observer<List<TRecommendation>>() {
             @Override
-            public void onChanged(List<TRecommendation> tRecomendations) {
-                if(tRecomendations == null){
+            public void onChanged(List<TRecommendation> tRecommendations) {
+                if(tRecommendations == null){
                     Log.d("MY_RECO", "Lista de recomendaciones nula");
                     return;
                 }
-                recommendationList = tRecomendations;
+                recommendationList = tRecommendations;
                 myRecommendationsAdapter = new MyRecommendationsAdapter(getActivity(), recommendationList, MyRecommendationsFragment.this);
                 recyclerView.setAdapter(myRecommendationsAdapter);
                 progressBar.setVisibility(View.GONE);
@@ -111,12 +127,6 @@ public class MyRecommendationsFragment extends Fragment implements MyRecommendat
                     page++;
                     //Mostrar progress bar
                     progressBar.setVisibility(View.VISIBLE);
-
-                    /*
-                    shimmerFrameLayout.startShimmer();
-
-                    shimmerFrameLayout.setVisibility(View.VISIBLE);
-                     */
 
                     //Pedimos más datos
                     mViewModel.listUserRecommendations(page, quantum, App.getInstance().getUsername());
@@ -142,7 +152,6 @@ public class MyRecommendationsFragment extends Fragment implements MyRecommendat
     @Override
     public void onSpanClick(String placeName) {
         Toast.makeText(getContext(), "Funciona", Toast.LENGTH_SHORT).show();
-
         //Enviar datos del objeto con posicion position de la lista al otro fragment
 
         Bundle bundle = new Bundle();

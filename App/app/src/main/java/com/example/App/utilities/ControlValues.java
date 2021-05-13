@@ -11,8 +11,8 @@ public class ControlValues {
     public static final Integer LIST_USERS_OK = 102;
     public static final Integer LIST_USERS_FAILED = -102;
 
-    public static final Integer LIST_PLACES = 103;
-    public static final Integer LIST_PLACES_FAILED = -103;
+    public static final Integer LIST_PLACES_OK = 103;
+    public static final Integer LIST_PLACES_FAIL = -103;
 
     public static final Integer LIST_COMMENTS_OK = 104;
     public static final Integer LIST_COMMENTS_FAILED = -104;
@@ -23,23 +23,23 @@ public class ControlValues {
     public static final Integer ADD_PLACE = 106;
     public static final Integer ADD_PLACE_FAILED = -106;
 
-    public static final Integer DELETE_PLACE = 107;
-    public static final Integer DETAIL_PLACE_FAILED = -107;
+    public static final Integer DELETE_PLACE_OK = 107;
+    public static final Integer DELETE_PLACE_FAIL = -107;
 
-    public static final Integer MODIFY_PLACE = 108;
-    public static final Integer MODIFY_PLACE_FAILED = -108;
+    public static final Integer MODIFY_PLACE_OK = 108;
+    public static final Integer MODIFY_PLACE_FAIL = -108;
 
     public static final Integer GET_CATEGORIES_OK = 109;
-    public static final Integer GET_CATEGORIES_FAILED = -109;
+    public static final Integer GET_CATEGORIES_FAIL = -109;
 
     public static final Integer DELETE_COMMENT_OK = 110;
-    public static final Integer DELETE_COMMENT_FAILED = -110;
+    public static final Integer DELETE_COMMENT_FAIL = -110;
 
     public static final Integer VISITED_POST_OK = 111;
     public static final Integer VISITED_POST_FAIL = -111;
 
-    public static final Integer ACCEPT_REQ_FRIEND_OK = 112;
-    public static final Integer PENDING_REQ_FRIEND_FAIL = -112;
+    public static final Integer ACCEPT_REQ_FRIEND_OK = 112;;
+    public static final Integer ACCEPT_REQ_FRIEND_FAIL = -112;
 
     public static final Integer DECLINE_REQ_FRIEND_OK = 113;
     public static final Integer DECLINE_REQ_FRIEND_FAIL = -113;

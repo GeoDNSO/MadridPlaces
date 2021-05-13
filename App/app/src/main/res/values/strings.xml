@@ -199,5 +199,23 @@
     <string name="get_categories_ok">Se han cargado las categorias</string>
     <string name="delete_comment_failed_msg">Error al borrar comentario</string>
     <string name="delete_comment_ok_msg">Comentario borrado con exito</string>
+    <string name="profile_delete_msg">Se ha eliminado el perfil seleccionado</string>
+    <string name="error_msg">Algo ha ido mal...</string>
+    <string name="recommendation_accepted">Se ha aceptado la recomendación</string>
+    <string name="friend_request_not_accepted">Se ha rechazado la recomendación</string>
+    <string name="friend_request_accepted">Se aceptó la solicitud de amigo</string>
+    <string name="decline_friend_request">Se rechazó la solicitud de amigo de</string>
+    <string name="friend_deleted_1">"Se borró a "</string>
+    <string name="friend_deleted_2">de tu lista de amigos</string>
+    <string name="place_modified">Se ha modificado el lugar</string>
+    <string name="place_modified_failed">No se ha podido modificar el lugar</string>
+    <string name="place_deleted_msg">Se ha eliminado el lugar</string>
+    <string name="user_profile_deleted">Se ha eliminado el perfil</string>
+    <string name="user_profile_modified">Se ha modificado el perfil con éxito</string>
+    <string name="recommendation_list_loaded_success">Lista de recomendaciones recibida con éxito</string>
+    <string name="recommendation_denied">Se ha rechazado la recomendación</string>
+    <string name="registered_success">Registrado con éxito</string>
+    <string name="recommendation_sent">Recomendación enviada</string>
+    <string name="comment_list_loaded">Lista de comentarios cargada con éxito</string>
 
 </resources>

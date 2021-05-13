@@ -34,6 +34,8 @@ import com.example.App.R;
 import com.example.App.models.TPlace;
 
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 import com.example.App.utilities.Validator;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -44,12 +46,13 @@ import org.json.JSONException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ModifyPlaceFragment extends Fragment {
     private View root;
-
     private ModifyPlaceViewModel mViewModel;
+    private HashMap<Integer, OnResultAction> actionHashMap;
 
     private LinearLayout linearLayout;
     private Button imageButton;
@@ -92,20 +95,36 @@ public class ModifyPlaceFragment extends Fragment {
         setValues();
         initListeners();
 
-        mViewModel.getmModifyPlaceSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        observers();
+        configOnResultActions();
+
+
+
+        return root;
+    }
+
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.MODIFY_PLACE_OK, () -> {
+            Toast.makeText(getActivity(), getString(R.string.place_modified), Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(root).navigate(R.id.homeFragment);
+        });
+
+        actionHashMap.put(ControlValues.MODIFY_PLACE_FAIL, () -> {
+            Toast.makeText(getActivity(),  getString(R.string.place_modified_failed), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void observers() {
+        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    Toast.makeText(getActivity(), "Se ha modificado el lugar", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(root).navigate(R.id.homeFragment);
-                }
-                else {
-                    Toast.makeText(getActivity(),  "No se ha podido modificar el lugar", Toast.LENGTH_SHORT).show();
-                }
+            public void onChanged(Integer integer) {
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
             }
         });
 
-        mViewModel.getmCategoriesSuccess().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+        mViewModel.getmCategoriesList().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> categoriesList) {
                 listTypesPlaces = new ArrayList<>();
@@ -113,9 +132,6 @@ public class ModifyPlaceFragment extends Fragment {
                 addChips();
             }
         });
-
-
-        return root;
     }
 
     public void init(){

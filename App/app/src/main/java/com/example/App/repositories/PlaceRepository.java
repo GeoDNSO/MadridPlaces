@@ -1,7 +1,6 @@
 package com.example.App.repositories;
 
 import android.os.Looper;
-import android.service.controls.Control;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -26,10 +25,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class PlaceRepository extends Repository{
-    private MutableLiveData<Integer> mBooleanPlace = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mTwitterPlacesList = new MutableLiveData<>();
-    private MutableLiveData<List<TPlace>> mHistoryPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mNearestPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mFavouritesPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mCategoriesPlacesList = new MutableLiveData<>();
@@ -38,30 +35,18 @@ public class PlaceRepository extends Repository{
     private MutableLiveData<List<TPlace>> mPlaceVisited = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mPlacesPendingToVisit = new MutableLiveData<>();
 
-    private MutableLiveData<Integer> mFavSuccess = new MutableLiveData<Integer>();
-    private MutableLiveData<Integer> mVisitedSuccess = new MutableLiveData<Integer>();
-    private MutableLiveData<Integer> mPendingToVisitedSuccess = new MutableLiveData<Integer>();
-
-    public MutableLiveData<Integer> getBooleanPlace(){ return mBooleanPlace; }
+    public MutableLiveData<TPlace> getmPlace() {
+        return mPlace;
+    }
     public MutableLiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
     public MutableLiveData<List<TPlace>> getTwitterPlacesList(){ return mTwitterPlacesList; }
-    public MutableLiveData<List<TPlace>> getHistoryPlacesList(){ return mHistoryPlacesList; }
     public MutableLiveData<List<String>> getCategoriesList(){ return mCategoriesList; }
     public MutableLiveData<List<TPlace>> getCategoriesPlacesList() { return mCategoriesPlacesList; }
     public MutableLiveData<List<TPlace>> getNearestPlacesList() { return mNearestPlacesList; }
     public MutableLiveData<List<TPlace>> getFavouritesPlacesList() { return mFavouritesPlacesList; }
     public MutableLiveData<List<TPlace>> getPlaceVisitedList() { return mPlaceVisited; }
     public MutableLiveData<List<TPlace>> getPendingToVisitList() { return mPlacesPendingToVisit; }
-    public MutableLiveData<Integer> getmPendingToVisitedSuccess() {
-        return mPendingToVisitedSuccess;
-    }
 
-    public MutableLiveData<Integer> getFavSuccess() { return mFavSuccess; }
-    public MutableLiveData<Integer> getVisitedSuccess() { return mVisitedSuccess; }
-
-    public MutableLiveData<TPlace> getmPlace() {
-        return mPlace;
-    }
 
 
     //Callback personalizado tanto para List como para Append
@@ -88,7 +73,7 @@ public class PlaceRepository extends Repository{
         public void onFailure(@NotNull Call call, @NotNull IOException e) {
             e.printStackTrace();
             Log.d("PLACE_REPOSITORY", "FAILURE, error above");
-            mSuccess.postValue(AppConstants.LIST_PLACES_FAILED);
+            mSuccess.postValue(ControlValues.LIST_PLACES_FAIL);
             placeList.postValue(null);
             call.cancel();
         }
@@ -99,7 +84,7 @@ public class PlaceRepository extends Repository{
             this.sleep(500);//Para simular la carga...
 
             if (!response.isSuccessful()) {
-                mSuccess.postValue(AppConstants.LIST_PLACES_FAILED);
+                mSuccess.postValue(ControlValues.LIST_PLACES_FAIL);
                 throw new IOException("Unexpected code " + response);
             }
             String res = response.body().string();
@@ -108,7 +93,7 @@ public class PlaceRepository extends Repository{
             if(!success){
                 Log.d("PlaceListCallback", "Not success");
                 placeList.postValue(null);
-                mSuccess.postValue(AppConstants.LIST_PLACES_FAILED);//Importante que este despues del postValue de mUser
+                mSuccess.postValue(ControlValues.LIST_PLACES_FAIL);//Importante que este despues del postValue de mUser
 
                 return;
             }
@@ -129,7 +114,7 @@ public class PlaceRepository extends Repository{
                 listaAux.addAll(listaFromResponse);
                 placeList.postValue(listaAux);
             }
-            mSuccess.postValue(AppConstants.LIST_PLACES);//Importante que este despues del postValue de mUser
+            mSuccess.postValue(ControlValues.LIST_PLACES_OK);//Importante que este despues del postValue de mUser
         }
     }
 
@@ -216,7 +201,7 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mPendingToVisitedSuccess.postValue(AppConstants.PLACE_TO_PENDING_VISITED_FAIL);
+                mSuccess.postValue(ControlValues.PLACE_TO_PENDING_VISITED_FAIL);
                 call.cancel();
             }
 
@@ -228,10 +213,10 @@ public class PlaceRepository extends Repository{
                 }
                 boolean success = simpleRequest.isSuccessful(response);
                 if(success){
-                    mPendingToVisitedSuccess.postValue(AppConstants.PLACE_TO_PENDING_VISITED_OK);
+                    mSuccess.postValue(ControlValues.PLACE_TO_PENDING_VISITED_OK);
                 }
                 else{
-                    mPendingToVisitedSuccess.postValue(AppConstants.PLACE_TO_PENDING_VISITED_FAIL);
+                    mSuccess.postValue(ControlValues.PLACE_TO_PENDING_VISITED_FAIL);
                 }
             }
         });
@@ -251,7 +236,7 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(ControlValues.MODIFY_PLACE_FAILED);
+                mSuccess.postValue(ControlValues.MODIFY_PLACE_FAIL);
                 call.cancel();
             }
 
@@ -263,10 +248,10 @@ public class PlaceRepository extends Repository{
                 }
                 boolean sucess = simpleRequest.isSuccessful(response);
                 if(sucess){
-                    mSuccess.postValue(ControlValues.MODIFY_PLACE);
+                    mSuccess.postValue(ControlValues.MODIFY_PLACE_OK);
                 }
                 else{
-                    mSuccess.postValue(ControlValues.MODIFY_PLACE_FAILED);
+                    mSuccess.postValue(ControlValues.MODIFY_PLACE_FAIL);
                 }
             }
         });
@@ -293,22 +278,22 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.DETAIL_PLACE_FAILED);
+                mSuccess.postValue(ControlValues.DELETE_PLACE_FAIL);
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.DETAIL_PLACE_FAILED);
+                    mSuccess.postValue(ControlValues.DELETE_PLACE_FAIL);
                     throw new IOException("Unexpected code " + response);
                 }
                 Boolean success = simpleRequest.isSuccessful(response);
                 if(success){
-                    mSuccess.postValue(AppConstants.DELETE_PLACE);
+                    mSuccess.postValue(ControlValues.DELETE_PLACE_OK);
                 }
                 else{
-                    mSuccess.postValue(AppConstants.DETAIL_PLACE_FAILED);
+                    mSuccess.postValue(ControlValues.DELETE_PLACE_FAIL);
                 }
 
             }
@@ -327,7 +312,7 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(ControlValues.GET_CATEGORIES_FAILED);
+                mSuccess.postValue(ControlValues.GET_CATEGORIES_FAIL);
                 mCategoriesList.postValue(null);
                 call.cancel();
             }
@@ -335,7 +320,7 @@ public class PlaceRepository extends Repository{
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(ControlValues.GET_CATEGORIES_FAILED);
+                    mSuccess.postValue(ControlValues.GET_CATEGORIES_FAIL);
                     mCategoriesList.postValue(null);
                     throw new IOException("Unexpected code " + response);
                 }
@@ -347,7 +332,7 @@ public class PlaceRepository extends Repository{
                     mCategoriesList.postValue(PlaceRepositoryHelper.getCategoriesFromResponse(res));
                 }
                 else{
-                    mSuccess.postValue(ControlValues.GET_CATEGORIES_FAILED);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.GET_CATEGORIES_FAIL);//Importante que este despues del postValue de mUser
                     mCategoriesList.postValue(null);
                 }
             }
@@ -380,16 +365,16 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mFavSuccess.postValue(AppConstants.FAV_POST_FAIL);
-                mSuccess.postValue(AppConstants.FAV_POST_FAIL);
+                mSuccess.postValue(ControlValues.FAV_POST_FAIL);
+                mSuccess.postValue(ControlValues.FAV_POST_FAIL);
                 call.cancel();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mFavSuccess.postValue(AppConstants.FAV_POST_FAIL);
-                    mSuccess.postValue(AppConstants.FAV_POST_FAIL);
+                    mSuccess.postValue(ControlValues.FAV_POST_FAIL);
+                    mSuccess.postValue(ControlValues.FAV_POST_FAIL);
                     throw new IOException("Unexpected code " + response);
                 }
 
@@ -397,10 +382,10 @@ public class PlaceRepository extends Repository{
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if (success){
-                    mFavSuccess.postValue(AppConstants.FAV_POST_OK);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.FAV_POST_OK);//Importante que este despues del postValue de mUser
                 }
                 else{
-                    mFavSuccess.postValue(AppConstants.FAV_POST_FAIL);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.FAV_POST_FAIL);//Importante que este despues del postValue de mUser
                 }
 
 
@@ -550,22 +535,22 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(AppConstants.DETAIL_PLACE_FAILED);
+                mSuccess.postValue(ControlValues.DELETE_PLACE_FAIL);
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mSuccess.postValue(AppConstants.DETAIL_PLACE_FAILED);
+                    mSuccess.postValue(ControlValues.DELETE_PLACE_FAIL);
                     throw new IOException("Unexpected code " + response);
                 }
                 Boolean success = simpleRequest.isSuccessful(response);
                 if(success){
-                    mSuccess.postValue(AppConstants.DELETE_PLACE);
+                    mSuccess.postValue(ControlValues.DELETE_PLACE_OK);
                 }
                 else{
-                    mSuccess.postValue(AppConstants.DETAIL_PLACE_FAILED);
+                    mSuccess.postValue(ControlValues.DELETE_PLACE_FAIL);
                 }
 
             }
@@ -598,16 +583,14 @@ public class PlaceRepository extends Repository{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mVisitedSuccess.postValue(AppConstants.VISITED_POST_FAIL);
-                mSuccess.postValue(AppConstants.VISITED_POST_FAIL);
+                mSuccess.postValue(ControlValues.VISITED_POST_FAIL);
                 call.cancel();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mVisitedSuccess.postValue(AppConstants.VISITED_POST_FAIL);
-                    mSuccess.postValue(AppConstants.VISITED_POST_FAIL);
+                    mSuccess.postValue(ControlValues.VISITED_POST_FAIL);
                     throw new IOException("Unexpected code " + response);
                 }
 
@@ -615,10 +598,10 @@ public class PlaceRepository extends Repository{
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if (success){
-                    mVisitedSuccess.postValue(AppConstants.VISITED_POST_OK);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.VISITED_POST_OK);
                 }
                 else{
-                    mVisitedSuccess.postValue(AppConstants.VISITED_POST_FAIL);//Importante que este despues del postValue de mUser
+                    mSuccess.postValue(ControlValues.VISITED_POST_FAIL);
                 }
             }
         });

@@ -87,6 +87,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
     }
 
     private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
         //TODO hacer algo con ej: actionHashMap.put(INTEGER, new Action(...))
     }
 

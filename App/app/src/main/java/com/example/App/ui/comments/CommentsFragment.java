@@ -23,10 +23,8 @@ import android.widget.Toast;
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.TComment;
-import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ControlValues;
 import com.example.App.utilities.OnResultAction;
-import com.example.App.utilities.ViewListenerUtilities;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -93,30 +91,30 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
         return root;
     }
 
+    //TODO rellenar actions??
     private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
         actionHashMap.put(ControlValues.LIST_COMMENTS_OK, () -> {
-            progressBar.setVisibility(View.GONE);
+            Toast.makeText(getContext(), getString(R.string.comment_list_loaded), Toast.LENGTH_SHORT).show();
+            prepareRecyclerViewAndShimmer();
         });
         actionHashMap.put(ControlValues.LIST_COMMENTS_FAILED, () -> {
-            progressBar.setVisibility(View.GONE);
+            Toast.makeText(getContext(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+            prepareRecyclerViewAndShimmer();
         });
 
         actionHashMap.put(ControlValues.NEW_COMMENT_OK, () -> {
-            progressBar.setVisibility(View.GONE);
+            Toast.makeText(getContext(), getString(R.string.comment_list_loaded), Toast.LENGTH_SHORT).show();
         });
         actionHashMap.put(ControlValues.NEW_COMMENT_FAILED, () -> {
-            progressBar.setVisibility(View.GONE);
+            Toast.makeText(getContext(), getString(R.string.comment_list_loaded), Toast.LENGTH_SHORT).show();
         });
 
         actionHashMap.put(ControlValues.DELETE_COMMENT_OK, () -> {
-            progressBar.setVisibility(View.GONE);
             Toast.makeText(getActivity(), getString(R.string.delete_comment_ok_msg), Toast.LENGTH_SHORT ).show();
-            prepareRecyclerViewAndShimmer();
         });
-        actionHashMap.put(ControlValues.DELETE_COMMENT_FAILED, () -> {
-            progressBar.setVisibility(View.GONE);
+        actionHashMap.put(ControlValues.DELETE_COMMENT_FAIL, () -> {
             Toast.makeText(getActivity(), getString(R.string.delete_comment_failed_msg), Toast.LENGTH_SHORT ).show();
-            prepareRecyclerViewAndShimmer();
         });
     }
 
@@ -140,6 +138,16 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
                 recyclerView.setAdapter(commentListAdapter);
             }
         });
+
+        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
+                progressBar.setVisibility(View.GONE);
+                //prepareRecyclerViewAndShimmer() //TODO DESCOMENTAR??
+            }
+        });
     }
 
     private void listeners() {
@@ -148,6 +156,7 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
             @Override
             public void onClick(View v) {
                 //TODO Tres casos: comentario sin valoración, con valoración o con las dos cosas
+                progressBar.setVisibility(View.VISIBLE);
                 if(app.isLogged()) { //Tienes que estar logueado
 
                     if (ratingBar.getRating() != 0) {
@@ -215,6 +224,7 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
     public void onCommentDelete(int position) {
         Toast.makeText(getActivity(), "Delete a Comentario Num " + position, Toast.LENGTH_SHORT).show();
         TComment comment = commentsList.get(position);
+        progressBar.setVisibility(View.VISIBLE);
         mViewModel.deleteComment(comment, position);
     }
 }

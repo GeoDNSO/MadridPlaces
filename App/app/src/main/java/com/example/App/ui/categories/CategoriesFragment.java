@@ -24,13 +24,10 @@ import com.example.App.models.TCategory;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ControlValues;
 import com.example.App.utilities.OnResultAction;
-import com.example.App.utilities.ViewListenerUtilities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 public class CategoriesFragment extends Fragment implements CategoriesAdapter.CategoryListener {
 
@@ -81,7 +78,8 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     }
 
     private void configOnResultActions() {
-        actionHashMap.put(ControlValues.GET_CATEGORIES_FAILED, () ->
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.GET_CATEGORIES_FAIL, () ->
                 Toast.makeText(getActivity(), getString(R.string.get_categories_error), Toast.LENGTH_SHORT).show());
 
         actionHashMap.put(ControlValues.GET_CATEGORIES_OK, () ->
@@ -98,6 +96,14 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
                 adaptDataToCategories();
                 categoriesAdapter = new CategoriesAdapter(getActivity(), categoryList, CategoriesFragment.this);
                 recyclerView.setAdapter(categoriesAdapter);
+            }
+        });
+
+        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
             }
         });
     }

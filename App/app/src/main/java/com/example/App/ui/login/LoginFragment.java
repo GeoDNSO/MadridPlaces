@@ -21,12 +21,17 @@ import android.widget.Toast;
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.TUser;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 import com.example.App.utilities.Validator;
+
+import java.util.HashMap;
 
 public class LoginFragment extends Fragment {
 
     private View root;
     private LoginViewModel mViewModel;
+    private HashMap<Integer, OnResultAction> actionHashMap;
 
     /*MVVM*/
     private TextView tv_LoginText;
@@ -50,32 +55,37 @@ public class LoginFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         mViewModel.init();
 
-        mViewModel.getLoginInProcess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                /*if (aBoolean) {
-                    showProgressBar();
-                }
-                else {
-                    hideProgressBar();
-                }*/
-            }
-        });
+        observers();
+        configOnResultActions();
 
-        mViewModel.getLoginSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    Toast.makeText(getActivity(), getString(R.string.sign_in), Toast.LENGTH_SHORT).show();
-                    app.setUserSession(userValue);
-                    Navigation.findNavController(root).navigate(R.id.action_loginFragment_to_homeFragment);
-                }
-                else {
-                    //hideProgressBar();
-                    Toast.makeText(getActivity(),  getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
-                }
-            }
+
+        initializeUI();
+        initializeListeners();
+
+        return root;
+    }
+
+    //TODO no tiene progress bar, pone??
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.LOGIN_OK, () -> {
+            Toast.makeText(getActivity(), getString(R.string.sign_in), Toast.LENGTH_SHORT).show();
+            app.setUserSession(userValue);
+            Navigation.findNavController(root).navigate(R.id.action_loginFragment_to_homeFragment);
         });
+        actionHashMap.put(ControlValues.LOGIN_FAIL, () -> {
+            Toast.makeText(getActivity(),  getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void observers() {
+       mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+           @Override
+           public void onChanged(Integer integer) {
+               if(actionHashMap.containsKey(integer))
+                   actionHashMap.get(integer).execute();
+           }
+       });
 
         mViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<TUser>() {
             @Override
@@ -83,11 +93,6 @@ public class LoginFragment extends Fragment {
                 userValue = tUser;
             }
         });
-
-        initializeUI();
-        initializeListeners();
-
-        return root;
     }
 
 

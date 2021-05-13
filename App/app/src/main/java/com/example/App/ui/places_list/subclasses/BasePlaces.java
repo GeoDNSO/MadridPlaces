@@ -37,10 +37,12 @@ import com.example.App.models.TPlace;
 import com.example.App.components.LogoutObserver;
 import com.example.App.ui.places_list.PlaceListAdapter;
 import com.example.App.utilities.AppConstants;
-import com.example.App.utilities.ViewListenerUtilities;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,6 +51,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
     protected BaseViewModel mViewModel;
     protected View root;
+    protected HashMap<Integer, OnResultAction> actionHashMap;
 
     protected MenuItem search_place;
     protected MenuItem mic_search_place;
@@ -79,8 +82,6 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //mViewModel = new ViewModelProvider(this).get(PlacesListViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     @Override
@@ -88,7 +89,6 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                              @Nullable Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.places_list_fragment, container, false);
-        //mViewModel = new ViewModelProvider(this).get(BaseViewModel.class);
         setHasOptionsMenu(true);
         App.getInstance(getContext()).addLogoutObserver(this);
 
@@ -100,13 +100,47 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
         initUI();
         initListener();
         initObservers();
+        configOnResultActions();
 
         placeListManagement();
 
         return root;
     }
 
-    private void initObservers() {
+    protected void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.FAV_POST_OK, () -> {
+            TPlace place = placeList.get(lastFavPlacePos);
+            place.setUserFav(!place.isUserFav());
+
+            int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
+            if(place.isUserFav()){
+                favTint = ContextCompat.getColor(getActivity(), R.color.colorFavRed);
+            }
+
+            ImageViewCompat.setImageTintList(lastFavImage, ColorStateList.valueOf(favTint));
+        });
+        actionHashMap.put(ControlValues.FAV_POST_FAIL, () -> {
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT);
+        });
+
+
+        actionHashMap.put(ControlValues.LIST_PLACES_OK, () -> {
+            //Mostrar el recyclerView
+            recyclerView.setVisibility(View.VISIBLE);
+            //Parar el efecto shimmer
+            shimmerFrameLayout.stopShimmer();
+            //Esconder al frameLayout de shimmer
+            shimmerFrameLayout.setVisibility(View.GONE);
+
+            swipeRefreshLayout.setRefreshing(false);
+        });
+        actionHashMap.put(ControlValues.LIST_PLACES_FAIL, () -> {
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT);
+        });
+    }
+
+    protected void initObservers() {
 
         mViewModel.getPlacesList().observe(getViewLifecycleOwner(), new Observer<List<TPlace>>() {
             @Override
@@ -117,9 +151,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                 }
 
                 placeList = tPlaces; //TODO Aquí hay un bug que hay que arreglar
-
                 placeListAdapter = new PlaceListAdapter(getActivity(), placeList, BasePlaces.this);
-
                 recyclerView.setAdapter(placeListAdapter);
             }
         });
@@ -127,44 +159,14 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
         mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-
-                //Mostrar el recyclerView
-                recyclerView.setVisibility(View.VISIBLE);
-                //Parar el efecto shimmer
-                shimmerFrameLayout.stopShimmer();
-                //Esconder al frameLayout de shimmer
-                shimmerFrameLayout.setVisibility(View.GONE);
-
-                swipeRefreshLayout.setRefreshing(false);
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
             }
         });
 
-        mViewModel.getFavSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-
-                if (integer.equals(AppConstants.FAV_POST_OK)){
-                    TPlace place = placeList.get(lastFavPlacePos);
-                    place.setUserFav(!place.isUserFav());
-
-                    int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
-                    if(place.isUserFav()){
-                        favTint = ContextCompat.getColor(getActivity(), R.color.colorFavRed);
-                    }
-
-                    ImageViewCompat.setImageTintList(lastFavImage, ColorStateList.valueOf(favTint));
-                    return ;
-                }
-
-                Toast.makeText(getActivity(), "Error al hacer favorito", Toast.LENGTH_SHORT);
-            }
-        });
-
-        mViewModel.getMLV_IsLoading().observe(getViewLifecycleOwner(), aBoolean ->
-                ViewListenerUtilities.setVisibility(progressBar, aBoolean));
     }
 
-    private void initListener() {
+    protected void initListener() {
         Activity activity = getActivity();
         String s = getString(R.string.no_internet);
 
@@ -221,7 +223,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
         });
     }
 
-    private void placeListManagement(){
+    protected void placeListManagement(){
         if(placeList == null){
             placeList = new ArrayList<>();
         }
@@ -236,7 +238,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
     }
 
 
-    private void initUI(){
+    protected void initUI(){
         nestedScrollView = root.findViewById(R.id.placesList_ScrollView);
         recyclerView = root.findViewById(R.id.PlaceList_RecyclerView);
         progressBar = root.findViewById(R.id.placeList_ProgressBar);

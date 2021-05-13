@@ -39,6 +39,8 @@ import com.example.App.components.LogoutObserver;
 import com.example.App.ui.comments.CommentsFragment;
 import com.example.App.ui.map.MapboxActivity;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 import com.example.App.utilities.UserInterfaceUtils;
 import com.example.App.utilities.ViewListenerUtilities;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
@@ -47,11 +49,13 @@ import com.smarteist.autoimageslider.SliderView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
 
     private View root;
+    private HashMap<Integer, OnResultAction> actionHashMap;
 
     private PlaceDetailViewModel mViewModel;
     private TPlace place;
@@ -98,6 +102,7 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         initUI();
         listeners();
         observers();
+        configOnResultActions();
 
         App.getInstance(getActivity()).addLogoutObserver(this);
 
@@ -112,6 +117,58 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         initConfig();
 
         return root;
+    }
+
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.DELETE_PLACE_OK, () -> {
+            Toast.makeText(getActivity(), getString(R.string.place_deleted_msg), Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(root).navigate(R.id.homeFragment);
+        });
+        actionHashMap.put(ControlValues.DELETE_PLACE_FAIL, () -> {
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+        });
+
+        actionHashMap.put(ControlValues.FAV_POST_OK, () -> {
+            place.setUserFav(!place.isUserFav());
+
+            int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
+            if(place.isUserFav()){
+                favTint = ContextCompat.getColor(getActivity(), R.color.colorFavRed);
+            }
+
+            ImageViewCompat.setImageTintList(favIcon, ColorStateList.valueOf(favTint));
+        });
+        actionHashMap.put(ControlValues.FAV_POST_FAIL, () -> {
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+        });
+
+        actionHashMap.put(ControlValues.VISITED_POST_OK, () -> {
+            Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_flag_grey);
+            ivVisited.setImageDrawable(drawable);
+
+            if(place.getTimeVisited() != null && !place.getTimeVisited().equals("")){
+                ivVisited.setImageDrawable(drawable);
+                return;
+            }
+            drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_flag);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = new Date();
+            place.setTimeVisited(formatter.format(date));
+            ivVisited.setImageDrawable(drawable);
+        });
+        actionHashMap.put(ControlValues.VISITED_POST_FAIL, () -> {
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+        });
+
+        actionHashMap.put(ControlValues.PLACE_TO_PENDING_VISITED_OK, () -> {
+            Toast.makeText(getActivity(), getString(R.string.saved_on_pending_visited_list), Toast.LENGTH_SHORT).show();
+        });
+        actionHashMap.put(ControlValues.PLACE_TO_PENDING_VISITED_FAIL, () -> {
+            Toast.makeText(getActivity(), getString(R.string.saved_on_pending_visited_list_error), Toast.LENGTH_SHORT).show();
+        });
+
+
     }
 
     private void initConfig(){
@@ -149,11 +206,6 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         ivMapIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Bundle bundle = new Bundle();
-                //bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
-
-                //Le pasamos el bundle
-                //Navigation.findNavController(root).navigate(R.id.mapFragment, bundle);
                 Intent mapboxIntent = new Intent(getActivity(), MapboxActivity.class);
                 mapboxIntent.putExtra("placeMapbox", place); //Optional parameters
                 getActivity().startActivity(mapboxIntent);
@@ -190,84 +242,18 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         mViewModel.getmPlace().observe(getViewLifecycleOwner(), new Observer<TPlace>() {
             @Override
             public void onChanged(TPlace place) {
-
                 PlaceDetailFragment .this.place = place;
-                PlaceDetailFragment placeDetailFragment = PlaceDetailFragment.this;
                 initConfig();
             }
         });
 
-        mViewModel.getPlaceDetailProfileSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer aInteger) {
-                if (aInteger.equals(AppConstants.DELETE_PLACE)) {
-                    Toast.makeText(getActivity(), "Se ha eliminado el lugar", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(root).navigate(R.id.homeFragment);
-                }
-                else {
-                    Toast.makeText(getActivity(), "Algo ha funcionado mal", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        mViewModel.getFavSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-
-                if (integer.equals(AppConstants.FAV_POST_OK)){
-                    place.setUserFav(!place.isUserFav());
-
-                    int favTint = ContextCompat.getColor(getActivity(), R.color.grey);
-                    if(place.isUserFav()){
-                        favTint = ContextCompat.getColor(getActivity(), R.color.colorFavRed);
-                    }
-
-                    ImageViewCompat.setImageTintList(favIcon, ColorStateList.valueOf(favTint));
-                    return ;
-                }
-
-                Toast.makeText(getActivity(), "Error al hacer favorito", Toast.LENGTH_SHORT);
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
             }
         });
-
-
-        mViewModel.getVisitedSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_flag_grey);
-
-                ivVisited.setImageDrawable(drawable);
-
-                if (integer.equals(AppConstants.VISITED_POST_OK)){
-
-                    if(place.getTimeVisited() != null && !place.getTimeVisited().equals("")){
-                        ivVisited.setImageDrawable(drawable);
-                        return;
-                    }
-                    drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_flag);
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-                    Date date = new Date();
-                    place.setTimeVisited(formatter.format(date));
-                    ivVisited.setImageDrawable(drawable);
-
-                    return ;
-                }
-
-                Toast.makeText(getActivity(), "Error al hacer favorito", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mViewModel.getmPendingToVisitedSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                if (integer.equals(AppConstants.PLACE_TO_PENDING_VISITED_OK)){
-                    Toast.makeText(getActivity(), getString(R.string.saved_on_pending_visited_list), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Toast.makeText(getActivity(), getString(R.string.saved_on_pending_visited_list_error), Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
     private void fillFields() {
