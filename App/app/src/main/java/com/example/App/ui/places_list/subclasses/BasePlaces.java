@@ -73,6 +73,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
     protected int page = 1, limit = 3, quantum = 3;
 
     protected String search_text = "";
+    private boolean endOfList;
 
 
     //Funciones a implementar en los hijos según el tipo de lugares a mostrar
@@ -121,7 +122,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
             ImageViewCompat.setImageTintList(lastFavImage, ColorStateList.valueOf(favTint));
         });
         actionHashMap.put(ControlValues.FAV_POST_FAIL, () -> {
-            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
         });
 
 
@@ -136,7 +137,13 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
             swipeRefreshLayout.setRefreshing(false);
         });
         actionHashMap.put(ControlValues.LIST_PLACES_FAIL, () -> {
-            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+        });
+
+        actionHashMap.put(ControlValues.NO_MORE_PLACES_TO_LIST, () -> {
+            Toast.makeText(getActivity(), getString(R.string.end_of_list), Toast.LENGTH_SHORT).show();
+            endOfList = true;
+            progressBar.setVisibility(View.GONE);
         });
     }
 
@@ -205,6 +212,8 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if(endOfList)
+                    return;
                 if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
                     //Cuando alacance al ultimo item de la lista
                     //Incrementea el numero de la pagina
@@ -244,6 +253,8 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
         progressBar = root.findViewById(R.id.placeList_ProgressBar);
         shimmerFrameLayout = root.findViewById(R.id.placeList_ShimmerLayout);
         swipeRefreshLayout = root.findViewById(R.id.placesList_SwipeRefreshLayout);
+
+        endOfList = false;
     }
 
     @Override
@@ -276,7 +287,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
         Toast.makeText(getActivity(), "fav listener", Toast.LENGTH_SHORT).show();
 
         if(App.getInstance(getActivity()).getSessionManager().isLogged() == false){
-            Toast.makeText(getActivity(), "Tienes que estar logueado para poder tener favoritos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.no_logged_fav_try), Toast.LENGTH_SHORT).show();
             return;
         }
 

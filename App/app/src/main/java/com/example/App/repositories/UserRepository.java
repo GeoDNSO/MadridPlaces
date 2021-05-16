@@ -253,6 +253,7 @@ public class UserRepository {
                     List<TUser> listaAux = mListUsers.getValue();
                     List<TUser> listFromResponse = UserRepositoryHelper.getListFromResponse(res);
                     if(listFromResponse.isEmpty()){
+                        mSuccess.postValue(ControlValues.NO_MORE_USERS_TO_LIST);
                         return;
                     }
                     if (listaAux == null){

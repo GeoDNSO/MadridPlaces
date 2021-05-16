@@ -95,7 +95,7 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
     private void configOnResultActions() {
         actionHashMap = new HashMap<>();
         actionHashMap.put(ControlValues.LIST_COMMENTS_OK, () -> {
-            Toast.makeText(getContext(), getString(R.string.comment_list_loaded), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), getString(R.string.comment_list_loaded), Toast.LENGTH_SHORT).show();
             prepareRecyclerViewAndShimmer();
         });
         actionHashMap.put(ControlValues.LIST_COMMENTS_FAILED, () -> {
@@ -104,10 +104,10 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
         });
 
         actionHashMap.put(ControlValues.NEW_COMMENT_OK, () -> {
-            Toast.makeText(getContext(), getString(R.string.comment_list_loaded), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), getString(R.string.comment_list_loaded), Toast.LENGTH_SHORT).show();
         });
         actionHashMap.put(ControlValues.NEW_COMMENT_FAILED, () -> {
-            Toast.makeText(getContext(), getString(R.string.comment_list_loaded), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), getString(R.string.comment_list_loaded), Toast.LENGTH_SHORT).show();
         });
 
         actionHashMap.put(ControlValues.DELETE_COMMENT_OK, () -> {

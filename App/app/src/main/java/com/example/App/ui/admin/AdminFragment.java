@@ -33,6 +33,7 @@ import com.example.App.MainActivity;
 import com.example.App.R;
 import com.example.App.models.TUser;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
 import com.example.App.utilities.OnResultAction;
 import com.example.App.utilities.ViewListenerUtilities;
 
@@ -61,6 +62,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
 
     private int page = 1, quantum = 8;
     private SearchView searchView;
+    private boolean endOfList;
 
     public static AdminFragment newInstance() {
         return new AdminFragment();
@@ -88,7 +90,11 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
 
     private void configOnResultActions() {
         actionHashMap = new HashMap<>();
-        //TODO hacer algo con ej: actionHashMap.put(INTEGER, new Action(...))
+        actionHashMap.put(ControlValues.NO_MORE_USERS_TO_LIST, () -> {
+            Toast.makeText(getContext(), getString(R.string.end_of_list), Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+            endOfList = true;
+        });
     }
 
     private void observers() {
@@ -105,15 +111,13 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
             }
         });
 
-        mViewModel.getListSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                //TODO --> No se hace nada con la respuesta
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
             }
         });
-
-        mViewModel.getMLV_IsLoading().observe(getViewLifecycleOwner(), aBoolean ->
-                ViewListenerUtilities.setVisibility(progressBar, aBoolean));
     }
 
     private void adminManagement() {
@@ -135,12 +139,16 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         sortNameboolean = AppConstants.NO_SORT;
         sortUsernameboolean = AppConstants.NO_SORT;
         finalsort = AppConstants.NO_SORT;
+
+        endOfList = false;
     }
 
     private void listeners(){
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if(endOfList)
+                    return;
                 if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
                     //Cuando alacance al ultimo item de la lista
                     //Incrementea el numero de la pagina

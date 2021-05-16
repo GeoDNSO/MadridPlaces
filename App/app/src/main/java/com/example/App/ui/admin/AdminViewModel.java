@@ -12,7 +12,6 @@ import java.util.List;
 
 public class AdminViewModel extends ViewModelParent {
     private UserRepository userRepository;
-    private LiveData<Integer> mListSuccess = new MutableLiveData<>();
     private LiveData<List<TUser>> mListUsers = new MutableLiveData<>();
 
     //observamos los objetos del repositorio, en este caso, el success devuelto por la llamada okhttp
@@ -33,9 +32,6 @@ public class AdminViewModel extends ViewModelParent {
         userRepository.clearListUsers();
     }
 
-    public LiveData<Integer> getListSuccess(){
-        return mListSuccess;
-    }
     public LiveData<List<TUser>> getListUsers(){
         return mListUsers;
     }

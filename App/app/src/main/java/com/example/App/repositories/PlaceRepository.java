@@ -105,6 +105,7 @@ public class PlaceRepository extends Repository{
                 return;
             }
             if(listaFromResponse.isEmpty()){
+                mSuccess.postValue(ControlValues.NO_MORE_PLACES_TO_LIST);
                 return;
             }
             if (listaAux == null){
