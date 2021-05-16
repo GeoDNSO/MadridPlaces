@@ -143,7 +143,11 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
         actionHashMap.put(ControlValues.NO_MORE_PLACES_TO_LIST, () -> {
             Toast.makeText(getActivity(), getString(R.string.end_of_list), Toast.LENGTH_SHORT).show();
             endOfList = true;
+
             progressBar.setVisibility(View.GONE);
+            shimmerFrameLayout.stopShimmer();
+            shimmerFrameLayout.setVisibility(View.GONE);
+            swipeRefreshLayout.setRefreshing(false);
         });
     }
 
