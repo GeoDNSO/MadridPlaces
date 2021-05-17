@@ -112,11 +112,9 @@ public class PlaceRepositoryHelper {
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(jsonString);
-            String a = jsonObject.getString("road_number");
 
             List<String> jsonImagesList = jsonArrayImagesToStringList(jsonObject.getJSONArray("imageList"));
             Boolean placeIsFav = jsonObject.getString("favorite").equals("true");
-
 
             Double latitude = jsonObject.getDouble("coordinate_latitude");
             Double longitude = jsonObject.getDouble("coordinate_longitude");
@@ -162,7 +160,6 @@ public class PlaceRepositoryHelper {
     public static List<String> jsonArrayImagesToStringList(JSONArray jsonImageList) {
         ArrayList<String> lista = new ArrayList<>();
 
-
         for (int i=0;i<jsonImageList.length();i++){
             try {
                 String imageURL = jsonImageList.getJSONObject(i).getString("image");
@@ -173,6 +170,12 @@ public class PlaceRepositoryHelper {
                 Log.d("ERROR", "jsonArrayImagesToStringList: Error al procesar array");
             }
         }
+
+        lista.remove("");
+
+        if(lista.isEmpty())
+            lista.add("https://youimg1.tripcdn.com/target/10060j0000009zxuk4720.jpg?proc=source%2Ftrip");//Default Image
+
         return lista;
     }
 

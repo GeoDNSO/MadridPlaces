@@ -284,4 +284,8 @@ public class TPlace implements JSONSerializable, Parcelable {
     public String getRoad_class() {
         return road_class;
     }
+
+    public void addImage(String image) {
+        this.imagesList.add(image);
+    }
 }
