@@ -243,7 +243,7 @@ public class App {
         sessionManager.loadLocale();
     }
 
-    public String getLang() {
-        return sessionManager.getLang();
+    public String getLangTag() {
+        return sessionManager.getLangTag();
     }
 }

@@ -6,6 +6,7 @@ import com.example.App.R;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class AppLanguages {
 
@@ -33,5 +34,18 @@ public class AppLanguages {
 
     public static String getLangTag(String language){
         return langMap.get(language);
+    }
+
+    public static String getLangFromTag(String tag){
+        return getKey(langMap, tag);
+    }
+
+    public static  <K, V> K getKey(Map<K, V> map, V value) {
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            if (entry.getValue().equals(value)) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 }

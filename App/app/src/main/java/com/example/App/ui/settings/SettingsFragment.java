@@ -27,7 +27,6 @@ import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static android.content.ContentValues.TAG;
 
@@ -74,6 +73,11 @@ public class SettingsFragment extends Fragment {
         langSearchableSpinner.setAdapter(new ArrayAdapter<>(getActivity(),
                 R.layout.support_simple_spinner_dropdown_item,
                 langList));
+
+        String currentLang = App.getInstance().getLangTag();
+        currentLang = AppLanguages.getLangFromTag(currentLang);
+        int index = langList.indexOf(currentLang);
+        langSearchableSpinner.setSelection(index);
     }
 
     private void initListeners() {
@@ -93,11 +97,19 @@ public class SettingsFragment extends Fragment {
         });
 
         langSearchableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            private boolean firstTime = true;
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if(firstTime){
+                    firstTime = false;
+                    return;
+                }
+
+
                 String lang = (String) langSearchableSpinner.getSelectedItem();
 
-                String oldLangTag = App.getInstance().getLang();
+                String oldLangTag = App.getInstance().getLangTag();
                 String langTag = AppLanguages.getLangTag(lang);
 
                 //El listener del searchable spinner se ejecuta nada más iniciar la clase
@@ -107,6 +119,7 @@ public class SettingsFragment extends Fragment {
                     App.getInstance().setLocale(langTag);
                     recreateActivity();
                 }
+
             }
 
             @Override

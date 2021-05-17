@@ -133,7 +133,7 @@ public class SessionManager {
                 getBirthDate(), getCity(), getRol(), getImageProfile());
     }
 
-    public String getLang() {
+    public String getLangTag() {
         return  langPrefs.getString(AppConstants.APP_LANG, "es");
     }
 }
