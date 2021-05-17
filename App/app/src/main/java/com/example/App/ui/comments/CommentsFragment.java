@@ -119,6 +119,7 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
 
         actionHashMap.put(ControlValues.NO_MORE_COMMENTS_TO_LIST, () -> {
             Toast.makeText(getActivity(), getString(R.string.end_of_list), Toast.LENGTH_SHORT ).show();
+            prepareRecyclerViewAndShimmer();
             endOfList = true;
         });
 

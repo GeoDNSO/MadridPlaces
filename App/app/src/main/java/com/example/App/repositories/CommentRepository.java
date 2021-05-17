@@ -63,6 +63,7 @@ public class CommentRepository extends Repository {
                     List<TComment> commentList = CommentRepositoryHelper.getListFromResponse(res);
                     if(commentList.isEmpty()){
                         mSuccess.postValue(ControlValues.NO_MORE_COMMENTS_TO_LIST);
+                        return;
                     }
                     mCommentList.postValue(commentList);
                     mSuccess.postValue(ControlValues.LIST_COMMENTS_OK);//Importante que este despues del postValue de mUser
@@ -108,7 +109,12 @@ public class CommentRepository extends Repository {
                         mCommentList.postValue(CommentRepositoryHelper.getListFromResponse(res));
                     }
                     else{
-                        listaAux.addAll(CommentRepositoryHelper.getListFromResponse(res));
+                        List<TComment> commentList = CommentRepositoryHelper.getListFromResponse(res);
+                        if(commentList.isEmpty()){
+                            mSuccess.postValue(ControlValues.NO_MORE_COMMENTS_TO_LIST);
+                            return;
+                        }
+                        listaAux.addAll(commentList);
                         mCommentList.postValue(listaAux);
                     }
                     mSuccess.postValue(ControlValues.LIST_COMMENTS_OK);//Importante que este despues del postValue de mUser
