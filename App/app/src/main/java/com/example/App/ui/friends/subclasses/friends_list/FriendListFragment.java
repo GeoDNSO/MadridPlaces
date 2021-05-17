@@ -90,6 +90,7 @@ public class FriendListFragment extends Fragment implements FriendListAdapter.Fr
         actionHashMap.put(ControlValues.DELETE_FRIEND_FAIL, () -> {
             //Nothing..
         });
+
     }
 
     private void observers() {

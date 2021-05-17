@@ -93,4 +93,7 @@ public class ControlValues {
     public static final Integer NO_MORE_USERS_TO_LIST = 1001;
     public static final Integer NO_MORE_PLACES_TO_LIST = 1002;
     public static final Integer NO_MORE_COMMENTS_TO_LIST = 1003;
+    public static final Integer NO_MORE_RECOMMENDATIONS_TO_LIST = 1004;
+    public static final Integer NO_MORE_PEND_RECOMMENDATIONS_TO_LIST = 1005;
+    public static final Integer NO_MORE_FRIENDS_TO_LIST = 1006;
 }

@@ -92,6 +92,7 @@ public class UserInteractionRepository extends Repository{
                 return;
             }
             if(listaFromResponse.isEmpty()){
+                mSuccess.postValue(ControlValues.NO_MORE_RECOMMENDATIONS_TO_LIST);
                 return;
             }
             if (listaAux == null){

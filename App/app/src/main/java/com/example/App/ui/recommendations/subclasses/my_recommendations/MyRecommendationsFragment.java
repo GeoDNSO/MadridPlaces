@@ -47,6 +47,7 @@ public class MyRecommendationsFragment extends Fragment implements MyRecommendat
     private MyRecommendationsAdapter myRecommendationsAdapter;
 
     protected int page = 1, limit = 3, quantum = 8;
+    private boolean endOfList;
 
 
     public static MyRecommendationsFragment newInstance() {
@@ -90,6 +91,12 @@ public class MyRecommendationsFragment extends Fragment implements MyRecommendat
         actionHashMap.put(ControlValues.LIST_REC_FAIL, () -> {
             Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
         });
+
+        actionHashMap.put(ControlValues.NO_MORE_RECOMMENDATIONS_TO_LIST, () -> {
+            Toast.makeText(getActivity(), getString(R.string.end_of_list), Toast.LENGTH_SHORT).show();
+            endOfList = true;
+            progressBar.setVisibility(View.GONE);
+        });
     }
 
     private void initObservers() {
@@ -122,6 +129,9 @@ public class MyRecommendationsFragment extends Fragment implements MyRecommendat
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                
+                if(endOfList)
+                    return;
 
                 if (v.getChildAt(0).getBottom() <= (v.getHeight() + v.getScrollY())) {
                     page++;
@@ -139,6 +149,8 @@ public class MyRecommendationsFragment extends Fragment implements MyRecommendat
         nestedScrollView = root.findViewById(R.id.my_recommendations_NestedScroll);
         progressBar = root.findViewById(R.id.my_recommendations_progressBar);
         recyclerView = root.findViewById(R.id.my_recommendations_RecyclerView);
+
+        endOfList = false;
     }
 
     @Override

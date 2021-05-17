@@ -46,6 +46,7 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
     private List<TRecommendation> recommendationsList;
     private int page = 1, quantum = 3;
     private int listPosition = -1;
+    private boolean endOfList;
 
 
     public static PendingRecommendationsFragment newInstance() {
@@ -79,6 +80,8 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
         recyclerView = root.findViewById(R.id.recommendations_pending_list_recycle_view);
         progressBar = root.findViewById(R.id.recommendations_pending_list_progressBar);
         nestedScrollView = root.findViewById(R.id.recommedations_pending_list_user_nestedScrollView);
+
+        endOfList = false;
     }
 
     private void initListeners() {
@@ -87,16 +90,13 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
+                if(endOfList)
+                    return;
+
                 if (v.getChildAt(0).getBottom() <= (v.getHeight() + v.getScrollY())) {
                     page++;
                     //Mostrar progress bar
                     progressBar.setVisibility(View.VISIBLE);
-
-                    /*
-                    shimmerFrameLayout.startShimmer();
-
-                    shimmerFrameLayout.setVisibility(View.VISIBLE);
-                     */
 
                     //Pedimos más datos
                     mViewModel.listUserPendingRecommendations(page, quantum, App.getInstance().getUsername());
@@ -142,6 +142,12 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
         });
         actionHashMap.put(ControlValues.DENY_REC_FAIL, () -> {
             Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+        });
+
+        actionHashMap.put(ControlValues.NO_MORE_PEND_RECOMMENDATIONS_TO_LIST, () -> {
+            Toast.makeText(getActivity(), getString(R.string.end_of_list), Toast.LENGTH_SHORT).show();
+            endOfList = true;
+            progressBar.setVisibility(View.GONE);
         });
     }
 
