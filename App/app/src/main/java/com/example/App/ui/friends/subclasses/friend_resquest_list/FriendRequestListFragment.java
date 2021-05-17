@@ -56,7 +56,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
         initObservers();
 
         friendsList = new ArrayList<>();
-        friendRequestListAdapter = new FriendRequestListAdapter(friendsList, this); //getActivity = MainActivity.this
+        friendRequestListAdapter = new FriendRequestListAdapter(getActivity(), friendsList, this); //getActivity = MainActivity.this
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(friendRequestListAdapter);
 
@@ -84,7 +84,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
                     Toast.makeText(getContext(), "Se ha aceptado la recomendación", Toast.LENGTH_SHORT).show();
                     TRequestFriend friends = friendsList.get(lastPosition);
                     friendsList.remove(friends);
-                    friendRequestListAdapter = new FriendRequestListAdapter(friendsList, FriendRequestListFragment.this);
+                    friendRequestListAdapter = new FriendRequestListAdapter(getActivity(), friendsList, FriendRequestListFragment.this);
                     recyclerView.setAdapter(friendRequestListAdapter);
                     progressBar.setVisibility(View.GONE);
                     lastPosition = -1;
@@ -99,7 +99,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
                     Toast.makeText(getContext(), "Se ha rechazado la recomendación", Toast.LENGTH_SHORT).show();
                     TRequestFriend friends = friendsList.get(lastPosition);
                     friendsList.remove(friends);
-                    friendRequestListAdapter = new FriendRequestListAdapter(friendsList, FriendRequestListFragment.this);
+                    friendRequestListAdapter = new FriendRequestListAdapter(getActivity(), friendsList, FriendRequestListFragment.this);
                     recyclerView.setAdapter(friendRequestListAdapter);
                     progressBar.setVisibility(View.GONE);
                     lastPosition = -1;
@@ -111,7 +111,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
             @Override
             public void onChanged(List<TRequestFriend> tRequestFriends) {
                 friendsList = tRequestFriends;
-                friendRequestListAdapter = new FriendRequestListAdapter(tRequestFriends, FriendRequestListFragment.this);
+                friendRequestListAdapter = new FriendRequestListAdapter(getActivity(), tRequestFriends, FriendRequestListFragment.this);
                 recyclerView.setAdapter(friendRequestListAdapter);
             }
         });
