@@ -1,4 +1,4 @@
-package com.example.App.ui.sendRecomendation;
+package com.example.App.ui.send_recommendation;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;

@@ -78,11 +78,9 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.View
         String numberOfRatings = place.getNumberOfRatings() + " " + App.getInstance().getAppString(R.string.ratings_text);
         holder.tvPlaceNumberOfRatings.setText(numberOfRatings);
 
-
         //TODO revisar si son metros o km o es segun el valor...
         String distance = UserInterfaceUtils.formatDistance(place.getDistanceToUser());
         holder.tvPlaceDistance.setText(distance);
-
 
         //Rating del lugar
         String ratingValue = UserInterfaceUtils.rating2UIString(place.getRating());

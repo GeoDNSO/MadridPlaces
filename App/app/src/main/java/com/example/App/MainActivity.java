@@ -115,6 +115,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
             @Override
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
                 int dest_id = destination.getId();
+
+                if(dest_id == R.id.homeFragment){
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                }
+                else{
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                }
+
                 if(dest_id == R.id.loginFragment || dest_id == R.id.registerFragment ||
                         dest_id == R.id.profileFragment || dest_id == R.id.adminFragment ||
                         dest_id == R.id.detailFragment || dest_id == R.id.sendRecomendationFragment || dest_id == R.id.addPlaceFragment || dest_id == R.id.modifyPlaceFragment || dest_id == R.id.mapFragment){

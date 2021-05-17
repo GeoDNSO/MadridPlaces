@@ -54,6 +54,7 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
     private CommentListAdapter commentListAdapter;
 
     private int page = 1, quant = 5, limit = 3; //Aun no implementado paginado en comentarios
+    private boolean endOfList;
 
     public CommentsFragment(String placeName) {
         this.placeName = placeName;
@@ -91,7 +92,6 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
         return root;
     }
 
-    //TODO rellenar actions??
     private void configOnResultActions() {
         actionHashMap = new HashMap<>();
         actionHashMap.put(ControlValues.LIST_COMMENTS_OK, () -> {
@@ -104,7 +104,7 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
         });
 
         actionHashMap.put(ControlValues.NEW_COMMENT_OK, () -> {
-            //Toast.makeText(getContext(), getString(R.string.comment_list_loaded), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.comment_added), Toast.LENGTH_SHORT).show();
         });
         actionHashMap.put(ControlValues.NEW_COMMENT_FAILED, () -> {
             //Toast.makeText(getContext(), getString(R.string.comment_list_loaded), Toast.LENGTH_SHORT).show();
@@ -116,6 +116,13 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
         actionHashMap.put(ControlValues.DELETE_COMMENT_FAIL, () -> {
             Toast.makeText(getActivity(), getString(R.string.delete_comment_failed_msg), Toast.LENGTH_SHORT ).show();
         });
+
+        actionHashMap.put(ControlValues.NO_MORE_COMMENTS_TO_LIST, () -> {
+            Toast.makeText(getActivity(), getString(R.string.end_of_list), Toast.LENGTH_SHORT ).show();
+            endOfList = true;
+        });
+
+
     }
 
     private void prepareRecyclerViewAndShimmer(){
@@ -163,12 +170,12 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
                         mViewModel.newComment(app.getUsername(), etComment.getEditText().getText().toString(), placeName, ratingBar.getRating());
                     } else {
                         //No se hace nada
-                        Toast.makeText(getActivity(), "Selecciona una valoración", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.rate_place_msg, Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 else{
-                    Toast.makeText(getActivity(), "Necesitas tener iniciada la sesión", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.login_needed, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -181,6 +188,9 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
 
     //PlaceListDetail usa esta función para actualizar el scroll
     public void onScrollViewAtBottom(){
+        if(endOfList)
+            return;
+
         //Cuando alacance al ultimo item de la lista incrementea el numero de la pagina
         page++;
 
@@ -203,6 +213,8 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
 
         ratingBar = root.findViewById(R.id.placeDetailsRatingBar);
         sendRateButton = root.findViewById(R.id.placeDetailSendRating);
+
+        endOfList = false;
     }
 
     private void commentListManagement() {
@@ -222,7 +234,7 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
 
     @Override
     public void onCommentDelete(int position) {
-        Toast.makeText(getActivity(), "Delete a Comentario Num " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "Delete a Comentario Num " + position, Toast.LENGTH_SHORT).show();
         TComment comment = commentsList.get(position);
         progressBar.setVisibility(View.VISIBLE);
         mViewModel.deleteComment(comment, position);

@@ -13,6 +13,7 @@ import com.example.App.utilities.ControlValues;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Comment;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,7 +60,11 @@ public class CommentRepository extends Repository {
                 boolean success = simpleRequest.isSuccessful(res);
 
                 if (success) {
-                    mCommentList.postValue(CommentRepositoryHelper.getListFromResponse(res));
+                    List<TComment> commentList = CommentRepositoryHelper.getListFromResponse(res);
+                    if(commentList.isEmpty()){
+                        mSuccess.postValue(ControlValues.NO_MORE_COMMENTS_TO_LIST);
+                    }
+                    mCommentList.postValue(commentList);
                     mSuccess.postValue(ControlValues.LIST_COMMENTS_OK);//Importante que este despues del postValue de mUser
                 } else {
                     mCommentList.postValue(null);

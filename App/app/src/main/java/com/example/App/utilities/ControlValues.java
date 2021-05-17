@@ -92,4 +92,5 @@ public class ControlValues {
     public static final Integer LOGIN_WRONG_CREDENTIALS = 1000;
     public static final Integer NO_MORE_USERS_TO_LIST = 1001;
     public static final Integer NO_MORE_PLACES_TO_LIST = 1002;
+    public static final Integer NO_MORE_COMMENTS_TO_LIST = 1003;
 }

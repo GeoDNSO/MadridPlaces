@@ -1,8 +1,7 @@
-package com.example.App.ui.sendRecomendation;
+package com.example.App.ui.send_recommendation;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
 import com.example.App.repositories.UserFriendRepository;
 import com.example.App.repositories.UserInteractionRepository;

@@ -1,4 +1,4 @@
-package com.example.App.ui.sendRecomendation;
+package com.example.App.ui.send_recommendation;
 
 import android.app.Activity;
 import android.graphics.Color;

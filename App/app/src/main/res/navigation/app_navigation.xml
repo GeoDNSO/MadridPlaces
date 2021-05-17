@@ -108,7 +108,7 @@
         tools:layout="@layout/modify_place_fragment" />
     <fragment
         android:id="@+id/sendRecomendationFragment"
-        android:name="com.example.App.ui.sendRecomendation.SendRecommendationFragment"
+        android:name="com.example.App.ui.send_recommendation.SendRecommendationFragment"
         android:label="@string/send_recomendation"
         tools:layout="@layout/send_recomendation_fragment" />
     <activity
@@ -127,6 +127,6 @@
     <fragment
         android:id="@+id/addFriendFragment"
         android:name="com.example.App.ui.friends.AddFriendFragment"
-        android:label="fragment_add_friend"
+        android:label="@string/add_friend"
         tools:layout="@layout/fragment_add_friend" />
 </navigation>

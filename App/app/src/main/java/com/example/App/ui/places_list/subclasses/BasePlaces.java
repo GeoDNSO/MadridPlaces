@@ -318,6 +318,12 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
         searchView = (SearchView) search_place.getActionView();
 
         searchView.setMaxWidth(600);
+        searchView.setOnCloseListener(() -> {
+            swipeRefreshLayout.setEnabled(true);
+            return false;
+        });
+
+        searchView.setOnSearchClickListener(v -> swipeRefreshLayout.setEnabled(false));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

@@ -219,5 +219,8 @@
     <string name="comment_list_loaded">Lista de comentarios cargada con éxito</string>
     <string name="end_of_list">Fin de la lista</string>
     <string name="no_logged_fav_try">Tienes que estar logueado para poder añadir favoritos</string>
+    <string name="comment_added">Comentario añadido</string>
+    <string name="rate_place_msg">Selecciona una valoración</string>
+    <string name="login_needed">Necesitas tener iniciada la sesión</string>
 
 </resources>
