@@ -27,34 +27,11 @@ public class AppConstants {
     public static final String USER_ROL_ADMIN = "admin";
     public static final String USER_ROL_USER = "user";
 
+    public static final String APP_LANG = "APP_LANG";
+
 
     public static final String RETURN_OK = "ok";
 
-    public static final Integer PROFILE_FAILED = -1;
-    public static final Integer DELETE_PROFILE = 1;
-    public static final Integer MODIFY_PROFILE = 2;
-    public static final Integer LIST_USERS = 3;
-    public static final Integer LIST_USERS_FAILED = -3;
-
-    public static final Integer LIST_PLACES_FAILED = -4;
-    public static final Integer LIST_PLACES = 4;
-
-    public static final Integer LIST_COMMENTS_FAILED = -5;
-    public static final Integer LIST_COMMENTS = 5;
-    public static final Integer NEW_COMMENT_FAILED = -6;
-    public static final Integer NEW_COMMENT = 6;
-
-    public static final Integer ADD_PLACE_FAILED = -7;
-    public static final Integer ADD_PLACE = 7;
-
-    public static final Integer DETAIL_PLACE_FAILED = -8;
-    public static final Integer DELETE_PLACE = 8;
-
-    public static final Integer MODIFY_PLACE_FAILED = -9;
-    public static final Integer MODIFY_PLACE = 9;
-
-    public static final Integer GET_CATEGORIES_FAILED = -10;
-    public static final Integer GET_CATEGORIES = 10;
 
     public static final Integer REQUEST_STORAGE = 1;
 
@@ -69,22 +46,7 @@ public class AppConstants {
     public static final int PLACE_CATEGORIES = 4;
 
     public static final String BUNDLE_CATEGORY_TYPE = "CATEGORIA";
-    public static final Integer DELETE_COMMENT_OK = 340;
-    public static final Integer ERROR_DELETE_COMMENT = -340;
-    public static final Integer VISITED_POST_FAIL = -341;
-    public static final Integer VISITED_POST_OK = 341;
-    public static final Integer PENDING_REQ_FRIEND_FAIL = 0;
-    public static final Integer ACCEPT_REQ_FRIEND_OK = 1;
-    public static final Integer DECLINE_REQ_FRIEND_OK = 2;
-    public static final Integer LIST_REQ_FRIEND_OK = 10;
-    public static final Integer LIST_REQ_FRIEND_FAIL = 11;
 
-    public static final Integer REQ_FRIEND_FAIL = 0;
-    public static final Integer REQ_FRIEND_OK = 1;
-    public static final Integer DELETE_FRIEND_FAIL = 20;
-    public static final Integer DELETE_FRIEND_SUCCESS = 21;
-    public static final Integer PLACE_TO_PENDING_VISITED_OK = 22;
-    public static final Integer PLACE_TO_PENDING_VISITED_FAIL = -22;
 
     public static String TAB_RATING = "W";
     public static String TAB_NEAREST = "W";
@@ -101,10 +63,6 @@ public class AppConstants {
     public static final int NAME_SORT_UP = 3;
     public static final int NAME_SORT_DOWN = 4;
 
-    
-    public static final Integer FAV_POST_OK = 1;
-    public static final Integer FAV_POST_FAIL = 0;
-
 
     public static final Integer LONGITUDE = 0;
     public static final Integer LATITUDE = 1;
@@ -113,15 +71,6 @@ public class AppConstants {
     public static final Double DEFAULT_RADIUS = 2000.0;
     public static final Integer DEFAULT_NPLACES = 20;
 
-    public static final Integer SEND_REC_OK = 0;
-    public static final Integer SEND_REC_FAIL = 1;
-
-    public static final Integer LIST_REC_OK = 0;
-    public static final Integer LIST_REC_FAIL = 1;
-
-    public static final Integer PENDING_REC_FAIL = 0;
-    public static final Integer ACCEPT_REC_OK = 1;
-    public static final Integer DENY_REC_OK = 2;
 
     public static final int RESULT_SPEECH = 1;
 

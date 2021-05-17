@@ -234,4 +234,16 @@ public class App {
     public LocationTrack getLocationTrack() {
         return locationTrack;
     }
+
+    public void setLocale(String langTag) {
+        sessionManager.setLocale(langTag);
+    }
+
+    public void loadLocale() {
+        sessionManager.loadLocale();
+    }
+
+    public String getLang() {
+        return sessionManager.getLang();
+    }
 }

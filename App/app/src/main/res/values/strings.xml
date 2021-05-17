@@ -222,5 +222,13 @@
     <string name="comment_added">Comentario añadido</string>
     <string name="rate_place_msg">Selecciona una valoración</string>
     <string name="login_needed">Necesitas tener iniciada la sesión</string>
+    <string name="spanish">Español</string>
+    <string name="english">Inglés</string>
+    <string name="french">Francés</string>
+    <string name="language">Idioma</string>
+    <string name="select_lang_message">Por favor, seleccione un idioma</string>
+    <string name="select_lang">Elige un idioma</string>
+    <string name="lang_select_ok">Confirmar</string>
+    <string name="german">Alemán</string>
 
 </resources>
