@@ -19,9 +19,7 @@ import android.view.ViewGroup;
 
 import com.example.App.R;
 import com.example.App.ui.friends.subclasses.FriendsFragmentFactory;
-import com.example.App.ui.recommendations.RecommendationsTabAdapter;
-import com.example.App.ui.recommendations.RecommendationsViewModel;
-import com.example.App.ui.visited.subclasses.VisitedFragmentFactory;
+import com.example.App.components.BaseTabAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -75,11 +73,10 @@ public class FriendsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(FriendsViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     private void prepareViewPager() {
-        RecommendationsTabAdapter visitedTabAdapter = new RecommendationsTabAdapter(getChildFragmentManager());
+        BaseTabAdapter visitedTabAdapter = new BaseTabAdapter(getChildFragmentManager());
 
         FriendsFragmentFactory friendsFragmentFactory = new FriendsFragmentFactory();
 

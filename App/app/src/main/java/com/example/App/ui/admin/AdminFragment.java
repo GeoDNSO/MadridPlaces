@@ -1,7 +1,5 @@
 package com.example.App.ui.admin;
 
-import androidx.appcompat.widget.PopupMenu;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -9,23 +7,18 @@ import androidx.lifecycle.ViewModelProvider;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.speech.RecognizerIntent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,36 +29,40 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.App.App;
 import com.example.App.MainActivity;
-import com.example.App.MainActivityInterface;
 import com.example.App.R;
-import com.example.App.models.transfer.TUser;
+import com.example.App.models.TUser;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 import com.example.App.utilities.ViewListenerUtilities;
-import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 public class AdminFragment extends Fragment implements UserListAdapter.OnListListener {
 
     private View root;
     private AdminViewModel mViewModel;
-    private NestedScrollView nestedScrollView;
-    private App app;
+    private HashMap<Integer, OnResultAction> actionHashMap;
+
+
     private List<TUser> listUser;
+
+    private NestedScrollView nestedScrollView;
     private ProgressBar progressBar;
     private UserListAdapter adapter;
     private RecyclerView recyclerView;
     private UserListAdapter.OnListListener onListListener;
+
     private Integer sortUsernameboolean; /*0 == no sort, 1 == sort up (A-Z), 2 == sort down (Z-A)*/
     private Integer sortNameboolean; /*0 == no sort, 1 == sort up (A-Z), 2 == sort down (Z-A)*/
     private Integer finalsort;
+
     private int page = 1, quantum = 8;
     private SearchView searchView;
+    private boolean endOfList;
 
     public static AdminFragment newInstance() {
         return new AdminFragment();
@@ -80,10 +77,27 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
         mViewModel.init();
 
-        init();
-
+        initUI();
         listeners();
+        configOnResultActions();
 
+        observers();
+
+        adminManagement();
+
+        return root;
+    }
+
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.NO_MORE_USERS_TO_LIST, () -> {
+            Toast.makeText(getContext(), getString(R.string.end_of_list), Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+            endOfList = true;
+        });
+    }
+
+    private void observers() {
         mViewModel.getListUsers().observe(getViewLifecycleOwner(), new Observer<List<TUser>>() {
             @Override
             public void onChanged(List<TUser> tUsers) {
@@ -97,19 +111,13 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
             }
         });
 
-        mViewModel.getListSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
             }
         });
-
-        mViewModel.getProgressBar().observe(getViewLifecycleOwner(), aBoolean ->
-                ViewListenerUtilities.setVisibility(progressBar, aBoolean));
-
-        adminManagement();
-
-        return root;
     }
 
     private void adminManagement() {
@@ -125,18 +133,22 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
         recyclerView.setAdapter(adapter);
     }
 
-    private void init(){
+    private void initUI(){
         nestedScrollView = root.findViewById(R.id.list_user_nestedScrollView);
         progressBar = root.findViewById(R.id.user_list_progressBar);
         sortNameboolean = AppConstants.NO_SORT;
         sortUsernameboolean = AppConstants.NO_SORT;
         finalsort = AppConstants.NO_SORT;
+
+        endOfList = false;
     }
 
     private void listeners(){
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if(endOfList)
+                    return;
                 if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
                     //Cuando alacance al ultimo item de la lista
                     //Incrementea el numero de la pagina
@@ -153,16 +165,12 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //mViewModel = new ViewModelProvider(this).get(AdminViewModel.class);
-        //progressBar.setVisibility(View.VISIBLE); //progress bar visible
     }
 
     @Override
     public void OnListClick(int position) {
         Bundle bundle = new Bundle();
-
         TUser user = listUser.get(position);
-
         bundle.putParcelable(AppConstants.BUNDLE_PROFILE_LIST_DETAILS, user);
 
         //Le pasamos el bundle
@@ -316,7 +324,6 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
                 return true;
             }
         });
-
     }
 
     @Override
@@ -334,7 +341,5 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
                 break;
         }
     }
-
-
 
 }

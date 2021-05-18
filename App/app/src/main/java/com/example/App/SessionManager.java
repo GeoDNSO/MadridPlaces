@@ -1,10 +1,15 @@
 package com.example.App;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 
-import com.example.App.models.transfer.TUser;
+import com.example.App.models.TUser;
 import com.example.App.utilities.AppConstants;
+
+import java.util.Locale;
 
 public class SessionManager {
 
@@ -13,10 +18,37 @@ public class SessionManager {
     private SharedPreferences.Editor editor;
     private Context context;
 
+    private SharedPreferences langPrefs;
+
     public SessionManager(Context context) {
         this.context = context;
         this.prefs = context.getSharedPreferences(SHARED_PRIVATE_FILE, Context.MODE_PRIVATE);
         this.editor = prefs.edit();
+
+        this.langPrefs = context.getSharedPreferences("Settings", Activity.MODE_PRIVATE);
+        String language = langPrefs.getString(AppConstants.APP_LANG, "es");
+        setLocale(language);
+
+    }
+
+    public void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Configuration configuration = new Configuration();
+        configuration.setLocale(locale);
+
+        Resources resources = context.getResources();
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        SharedPreferences.Editor editor = context.getSharedPreferences("Settings", Context.MODE_PRIVATE).edit();
+        editor.putString(AppConstants.APP_LANG, lang);
+        editor.apply();
+    }
+
+    public void loadLocale(){
+        String language = langPrefs.getString(AppConstants.APP_LANG, "es");
+        setLocale(language);
     }
 
     public void setContext(Context context){
@@ -99,5 +131,9 @@ public class SessionManager {
         return new TUser(getUsername(), getPassword(), getFirstName(),
                 getSurname(), getEmail(), getGender(),
                 getBirthDate(), getCity(), getRol(), getImageProfile());
+    }
+
+    public String getLangTag() {
+        return  langPrefs.getString(AppConstants.APP_LANG, "es");
     }
 }

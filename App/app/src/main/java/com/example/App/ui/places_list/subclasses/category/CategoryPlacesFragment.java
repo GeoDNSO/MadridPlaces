@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.App.App;
-import com.example.App.models.transfer.TCategory;
+import com.example.App.models.TCategory;
 import com.example.App.services.LocationTrack;
 import com.example.App.ui.places_list.subclasses.BasePlaces;
 import com.example.App.ui.places_list.subclasses.BaseViewModel;

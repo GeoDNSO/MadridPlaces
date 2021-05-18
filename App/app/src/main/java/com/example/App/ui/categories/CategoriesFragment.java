@@ -20,26 +20,25 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.App.R;
-import com.example.App.models.transfer.TCategory;
-import com.example.App.ui.add_place.AddPlaceViewModel;
+import com.example.App.models.TCategory;
 import com.example.App.utilities.AppConstants;
-import com.example.App.utilities.ViewListenerUtilities;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CategoriesFragment extends Fragment implements CategoriesAdapter.CategoryListener {
 
+    private View root;
+    private CategoriesViewModel mViewModel;
+    private HashMap<Integer, OnResultAction> actionHashMap;
 
     private List<String> categoriesTitles;
     private List<Integer> categoriesIcons;
     private List<TCategory> categoryList;
     private CategoriesAdapter categoriesAdapter;
-
-
-    private View root;
-
-    private CategoriesViewModel mViewModel;
 
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
@@ -69,6 +68,8 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(categoriesAdapter);
 
+        configOnResultActions();
+        
         initObservers();
 
         mViewModel.getTypesOfPlaces();
@@ -76,21 +77,33 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         return root;
     }
 
-    private void initObservers() {
-        mViewModel.getProgressBar().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                ViewListenerUtilities.setVisibility(progressBar, aBoolean);
-            }
-        });
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.GET_CATEGORIES_FAIL, () ->
+                Toast.makeText(getActivity(), getString(R.string.get_categories_error), Toast.LENGTH_SHORT).show());
 
-        mViewModel.getmCategoriesSuccess().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+        actionHashMap.put(ControlValues.GET_CATEGORIES_OK, () ->
+                Log.d("CategoriesFragment", "configOnResultActions: "+ getString(R.string.get_categories_ok)));
+    }
+
+
+    private void initObservers() {
+
+        mViewModel.getmCategoriesStringList().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> categoriesList) {
                 categoriesTitles = categoriesList;
                 adaptDataToCategories();
                 categoriesAdapter = new CategoriesAdapter(getActivity(), categoryList, CategoriesFragment.this);
                 recyclerView.setAdapter(categoriesAdapter);
+            }
+        });
+
+        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
             }
         });
     }

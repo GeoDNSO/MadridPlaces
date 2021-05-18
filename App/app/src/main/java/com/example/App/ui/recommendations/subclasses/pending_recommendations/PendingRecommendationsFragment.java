@@ -17,34 +17,36 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.models.transfer.TPlace;
-import com.example.App.models.transfer.TRecomendation;
-import com.example.App.ui.places_list.PlaceListAdapter;
+import com.example.App.models.TPlace;
+import com.example.App.models.TRecommendation;
 import com.example.App.ui.recommendations.RecommendationsViewModel;
-import com.example.App.ui.recommendations.subclasses.my_recommendations.MyRecommendationsAdapter;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PendingRecommendationsFragment extends Fragment implements PendingRecommendationsListAdapter.OnPendingRecommendationsListener{
 
     private RecommendationsViewModel mViewModel;
     private View root;
+    private HashMap<Integer, OnResultAction> actionHashMap;
+
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private NestedScrollView nestedScrollView;
     private PendingRecommendationsListAdapter pendingRecommendationsListAdapter;
-    private List<TRecomendation> recommendationsList;
+    private List<TRecommendation> recommendationsList;
     private int page = 1, quantum = 3;
     private int listPosition = -1;
+    private boolean endOfList;
 
 
     public static PendingRecommendationsFragment newInstance() {
@@ -62,6 +64,7 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
         initUI();
         initListeners();
         initObservers();
+        configOnResultActions();
 
         recommendationsList = new ArrayList<>();
         pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, this); //getActivity = MainActivity.this
@@ -77,6 +80,8 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
         recyclerView = root.findViewById(R.id.recommendations_pending_list_recycle_view);
         progressBar = root.findViewById(R.id.recommendations_pending_list_progressBar);
         nestedScrollView = root.findViewById(R.id.recommedations_pending_list_user_nestedScrollView);
+
+        endOfList = false;
     }
 
     private void initListeners() {
@@ -85,16 +90,13 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
+                if(endOfList)
+                    return;
+
                 if (v.getChildAt(0).getBottom() <= (v.getHeight() + v.getScrollY())) {
                     page++;
                     //Mostrar progress bar
                     progressBar.setVisibility(View.VISIBLE);
-
-                    /*
-                    shimmerFrameLayout.startShimmer();
-
-                    shimmerFrameLayout.setVisibility(View.VISIBLE);
-                     */
 
                     //Pedimos más datos
                     mViewModel.listUserPendingRecommendations(page, quantum, App.getInstance().getUsername());
@@ -103,21 +105,66 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
         });
     }
 
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.LIST_REC_OK, () -> {
+            Toast.makeText(getActivity(), getString(R.string.recommendation_list_loaded_success), Toast.LENGTH_SHORT).show();
+        });
+        actionHashMap.put(ControlValues.LIST_REC_FAIL, () -> {
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+        });
+
+        actionHashMap.put(ControlValues.ACCEPT_REC_OK, () -> {
+            if(listPosition == -1)
+                return;
+            Toast.makeText(getContext(), getString(R.string.recommendation_accepted), Toast.LENGTH_SHORT).show();
+            TRecommendation recommendation = recommendationsList.get(listPosition);
+            recommendationsList.remove(recommendation);
+            pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, PendingRecommendationsFragment.this);
+            recyclerView.setAdapter(pendingRecommendationsListAdapter);
+            progressBar.setVisibility(View.GONE);
+            listPosition = -1;
+        });
+        actionHashMap.put(ControlValues.ACCEPT_REC_FAIL, () -> {
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+        });
+
+        actionHashMap.put(ControlValues.DENY_REC_OK, () -> {
+            if(listPosition == -1)
+                return;
+            Toast.makeText(getContext(), getString(R.string.recommendation_denied), Toast.LENGTH_SHORT).show();
+            TRecommendation recommendation = recommendationsList.get(listPosition);
+            recommendationsList.remove(recommendation);
+            pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, PendingRecommendationsFragment.this);
+            recyclerView.setAdapter(pendingRecommendationsListAdapter);
+            progressBar.setVisibility(View.GONE);
+            listPosition = -1;
+        });
+        actionHashMap.put(ControlValues.DENY_REC_FAIL, () -> {
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+        });
+
+        actionHashMap.put(ControlValues.NO_MORE_PEND_RECOMMENDATIONS_TO_LIST, () -> {
+            Toast.makeText(getActivity(), getString(R.string.end_of_list), Toast.LENGTH_SHORT).show();
+            endOfList = true;
+            progressBar.setVisibility(View.GONE);
+        });
+    }
+
 
     private void initObservers(){
         mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                if(AppConstants.LIST_REC_OK == integer){
-
-                }
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
                 progressBar.setVisibility(View.GONE);
             }
         });
 
-        mViewModel.getmListPendingRecom().observe(getViewLifecycleOwner(), new Observer<List<TRecomendation>>() {
+        mViewModel.getmListPendingRecom().observe(getViewLifecycleOwner(), new Observer<List<TRecommendation>>() {
             @Override
-            public void onChanged(List<TRecomendation> tRecomendations) {
+            public void onChanged(List<TRecommendation> tRecomendations) {
                 if(tRecomendations == null){
                     Log.d("MY_RECO", "Lista de recomendaciones nula");
                     return;
@@ -126,36 +173,6 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
                 pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, PendingRecommendationsFragment.this);
                 recyclerView.setAdapter(pendingRecommendationsListAdapter);
                 progressBar.setVisibility(View.GONE);
-            }
-        });
-
-        mViewModel.getmAcceptRecom().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                if(AppConstants.ACCEPT_REC_OK.equals(integer) && listPosition != -1){
-                    Toast.makeText(getContext(), "Se ha aceptado la recomendación", Toast.LENGTH_SHORT).show();
-                    TRecomendation recomendation = recommendationsList.get(listPosition);
-                    recommendationsList.remove(recomendation);
-                    pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, PendingRecommendationsFragment.this);
-                    recyclerView.setAdapter(pendingRecommendationsListAdapter);
-                    progressBar.setVisibility(View.GONE);
-                    listPosition = -1;
-                }
-            }
-        });
-
-        mViewModel.getmDenyRecom().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                if(AppConstants.DENY_REC_OK.equals(integer) && listPosition != -1){
-                    Toast.makeText(getContext(), "Se ha rechazado la recomendación", Toast.LENGTH_SHORT).show();
-                    TRecomendation recomendation = recommendationsList.get(listPosition);
-                    recommendationsList.remove(recomendation);
-                    pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, PendingRecommendationsFragment.this);
-                    recyclerView.setAdapter(pendingRecommendationsListAdapter);
-                    progressBar.setVisibility(View.GONE);
-                    listPosition = -1;
-                }
             }
         });
     }

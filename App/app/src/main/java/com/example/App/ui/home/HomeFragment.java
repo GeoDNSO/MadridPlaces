@@ -7,14 +7,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
-
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +17,8 @@ import android.view.ViewGroup;
 import com.example.App.App;
 import com.example.App.R;
 
+import com.example.App.components.BaseTabAdapter;
 import com.example.App.ui.categories.CategoriesFragment;
-
-import com.example.App.ui.LogoutObserver;
 
 import com.example.App.ui.places_list.subclasses.PlaceFragmentFactory;
 import com.google.android.material.tabs.TabLayout;
@@ -87,7 +81,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void prepareViewPager() {
-        HomeTabAdapter homeTabAdapter = new HomeTabAdapter(getChildFragmentManager());
+        BaseTabAdapter homeTabAdapter = new BaseTabAdapter(getChildFragmentManager());
 
         PlaceFragmentFactory placeFragmentFactory = new PlaceFragmentFactory();
 
@@ -120,7 +114,6 @@ public class HomeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         // TODO: Use the ViewModel
-        //Insertar fragment de lista de lugares a home
     }
 
     private void initializeListeners() {

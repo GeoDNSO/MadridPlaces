@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.App.services.LocationTrack;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.AppLanguages;
 import com.example.App.utilities.PermissionsManager;
 import com.example.App.utilities.TextViewExpandableUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -46,13 +47,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         //Thread.sleep(300); //Para añadir un pequeño delay antes del splash screen
         setTheme(R.style.Theme_App);
         super.onCreate(savedInstanceState);
+
+        new AppLanguages(this);
+        App app = App.getInstance(this); //Para la carga del lenguaje a traves del sessionManager
+        app.loadLocale();
+
         setContentView(R.layout.activity_main);
 
         initializeUI();
 
         setGlobalVariables();
 
-        App app = App.getInstance(this);
         app.setMenu(drawerNavigationView.getMenu());
         app.setBottomNavigationView(bottomNavView);
         app.setMainActivity(this);
@@ -115,6 +120,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
             @Override
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
                 int dest_id = destination.getId();
+
+                if(dest_id == R.id.homeFragment){
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                }
+                else{
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                }
+
                 if(dest_id == R.id.loginFragment || dest_id == R.id.registerFragment ||
                         dest_id == R.id.profileFragment || dest_id == R.id.adminFragment ||
                         dest_id == R.id.detailFragment || dest_id == R.id.sendRecomendationFragment || dest_id == R.id.addPlaceFragment || dest_id == R.id.modifyPlaceFragment || dest_id == R.id.mapFragment){

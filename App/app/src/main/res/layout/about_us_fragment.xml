@@ -8,19 +8,54 @@
 
     tools:context=".ui.aboutus.AboutUsFragment">
 
+
     <TextView
         android:id="@+id/text_aboutus"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="ABOUT US(ENLAZAR A STRING)"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginEnd="24dp"
+        android:text="El grupo que ha desarrollado el proyecto, memoria y aplicación esta compuesto por:
+         \n\t\t\to Daniel Nasim Santos Ouafki\n\t\t\to Jin Tao Peng Zhou\n\t\t\to Jin Wang Xu\n\t\t\to Juan Antonio Escobar de los Ángeles"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_aboutus_2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="24dp"
+        android:text="Este proyecto constituye el Trabajo de Fin de Grado para el Grado de Ingenería Informática en la UCM"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="150dp"
+        android:layout_height="144dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="32dp"
+        android:src="@drawable/madrid_places_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_aboutus" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="150dp"
+        android:layout_height="144dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="60dp"
+        android:src="@drawable/ucm_fdi"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_aboutus" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,43 +1,25 @@
 package com.example.App.ui.recommendations;
 
-import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.example.App.R;
-import com.example.App.models.dao.SimpleRequest;
-import com.example.App.models.transfer.TPlace;
-import com.example.App.ui.categories.CategoriesFragment;
-import com.example.App.ui.home.HomeTabAdapter;
-import com.example.App.ui.places_list.subclasses.PlaceFragmentFactory;
+import com.example.App.components.BaseTabAdapter;
 import com.example.App.ui.recommendations.subclasses.RecommendationsFragmentFactory;
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class RecommendationsFragment extends Fragment {
 
@@ -85,7 +67,7 @@ public class RecommendationsFragment extends Fragment {
     }
 
     private void prepareViewPager() {
-        RecommendationsTabAdapter recoTabAdapter = new RecommendationsTabAdapter(getChildFragmentManager());
+        BaseTabAdapter recoTabAdapter = new BaseTabAdapter(getChildFragmentManager());
 
         RecommendationsFragmentFactory recoFragmentFactory = new RecommendationsFragmentFactory();
 

@@ -44,6 +44,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.App.App;
 import com.example.App.R;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 import com.example.App.utilities.Validator;
 
 import java.io.ByteArrayOutputStream;
@@ -51,13 +53,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 public class RegisterFragment extends Fragment {
 
     private DatePickerDialog.OnDateSetListener datePicker;
     private View root;
     private RegisterViewModel mRegisterViewModel;
-    private App app;
+    private HashMap<Integer, OnResultAction> actionHashMap;
+
     private Bitmap bitmap;
     private Uri uri;
 
@@ -89,36 +93,37 @@ public class RegisterFragment extends Fragment {
         mRegisterViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
         mRegisterViewModel.init();
 
-        mRegisterViewModel.getRegisterInProcess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    showProgressBar();
-                }
-                else {
-                    hideProgressBar();
-                }
-            }
-        });
-
-        mRegisterViewModel.getIsDoneRegistration().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    Toast.makeText(getActivity(), "Registrado con exito", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(root).navigate(R.id.action_registerFragment_to_homeFragment);
-                }
-                else {
-                    hideProgressBar();
-                    Toast.makeText(getActivity(), "Error al registrar", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        observers();
+        configOnResultActions();
 
         initializeUI();
         initializeListeners();
 
         return root;
+    }
+
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.REGISTER_USER_OK, () -> {
+            Toast.makeText(getActivity(), getString(R.string.registered_success), Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(root).navigate(R.id.action_registerFragment_to_homeFragment);
+        });
+
+        actionHashMap.put(ControlValues.REGISTER_USER_FAIL, () -> {
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void observers() {
+        mRegisterViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
+                hideProgressBar();
+            }
+        });
+
     }
 
     private void hideProgressBar() {
@@ -156,7 +161,7 @@ public class RegisterFragment extends Fragment {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //root = v;
+                showProgressBar();
                 registerOnClickAction(v);
             }
         });

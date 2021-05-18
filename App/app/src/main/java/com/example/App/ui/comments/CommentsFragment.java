@@ -1,6 +1,5 @@
 package com.example.App.ui.comments;
 
-import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,19 +22,22 @@ import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.models.transfer.TComment;
-import com.example.App.utilities.AppConstants;
-import com.example.App.utilities.ViewListenerUtilities;
+import com.example.App.models.TComment;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CommentsFragment extends Fragment implements CommentListAdapter.CommentObserver {
     private String placeName;
     private View root;
     private CommentsViewModel mViewModel;
+
+    private HashMap<Integer, OnResultAction> actionHashMap;
 
     private App app; //global variable
 
@@ -52,6 +54,7 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
     private CommentListAdapter commentListAdapter;
 
     private int page = 1, quant = 5, limit = 3; //Aun no implementado paginado en comentarios
+    private boolean endOfList;
 
     public CommentsFragment(String placeName) {
         this.placeName = placeName;
@@ -65,7 +68,6 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(CommentsViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     @Override
@@ -80,7 +82,60 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
 
         initUI();
 
+        observers();
 
+        configOnResultActions();
+
+        listeners();
+        commentListManagement();
+
+        return root;
+    }
+
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.LIST_COMMENTS_OK, () -> {
+            //Toast.makeText(getContext(), getString(R.string.comment_list_loaded), Toast.LENGTH_SHORT).show();
+            prepareRecyclerViewAndShimmer();
+        });
+        actionHashMap.put(ControlValues.LIST_COMMENTS_FAILED, () -> {
+            Toast.makeText(getContext(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+            prepareRecyclerViewAndShimmer();
+        });
+
+        actionHashMap.put(ControlValues.NEW_COMMENT_OK, () -> {
+            Toast.makeText(getContext(), getString(R.string.comment_added), Toast.LENGTH_SHORT).show();
+        });
+        actionHashMap.put(ControlValues.NEW_COMMENT_FAILED, () -> {
+            //Toast.makeText(getContext(), getString(R.string.comment_list_loaded), Toast.LENGTH_SHORT).show();
+        });
+
+        actionHashMap.put(ControlValues.DELETE_COMMENT_OK, () -> {
+            Toast.makeText(getActivity(), getString(R.string.delete_comment_ok_msg), Toast.LENGTH_SHORT ).show();
+        });
+        actionHashMap.put(ControlValues.DELETE_COMMENT_FAIL, () -> {
+            Toast.makeText(getActivity(), getString(R.string.delete_comment_failed_msg), Toast.LENGTH_SHORT ).show();
+        });
+
+        actionHashMap.put(ControlValues.NO_MORE_COMMENTS_TO_LIST, () -> {
+            Toast.makeText(getActivity(), getString(R.string.end_of_list), Toast.LENGTH_SHORT ).show();
+            prepareRecyclerViewAndShimmer();
+            endOfList = true;
+        });
+
+
+    }
+
+    private void prepareRecyclerViewAndShimmer(){
+        //Mostrar el recyclerView
+        recyclerView.setVisibility(View.VISIBLE);
+        //Parar el efecto shimmer
+        shimmerFrameLayout.stopShimmer();
+        //Esconder al frameLayout de shimmer
+        shimmerFrameLayout.setVisibility(View.GONE);
+    }
+
+    private void observers() {
         mViewModel.getmCommentsList().observe(getViewLifecycleOwner(), new Observer<List<TComment>>() {
             @Override
             public void onChanged(List<TComment> tComments) {
@@ -95,36 +150,12 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
         mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-
-                if(integer.equals(AppConstants.ERROR_DELETE_COMMENT)){
-                    Toast.makeText(getActivity(), "Error al borrar comentario", Toast.LENGTH_SHORT ).show();
-                    return;
-                }
-                else if(integer.equals(AppConstants.DELETE_COMMENT_OK)){
-                    Toast.makeText(getActivity(), "Comentario borrado con exito", Toast.LENGTH_SHORT ).show();
-                    return;
-                }
-
-                //Mostrar el recyclerView
-                recyclerView.setVisibility(View.VISIBLE);
-                //Parar el efecto shimmer
-                shimmerFrameLayout.stopShimmer();
-                //Esconder al frameLayout de shimmer
-                shimmerFrameLayout.setVisibility(View.GONE);
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
+                progressBar.setVisibility(View.GONE);
+                //prepareRecyclerViewAndShimmer() //TODO DESCOMENTAR??
             }
         });
-
-        mViewModel.getProgressBar().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                ViewListenerUtilities.setVisibility(progressBar, aBoolean);
-            }
-        });
-
-        listeners();
-        commentListManagement();
-
-        return root;
     }
 
     private void listeners() {
@@ -133,18 +164,19 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
             @Override
             public void onClick(View v) {
                 //TODO Tres casos: comentario sin valoración, con valoración o con las dos cosas
+                progressBar.setVisibility(View.VISIBLE);
                 if(app.isLogged()) { //Tienes que estar logueado
 
                     if (ratingBar.getRating() != 0) {
                         mViewModel.newComment(app.getUsername(), etComment.getEditText().getText().toString(), placeName, ratingBar.getRating());
                     } else {
                         //No se hace nada
-                        Toast.makeText(getActivity(), "Selecciona una valoración", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.rate_place_msg, Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 else{
-                    Toast.makeText(getActivity(), "Necesitas tener iniciada la sesión", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.login_needed, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -157,6 +189,9 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
 
     //PlaceListDetail usa esta función para actualizar el scroll
     public void onScrollViewAtBottom(){
+        if(endOfList)
+            return;
+
         //Cuando alacance al ultimo item de la lista incrementea el numero de la pagina
         page++;
 
@@ -179,6 +214,8 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
 
         ratingBar = root.findViewById(R.id.placeDetailsRatingBar);
         sendRateButton = root.findViewById(R.id.placeDetailSendRating);
+
+        endOfList = false;
     }
 
     private void commentListManagement() {
@@ -198,8 +235,9 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
 
     @Override
     public void onCommentDelete(int position) {
-        Toast.makeText(getActivity(), "Delete a Comentario Num " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "Delete a Comentario Num " + position, Toast.LENGTH_SHORT).show();
         TComment comment = commentsList.get(position);
+        progressBar.setVisibility(View.VISIBLE);
         mViewModel.deleteComment(comment, position);
     }
 }

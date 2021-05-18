@@ -32,19 +32,23 @@ import com.bumptech.glide.Glide;
 import com.example.App.App;
 import com.example.App.R;
 import com.example.App.SessionManager;
-import com.example.App.models.transfer.TUser;
+import com.example.App.models.TUser;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 import com.example.App.utilities.Validator;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 public class ProfileFragment extends Fragment {
 
     private View root;
     private ProfileViewModel mViewModel;
+    private HashMap<Integer, OnResultAction> actionHashMap;
 
     private TextView tv_Username;
     private TextView tv_FullName;
@@ -90,11 +94,35 @@ public class ProfileFragment extends Fragment {
         initializeUI();
         initializeListeners();
         initializeObservers();
+        configOnResultActions();
 
         //tiene que estar despues de los observadores
         ib_profile_image.setClickable(false);
 
         return root;
+    }
+
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.DELETE_PROFILE_OK, () -> {
+            Toast.makeText(getActivity(), getString(R.string.user_profile_deleted), Toast.LENGTH_SHORT).show();
+            app.logout();
+            Navigation.findNavController(root).navigate(R.id.homeFragment);
+        });
+
+        actionHashMap.put(ControlValues.DELETE_PROFILE_FAILED, () -> {
+            Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
+        });
+
+        actionHashMap.put(ControlValues.MODIFY_USER_OK, () -> {
+            Toast.makeText(getActivity(), getString(R.string.user_profile_modified), Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(root).navigate(R.id.profileFragment);
+        });
+        actionHashMap.put(ControlValues.MODIFY_USER_FAIL, () -> {
+            Toast.makeText(getActivity(), getString(R.string.modify_user_failed), Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(root).navigate(R.id.profileFragment);
+        });
+
     }
 
     private void init(){
@@ -126,33 +154,11 @@ public class ProfileFragment extends Fragment {
 
     private void initializeObservers() {
 
-        mViewModel.getProfileActionInProgress().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
-            public void onChanged(Boolean aBoolean) {
-                /*if (aBoolean) {
-                    showProgressBar();
-                }
-                else {
-                    hideProgressBar();
-                }*/
-            }
-        });
-
-        mViewModel.getActionProfileSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer aInteger) {
-                if (aInteger.equals(AppConstants.DELETE_PROFILE)) {
-                    Toast.makeText(getActivity(), "Se ha eliminado el perfil", Toast.LENGTH_SHORT).show();
-                    app.logout();
-                    Navigation.findNavController(root).navigate(R.id.homeFragment);
-                }
-                else if(aInteger.equals(AppConstants.MODIFY_PROFILE)){
-                    Toast.makeText(getActivity(), "Se ha modificado el perfil", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(root).navigate(R.id.profileFragment);
-                }
-                else {
-                    Toast.makeText(getActivity(), getString(R.string.modify_user_failed), Toast.LENGTH_SHORT).show();
-                }
+            public void onChanged(Integer integer) {
+                if(actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
             }
         });
 

@@ -4,36 +4,26 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import com.example.App.models.dao.SimpleRequest;
-import com.example.App.models.transfer.TUser;
+import com.example.App.networking.SimpleRequest;
+import com.example.App.models.TUser;
 import com.example.App.services.LocationTrack;
-import com.example.App.ui.LogoutObserver;
+import com.example.App.components.LogoutObserver;
 import com.example.App.utilities.AppConstants;
-import com.example.App.utilities.TextViewExpandableUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -243,5 +233,17 @@ public class App {
 
     public LocationTrack getLocationTrack() {
         return locationTrack;
+    }
+
+    public void setLocale(String langTag) {
+        sessionManager.setLocale(langTag);
+    }
+
+    public void loadLocale() {
+        sessionManager.loadLocale();
+    }
+
+    public String getLangTag() {
+        return sessionManager.getLangTag();
     }
 }

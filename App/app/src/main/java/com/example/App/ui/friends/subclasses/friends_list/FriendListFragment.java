@@ -19,18 +19,20 @@ import android.widget.Toast;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.models.transfer.TRequestFriend;
+import com.example.App.models.TRequestFriend;
 import com.example.App.ui.friends.FriendsViewModel;
-import com.example.App.ui.friends.subclasses.friend_resquest_list.FriendRequestListAdapter;
-import com.example.App.ui.friends.subclasses.friend_resquest_list.FriendRequestListFragment;
 import com.example.App.utilities.AppConstants;
+import com.example.App.utilities.ControlValues;
+import com.example.App.utilities.OnResultAction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class FriendListFragment extends Fragment implements FriendListAdapter.FriendActionListener{
 
     private FriendsViewModel mViewModel;
+    private HashMap<Integer, OnResultAction> actionHashMap;
 
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
@@ -54,6 +56,7 @@ public class FriendListFragment extends Fragment implements FriendListAdapter.Fr
 
         init();
         observers();
+        configOnResultActions();
 
         friendList = new ArrayList<>();
         friendListAdapter = new FriendListAdapter(getActivity(), friendList, this); //getActivity = MainActivity.this
@@ -65,13 +68,37 @@ public class FriendListFragment extends Fragment implements FriendListAdapter.Fr
         return root;
     }
 
+    private void configOnResultActions() {
+        actionHashMap = new HashMap<>();
+        actionHashMap.put(ControlValues.LIST_REQ_FRIEND_OK, () -> {
+            //Nothing..
+        });
+        actionHashMap.put(ControlValues.LIST_REQ_FRIEND_FAIL, () -> {
+            //Nothing..
+        });
+
+        actionHashMap.put(ControlValues.DELETE_FRIEND_SUCCESS, () -> {
+            TRequestFriend friends = friendList.get(lastPosition);
+            String msg = getString(R.string.friend_deleted_1) + " " + friends.getUserDest() + " " + getString(R.string.friend_deleted_2);
+            Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+            friendList.remove(friends);
+            friendListAdapter = new FriendListAdapter(getActivity(), friendList, FriendListFragment.this);
+            recyclerView.setAdapter(friendListAdapter);
+            progressBar.setVisibility(View.GONE);
+            lastPosition = -1;
+        });
+        actionHashMap.put(ControlValues.DELETE_FRIEND_FAIL, () -> {
+            //Nothing..
+        });
+
+    }
+
     private void observers() {
         mViewModel.getSuccess().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                if(AppConstants.LIST_REQ_FRIEND_OK == integer){
-
-                }
+                if (actionHashMap.containsKey(integer))
+                    actionHashMap.get(integer).execute();
                 progressBar.setVisibility(View.GONE);
             }
         });
@@ -85,18 +112,6 @@ public class FriendListFragment extends Fragment implements FriendListAdapter.Fr
             }
         });
 
-        mViewModel.getmDeleteFriend().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                Toast.makeText(getContext(), "Se ha aceptado la recomendación", Toast.LENGTH_SHORT).show();
-                TRequestFriend friends = friendList.get(lastPosition);
-                friendList.remove(friends);
-                friendListAdapter = new FriendListAdapter(getActivity(), friendList, FriendListFragment.this);
-                recyclerView.setAdapter(friendListAdapter);
-                progressBar.setVisibility(View.GONE);
-                lastPosition = -1;
-            }
-        });
     }
 
     private void init() {

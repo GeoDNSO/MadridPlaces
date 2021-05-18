@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
@@ -18,8 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.App.App;
 import com.example.App.R;
-import com.example.App.models.transfer.TRecomendation;
-import com.example.App.ui.places_list.PlaceListAdapter;
+import com.example.App.models.TRecommendation;
 import com.example.App.utilities.AppConstants;
 
 import java.util.List;
@@ -27,12 +30,16 @@ import java.util.List;
 public class MyRecommendationsAdapter extends RecyclerView.Adapter<MyRecommendationsAdapter.ViewHolder> {
 
     private Activity activity;
-    private List<TRecomendation> recommendationList;
+    private List<TRecommendation> recommendationList;
+    private RecommendationAdapterListener listener;
 
-    public MyRecommendationsAdapter(Activity activity, List<TRecomendation> recommendationList) {
+    public MyRecommendationsAdapter(Activity activity, List<TRecommendation> recommendationList, RecommendationAdapterListener listener) {
         this.activity = activity;
         this.recommendationList = recommendationList;
+        this.listener = listener;
     }
+
+
 
     @NonNull
     @Override
@@ -47,7 +54,7 @@ public class MyRecommendationsAdapter extends RecyclerView.Adapter<MyRecommendat
     public void onBindViewHolder(@NonNull MyRecommendationsAdapter.ViewHolder holder, int position) {
 
         App app = App.getInstance();
-        TRecomendation recommendation = recommendationList.get(position);
+        TRecommendation recommendation = recommendationList.get(position);
 
         String state = recommendation.getState();
         String userDest = recommendation.getUserDest();
@@ -59,10 +66,24 @@ public class MyRecommendationsAdapter extends RecyclerView.Adapter<MyRecommendat
 
         //Texto azul del lugar
         int blueColorId = ContextCompat.getColor(activity, R.color.blue_link);
+        int purpleColorId = ContextCompat.getColor(activity, R.color.purple_500);
         SpannableString spanPlace = new SpannableString(msg_placeName);
-        spanPlace.setSpan(new ForegroundColorSpan(blueColorId),
-                0, msg_placeName.length(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                listener.onSpanClick(msg_placeName);
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+            }
+        };
+
+        spanPlace.setSpan(clickableSpan, 0, msg_placeName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spanPlace.setSpan(new ForegroundColorSpan(blueColorId),0, msg_placeName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         //Texto negrita del nombre del usuario destino
         final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
@@ -91,6 +112,7 @@ public class MyRecommendationsAdapter extends RecyclerView.Adapter<MyRecommendat
 
         //Asignación final
         holder.tvMyRecommendationMainText.setText(TextUtils.concat(msg_1, " ", spanPlace, " ", msg_2, " ", spanUserDest));
+        holder.tvMyRecommendationMainText.setMovementMethod(LinkMovementMethod.getInstance());
 
         holder.tvMyRecommendationState.setBackgroundColor(colorState);
         holder.tvMyRecommendationState.setText(messageState);
@@ -100,6 +122,10 @@ public class MyRecommendationsAdapter extends RecyclerView.Adapter<MyRecommendat
     @Override
     public int getItemCount() {
         return recommendationList.size();
+    }
+
+    public interface RecommendationAdapterListener{
+        public void onSpanClick(String placeName);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

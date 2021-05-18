@@ -10,20 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.App.R;
-import com.example.App.models.transfer.TPlace;
-import com.example.App.models.transfer.TRecomendation;
-import com.example.App.models.transfer.TUser;
-import com.example.App.ui.admin.UserListAdapter;
-import com.example.App.ui.places_list.PlaceListAdapter;
+import com.example.App.models.TRecommendation;
 
 import java.util.List;
 
 public class PendingRecommendationsListAdapter extends RecyclerView.Adapter<PendingRecommendationsListAdapter.ViewHolder>{
 
-    private List<TRecomendation> listRecommendation;
+    private List<TRecommendation> listRecommendation;
     private OnPendingRecommendationsListener onPendingRecommendationsListener;
 
-    public PendingRecommendationsListAdapter(List<TRecomendation> listRecommendation, OnPendingRecommendationsListener onPendingRecommendationsListener){
+    public PendingRecommendationsListAdapter(List<TRecommendation> listRecommendation, OnPendingRecommendationsListener onPendingRecommendationsListener){
         this.listRecommendation = listRecommendation;
         this.onPendingRecommendationsListener = onPendingRecommendationsListener;
     }
@@ -37,7 +33,7 @@ public class PendingRecommendationsListAdapter extends RecyclerView.Adapter<Pend
 
     @Override
     public void onBindViewHolder(@NonNull PendingRecommendationsListAdapter.ViewHolder holder, int position) {
-        TRecomendation recomendation = listRecommendation.get(position);
+        TRecommendation recomendation = listRecommendation.get(position);
 
         holder.tv_name_place.setText(String.format("%s: %s", holder.itemView.getContext().getString(R.string.place_default_name), recomendation.getPlace().getName()));
         holder.tv_rating_place.setText(String.format("%s: %s", holder.itemView.getContext().getString(R.string.place_rate), recomendation.getPlace().getRating()));

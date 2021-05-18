@@ -1,19 +1,11 @@
 package com.example.App.ui.places_list.subclasses.nearest;
 
-import android.location.Location;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
-import com.example.App.App;
-import com.example.App.models.transfer.TPlace;
-import com.example.App.services.LocationTrack;
+import com.example.App.models.TPlace;
 import com.example.App.ui.places_list.subclasses.BaseViewModel;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationResult;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NearestPlaceViewModel extends BaseViewModel {
@@ -21,7 +13,7 @@ public class NearestPlaceViewModel extends BaseViewModel {
     private List<Double> points;
 
     @Override
-    protected LiveData<List<TPlace>> getPlaceListToParent() {
+    protected MutableLiveData<List<TPlace>> getPlaceListToParent() {
         return placeRepository.getNearestPlacesList();
     }
 

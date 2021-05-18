@@ -14,8 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.App.R;
-import com.example.App.models.transfer.TRequestFriend;
-import com.example.App.models.transfer.TUser;
+import com.example.App.models.TRequestFriend;
 
 import java.util.ArrayList;
 import java.util.List;
