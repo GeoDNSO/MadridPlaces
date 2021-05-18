@@ -139,14 +139,14 @@ public class SendRecommendationFragment extends Fragment implements SendRecommen
         sendRecommendation.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                sendRecomendationAction();
+                sendRecommendationAction();
                 return true;
             }
         });
     }
 
-    private void sendRecomendationAction(){
-        app = App.getInstance(getActivity());
+    private void sendRecommendationAction(){
+        app = App.getInstance();
         List<String> userList = sendRecomendationAdapter.getListSelected();
         String userOrigin = app.getUsername();
         String placeName = place.getName();

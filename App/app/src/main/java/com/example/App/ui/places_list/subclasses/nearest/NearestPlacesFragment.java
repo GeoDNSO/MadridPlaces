@@ -61,7 +61,7 @@ public class NearestPlacesFragment extends BasePlaces {
 
         ((NearestPlaceViewModel) mViewModel).setPoints(points);
 
-        super.mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername(), search_text);
+        super.mViewModel.listPlaces(page, quantum, App.getInstance().getUsername(), search_text);
     }
 
     @Override

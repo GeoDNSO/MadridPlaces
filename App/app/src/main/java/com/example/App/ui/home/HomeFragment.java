@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment {
 
         root = inflater.inflate(R.layout.home_fragment, container, false);
         //setHasOptionsMenu(true);
-        app = App.getInstance(getActivity());
+        app = App.getInstance();
 
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 

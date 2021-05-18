@@ -131,7 +131,7 @@ public class LoginFragment extends Fragment {
     private void loginOnClickAction(View v){
         String username = et_Username.getText().toString();
         String pass = et_Password.getText().toString();
-        app = App.getInstance(getActivity());
+        app = App.getInstance();
 
         if (Validator.argumentsEmpty(username, pass)) {
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();

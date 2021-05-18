@@ -16,7 +16,7 @@ public class PendingVisitedFragment extends BasePlaces {
     }
     @Override
     public void listPlaces() {
-        super.mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername(), search_text);
+        super.mViewModel.listPlaces(page, quantum, App.getInstance().getUsername(), search_text);
     }
 
     @Override

@@ -91,7 +91,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
         root = inflater.inflate(R.layout.places_list_fragment, container, false);
         setHasOptionsMenu(true);
-        App.getInstance(getContext()).addLogoutObserver(this);
+        App.getInstance().addLogoutObserver(this);
 
         mViewModel = getViewModelToParent();
         mViewModel.init();
@@ -202,7 +202,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                     //Reseteamos la pagina para ver cambios y borramos la lista...
                     page = 1;
                     placeList.clear();
-                    //mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername());
+                    //mViewModel.listPlaces(page, quantum, App.getInstance().getUsername());
                     search_text = "";
                     listPlaces();
                 };
@@ -290,7 +290,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
     public void onFavClick(int position, ImageView favImage) {
         Toast.makeText(getActivity(), "fav listener", Toast.LENGTH_SHORT).show();
 
-        if(App.getInstance(getActivity()).getSessionManager().isLogged() == false){
+        if(App.getInstance().getSessionManager().isLogged() == false){
             Toast.makeText(getActivity(), getString(R.string.no_logged_fav_try), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -300,7 +300,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
 
         TPlace place = placeList.get(position);
-        String username = App.getInstance(getActivity()).getUsername();
+        String username = App.getInstance().getUsername();
 
         mViewModel.setFavOnPlace(place, username);
     }
@@ -336,7 +336,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                 page = 1;
                 progressBar.setVisibility(View.VISIBLE);
                 placeList.clear();
-                mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername(), newText);
+                mViewModel.listPlaces(page, quantum, App.getInstance().getUsername(), newText);
                 search_text = newText;
                 //adapter.getFilter().filter(newText);
                 return false;
@@ -362,7 +362,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
         inflater.inflate(R.menu.add_place_menu, menu);
 
         addPlace = menu.findItem(R.id.add_place_menu_item);
-        if(App.getInstance(getActivity()).isLogged()){
+        if(App.getInstance().isLogged()){
             addPlace.setVisible(true);
         }
         else {
@@ -391,7 +391,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                     page = 1;
                     progressBar.setVisibility(View.VISIBLE);
                     placeList.clear();
-                    mViewModel.listPlaces(page, quantum, App.getInstance(getContext()).getUsername(), text.get(0));
+                    mViewModel.listPlaces(page, quantum, App.getInstance().getUsername(), text.get(0));
                     search_text = text.get(0);
                 }
                 break;

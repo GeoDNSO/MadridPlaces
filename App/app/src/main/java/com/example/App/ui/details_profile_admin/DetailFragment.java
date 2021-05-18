@@ -167,7 +167,7 @@ public class DetailFragment extends Fragment{
         deleteAccountDialog.setTitle(getString(R.string.profile_delete_account_title));
         deleteAccountDialog.setMessage(getString(R.string.profile_delete_account_message));
 
-        app = App.getInstance(getActivity());
+        app = App.getInstance();
         SessionManager sm = app.getSessionManager();
         deleteAccountDialog.setPositiveButton(getString(R.string.alert_yes), (dialog, which) -> {
             if(user.getUsername().equals(sm.getUsername())){

@@ -104,7 +104,7 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         observers();
         configOnResultActions();
 
-        App.getInstance(getActivity()).addLogoutObserver(this);
+        App.getInstance().addLogoutObserver(this);
 
         String bundlePlaceName = getArguments().getString(AppConstants.BUNDLE_PLACE_NAME_PLACE_DETAILS);
         if(bundlePlaceName != null){
@@ -370,9 +370,9 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         });
 
         //Gestión de Botones si eres admin o no
-        if(App.getInstance(getActivity()).isLogged()){
+        if(App.getInstance().isLogged()){
             modifyPlace.setVisible(true);
-            if(App.getInstance(getActivity()).isAdmin()){
+            if(App.getInstance().isAdmin()){
                 deletePlace.setVisible(true);
             }
             else{
@@ -422,14 +422,14 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
     public void onFavClick(int position, ImageView favImage) {
         Toast.makeText(getActivity(), "fav listener", Toast.LENGTH_SHORT).show();
 
-        if(App.getInstance(getActivity()).getSessionManager().isLogged() == false){
+        if(App.getInstance().getSessionManager().isLogged() == false){
             Toast.makeText(getActivity(), "Tienes que estar logueado para poder tener favoritos", Toast.LENGTH_SHORT).show();
             return;
         }
 
         lastFavImage = favImage;
 
-        String username = App.getInstance(getActivity()).getUsername();
+        String username = App.getInstance().getUsername();
 
         mViewModel.setFavOnPlace(place, username);
     }
@@ -437,7 +437,7 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
     public void onRecomClick() {
         Toast.makeText(getActivity(), "Recom listener", Toast.LENGTH_SHORT).show();
 
-        if(App.getInstance(getActivity()).getSessionManager().isLogged() == false) {
+        if(App.getInstance().getSessionManager().isLogged() == false) {
             Toast.makeText(getActivity(), "Tienes que estar logueado para enviar una recomendacion", Toast.LENGTH_SHORT).show();
             return;
         }

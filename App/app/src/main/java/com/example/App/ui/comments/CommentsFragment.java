@@ -75,7 +75,7 @@ public class CommentsFragment extends Fragment implements CommentListAdapter.Com
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.comments_fragment, container, false);
 
-        app = App.getInstance(getActivity()); //para coger el nombre del usuario
+        app = App.getInstance(); //para coger el nombre del usuario
 
         mViewModel = new ViewModelProvider(this).get(CommentsViewModel.class);
         mViewModel.init();

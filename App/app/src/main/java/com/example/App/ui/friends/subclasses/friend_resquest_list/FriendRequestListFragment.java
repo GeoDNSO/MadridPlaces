@@ -85,7 +85,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
             Toast.makeText(getContext(), getString(R.string.friend_request_accepted), Toast.LENGTH_SHORT).show();
             TRequestFriend friends = friendsList.get(lastPosition);
             friendsList.remove(friends);
-            friendRequestListAdapter = new FriendRequestListAdapter(friendsList, FriendRequestListFragment.this);
+            friendRequestListAdapter = new FriendRequestListAdapter(getActivity(), friendsList, FriendRequestListFragment.this);
             recyclerView.setAdapter(friendRequestListAdapter);
             progressBar.setVisibility(View.GONE);
             lastPosition = -1;
@@ -101,7 +101,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
             TRequestFriend friends = friendsList.get(lastPosition);
             Toast.makeText(getContext(), getString(R.string.decline_friend_request) +friends.getUserDest(), Toast.LENGTH_SHORT).show();
             friendsList.remove(friends);
-            friendRequestListAdapter = new FriendRequestListAdapter(friendsList, FriendRequestListFragment.this);
+            friendRequestListAdapter = new FriendRequestListAdapter(getActivity(), friendsList, FriendRequestListFragment.this);
             recyclerView.setAdapter(friendRequestListAdapter);
             progressBar.setVisibility(View.GONE);
             lastPosition = -1;

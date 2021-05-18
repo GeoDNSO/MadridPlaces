@@ -219,7 +219,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initializeUI() {
-        app = App.getInstance(getActivity());
+        app = App.getInstance();
         if(!app.isLogged()){
             return ;
         }
@@ -275,7 +275,7 @@ public class ProfileFragment extends Fragment {
         deleteAccountDialog.setTitle(getString(R.string.profile_delete_account_title));
         deleteAccountDialog.setMessage(getString(R.string.profile_delete_account_message));
 
-        app = App.getInstance(getActivity());
+        app = App.getInstance();
         SessionManager sm = app.getSessionManager();
         deleteAccountDialog.setPositiveButton(getString(R.string.alert_yes), (dialog, which) -> {
             mViewModel.deleteUser(sm.getUsername()); //Llamar al viewmodel para borrar usuario
@@ -335,7 +335,7 @@ public class ProfileFragment extends Fragment {
 
     private void confirmChangesAction(View v){
         //Conseguir los datos del usuario para despues modificarlos
-        app = App.getInstance(getActivity());
+        app = App.getInstance();
         SessionManager sm = app.getSessionManager();
         TUser u = sm.getSesionUser();
 
