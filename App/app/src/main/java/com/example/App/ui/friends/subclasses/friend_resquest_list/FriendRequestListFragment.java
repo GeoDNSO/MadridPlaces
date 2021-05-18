@@ -61,7 +61,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
         configOnResultActions();
 
         friendsList = new ArrayList<>();
-        friendRequestListAdapter = new FriendRequestListAdapter(friendsList, this); //getActivity = MainActivity.this
+        friendRequestListAdapter = new FriendRequestListAdapter(getActivity(), friendsList, this); //getActivity = MainActivity.this
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(friendRequestListAdapter);
 
@@ -126,7 +126,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
             @Override
             public void onChanged(List<TRequestFriend> tRequestFriends) {
                 friendsList = tRequestFriends;
-                friendRequestListAdapter = new FriendRequestListAdapter(tRequestFriends, FriendRequestListFragment.this);
+                friendRequestListAdapter = new FriendRequestListAdapter(getActivity(), tRequestFriends, FriendRequestListFragment.this);
                 recyclerView.setAdapter(friendRequestListAdapter);
             }
         });

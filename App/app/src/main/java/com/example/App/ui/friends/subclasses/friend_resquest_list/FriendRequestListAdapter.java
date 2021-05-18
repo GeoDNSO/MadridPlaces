@@ -1,14 +1,18 @@
 package com.example.App.ui.friends.subclasses.friend_resquest_list;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.TRequestFriend;
 
@@ -18,10 +22,12 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     private List<TRequestFriend> listFriends;
     private OnFriendRequestListener onFriendRequestListener;
+    private Activity activity;
 
-    public FriendRequestListAdapter(List<TRequestFriend> listFriends, FriendRequestListAdapter.OnFriendRequestListener onFriendRequestListener){
+    public FriendRequestListAdapter(Activity activity, List<TRequestFriend> listFriends, FriendRequestListAdapter.OnFriendRequestListener onFriendRequestListener){
         this.listFriends = listFriends;
         this.onFriendRequestListener = onFriendRequestListener;
+        this.activity = activity;
     }
 
     @NonNull
@@ -36,6 +42,12 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         TRequestFriend user = listFriends.get(position);
 
         holder.tv_completeName_user.setText(String.format("%s %s", user.getUserOrigin().getName(), user.getUserOrigin().getSurname()));
+        if(user.getUserOrigin().getImage_profile() == null || user.getUserOrigin().getImage_profile() == ""){
+            holder.image_user.setImageResource(R.drawable.ic_username);
+        }
+        else {
+            Glide.with(activity).load(user.getUserOrigin().getImage_profile()).circleCrop().into(holder.image_user);
+        }
         holder.tv_username_user.setText(user.getUserOrigin().getUsername());
     }
 
@@ -47,6 +59,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     public class FriendRequestViewHolder extends RecyclerView.ViewHolder {
         private TextView tv_completeName_user;
         private TextView tv_username_user;
+        private ImageView image_user;
         private Button ib_accept_user;
         private Button ib_decline_user;
 
@@ -55,6 +68,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
             tv_completeName_user = itemView.findViewById(R.id.request_friend_textView_name_item);
             tv_username_user = itemView.findViewById(R.id.request_friend_textView_username_item);
+            image_user = itemView.findViewById(R.id.request_friend_image_view_item);
             ib_accept_user = itemView.findViewById(R.id.request_friend_button_accept_item);
             ib_decline_user = itemView.findViewById(R.id.request_friend_button_decline_item);
 
