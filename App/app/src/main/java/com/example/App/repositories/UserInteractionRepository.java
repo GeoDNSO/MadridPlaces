@@ -26,17 +26,6 @@ public class UserInteractionRepository extends Repository{
     private MutableLiveData<List<TRecommendation>> mRecommendationsList = new MutableLiveData<>();
     private MutableLiveData<List<TRecommendation>> mPendingRecommendationsList = new MutableLiveData<>();
 
-
-
-    public MutableLiveData<List<TRecommendation>> getmRecommendationsList() {
-        return mRecommendationsList;
-    }
-
-    public MutableLiveData<List<TRecommendation>> getmPendingRecommendationsList() {
-        return mPendingRecommendationsList;
-    }
-
-
     class RecommendationsListCallBack implements Callback {
 
         private SimpleRequest simpleRequest;
@@ -106,8 +95,6 @@ public class UserInteractionRepository extends Repository{
         }
     }
 
-    //lista lugares de quantity en quantity en función de page alfabeticamente
-    // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
     public void listRecom(int page, int quantity, String nickname) {
 
         String postBodyString = UserInteractionRepositoryHelper.pageAndQuantToSTring(page, quantity, nickname);
@@ -250,4 +237,11 @@ public class UserInteractionRepository extends Repository{
         });
     }
 
+    public MutableLiveData<List<TRecommendation>> getmRecommendationsList() {
+        return mRecommendationsList;
+    }
+
+    public MutableLiveData<List<TRecommendation>> getmPendingRecommendationsList() {
+        return mPendingRecommendationsList;
+    }
 }

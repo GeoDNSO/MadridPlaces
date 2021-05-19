@@ -24,13 +24,10 @@ import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class UserRepository {
-
-    private MutableLiveData<Integer> mSuccess = new MutableLiveData<Integer>();
+public class UserRepository extends Repository{
 
     private MutableLiveData<TUser> mUser = new MutableLiveData<>();
     private MutableLiveData<List<TUser>> mListUsers = new MutableLiveData<>();
-
     private MutableLiveData<Pair<Integer,Integer>> mCountProfileCommentsAndHistory = new MutableLiveData<>();
 
     public void registerUser(TUser user) {
@@ -50,14 +47,12 @@ public class UserRepository {
                 mSuccess.postValue(ControlValues.REGISTER_USER_FAIL);
                 call.cancel();
             }
-
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     throw new IOException("Unexpected code " + response);
                 }
                 mSuccess.postValue(ControlValues.REGISTER_USER_OK);
-
             }
         });
     }
@@ -103,46 +98,6 @@ public class UserRepository {
             }
         });
 
-    }
-
-    public void getUser(String nickname) {
-
-        JSONObject jsonUser = new JSONObject();
-        try {
-            jsonUser.put("nickname", nickname);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        String postBodyString = jsonUser.toString();
-
-        SimpleRequest simpleRequest = new SimpleRequest();
-        Request request = simpleRequest.buildRequest(
-                postBodyString,
-                AppConstants.METHOD_POST, "/registration/"
-        );
-
-        Call call = simpleRequest.createCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-                mSuccess.postValue(ControlValues.GET_USER_FAIL);
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(Call call, final Response response) throws IOException {
-
-                if (!response.isSuccessful()) {
-                    mSuccess.postValue(ControlValues.GET_USER_FAIL);
-                    throw new IOException("Unexpected code " + response);
-                }
-
-                TUser user = UserRepositoryHelper.jsonStringToUser(response.body().string());
-                mUser.postValue(user);
-                mSuccess.postValue(ControlValues.GET_USER_OK);
-            }
-        });
     }
 
     public void deleteUser(String nickname){
@@ -333,10 +288,6 @@ public class UserRepository {
 
     public MutableLiveData<List<TUser>> getListUsers() { return mListUsers; }
 
-    public void setmSuccess(MutableLiveData<Integer> mSuccess) {
-        this.mSuccess = mSuccess;
-    }
-
     public MutableLiveData<TUser> getmUser() {
         return mUser;
     }
@@ -347,5 +298,49 @@ public class UserRepository {
 
     public void clearListUsers() {
         mListUsers.setValue(new ArrayList<>());
+    }
+
+    public void setmSuccess(MutableLiveData<Integer> mSuccess) {
+        this.mSuccess = mSuccess;
+    }
+
+    public void getUser(String nickname) {
+
+        JSONObject jsonUser = new JSONObject();
+        try {
+            jsonUser.put("nickname", nickname);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String postBodyString = jsonUser.toString();
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+        Request request = simpleRequest.buildRequest(
+                postBodyString,
+                AppConstants.METHOD_POST, "/registration/"
+        );
+
+        Call call = simpleRequest.createCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(ControlValues.GET_USER_FAIL);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    mSuccess.postValue(ControlValues.GET_USER_FAIL);
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                TUser user = UserRepositoryHelper.jsonStringToUser(response.body().string());
+                mUser.postValue(user);
+                mSuccess.postValue(ControlValues.GET_USER_OK);
+            }
+        });
     }
 }
