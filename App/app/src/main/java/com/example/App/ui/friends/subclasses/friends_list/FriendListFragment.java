@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.App.App;
@@ -39,6 +40,7 @@ public class FriendListFragment extends Fragment implements FriendListAdapter.Fr
     private FriendListAdapter friendListAdapter;
 
     private List<TRequestFriend> friendList;
+    private TextView noFriends;
 
     private View root;
     private int lastPosition = -1;
@@ -62,7 +64,7 @@ public class FriendListFragment extends Fragment implements FriendListAdapter.Fr
         friendListAdapter = new FriendListAdapter(getActivity(), friendList, this); //getActivity = MainActivity.this
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(friendListAdapter);
-
+        showTextViewNoFriends();
         mViewModel.friendList(App.getInstance().getUsername());
 
         return root;
@@ -82,11 +84,13 @@ public class FriendListFragment extends Fragment implements FriendListAdapter.Fr
             String msg = getString(R.string.friend_deleted_1) + " " + friends.getUserDest() + " " + getString(R.string.friend_deleted_2);
             Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
             friendList.remove(friends);
+            showTextViewNoFriends();
             friendListAdapter = new FriendListAdapter(getActivity(), friendList, FriendListFragment.this);
             recyclerView.setAdapter(friendListAdapter);
             progressBar.setVisibility(View.GONE);
             lastPosition = -1;
         });
+
         actionHashMap.put(ControlValues.DELETE_FRIEND_FAIL, () -> {
             //Nothing..
         });
@@ -107,6 +111,7 @@ public class FriendListFragment extends Fragment implements FriendListAdapter.Fr
             @Override
             public void onChanged(List<TRequestFriend> tRequestFriends) {
                 friendList = tRequestFriends;
+                showTextViewNoFriends();
                 friendListAdapter = new FriendListAdapter(getActivity(), tRequestFriends, FriendListFragment.this);
                 recyclerView.setAdapter(friendListAdapter);
             }
@@ -114,9 +119,19 @@ public class FriendListFragment extends Fragment implements FriendListAdapter.Fr
 
     }
 
+    private void showTextViewNoFriends(){
+        if(friendList.size() == 0){
+            noFriends.setVisibility(View.VISIBLE);
+        }
+        else{
+            noFriends.setVisibility(View.GONE);
+        }
+    }
+
     private void init() {
         recyclerView = root.findViewById(R.id.friends_list_recycle_view);
         progressBar = root.findViewById(R.id.friends_list_progressBar);
+        noFriends = root.findViewById(R.id.friends_list_no_results);
     }
 
     @Override

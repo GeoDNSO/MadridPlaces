@@ -157,14 +157,14 @@ public class UserFriendRepository extends Repository{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                mSuccess.postValue(ControlValues.ACCEPT_REQ_FRIEND_FAIL);
+                mSuccess.postValue(ControlValues.DECLINE_REQ_FRIEND_FAIL);
                 call.cancel();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(!response.isSuccessful()) {
-                    mSuccess.postValue(ControlValues.ACCEPT_REQ_FRIEND_FAIL);
+                    mSuccess.postValue(ControlValues.DECLINE_REQ_FRIEND_FAIL);
                     throw new IOException("Unexpected code " + response);
                 }
 
@@ -175,7 +175,7 @@ public class UserFriendRepository extends Repository{
                     mSuccess.postValue(ControlValues.DECLINE_REQ_FRIEND_OK);
                 }
                 else {
-                    mSuccess.postValue(ControlValues.ACCEPT_REQ_FRIEND_FAIL);
+                    mSuccess.postValue(ControlValues.DECLINE_REQ_FRIEND_FAIL);
                 }
             }
         });

@@ -230,5 +230,7 @@
     <string name="select_lang">Elige un idioma</string>
     <string name="lang_select_ok">Confirmar</string>
     <string name="german">Alemán</string>
+    <string name="no_friends">No tienes amigos en la aplicación</string>
+    <string name="no_request_friends">No tienes ninguna petición de amistad</string>
 
 </resources>
