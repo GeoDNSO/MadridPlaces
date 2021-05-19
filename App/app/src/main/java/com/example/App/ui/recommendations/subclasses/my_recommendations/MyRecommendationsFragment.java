@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.App.App;
@@ -41,6 +42,7 @@ public class MyRecommendationsFragment extends Fragment implements MyRecommendat
     private NestedScrollView nestedScrollView;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
+    private TextView noRecommendations;
 
     private List<TRecommendation> recommendationList;
 
@@ -74,7 +76,7 @@ public class MyRecommendationsFragment extends Fragment implements MyRecommendat
         //Set layout
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(myRecommendationsAdapter);
-
+        showTextViewNoRecommendations();
         progressBar.setVisibility(View.VISIBLE);
 
         mViewModel.listUserRecommendations(page, quantum, App.getInstance().getUsername());
@@ -119,9 +121,19 @@ public class MyRecommendationsFragment extends Fragment implements MyRecommendat
                 recommendationList = tRecommendations;
                 myRecommendationsAdapter = new MyRecommendationsAdapter(getActivity(), recommendationList, MyRecommendationsFragment.this);
                 recyclerView.setAdapter(myRecommendationsAdapter);
+                showTextViewNoRecommendations();
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void showTextViewNoRecommendations(){
+        if(recommendationList.size() == 0){
+            noRecommendations.setVisibility(View.VISIBLE);
+        }
+        else{
+            noRecommendations.setVisibility(View.GONE);
+        }
     }
 
     private void initListeners() {
@@ -149,7 +161,7 @@ public class MyRecommendationsFragment extends Fragment implements MyRecommendat
         nestedScrollView = root.findViewById(R.id.my_recommendations_NestedScroll);
         progressBar = root.findViewById(R.id.my_recommendations_progressBar);
         recyclerView = root.findViewById(R.id.my_recommendations_RecyclerView);
-
+        noRecommendations = root.findViewById(R.id.my_recommendations_no_results);
         endOfList = false;
     }
 
