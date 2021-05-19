@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserInteractionRepositoryHelper {
+public class RecommendationRepositoryHelper {
 
     public static List<TRecommendation> getListFromResponse(String res) {
         JSONObject jresponse = null;

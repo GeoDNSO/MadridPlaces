@@ -2,9 +2,8 @@ package com.example.App.ui.recommendations;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
-import com.example.App.repositories.UserInteractionRepository;
+import com.example.App.repositories.RecommendationRepository;
 import com.example.App.models.TRecommendation;
 import com.example.App.components.ViewModelParent;
 
@@ -15,11 +14,11 @@ public class RecommendationsViewModel extends ViewModelParent {
     private LiveData<List<TRecommendation>> mListPendingRecom = new MutableLiveData<>();
 
 
-    private UserInteractionRepository recomRepository;
+    private RecommendationRepository recomRepository;
 
     @Override
     public void init() {
-        recomRepository = new UserInteractionRepository();
+        recomRepository = new RecommendationRepository();
 
         mListRecom = super.updateOnChange(mListRecom, recomRepository.getmRecommendationsList());
         mListPendingRecom = super.updateOnChange(mListPendingRecom, recomRepository.getmPendingRecommendationsList());

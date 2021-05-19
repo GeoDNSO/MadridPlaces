@@ -1,12 +1,11 @@
 package com.example.App.repositories;
 
-
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.networking.SimpleRequest;
-import com.example.App.repositories.helpers.UserInteractionRepositoryHelper;
+import com.example.App.repositories.helpers.RecommendationRepositoryHelper;
 import com.example.App.models.TRecommendation;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ControlValues;
@@ -21,7 +20,7 @@ import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class UserInteractionRepository extends Repository{
+public class RecommendationRepository extends Repository{
 
     private MutableLiveData<List<TRecommendation>> mRecommendationsList = new MutableLiveData<>();
     private MutableLiveData<List<TRecommendation>> mPendingRecommendationsList = new MutableLiveData<>();
@@ -75,7 +74,7 @@ public class UserInteractionRepository extends Repository{
             }
             //si no hubo problemas...
             List<TRecommendation> listaAux = recomList.getValue();
-            List<TRecommendation> listaFromResponse = UserInteractionRepositoryHelper.getListFromResponse(res);
+            List<TRecommendation> listaFromResponse = RecommendationRepositoryHelper.getListFromResponse(res);
             if(listaFromResponse == null){
                 Log.d("PLACE_REPO", "La lista JSON convertida es NULO, MIRAR...");
                 return;
@@ -85,7 +84,7 @@ public class UserInteractionRepository extends Repository{
                 return;
             }
             if (listaAux == null){
-                recomList.postValue(UserInteractionRepositoryHelper.getListFromResponse(res));
+                recomList.postValue(RecommendationRepositoryHelper.getListFromResponse(res));
             }
             else{
                 listaAux.addAll(listaFromResponse);
@@ -97,17 +96,17 @@ public class UserInteractionRepository extends Repository{
 
     public void listRecom(int page, int quantity, String nickname) {
 
-        String postBodyString = UserInteractionRepositoryHelper.pageAndQuantToSTring(page, quantity, nickname);
+        String postBodyString = RecommendationRepositoryHelper.pageAndQuantToSTring(page, quantity, nickname);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/recommendations/listRecommendationsSent");
         Call call = simpleRequest.createCall(request);
 
-        call.enqueue(new UserInteractionRepository.RecommendationsListCallBack(simpleRequest, mRecommendationsList));
+        call.enqueue(new RecommendationRepository.RecommendationsListCallBack(simpleRequest, mRecommendationsList));
     }
 
     public void acceptPendingRecom(String placeName, String userOrigin, String userDest){
-        String postBodyString = UserInteractionRepositoryHelper.jsonInfoForSendRecomendation(userOrigin, userDest, placeName);
+        String postBodyString = RecommendationRepositoryHelper.jsonInfoForSendRecomendation(userOrigin, userDest, placeName);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -147,7 +146,7 @@ public class UserInteractionRepository extends Repository{
     }
 
     public void denyPendingRecom(String placeName, String userOrigin, String userDest){
-        String postBodyString = UserInteractionRepositoryHelper.jsonInfoForSendRecomendation(userOrigin, userDest, placeName);
+        String postBodyString = RecommendationRepositoryHelper.jsonInfoForSendRecomendation(userOrigin, userDest, placeName);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 
@@ -188,17 +187,17 @@ public class UserInteractionRepository extends Repository{
 
     public void listPendingRecom(int page, int quantity, String nickname) {
 
-        String postBodyString = UserInteractionRepositoryHelper.pageAndQuantToSTring(page, quantity, nickname);
+        String postBodyString = RecommendationRepositoryHelper.pageAndQuantToSTring(page, quantity, nickname);
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_POST, "/recommendations/listPendingRecommendations");
         Call call = simpleRequest.createCall(request);
 
-        call.enqueue(new UserInteractionRepository.RecommendationsListCallBack(simpleRequest, mPendingRecommendationsList));
+        call.enqueue(new RecommendationRepository.RecommendationsListCallBack(simpleRequest, mPendingRecommendationsList));
     }
 
-    public void sendRecomendation(String userOrigin, String userDest, String place) {
-        String postBodyString = UserInteractionRepositoryHelper.jsonInfoForSendRecomendation(userOrigin, userDest, place);
+    public void sendRecommendation(String userOrigin, String userDest, String place) {
+        String postBodyString = RecommendationRepositoryHelper.jsonInfoForSendRecomendation(userOrigin, userDest, place);
 
         SimpleRequest simpleRequest = new SimpleRequest();
 

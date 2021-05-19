@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.repositories.UserFriendRepository;
-import com.example.App.repositories.UserInteractionRepository;
+import com.example.App.repositories.RecommendationRepository;
 import com.example.App.models.TRequestFriend;
 import com.example.App.components.ViewModelParent;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SendRecommendationViewModel extends ViewModelParent {
 
-    private UserInteractionRepository userInteractionRepository;
+    private RecommendationRepository userInteractionRepository;
     private UserFriendRepository userFriendRepository;
 
     private MutableLiveData<String> mSelectedItems = new MutableLiveData<>();
@@ -20,7 +20,7 @@ public class SendRecommendationViewModel extends ViewModelParent {
 
     @Override
     public void init() {
-        userInteractionRepository = new UserInteractionRepository();
+        userInteractionRepository = new RecommendationRepository();
         userFriendRepository = new UserFriendRepository();
 
         mSuccess  = super.updateOnChange(mSuccess, userInteractionRepository.getSuccess());
@@ -33,7 +33,7 @@ public class SendRecommendationViewModel extends ViewModelParent {
 
 
     public void sendRecomendation(String userOrigin, String userDest, String place) {
-        userInteractionRepository.sendRecomendation(userOrigin, userDest, place);
+        userInteractionRepository.sendRecommendation(userOrigin, userDest, place);
     }
 
     public MutableLiveData<String> getmSelectedItems() {
