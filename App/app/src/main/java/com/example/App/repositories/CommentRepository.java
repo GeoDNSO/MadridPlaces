@@ -127,7 +127,6 @@ public class CommentRepository extends Repository {
         });
     }
 
-    //Para modificar el comentario, tambien se puede usar esta funcion
     public void newComment (String userName, String content, String placeName, float rate) { //Función que realiza la creación de un comentario con valoración
         String postBodyString = CommentRepositoryHelper.commentToString(userName, content, placeName, rate);
         SimpleRequest simpleRequest = new SimpleRequest();
@@ -180,7 +179,7 @@ public class CommentRepository extends Repository {
     public void deleteComment(TComment comment, int position) {
 
         //TODO Únicamente creo la valoracion en la BD, no lo muestro en la APP, me da miedo crear un Tcomment con el comment vacío
-        String postBodyString = deleteToString(comment.getId());
+        String postBodyString = CommentRepositoryHelper.deleteToString(comment.getId());
         SimpleRequest simpleRequest = new SimpleRequest();
         Request request = simpleRequest.buildRequest(postBodyString,
                 AppConstants.METHOD_DELETE, "/location/deleteComment");
@@ -220,18 +219,5 @@ public class CommentRepository extends Repository {
                 }
             }
         });
-    }
-
-    private String deleteToString(int id_comment) {
-        JSONObject jsonName = new JSONObject();
-        String infoString;
-        try {
-            jsonName.put("id_comment", id_comment);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            infoString = "error";
-        }
-        infoString = jsonName.toString();
-        return infoString;
     }
 }

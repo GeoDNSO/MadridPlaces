@@ -121,4 +121,16 @@ public class CommentRepositoryHelper {
         }
     }
 
+    public static String deleteToString(int id_comment) {
+        JSONObject jsonName = new JSONObject();
+        String infoString;
+        try {
+            jsonName.put("id_comment", id_comment);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            infoString = "error";
+        }
+        infoString = jsonName.toString();
+        return infoString;
+    }
 }
