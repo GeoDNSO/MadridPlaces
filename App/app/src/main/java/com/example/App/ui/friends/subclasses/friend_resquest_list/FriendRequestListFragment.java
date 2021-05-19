@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.App.App;
@@ -42,6 +43,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
     private NestedScrollView nestedScrollView;
     private FriendRequestListAdapter friendRequestListAdapter;
     private List<TRequestFriend> friendsList;
+    private TextView noFriendsRequests;
     int lastPosition = -1;
 
     public static FriendRequestListFragment newInstance() {
@@ -64,7 +66,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
         friendRequestListAdapter = new FriendRequestListAdapter(getActivity(), friendsList, this); //getActivity = MainActivity.this
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(friendRequestListAdapter);
-
+        showTextViewNoFriends();
         mViewModel.friendRequestList(App.getInstance().getUsername());
 
         return root;
@@ -80,34 +82,36 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
         });
 
         actionHashMap.put(ControlValues.ACCEPT_REQ_FRIEND_OK, () -> {
-            if(lastPosition != -1)
+            if(lastPosition == -1)
                 return;
             Toast.makeText(getContext(), getString(R.string.friend_request_accepted), Toast.LENGTH_SHORT).show();
             TRequestFriend friends = friendsList.get(lastPosition);
             friendsList.remove(friends);
+            showTextViewNoFriends();
             friendRequestListAdapter = new FriendRequestListAdapter(getActivity(), friendsList, FriendRequestListFragment.this);
             recyclerView.setAdapter(friendRequestListAdapter);
             progressBar.setVisibility(View.GONE);
             lastPosition = -1;
         });
         actionHashMap.put(ControlValues.ACCEPT_REQ_FRIEND_FAIL, () -> {
-            //Nothing
+            Toast.makeText(getContext(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
         });
 
         actionHashMap.put(ControlValues.DECLINE_REQ_FRIEND_OK, () -> {
-            if(lastPosition != -1)
+            if(lastPosition == -1)
                 return;
 
             TRequestFriend friends = friendsList.get(lastPosition);
-            Toast.makeText(getContext(), getString(R.string.decline_friend_request) +friends.getUserDest(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.decline_friend_request) + friends.getUserDest(), Toast.LENGTH_SHORT).show();
             friendsList.remove(friends);
+            showTextViewNoFriends();
             friendRequestListAdapter = new FriendRequestListAdapter(getActivity(), friendsList, FriendRequestListFragment.this);
             recyclerView.setAdapter(friendRequestListAdapter);
             progressBar.setVisibility(View.GONE);
             lastPosition = -1;
         });
         actionHashMap.put(ControlValues.DECLINE_REQ_FRIEND_FAIL, () -> {
-           //Nothing
+            Toast.makeText(getContext(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -126,6 +130,7 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
             @Override
             public void onChanged(List<TRequestFriend> tRequestFriends) {
                 friendsList = tRequestFriends;
+                showTextViewNoFriends();
                 friendRequestListAdapter = new FriendRequestListAdapter(getActivity(), tRequestFriends, FriendRequestListFragment.this);
                 recyclerView.setAdapter(friendRequestListAdapter);
             }
@@ -133,10 +138,20 @@ public class FriendRequestListFragment extends Fragment implements FriendRequest
 
     }
 
+    private void showTextViewNoFriends(){
+        if(friendsList.size() == 0){
+            noFriendsRequests.setVisibility(View.VISIBLE);
+        }
+        else{
+            noFriendsRequests.setVisibility(View.GONE);
+        }
+    }
+
     private void initUI() {
         recyclerView = root.findViewById(R.id.friends_request_list_recycle_view);
         progressBar = root.findViewById(R.id.friends_request_list_progressBar);
         nestedScrollView = root.findViewById(R.id.friend_request_list_nestedScrollView);
+        noFriendsRequests = root.findViewById(R.id.friend_request_list_no_results);
     }
 
     @Override

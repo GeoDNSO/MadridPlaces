@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.App.App;
@@ -44,6 +45,7 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
     private NestedScrollView nestedScrollView;
     private PendingRecommendationsListAdapter pendingRecommendationsListAdapter;
     private List<TRecommendation> recommendationsList;
+    private TextView noRecommendations;
     private int page = 1, quantum = 3;
     private int listPosition = -1;
     private boolean endOfList;
@@ -70,17 +72,26 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
         pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, this); //getActivity = MainActivity.this
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(pendingRecommendationsListAdapter);
-
+        showTextViewNoRecommendations();
         mViewModel.listUserPendingRecommendations(page, quantum, App.getInstance().getUsername());
 
         return root;
+    }
+
+    private void showTextViewNoRecommendations(){
+        if(recommendationsList.size() == 0){
+            noRecommendations.setVisibility(View.VISIBLE);
+        }
+        else{
+            noRecommendations.setVisibility(View.GONE);
+        }
     }
 
     private void initUI(){
         recyclerView = root.findViewById(R.id.recommendations_pending_list_recycle_view);
         progressBar = root.findViewById(R.id.recommendations_pending_list_progressBar);
         nestedScrollView = root.findViewById(R.id.recommedations_pending_list_user_nestedScrollView);
-
+        noRecommendations = root.findViewById(R.id.recommendations_pending_no_results);
         endOfList = false;
     }
 
@@ -122,6 +133,7 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
             recommendationsList.remove(recommendation);
             pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, PendingRecommendationsFragment.this);
             recyclerView.setAdapter(pendingRecommendationsListAdapter);
+            showTextViewNoRecommendations();
             progressBar.setVisibility(View.GONE);
             listPosition = -1;
         });
@@ -137,6 +149,7 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
             recommendationsList.remove(recommendation);
             pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, PendingRecommendationsFragment.this);
             recyclerView.setAdapter(pendingRecommendationsListAdapter);
+            showTextViewNoRecommendations();
             progressBar.setVisibility(View.GONE);
             listPosition = -1;
         });
@@ -172,6 +185,7 @@ public class PendingRecommendationsFragment extends Fragment implements PendingR
                 recommendationsList = tRecomendations;
                 pendingRecommendationsListAdapter = new PendingRecommendationsListAdapter(recommendationsList, PendingRecommendationsFragment.this);
                 recyclerView.setAdapter(pendingRecommendationsListAdapter);
+                showTextViewNoRecommendations();
                 progressBar.setVisibility(View.GONE);
             }
         });
