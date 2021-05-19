@@ -27,16 +27,18 @@ public class LocationTrack extends Service implements LocationListener {
     private Activity mActivity;
     private PermissionsManager permissionsManager;
 
+    //Permissions
     private boolean checkGPS = false;
     private boolean checkNetwork = false;
     private boolean canGetLocation = false;
 
+    //Data
     private Location loc;
     private double latitude;
     private double longitude;
 
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
-    private static final long MIN_TIME_BW_UPDATES = 5000;
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; //m
+    private static final long MIN_TIME_BW_UPDATES = 5000; //ms
 
     protected LocationManager locationManager;
 
@@ -126,7 +128,6 @@ public class LocationTrack extends Service implements LocationListener {
 
         alertDialog.show();
     }
-
 
     public void stopListener() {
         if (locationManager != null) {

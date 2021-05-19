@@ -25,6 +25,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class PlaceRepository extends Repository{
+
     private MutableLiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mTwitterPlacesList = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mNearestPlacesList = new MutableLiveData<>();
@@ -35,38 +36,15 @@ public class PlaceRepository extends Repository{
     private MutableLiveData<List<TPlace>> mPlaceVisited = new MutableLiveData<>();
     private MutableLiveData<List<TPlace>> mPlacesPendingToVisit = new MutableLiveData<>();
 
-    public MutableLiveData<TPlace> getmPlace() {
-        return mPlace;
-    }
-    public MutableLiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
-    public MutableLiveData<List<TPlace>> getTwitterPlacesList(){ return mTwitterPlacesList; }
-    public MutableLiveData<List<String>> getCategoriesList(){ return mCategoriesList; }
-    public MutableLiveData<List<TPlace>> getCategoriesPlacesList() { return mCategoriesPlacesList; }
-    public MutableLiveData<List<TPlace>> getNearestPlacesList() { return mNearestPlacesList; }
-    public MutableLiveData<List<TPlace>> getFavouritesPlacesList() { return mFavouritesPlacesList; }
-    public MutableLiveData<List<TPlace>> getPlaceVisitedList() { return mPlaceVisited; }
-    public MutableLiveData<List<TPlace>> getPendingToVisitList() { return mPlacesPendingToVisit; }
-
-
-
-    //Callback personalizado tanto para List como para Append
+    //Callback personalizado tanto para las listas de lugares
     class PlaceListCallBack implements Callback{
 
         private SimpleRequest simpleRequest;
         private MutableLiveData<List<TPlace>> placeList;
 
-
         public PlaceListCallBack(SimpleRequest simpleRequest, MutableLiveData<List<TPlace>> placeList){
             this.simpleRequest = simpleRequest;
             this.placeList = placeList;
-        }
-
-        private void sleep(long milis){
-            try {
-                Thread.sleep(milis);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
 
         @Override
@@ -80,9 +58,7 @@ public class PlaceRepository extends Repository{
 
         @Override
         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-
-            this.sleep(500);//Para simular la carga...
-
+            //sleep(500);//Para simular la carga...
             if (!response.isSuccessful()) {
                 mSuccess.postValue(ControlValues.LIST_PLACES_FAIL);
                 throw new IOException("Unexpected code " + response);
@@ -91,31 +67,30 @@ public class PlaceRepository extends Repository{
             boolean success = simpleRequest.isSuccessful(res);
 
             if(!success){
-                Log.d("PlaceListCallback", "Not success");
+                Log.d("PlaceListCallback", "Result got: Not Success");
                 placeList.postValue(null);
-                mSuccess.postValue(ControlValues.LIST_PLACES_FAIL);//Importante que este despues del postValue de mUser
-
+                mSuccess.postValue(ControlValues.LIST_PLACES_FAIL);
                 return;
             }
             //si no hubo problemas...
-            List<TPlace> listaAux = placeList.getValue();
-            List<TPlace> listaFromResponse = PlaceRepositoryHelper.getListFromResponse(res);
-            if(listaFromResponse == null){
-                Log.d("PLACE_REPO", "La lista JSON convertida es NULO, MIRAR...");
+            List<TPlace> auxList = placeList.getValue();
+            List<TPlace> listFromResponse = PlaceRepositoryHelper.getListFromResponse(res);
+            if(listFromResponse == null){
+                Log.d("PlaceListCallback", "Lista recibida nula...");
                 return;
             }
-            if(listaFromResponse.isEmpty()){
+            if(listFromResponse.isEmpty()){
                 mSuccess.postValue(ControlValues.NO_MORE_PLACES_TO_LIST);
                 return;
             }
-            if (listaAux == null){
+            if (auxList == null){ //Lista vacia se crea
                 placeList.postValue(PlaceRepositoryHelper.getListFromResponse(res));
             }
-            else{
-                listaAux.addAll(listaFromResponse);
-                placeList.postValue(listaAux);
+            else{ //Lista creada, se añade la lista recibida a la lista actual
+                auxList.addAll(listFromResponse);
+                placeList.postValue(auxList);
             }
-            mSuccess.postValue(ControlValues.LIST_PLACES_OK);//Importante que este despues del postValue de mUser
+            mSuccess.postValue(ControlValues.LIST_PLACES_OK);
         }
     }
 
@@ -152,7 +127,6 @@ public class PlaceRepository extends Repository{
             }
         });
     }
-
 
     public void addPlace(TPlace place){
         String postBodyString = place.jsonToString();
@@ -395,8 +369,100 @@ public class PlaceRepository extends Repository{
 
     }
 
-    //lista lugares de quantity en quantity en función de page alfabeticamente
-    // Ej: quantity = 100 -> (page:0 = 1-100, page:1 = 101-200...)
+    public void setVisitedOnPlace(TPlace place, String username) {
+
+        String postBodyString = PlaceRepositoryHelper.jsonInfoForFav(place, username);
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = null;
+        if(!place.getTimeVisited().equals("")){
+            request = simpleRequest.buildRequest(
+                    postBodyString,
+                    AppConstants.METHOD_DELETE, "/location/deletePlaceVisited"
+            );
+        }
+        else{
+            request = simpleRequest.buildRequest(
+                    postBodyString,
+                    AppConstants.METHOD_POST, "/location/newPLaceVisited"
+            );
+        }
+
+        Call call = simpleRequest.createCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(ControlValues.VISITED_POST_FAIL);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    mSuccess.postValue(ControlValues.VISITED_POST_FAIL);
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String res = response.body().string();
+                boolean success = simpleRequest.isSuccessful(res);
+
+                if (success){
+                    mSuccess.postValue(ControlValues.VISITED_POST_OK);
+                }
+                else{
+                    mSuccess.postValue(ControlValues.VISITED_POST_FAIL);
+                }
+            }
+        });
+    }
+
+    public void deletePlacePendingToVisit(String nickname, String placeName){
+        JSONObject jsonPlace = new JSONObject();
+
+        try {
+            jsonPlace.put("user", nickname);
+            jsonPlace.put("location", placeName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String postBodyString = jsonPlace.toString();
+
+        SimpleRequest simpleRequest = new SimpleRequest();
+
+        Request request = simpleRequest.buildRequest(postBodyString,
+                AppConstants.METHOD_DELETE, "/location/deletePendingToVisit");
+
+        Call call = simpleRequest.createCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                mSuccess.postValue(ControlValues.DELETE_PLACE_FAIL);
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    mSuccess.postValue(ControlValues.DELETE_PLACE_FAIL);
+                    throw new IOException("Unexpected code " + response);
+                }
+                Boolean success = simpleRequest.isSuccessful(response);
+                if(success){
+                    mSuccess.postValue(ControlValues.DELETE_PLACE_OK);
+                }
+                else{
+                    mSuccess.postValue(ControlValues.DELETE_PLACE_FAIL);
+                }
+
+            }
+        });
+    }
+
     public void listPlaces(int page, int quantity, String nickname, String searchText) {
 
         String postBodyString = PlaceRepositoryHelper.pageAndQuantToSTring(page, quantity, nickname, searchText);
@@ -492,7 +558,6 @@ public class PlaceRepository extends Repository{
         call.enqueue(new PlaceListCallBack(simpleRequest, mCategoriesPlacesList));
     }
 
-
     public void listVisitedPlaces(int page, int quantity, String nickname, String searchText) {
 
         String postBodyString = PlaceRepositoryHelper.pageAndQuantToSTring(page, quantity, nickname, searchText);
@@ -503,6 +568,7 @@ public class PlaceRepository extends Repository{
 
         call.enqueue(new PlaceListCallBack(simpleRequest, mPlaceVisited));
     }
+
     public void listPendingToVisit(int page, int quantity, String nickname, String searchText) {
 
         String postBodyString = PlaceRepositoryHelper.pageAndQuantToSTring(page, quantity, nickname, searchText);
@@ -514,98 +580,16 @@ public class PlaceRepository extends Repository{
         call.enqueue(new PlaceListCallBack(simpleRequest, mPlacesPendingToVisit));
     }
 
-    public void deletePlacePendingToVisit(String nickname, String placeName){
-        JSONObject jsonPlace = new JSONObject();
-
-        try {
-            jsonPlace.put("user", nickname);
-            jsonPlace.put("location", placeName);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String postBodyString = jsonPlace.toString();
-
-        SimpleRequest simpleRequest = new SimpleRequest();
-
-        Request request = simpleRequest.buildRequest(postBodyString,
-                AppConstants.METHOD_DELETE, "/location/deletePendingToVisit");
-
-        Call call = simpleRequest.createCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-                mSuccess.postValue(ControlValues.DELETE_PLACE_FAIL);
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(Call call, final Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    mSuccess.postValue(ControlValues.DELETE_PLACE_FAIL);
-                    throw new IOException("Unexpected code " + response);
-                }
-                Boolean success = simpleRequest.isSuccessful(response);
-                if(success){
-                    mSuccess.postValue(ControlValues.DELETE_PLACE_OK);
-                }
-                else{
-                    mSuccess.postValue(ControlValues.DELETE_PLACE_FAIL);
-                }
-
-            }
-        });
+    //MutableLiveData Getters
+    public MutableLiveData<TPlace> getmPlace() {
+        return mPlace;
     }
-
-    public void setVisitedOnPlace(TPlace place, String username) {
-
-        String postBodyString = PlaceRepositoryHelper.jsonInfoForFav(place, username);
-
-        SimpleRequest simpleRequest = new SimpleRequest();
-
-        Request request = null;
-        if(!place.getTimeVisited().equals("")){
-            request = simpleRequest.buildRequest(
-                    postBodyString,
-                    AppConstants.METHOD_DELETE, "/location/deletePlaceVisited"
-            );
-        }
-        else{
-            request = simpleRequest.buildRequest(
-                    postBodyString,
-                    AppConstants.METHOD_POST, "/location/newPLaceVisited"
-            );
-        }
-
-        Call call = simpleRequest.createCall(request);
-
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-                mSuccess.postValue(ControlValues.VISITED_POST_FAIL);
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    mSuccess.postValue(ControlValues.VISITED_POST_FAIL);
-                    throw new IOException("Unexpected code " + response);
-                }
-
-                String res = response.body().string();
-                boolean success = simpleRequest.isSuccessful(res);
-
-                if (success){
-                    mSuccess.postValue(ControlValues.VISITED_POST_OK);
-                }
-                else{
-                    mSuccess.postValue(ControlValues.VISITED_POST_FAIL);
-                }
-            }
-        });
-    }
-
+    public MutableLiveData<List<TPlace>> getPlacesList(){ return mPlacesList; }
+    public MutableLiveData<List<TPlace>> getTwitterPlacesList(){ return mTwitterPlacesList; }
+    public MutableLiveData<List<String>> getCategoriesList(){ return mCategoriesList; }
+    public MutableLiveData<List<TPlace>> getCategoriesPlacesList() { return mCategoriesPlacesList; }
+    public MutableLiveData<List<TPlace>> getNearestPlacesList() { return mNearestPlacesList; }
+    public MutableLiveData<List<TPlace>> getFavouritesPlacesList() { return mFavouritesPlacesList; }
+    public MutableLiveData<List<TPlace>> getPlaceVisitedList() { return mPlaceVisited; }
+    public MutableLiveData<List<TPlace>> getPendingToVisitList() { return mPlacesPendingToVisit; }
 }

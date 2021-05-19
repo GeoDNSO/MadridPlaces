@@ -33,18 +33,6 @@ public class TUser implements JSONSerializable, Parcelable {
         this.image_profile = profile;
     }
 
-    public static final Creator<TUser> CREATOR = new Creator<TUser>() {
-        @Override
-        public TUser createFromParcel(Parcel in) {
-            return new TUser(in);
-        }
-
-        @Override
-        public TUser[] newArray(int size) {
-            return new TUser[size];
-        }
-    };
-
     public String getUsername() {
         return username;
     }
@@ -181,6 +169,18 @@ public class TUser implements JSONSerializable, Parcelable {
         this.rol = in.readString();
         this.image_profile = in.readString();
     }
+
+    public static final Creator<TUser> CREATOR = new Creator<TUser>() {
+        @Override
+        public TUser createFromParcel(Parcel in) {
+            return new TUser(in);
+        }
+
+        @Override
+        public TUser[] newArray(int size) {
+            return new TUser[size];
+        }
+    };
 
     public static Comparator<TUser> comparatorUsernameAZusers = new Comparator<TUser>() {
         @Override

@@ -28,10 +28,6 @@ public class CommentRepository extends Repository {
 
     private MutableLiveData<List<TComment>> mCommentList = new MutableLiveData<>();
 
-    public MutableLiveData<List<TComment>> getCommentsList() {
-        return mCommentList;
-    }
-
     public void listComments(String placeName, int page, int quant) {
 
         String postBodyString = CommentRepositoryHelper.dataToString(placeName, page, quant);
@@ -219,5 +215,9 @@ public class CommentRepository extends Repository {
                 }
             }
         });
+    }
+
+    public MutableLiveData<List<TComment>> getCommentsList() {
+        return mCommentList;
     }
 }
