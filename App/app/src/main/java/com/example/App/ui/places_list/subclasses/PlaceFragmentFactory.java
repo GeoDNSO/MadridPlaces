@@ -1,5 +1,6 @@
 package com.example.App.ui.places_list.subclasses;
 
+import com.example.App.ui.places_list.BasePlaces;
 import com.example.App.ui.places_list.subclasses.category.CategoryPlacesFragment;
 import com.example.App.ui.places_list.subclasses.nearest.NearestPlacesFragment;
 import com.example.App.ui.places_list.subclasses.popular.TwitterPlacesFragment;

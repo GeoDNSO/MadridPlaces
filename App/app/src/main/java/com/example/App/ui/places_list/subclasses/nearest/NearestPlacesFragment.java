@@ -1,6 +1,5 @@
 package com.example.App.ui.places_list.subclasses.nearest;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,12 +12,9 @@ import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.App.App;
-import com.example.App.R;
 import com.example.App.services.LocationTrack;
-import com.example.App.ui.places_list.subclasses.BasePlaces;
-import com.example.App.ui.places_list.subclasses.BaseViewModel;
-import com.example.App.ui.places_list.subclasses.popular.TwitterPlaceViewModel;
-import com.example.App.utilities.AppConstants;
+import com.example.App.ui.places_list.BasePlaces;
+import com.example.App.ui.places_list.BaseViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

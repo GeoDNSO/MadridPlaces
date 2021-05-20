@@ -1,4 +1,4 @@
-package com.example.App.ui.places_list.subclasses;
+package com.example.App.ui.places_list;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -35,7 +35,6 @@ import com.example.App.R;
 import com.example.App.networking.SimpleRequest;
 import com.example.App.models.TPlace;
 import com.example.App.components.LogoutObserver;
-import com.example.App.ui.places_list.PlaceListAdapter;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ControlValues;
 import com.example.App.utilities.OnResultAction;
@@ -67,14 +66,13 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
     protected ProgressBar progressBar;
     protected ShimmerFrameLayout shimmerFrameLayout;
 
-    protected List<TPlace> placeList = new ArrayList<>();
+    protected List<TPlace> placeList;
     protected PlaceListAdapter placeListAdapter;
 
     protected int page = 1, limit = 3, quantum = 3;
 
     protected String search_text = "";
     private boolean endOfList;
-
 
     //Funciones a implementar en los hijos según el tipo de lugares a mostrar
     public abstract void listPlaces();
@@ -92,6 +90,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
         root = inflater.inflate(R.layout.places_list_fragment, container, false);
         setHasOptionsMenu(true);
         App.getInstance().addLogoutObserver(this);
+        placeList = new ArrayList<>();
 
         mViewModel = getViewModelToParent();
         mViewModel.init();
@@ -197,7 +196,7 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
                                 Toast.makeText(activity, s, Toast.LENGTH_LONG).show();
                             }
                         });
-                        return ; //IMP
+                        return ;
                     }
                     //Reseteamos la pagina para ver cambios y borramos la lista...
                     page = 1;
@@ -209,7 +208,6 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
 
                 ExecutorService executorService = Executors.newFixedThreadPool(1);
                 executorService.submit(task);
-
             }
         });
 
@@ -250,7 +248,6 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
         shimmerFrameLayout.startShimmer();
     }
 
-
     protected void initUI(){
         nestedScrollView = root.findViewById(R.id.placesList_ScrollView);
         recyclerView = root.findViewById(R.id.PlaceList_RecyclerView);
@@ -282,7 +279,6 @@ public abstract class BasePlaces extends Fragment implements PlaceListAdapter.On
         page=1;
         listPlaces();
     }
-
 
     protected Integer lastFavPlacePos;
     protected ImageView lastFavImage;

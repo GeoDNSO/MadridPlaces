@@ -3,8 +3,8 @@ package com.example.App.ui.visited.subclasses.pendingVisited;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.App.App;
-import com.example.App.ui.places_list.subclasses.BasePlaces;
-import com.example.App.ui.places_list.subclasses.BaseViewModel;
+import com.example.App.ui.places_list.BasePlaces;
+import com.example.App.ui.places_list.BaseViewModel;
 
 import java.util.ArrayList;
 

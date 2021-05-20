@@ -1,4 +1,4 @@
-package com.example.App.ui.places_list.subclasses;
+package com.example.App.ui.places_list;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -15,7 +15,7 @@ public abstract class BaseViewModel extends ViewModelParent {
     protected LiveData<List<TPlace>> mPlacesList = new MutableLiveData<>();
 
     protected abstract MutableLiveData<List<TPlace>> getPlaceListToParent();
-    public abstract void listPlaceToParent(int page, int quant, String nickname, String serchText);
+    public abstract void listPlaceToParent(int page, int quant, String nickname, String searchText);
 
     @Override
     public void init() {

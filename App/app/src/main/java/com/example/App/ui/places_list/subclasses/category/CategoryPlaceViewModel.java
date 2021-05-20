@@ -1,10 +1,9 @@
 package com.example.App.ui.places_list.subclasses.category;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.App.models.TPlace;
-import com.example.App.ui.places_list.subclasses.BaseViewModel;
+import com.example.App.ui.places_list.BaseViewModel;
 
 import java.util.List;
 

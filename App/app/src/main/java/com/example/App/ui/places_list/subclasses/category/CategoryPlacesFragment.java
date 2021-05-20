@@ -17,8 +17,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.App.App;
 import com.example.App.models.TCategory;
 import com.example.App.services.LocationTrack;
-import com.example.App.ui.places_list.subclasses.BasePlaces;
-import com.example.App.ui.places_list.subclasses.BaseViewModel;
+import com.example.App.ui.places_list.BasePlaces;
+import com.example.App.ui.places_list.BaseViewModel;
 import com.example.App.utilities.AppConstants;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class CategoryPlacesFragment extends BasePlaces {
         TCategory tCategory = (TCategory) getArguments().getParcelable(AppConstants.BUNDLE_CATEGORY_TYPE);
         category = tCategory.getName();
 
-        //Poner el nombre del lugar en la toolbar
+        //Poner el nombre de la categoria en la toolbar
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         ActionBar actionBar = appCompatActivity.getSupportActionBar();
         actionBar.setTitle(category);
@@ -60,13 +60,11 @@ public class CategoryPlacesFragment extends BasePlaces {
         return superView;
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
         addPlace.setVisible(false);
-
 
         nearestPlaces.setVisible(true);
         nearestPlaces.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {

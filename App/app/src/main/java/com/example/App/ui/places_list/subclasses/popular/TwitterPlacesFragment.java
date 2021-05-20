@@ -1,18 +1,10 @@
 package com.example.App.ui.places_list.subclasses.popular;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.App.App;
-import com.example.App.ui.places_list.subclasses.BasePlaces;
-import com.example.App.ui.places_list.subclasses.BaseViewModel;
-import com.example.App.ui.places_list.subclasses.category.CategoryPlaceViewModel;
+import com.example.App.ui.places_list.BasePlaces;
+import com.example.App.ui.places_list.BaseViewModel;
 
 import java.util.ArrayList;
 
