@@ -15,27 +15,28 @@ import com.bumptech.glide.Glide;
 import com.example.App.R;
 import com.example.App.models.TUser;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyViewHolder> /*implements Filterable*/ {
+public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyViewHolder> {
     private Activity activity;
     private List<TUser> listUser;
-    private List<TUser> listUserComplete;
-    private OnListListener onListListener;
+    private OnListObserver onListObserver;
 
-    public UserListAdapter(Activity activity, List<TUser> listUser, OnListListener onListListener) {
+    public UserListAdapter(Activity activity, List<TUser> listUser, OnListObserver onListListener) {
         this.activity = activity;
         this.listUser = listUser;
-        this.onListListener = onListListener;
-        listUserComplete = new ArrayList<>(listUser); //Se crea un nuevo array para que no apunten a la misma lista
+        this.onListObserver = onListListener;
+    }
+
+    public interface OnListObserver {
+        void OnListClick(int position);
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_user_item_row, parent, false);
-        return new MyViewHolder(view, onListListener);
+        return new MyViewHolder(view, onListObserver);
     }
 
     @Override
@@ -107,9 +108,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
         TextView tv_emailProfile;
         TextView tv_birthdayProfile;
         TextView tv_genderProfile;
-        OnListListener onListListener;
+        OnListObserver listObserver;
 
-        public MyViewHolder(View itemView, OnListListener onListListener) {
+        public MyViewHolder(View itemView, OnListObserver onListObserver) {
             super(itemView);
             iv_imgProfile = (ImageView) itemView.findViewById(R.id.imageViewFriend);
             tv_nameProfile = (TextView) itemView.findViewById(R.id.nameTextViewProfile);
@@ -117,19 +118,15 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
             tv_emailProfile = (TextView) itemView.findViewById(R.id.emailTextViewProfile);
             tv_birthdayProfile = (TextView) itemView.findViewById(R.id.birthdayTextViewProfile);
             tv_genderProfile = (TextView) itemView.findViewById(R.id.genderTextViewProfile);
-            this.onListListener = onListListener;
+            this.listObserver = onListObserver;
 
             itemView.setOnClickListener(this); //this referencia a la interfaz que se implementa en el constructor
         }
 
         @Override
         public void onClick(View v) {
-            onListListener.OnListClick(getAdapterPosition());
+            this.listObserver.OnListClick(getAdapterPosition());
         }
-    }
-
-    public interface OnListListener {
-        void OnListClick(int position);
     }
 
     public void setListUser(List<TUser> listUser){

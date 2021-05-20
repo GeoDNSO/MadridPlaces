@@ -61,10 +61,12 @@ public class FriendListFragment extends Fragment implements FriendListAdapter.Fr
         configOnResultActions();
 
         friendList = new ArrayList<>();
-        friendListAdapter = new FriendListAdapter(getActivity(), friendList, this); //getActivity = MainActivity.this
+        friendListAdapter = new FriendListAdapter(getActivity(), friendList, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(friendListAdapter);
+
         showTextViewNoFriends();
+
         mViewModel.friendList(App.getInstance().getUsername());
 
         return root;

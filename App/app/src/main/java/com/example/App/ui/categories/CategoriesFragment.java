@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CategoriesFragment extends Fragment implements CategoriesAdapter.CategoryListener {
+public class CategoriesFragment extends Fragment implements CategoriesAdapter.CategoryObserver {
 
     private View root;
     private CategoriesViewModel mViewModel;
@@ -135,15 +135,12 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     }
 
     @Override
-    public void onClicListener(int position) {
-        //Enviar datos del objeto con posicion position de la lista al otro fragment
-        Toast.makeText(getActivity(), "Touch Listener Category", Toast.LENGTH_SHORT);
+    public void onClickListener(int position) {
         TCategory category = categoryList.get(position);
 
         Bundle bundle = new Bundle();
         bundle.putParcelable(AppConstants.BUNDLE_CATEGORY_TYPE, category);
 
-        //Le pasamos el bundle
         Navigation.findNavController(root).navigate(R.id.categoryPlacesFragment, bundle);
     }
 }

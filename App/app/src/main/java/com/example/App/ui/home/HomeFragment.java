@@ -86,7 +86,6 @@ public class HomeFragment extends Fragment {
         PlaceFragmentFactory placeFragmentFactory = new PlaceFragmentFactory();
 
         for(int i = 0; i < tabTitlesList.size()-1; i++){
-            //Fragment placeListFragment = new PlacesListFragment();
             Fragment placeListFragment = placeFragmentFactory.getInstance(tabTitlesList.get(i), null);
             homeTabAdapter.addFragment(placeListFragment, tabTitlesList.get(i));
         }

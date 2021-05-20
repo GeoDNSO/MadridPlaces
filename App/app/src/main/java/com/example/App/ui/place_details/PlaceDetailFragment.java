@@ -268,7 +268,6 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
 
         ratingBar.setRating((float) place.getRating());
 
-
         String rating = UserInterfaceUtils.rating2UIString(place.getRating());
         tvPlaceRating.setText(rating);
 
@@ -286,7 +285,6 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
             drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_flag);
 
         ivVisited.setImageDrawable(drawable);
-
 
         String distance = UserInterfaceUtils.formatDistance(place.getDistanceToUser());
         tvDistance2Place.setText(distance);
@@ -328,45 +326,26 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         inflater.inflate(R.menu.option_for_place_navigation_menu, menu);
 
         modifyPlace = menu.findItem(R.id.modify_place_menu_button);
-
-        modifyPlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Bundle bundle = new Bundle();
-
-                bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
-
-                //Le pasamos el bundle
-                Navigation.findNavController(root).navigate(R.id.modifyPlaceFragment, bundle);
-                return true;
-            }
+        modifyPlace.setOnMenuItemClickListener(item -> {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(AppConstants.BUNDLE_PLACE_DETAILS, place);
+            Navigation.findNavController(root).navigate(R.id.modifyPlaceFragment, bundle);
+            return true;
         });
         deletePlace = menu.findItem(R.id.delete_place_menu_button);
-        deletePlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                deleteDialog();
-                return true;
-            }
+        deletePlace.setOnMenuItemClickListener(item -> {
+            deleteDialog();
+            return true;
         });
-
         toPendingVisited = menu.findItem(R.id.pending_visited_menu_item);
-        toPendingVisited.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                mViewModel.placeToPendingVisited(place, App.getInstance().getUsername());
-                return true;
-            }
+        toPendingVisited.setOnMenuItemClickListener(item -> {
+            mViewModel.placeToPendingVisited(place, App.getInstance().getUsername());
+            return true;
         });
-
-
         MenuItem recommendPlace = menu.findItem(R.id.recommend_place_menu_item);
-        recommendPlace.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                onRecomClick();
-                return false;
-            }
+        recommendPlace.setOnMenuItemClickListener(item -> {
+            onRecomClick();
+            return false;
         });
 
         //Gestión de Botones si eres admin o no
@@ -384,8 +363,6 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
             deletePlace.setVisible(false);
 
         }
-
-
     }
 
     public void deleteDialog(){

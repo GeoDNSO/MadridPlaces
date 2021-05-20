@@ -35,18 +35,16 @@ import com.example.App.models.TUser;
 import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ControlValues;
 import com.example.App.utilities.OnResultAction;
-import com.example.App.utilities.ViewListenerUtilities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class AdminFragment extends Fragment implements UserListAdapter.OnListListener {
+public class AdminFragment extends Fragment implements UserListAdapter.OnListObserver {
 
     private View root;
     private AdminViewModel mViewModel;
     private HashMap<Integer, OnResultAction> actionHashMap;
-
 
     private List<TUser> listUser;
 
@@ -54,7 +52,7 @@ public class AdminFragment extends Fragment implements UserListAdapter.OnListLis
     private ProgressBar progressBar;
     private UserListAdapter adapter;
     private RecyclerView recyclerView;
-    private UserListAdapter.OnListListener onListListener;
+    private UserListAdapter.OnListObserver onListListener;
 
     private Integer sortUsernameboolean; /*0 == no sort, 1 == sort up (A-Z), 2 == sort down (Z-A)*/
     private Integer sortNameboolean; /*0 == no sort, 1 == sort up (A-Z), 2 == sort down (Z-A)*/

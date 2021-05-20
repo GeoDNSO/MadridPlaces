@@ -20,12 +20,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
     private Activity activity;
     private List<TCategory> categoryList;
-    private CategoryListener categoryListener;
+    private CategoryObserver categoryObserver;
 
-    public CategoriesAdapter(Activity activity, List<TCategory> categoryList, CategoryListener categoryListener){
+    public CategoriesAdapter(Activity activity, List<TCategory> categoryList, CategoryObserver categoryObserver){
         this.activity = activity;
         this.categoryList = categoryList;
-        this.categoryListener = categoryListener;
+        this.categoryObserver = categoryObserver;
     }
 
     @NonNull
@@ -72,13 +72,13 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
             category_item_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    categoryListener.onClicListener(getAdapterPosition());
+                    categoryObserver.onClickListener(getAdapterPosition());
                 }
             });
         }
     }
 
-    interface CategoryListener{
-        public void onClicListener(int position);
+    interface CategoryObserver {
+        public void onClickListener(int position);
     }
 }
