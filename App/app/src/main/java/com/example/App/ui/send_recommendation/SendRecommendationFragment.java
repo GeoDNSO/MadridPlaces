@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -84,6 +85,7 @@ public class SendRecommendationFragment extends Fragment implements SendRecommen
         actionHashMap = new HashMap<>();
         actionHashMap.put(ControlValues.SEND_REC_OK, () -> {
             Toast.makeText(getActivity(), getString(R.string.recommendation_sent), Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(root).popBackStack();
         });
 
         actionHashMap.put(ControlValues.SEND_REC_FAIL, () -> {

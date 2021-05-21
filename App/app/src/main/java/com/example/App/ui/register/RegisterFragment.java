@@ -223,11 +223,13 @@ public class RegisterFragment extends Fragment {
         String date = tv_date.getText().toString();
         RadioButton radioButton = (RadioButton) root.findViewById(radioGroup.getCheckedRadioButtonId());
         String gender = "";
-        //TODO Habra que diferenciar genericamente cuando haya varios idiomas
-        if(radioButton.getText().equals("Hombre")){
+
+        String male = getString(R.string.gender_male);
+        String female = getString(R.string.gender_female);
+        if(radioButton.getText().equals(male)){
             gender = "H";
         }
-        else if(radioButton.getText().equals("Mujer")){
+        else if(radioButton.getText().equals(female)){
             gender = "M";
         }
 
@@ -248,9 +250,6 @@ public class RegisterFragment extends Fragment {
         else if (!pass.equals(pass2)) {
             et_Password.setError(getString(R.string.password_not_equal));
             et_RepeatPassword.setError(getString(R.string.password_not_equal));
-        }
-        else if (Validator.usernameAlredyExists(username)) { //TODO HAY QUE LLAMAR a app EN LA FUNCION
-            et_Username.setError(getString(R.string.username_exists));
         }
         else {
             mRegisterViewModel.registerUser(username, pass, name, surname, email, gender, date, "Madrid", "user", profile_image);

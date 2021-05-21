@@ -24,7 +24,7 @@
             android:layout_marginEnd="20dp"
             android:visibility="gone"
             android:textSize="30sp"
-            android:text="@string/no_send_recommendations"/>
+            android:text="@string/no_recommendations"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recommendations_pending_list_recycle_view"

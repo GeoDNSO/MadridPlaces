@@ -234,5 +234,6 @@
     <string name="no_request_friends">No tienes ninguna petición de amistad</string>
     <string name="no_recommendations">"No has recibido ninguna recomendación "</string>
     <string name="no_send_recommendations">No has enviado ninguna recomendación a algún amigo</string>
+    <string name="mark_as_visited">Marcar como visitado</string>
 
 </resources>

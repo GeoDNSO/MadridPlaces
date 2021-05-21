@@ -2,6 +2,7 @@ package com.example.App.ui.place_details;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.core.widget.NestedScrollView;
@@ -312,6 +313,8 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
         tvDistance2Place = root.findViewById(R.id.tvPlaceDetailDistance);
 
         isDescCollapsed = true;
+
+        TooltipCompat.setTooltipText(ivVisited, getString(R.string.mark_as_visited));
     }
 
     @Override

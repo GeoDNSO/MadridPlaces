@@ -26,15 +26,5 @@ public class Validator {
         return false;
     }
 
-    public static boolean usernameAlredyExists(String username){
-        //TODO --> APP --> LLAMAR A DAO, CONECTAR CON BD Y VERIFICAR QUE EL NOMBRE NO EXISTE
-        return false;
-    }
-
-    public static boolean placeAlredyExists(String place){
-        //TODO --> APP --> LLAMAR A DAO, CONECTAR CON BD Y VERIFICAR QUE EL NOMBRE NO EXISTE
-        return false;
-    }
-
 
 }
