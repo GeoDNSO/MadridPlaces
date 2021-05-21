@@ -152,6 +152,11 @@ public class CommentRepository extends Repository {
                 List<TComment> listaAux = mCommentList.getValue();
                 TComment newComment = CommentRepositoryHelper.jsonStringToComment(res);
                 if (success){
+                    if(listaAux == null){
+                        mCommentList.postValue(listaAux);
+                        mSuccess.postValue(ControlValues.NEW_COMMENT_OK);
+                        return;
+                    }
                     if (listaAux.isEmpty()){
                         List<TComment> nuevaLista = new ArrayList<>();
                         nuevaLista.add(newComment);

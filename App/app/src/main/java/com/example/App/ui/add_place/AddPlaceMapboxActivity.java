@@ -272,9 +272,9 @@ public class AddPlaceMapboxActivity extends AppCompatActivity implements Permiss
                                 @Override
                                 public void onStyleLoaded(@NonNull Style style) {
                                     if (style.getLayer(DROPPED_MARKER_LAYER_ID) != null) {
-                                        Toast.makeText(AddPlaceMapboxActivity.this,
-                                                String.format(getString(R.string.location_picker_place_name_result),
-                                                        feature.placeName()), Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(AddPlaceMapboxActivity.this,
+                                        //        String.format(getString(R.string.location_picker_place_name_result),
+                                         //               feature.placeName()), Toast.LENGTH_SHORT).show();
                                         Bundle bundle = new Bundle();
                                         /*Log.i("BundleLatitudeLongitude", String.valueOf(point.coordinates().get(0))); //lati
                                         Log.i("BundleLatitudeLongitude", String.valueOf(point.coordinates().get(1))); //longi

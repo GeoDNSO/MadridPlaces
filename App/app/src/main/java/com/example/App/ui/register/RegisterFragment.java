@@ -98,6 +98,7 @@ public class RegisterFragment extends Fragment {
 
         initializeUI();
         initializeListeners();
+        hideProgressBar();
 
         return root;
     }
