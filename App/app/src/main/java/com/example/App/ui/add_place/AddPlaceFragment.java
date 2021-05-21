@@ -84,12 +84,12 @@ public class AddPlaceFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(AddPlaceViewModel.class);
         root = inflater.inflate(R.layout.add_place_fragment, container, false);
+        mViewModel.init();
+
         init();
         initListeners();
         configOnResultActions();
         observers();
-
-        mViewModel.init();
 
         return root;
     }
