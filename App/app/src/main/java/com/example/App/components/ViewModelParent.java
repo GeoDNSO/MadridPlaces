@@ -9,16 +9,12 @@ import com.example.App.models.TPlace;
 
 public abstract class ViewModelParent extends ViewModel {
 
-    protected MutableLiveData<Boolean> mlv_isLoading = new MutableLiveData<>(); //true indica progress bar activo
     protected LiveData<Integer> mSuccess = new MutableLiveData<>();
 
     public abstract void init();
 
     public LiveData<Integer> getSuccess(){
         return mSuccess;
-    }
-    public LiveData<Boolean> getMLV_IsLoading(){
-        return mlv_isLoading;
     }
 
     /**

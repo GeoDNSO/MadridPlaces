@@ -24,13 +24,11 @@ public class ModifyPlaceViewModel extends ViewModelParent {
     }
 
     public void getTypesOfPlaces(){
-        mlv_isLoading.setValue(true); //progress bar visible
         placeRepository.getCategories();
     }
 
     public void modifyPlace(String placeName, String placeDescription, String typePlace, List<String> listImages, TPlace p, Double latitude, Double longitude,
                             String road_class, String road_name, String road_number, String zipcode) throws JSONException {
-        mlv_isLoading.setValue(true); //progress bar visible
         TPlace place = new TPlace(placeName, placeDescription, latitude, longitude, listImages, typePlace, p.getCity(),
                 road_class, road_name, road_number, zipcode, p.getAffluence(), p.getRating(), p.isUserFav(), 100.0, 100, "Sin Fecha");
         //TODO en type of place no devolvemos elnombre del lugar sino el numero asignado en la base de datos
@@ -40,7 +38,6 @@ public class ModifyPlaceViewModel extends ViewModelParent {
 
     public void modifyPlace(String placeName, String placeDescription, String typePlace, TPlace p, Double latitude, Double longitude,
                             String road_class, String road_name, String road_number, String zipcode) throws JSONException {
-        mlv_isLoading.setValue(true); //progress bar visible
         TPlace place = new TPlace(placeName, placeDescription, latitude, longitude, p.getImagesList(), typePlace, p.getCity(),
                 road_class, road_name, road_number, zipcode, p.getAffluence(), p.getRating(), p.isUserFav(), 100.0, 100, "Sin Fecha Modificado");
         //TODO en type of place no devolvemos elnombre del lugar sino el numero asignado en la base de datos
