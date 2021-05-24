@@ -2,7 +2,6 @@ package com.example.App.ui.places_list;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
 import com.example.App.repositories.PlaceRepository;
 import com.example.App.models.TPlace;
@@ -21,8 +20,8 @@ public abstract class BaseViewModel extends ViewModelParent {
     public void init() {
         placeRepository = new PlaceRepository();
 
-        mSuccess = super.updateOnChange(mSuccess, placeRepository.getSuccess());
-        mPlacesList = super.updateOnChange(mPlacesList, getPlaceListToParent());
+        mSuccess = super.updateOnChange(placeRepository.getSuccess());
+        mPlacesList = super.updateOnChange(getPlaceListToParent());
     }
     
     public void listPlaces(int page, int quant, String nickname, String serchText){

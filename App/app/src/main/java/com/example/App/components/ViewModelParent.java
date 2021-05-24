@@ -5,8 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.example.App.models.TPlace;
-
 public abstract class ViewModelParent extends ViewModel {
 
     protected LiveData<Integer> mSuccess = new MutableLiveData<>();
@@ -20,8 +18,8 @@ public abstract class ViewModelParent extends ViewModel {
     /**
      * Devuelve un liveData que se actualiza cada vez que el valor de observed cambia
      */
-    public <T> LiveData<T> updateOnChange(LiveData<T> liveData, MutableLiveData<T> observed){
-        liveData = Transformations.switchMap(
+    public <T> LiveData<T> updateOnChange(MutableLiveData<T> observed){
+        LiveData<T> liveData = Transformations.switchMap(
                 observed,
                 newValue -> getLiveDataFromNewValue(newValue)
         );
@@ -29,9 +27,8 @@ public abstract class ViewModelParent extends ViewModel {
     }
 
     private <T> LiveData<T> getLiveDataFromNewValue(T value) {
-        //MutableLiveData<T> mAux = new MutableLiveData<>();
         MutableLiveData<T> mAux = new MutableLiveData<>(value); //Sobraria el setValue
-        mAux.setValue(value);
+        //mAux.setValue(value);
         return mAux;
     }
 

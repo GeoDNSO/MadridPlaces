@@ -2,7 +2,6 @@ package com.example.App.ui.admin;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
 import com.example.App.repositories.UserRepository;
 import com.example.App.models.TUser;
@@ -18,8 +17,8 @@ public class AdminViewModel extends ViewModelParent {
     public void init(){
         userRepository = new UserRepository();
 
-        mSuccess = super.updateOnChange(mSuccess, userRepository.getmSuccess());
-        mListUsers = super.updateOnChange(mListUsers, userRepository.getListUsers());
+        mSuccess = super.updateOnChange(userRepository.getmSuccess());
+        mListUsers = super.updateOnChange(userRepository.getListUsers());
 
     }
 

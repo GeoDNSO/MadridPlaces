@@ -2,8 +2,6 @@ package com.example.App.ui.login;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModel;
 
 import com.example.App.components.ViewModelParent;
 import com.example.App.repositories.UserRepository;
@@ -19,8 +17,8 @@ public class LoginViewModel extends ViewModelParent {
     public void init(){
         userRepository = new UserRepository();
 
-        mSuccess = super.updateOnChange(mSuccess, userRepository.getmSuccess());
-        mUser = super.updateOnChange(mUser, userRepository.getmUser());
+        mSuccess = super.updateOnChange(userRepository.getmSuccess());
+        mUser = super.updateOnChange(userRepository.getmUser());
     }
 
     //envia datos al servidor para registrar el nuevo usuario, en la primera linea se activa el progressBar

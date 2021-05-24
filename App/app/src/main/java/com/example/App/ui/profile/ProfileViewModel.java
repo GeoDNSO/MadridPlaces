@@ -4,8 +4,6 @@ import android.util.Pair;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModel;
 
 import com.example.App.components.ViewModelParent;
 import com.example.App.repositories.UserRepository;
@@ -23,9 +21,9 @@ public class ProfileViewModel extends ViewModelParent {
     public void init(){
         userRepository = new UserRepository();
 
-        mSuccess = super.updateOnChange(mSuccess, userRepository.getmSuccess());
-        mProfilePairMutableLiveData = super.updateOnChange(mProfilePairMutableLiveData, userRepository.getmCountProfileCommentsAndHistory());
-        mUser = super.updateOnChange(mUser, userRepository.getmUser());
+        mSuccess = super.updateOnChange(userRepository.getmSuccess());
+        mProfilePairMutableLiveData = super.updateOnChange(userRepository.getmCountProfileCommentsAndHistory());
+        mUser = super.updateOnChange(userRepository.getmUser());
     }
 
     public void deleteUser(String username){

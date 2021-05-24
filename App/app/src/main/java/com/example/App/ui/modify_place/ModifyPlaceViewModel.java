@@ -9,7 +9,6 @@ import com.example.App.components.ViewModelParent;
 
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ModifyPlaceViewModel extends ViewModelParent {
@@ -19,8 +18,8 @@ public class ModifyPlaceViewModel extends ViewModelParent {
     public void init(){
         placeRepository = new PlaceRepository();
 
-        mSuccess = super.updateOnChange(mSuccess, placeRepository.getSuccess());
-        mCategoriesList = super.updateOnChange(mCategoriesList, placeRepository.getCategoriesList());
+        mSuccess = super.updateOnChange(placeRepository.getSuccess());
+        mCategoriesList = super.updateOnChange(placeRepository.getCategoriesList());
     }
 
     public void getTypesOfPlaces(){

@@ -23,8 +23,8 @@ public class SendRecommendationViewModel extends ViewModelParent {
         userInteractionRepository = new RecommendationRepository();
         userFriendRepository = new UserFriendRepository();
 
-        mSuccess  = super.updateOnChange(mSuccess, userInteractionRepository.getSuccess());
-        mFriendList = super.updateOnChange(mFriendList, userFriendRepository.getmFriendList());
+        mSuccess  = super.updateOnChange(userInteractionRepository.getSuccess());
+        mFriendList = super.updateOnChange(userFriendRepository.getmFriendList());
     }
 
     public void friendList(String username) {

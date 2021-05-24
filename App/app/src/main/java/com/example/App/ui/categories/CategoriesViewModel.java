@@ -18,8 +18,8 @@ public class CategoriesViewModel extends ViewModelParent {
     public void init(){
         placeRepository = new PlaceRepository();
 
-        mSuccess = super.updateOnChange(mSuccess, placeRepository.getSuccess());
-        mCategoriesStringList = super.updateOnChange(mCategoriesStringList, placeRepository.getCategoriesList());
+        mSuccess = super.updateOnChange(placeRepository.getSuccess());
+        mCategoriesStringList = super.updateOnChange(placeRepository.getCategoriesList());
 
     }
 

@@ -1,10 +1,5 @@
 package com.example.App.ui.register;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModel;
-
 import com.example.App.components.ViewModelParent;
 import com.example.App.repositories.UserRepository;
 import com.example.App.models.TUser;
@@ -17,7 +12,7 @@ public class RegisterViewModel extends ViewModelParent {
     @Override
     public void init(){
         userRepository = new UserRepository();
-        mSuccess = super.updateOnChange(mSuccess, userRepository.getmSuccess());
+        mSuccess = super.updateOnChange(userRepository.getmSuccess());
     }
 
     //envia datos al servidor para registrar el nuevo usuario, en la primera linea se activa el progressBar

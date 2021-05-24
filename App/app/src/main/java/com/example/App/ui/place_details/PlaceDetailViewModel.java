@@ -2,7 +2,6 @@ package com.example.App.ui.place_details;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
 import com.example.App.App;
 import com.example.App.repositories.PlaceRepository;
@@ -19,8 +18,8 @@ public class PlaceDetailViewModel extends ViewModelParent {
     public void init(){
         placeRepository = new PlaceRepository();
 
-        mSuccess =  super.updateOnChange(mSuccess, placeRepository.getSuccess());
-        mPlace = super.updateOnChange(mPlace, placeRepository.getmPlace());
+        mSuccess =  super.updateOnChange(placeRepository.getSuccess());
+        mPlace = super.updateOnChange(placeRepository.getmPlace());
     }
 
     public void deletePlace(String placeName){

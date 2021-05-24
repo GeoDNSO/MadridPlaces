@@ -2,7 +2,7 @@ package com.example.App.ui.comments;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
+
 import com.example.App.repositories.CommentRepository;
 import com.example.App.models.TComment;
 import com.example.App.components.ViewModelParent;
@@ -16,8 +16,8 @@ public class CommentsViewModel extends ViewModelParent {
     public void init() {
         commentRepository = new CommentRepository();
 
-        mSuccess = super.updateOnChange(mSuccess, commentRepository.getSuccess());
-        mCommentsList = super.updateOnChange(mCommentsList, commentRepository.getCommentsList());
+        mSuccess = super.updateOnChange(commentRepository.getSuccess());
+        mCommentsList = super.updateOnChange(commentRepository.getCommentsList());
     }
 
     public void showComments(String placeName, int page, int quant){

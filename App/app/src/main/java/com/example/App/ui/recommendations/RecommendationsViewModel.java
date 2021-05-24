@@ -20,9 +20,9 @@ public class RecommendationsViewModel extends ViewModelParent {
     public void init() {
         recomRepository = new RecommendationRepository();
 
-        mListRecom = super.updateOnChange(mListRecom, recomRepository.getmRecommendationsList());
-        mListPendingRecom = super.updateOnChange(mListPendingRecom, recomRepository.getmPendingRecommendationsList());
-        mSuccess = super.updateOnChange(mSuccess, recomRepository.getSuccess());
+        mListRecom = super.updateOnChange(recomRepository.getmRecommendationsList());
+        mListPendingRecom = super.updateOnChange(recomRepository.getmPendingRecommendationsList());
+        mSuccess = super.updateOnChange(recomRepository.getSuccess());
     }
 
     public void listUserRecommendations(int page,int quant, String username){

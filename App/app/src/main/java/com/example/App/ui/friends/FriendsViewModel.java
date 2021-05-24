@@ -2,7 +2,6 @@ package com.example.App.ui.friends;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
 import com.example.App.repositories.UserFriendRepository;
 import com.example.App.models.TRequestFriend;
@@ -20,12 +19,12 @@ public class FriendsViewModel extends ViewModelParent {
     public void init() {
         friendRepository = new UserFriendRepository();
 
-        mFriendList = super.updateOnChange(mFriendList, friendRepository.getmFriendList());
+        mFriendList = super.updateOnChange(friendRepository.getmFriendList());
 
-        mSuccess = super.updateOnChange(mSuccess, friendRepository.getSuccess());
+        mSuccess = super.updateOnChange(friendRepository.getSuccess());
 
-        mFriendList = super.updateOnChange(mFriendList, friendRepository.getmFriendList());
-        mFriendRequestList = super.updateOnChange(mFriendRequestList, friendRepository.getmFriendRequestList());
+        mFriendList = super.updateOnChange(friendRepository.getmFriendList());
+        mFriendRequestList = super.updateOnChange(friendRepository.getmFriendRequestList());
     }
 
     public void declineFriendRequest(String userOrigin, String userDest) {

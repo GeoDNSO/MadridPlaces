@@ -7,7 +7,6 @@ import com.example.App.repositories.PlaceRepository;
 import com.example.App.models.TPlace;
 import com.example.App.components.ViewModelParent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AddPlaceViewModel extends ViewModelParent {
@@ -19,8 +18,8 @@ public class AddPlaceViewModel extends ViewModelParent {
     public void init(){
         placeRepository = new PlaceRepository();
 
-        mSuccess = super.updateOnChange(mSuccess, placeRepository.getSuccess());
-        mCategoriesList = super.updateOnChange(mCategoriesList, placeRepository.getCategoriesList());
+        mSuccess = super.updateOnChange(placeRepository.getSuccess());
+        mCategoriesList = super.updateOnChange(placeRepository.getCategoriesList());
 
     }
 
