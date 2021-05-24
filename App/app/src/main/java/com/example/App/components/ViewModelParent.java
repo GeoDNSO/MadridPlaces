@@ -19,11 +19,10 @@ public abstract class ViewModelParent extends ViewModel {
      * Devuelve un liveData que se actualiza cada vez que el valor de observed cambia
      */
     public <T> LiveData<T> updateOnChange(MutableLiveData<T> observed){
-        LiveData<T> liveData = Transformations.switchMap(
+        return Transformations.switchMap(
                 observed,
                 newValue -> getLiveDataFromNewValue(newValue)
         );
-        return liveData;
     }
 
     private <T> LiveData<T> getLiveDataFromNewValue(T value) {
