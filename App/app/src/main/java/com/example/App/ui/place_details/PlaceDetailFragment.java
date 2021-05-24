@@ -149,6 +149,8 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
             ivVisited.setImageDrawable(drawable);
 
             if(place.getTimeVisited() != null && !place.getTimeVisited().equals("")){
+                place.setTimeVisited("");
+                Toast.makeText(getActivity(), getString(R.string.unmark_visited_msg), Toast.LENGTH_SHORT).show();
                 ivVisited.setImageDrawable(drawable);
                 return;
             }
@@ -157,6 +159,7 @@ public class PlaceDetailFragment extends Fragment implements LogoutObserver {
             Date date = new Date();
             place.setTimeVisited(formatter.format(date));
             ivVisited.setImageDrawable(drawable);
+            Toast.makeText(getActivity(), getString(R.string.visited_msg), Toast.LENGTH_SHORT).show();
         });
         actionHashMap.put(ControlValues.VISITED_POST_FAIL, () -> {
             Toast.makeText(getActivity(), getString(R.string.error_msg), Toast.LENGTH_SHORT).show();

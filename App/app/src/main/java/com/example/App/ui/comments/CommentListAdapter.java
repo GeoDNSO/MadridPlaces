@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.App.App;
 import com.example.App.R;
 import com.example.App.models.TComment;
 import com.example.App.utilities.ViewListenerUtilities;
@@ -54,7 +55,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     public void onBindViewHolder(@NonNull CommentListAdapter.ViewHolder holder, int position) {
 
         TComment comment = commentList.get(position);
-        Log.d("AAAAAAAAA", "value: " + position);
+
         //Efecto shimmer
         Shimmer shimmer = new Shimmer.ColorHighlightBuilder()
                 .setBaseColor(Color.parseColor("#F3F3F3"))
@@ -69,7 +70,6 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
         shimmerDrawable.setShimmer(shimmer);
 
-
         if(comment.getImageProfileUser() == null || comment.getImageProfileUser() == "") {
             holder.userImage.setImageResource(R.drawable.ic_username);
         }
@@ -83,10 +83,16 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         holder.tvComment.setText(comment.getContent());
         holder.tvUsername.setText(comment.getUsername());
         holder.tvDate.setText(comment.getDate());
-        holder.ratingBar.setRating((float) comment.getRating()); // TODO comment.getRating() Es en double y es necesario float
+        holder.ratingBar.setRating((float) comment.getRating()); //comment.getRating() Es en double y es necesario float
 
         ViewListenerUtilities.makeTextViewExpandable(holder.tvComment, true);
 
+        boolean isAdmin = App.getInstance().isAdmin();
+        boolean isUserComment = (comment.getUsername().equals(App.getInstance().getUsername()));
+
+        holder.ivOptions.setVisibility(View.GONE);
+        if(isAdmin || isUserComment)
+            holder.ivOptions.setVisibility(View.VISIBLE);
 
         holder.ivOptions.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +105,6 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
     private PopupMenu createPopMenu(@NonNull CommentListAdapter.ViewHolder holder, int position){
         PopupMenu popupMenu = new PopupMenu(activity.getApplicationContext(), holder.ivOptions);
-
         popupMenu.inflate(R.menu.comment_item_menu);
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

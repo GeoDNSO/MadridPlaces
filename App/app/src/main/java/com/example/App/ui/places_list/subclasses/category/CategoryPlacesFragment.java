@@ -26,21 +26,7 @@ import java.util.List;
 
 public class CategoryPlacesFragment extends BasePlaces {
 
-    //Cambiar llamadas a viewmodel segun el tipo de lugares que se busque
     protected String category;
-
-    public static CategoryPlacesFragment newInstance(String category) {
-        Bundle args = new Bundle();
-        args.putString("category", category);
-        CategoryPlacesFragment f = new CategoryPlacesFragment();
-        f.setArguments(args);
-        return f;
-    }
-
-    public CategoryPlacesFragment(){
-        super();
-        placeList = new ArrayList<>();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,6 +44,16 @@ public class CategoryPlacesFragment extends BasePlaces {
         View superView =  super.onCreateView(inflater, container, savedInstanceState);
 
         return superView;
+    }
+
+    @Override
+    public void listPlaces() { super.mViewModel.listPlaces(page, quantum, App.getInstance().getUsername(), search_text);  }
+
+    @Override
+    public BaseViewModel getViewModelToParent() {
+        CategoryPlaceViewModel cvm = new ViewModelProvider(this).get(CategoryPlaceViewModel.class);
+        cvm.setCategory(category);
+        return cvm;
     }
 
     @Override
@@ -81,14 +77,17 @@ public class CategoryPlacesFragment extends BasePlaces {
         });
     }
 
-    @Override
-    public void listPlaces() { super.mViewModel.listPlaces(page, quantum, App.getInstance().getUsername(), search_text);  }
+    public static CategoryPlacesFragment newInstance(String category) {
+        Bundle args = new Bundle();
+        args.putString("category", category);
+        CategoryPlacesFragment f = new CategoryPlacesFragment();
+        f.setArguments(args);
+        return f;
+    }
 
-    @Override
-    public BaseViewModel getViewModelToParent() {
-        CategoryPlaceViewModel cvm = new ViewModelProvider(this).get(CategoryPlaceViewModel.class);
-        cvm.setCategory(category);
-        return cvm;
+    public CategoryPlacesFragment(){
+        super();
+        placeList = new ArrayList<>();
     }
 
 }
