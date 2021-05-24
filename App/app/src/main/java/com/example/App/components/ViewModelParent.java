@@ -26,9 +26,7 @@ public abstract class ViewModelParent extends ViewModel {
     }
 
     private <T> LiveData<T> getLiveDataFromNewValue(T value) {
-        MutableLiveData<T> mAux = new MutableLiveData<>(value); //Sobraria el setValue
-        //mAux.setValue(value);
-        return mAux;
+        return new MutableLiveData<>(value);
     }
 
 
