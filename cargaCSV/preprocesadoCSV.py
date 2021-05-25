@@ -6,14 +6,10 @@ import re
 from xml.etree import ElementTree
 
 
-########## IMPORTANTE: NECESIDAD DE RECOGER HORARIOS, AÚN NO IMPLEMENTADO POR PEREZA
-
-
 def limpiezaTemplos(dataTemplos):
     separate = re.split(r';', dataTemplos)
     nombre = separate[1].replace('"', '')
     descripcion = separate[2].replace('"', '') if separate[2] != '' else "Sin especificar"
-    #direccion = separate[10] + " " + separate[9] +  " " + separate[12] + ', ' + separate[17] +  " " + separate[19]
     clase_vial = separate[10].replace('"', '') if separate[10] != '' else "Sin especificar"
     nombre_vial = separate[9].replace('"', '') if separate[9] != '' else "Sin especificar"
     numero_vial = separate[12].replace('"', '') if separate[12] != '' and separate[12] != 's/n' else '0'
@@ -83,7 +79,7 @@ def limpiezaParque(dataParque):
 
 
 def limpiezaXML(url):
-	tree = ElementTree.parse(url+'.xml')
+	tree = ElementTree.parse("datasets/" + url+'.xml')
 	root = tree.getroot()
 	newCSV = pd.DataFrame(columns=['Nombre','Descripcion','Latitud', 'Longitud', 'Tipo', 'Clase_vial', 'Nombre_vial', 'Numero_vial', 'Codigo_postal'])
 	for att in root:
@@ -122,13 +118,16 @@ def limpiezaXML(url):
 	    newCSV = newCSV.append({'Nombre' : nombre, 'Descripcion' : descripcion, 'Latitud' : latitud, 'Longitud' : longitud,'Tipo' : tipo, 'Clase_vial' : clase_vial, 'Nombre_vial' : nombre_vial, 'Numero_vial' : numero_vial, 'Codigo_postal' : codigo_postal},ignore_index=True)
 
 
-	newCSV.to_csv(url + 'procesados.csv',index=False, encoding='utf-8', sep= '\t')
+	newCSV.to_csv("datasets_procesados/" + url + 'procesados.csv',index=False, encoding='utf-8', sep= '\t')
 
 #########################################################################   Templos   #########################################################################
 print("Comenzando el preproceso de los datasets...")
 
-templos = pd.DataFrame(columns=['Nombre','Descripcion','Latitud', 'Longitud', 'Tipo', 'Clase_vial', 'Nombre_vial', 'Numero_vial', 'Codigo_postal'])
-dataTemplos = pd.read_csv("templos.csv", sep='delimiter', header=None, engine='python')
+templos = pd.DataFrame(columns=['Nombre','Descripcion','Latitud', 'Longitud', 'Tipo', 
+								'Clase_vial', 'Nombre_vial', 'Numero_vial', 'Codigo_postal'])
+
+dataTemplos = pd.read_csv("datasets/templos.csv", sep='delimiter', header=None, engine='python')
+
 for i in range(0, len(dataTemplos)):
     prueba = dataTemplos.iloc[i, 0] #Recoge toda la fila
     res = limpiezaTemplos(prueba)
@@ -136,18 +135,27 @@ for i in range(0, len(dataTemplos)):
         res[1] = "Sin descripcion"
     auxTipo = res[4].split("/")
     if('http' not in res[2] and 'Ntilde' not in res[2] and len(auxTipo) != 1):
-        templos = templos.append({'Nombre' : res[0], 'Descripcion' : res[1], 'Latitud' : res[2], 'Longitud' : res[2],'Tipo' : auxTipo[3], 'Clase_vial' : res[5], 'Nombre_vial' : res[6], 'Numero_vial' : res[7], 'Codigo_postal' : res[8]},ignore_index=True)
+        templos = templos.append({'Nombre' : res[0], 
+        						'Descripcion' : res[1], 
+        						'Latitud' : res[2], 
+        						'Longitud' : res[2],
+        						'Tipo' : auxTipo[3], 
+        						'Clase_vial' : res[5], 
+        						'Nombre_vial' : res[6], 
+        						'Numero_vial' : res[7], 
+        						'Codigo_postal' : res[8]}, ignore_index=True)
+        
 dataTemplos.drop(dataTemplos.columns, axis=1)
 
 templos.sort_values(by=['Nombre'], inplace=True)
 
-templos.to_csv("TemplosProcesados.csv",index=False, encoding='utf-8-sig', sep= '\t')
+templos.to_csv("datasets_procesados/TemplosProcesados.csv",index=False, encoding='utf-8-sig', sep= '\t')
 print("CSV de Templos creados")
 
 #########################################################################   Museos   #########################################################################
 
 museos = pd.DataFrame(columns=['Nombre','Descripcion','Latitud', 'Longitud', 'Tipo', 'Clase_vial', 'Nombre_vial', 'Numero_vial', 'Codigo_postal'])
-dataMuseos = pd.read_csv("museos.csv", sep='delimiter', header=None, engine='python')
+dataMuseos = pd.read_csv("datasets/museos.csv", sep='delimiter', header=None, engine='python')
 for i in range(1, len(dataMuseos)):
     prueba = dataMuseos.iloc[i, 0] #Recoge toda la fila
     res = limpiezaMuseos(prueba)
@@ -161,12 +169,12 @@ dataMuseos.drop(dataMuseos.columns, axis=1)
 
 museos.sort_values(by=['Nombre'], inplace=True)
 
-museos.to_csv("MuseosProcesados.csv",index=False, encoding='utf-8-sig', sep= '\t')
+museos.to_csv("datasets_procesados/MuseosProcesados.csv",index=False, encoding='utf-8-sig', sep= '\t')
 
 print("CSV de Museos creados")
 #########################################################################   Monumentos   #########################################################################
 monumentos = pd.DataFrame(columns=['Nombre','Descripcion','Latitud', 'Longitud', 'Tipo', 'Clase_vial', 'Nombre_vial', 'Numero_vial', 'Codigo_postal'])
-dataMonumentos = pd.read_csv("monumentos.csv", sep='delimiter', header=None, engine='python')
+dataMonumentos = pd.read_csv("datasets/monumentos.csv", sep='delimiter', header=None, engine='python')
 for i in range(1, len(dataMonumentos)):
     prueba = dataMonumentos.iloc[i, 0] #Recoge toda la fila
     res = limpiezaMonumentos(prueba)
@@ -179,12 +187,12 @@ for i in range(1, len(dataMonumentos)):
     monumentos = monumentos.append({'Nombre' : res[0], 'Descripcion' : res[1], 'Latitud' : res[2], 'Longitud' : res[3],'Tipo' : res[4], 'Clase_vial' : res[5], 'Nombre_vial' : res[6], 'Numero_vial' : res[7], 'Codigo_postal' : res[8]},ignore_index=True)
 dataMonumentos.drop(dataMonumentos.columns, axis=1)
 
-monumentos.to_csv("MonumentosProcesados.csv",index=False, encoding='utf-8-sig', sep= '\t')
+monumentos.to_csv("datasets_procesados/MonumentosProcesados.csv",index=False, encoding='utf-8-sig', sep= '\t')
 
 print("CSV de Monumentos creados")
 #########################################################################   Información Turistica   #########################################################################
 infoTurismo = pd.DataFrame(columns=['Nombre','Descripcion','Latitud', 'Longitud', 'Tipo', 'Clase_vial', 'Nombre_vial', 'Numero_vial', 'Codigo_postal'])
-dataInfo = pd.read_csv("informacionTurismo.csv", sep='delimiter', header=None, engine='python')
+dataInfo = pd.read_csv("datasets/informacionTurismo.csv", sep='delimiter', header=None, engine='python')
 for i in range(1, len(dataInfo)):
     prueba = dataInfo.iloc[i, 0] #Recoge toda la fila
     res = limpiezaInfoTurismo(prueba)
@@ -197,13 +205,13 @@ for i in range(1, len(dataInfo)):
     infoTurismo = infoTurismo.append({'Nombre' : res[0], 'Descripcion' : res[1], 'Latitud' : res[2], 'Longitud' : res[3],'Tipo' : res[4], 'Clase_vial' : res[5], 'Nombre_vial' : res[6], 'Numero_vial' : res[7], 'Codigo_postal' : res[8]},ignore_index=True)
 dataInfo.drop(dataInfo.columns, axis=1)
 
-infoTurismo.to_csv("informacionTurismoProcesados.csv",index=False, encoding='utf-8-sig', sep= '\t')
+infoTurismo.to_csv("datasets_procesados/informacionTurismoProcesados.csv",index=False, encoding='utf-8-sig', sep= '\t')
 
 print("CSV de Puntos de informacion Turisticas creados")
 
 #########################################################################      Parque      #########################################################################
 parques = pd.DataFrame(columns=['Nombre','Descripcion','Latitud', 'Longitud', 'Tipo', 'Clase_vial', 'Nombre_vial', 'Numero_vial', 'Codigo_postal'])
-dataParques = pd.read_csv("parques.csv", sep='delimiter', encoding='utf-8-sig', header=None, engine='python')
+dataParques = pd.read_csv("datasets/parques.csv", sep='delimiter', encoding='utf-8-sig', header=None, engine='python')
 for i in range(1, len(dataParques)):
     prueba = dataParques.iloc[i, 0] #Recoge toda la fila
     res = limpiezaParque(prueba)
@@ -216,30 +224,23 @@ for i in range(1, len(dataParques)):
     parques = parques.append({'Nombre' : res[0], 'Descripcion' : res[1], 'Latitud' : res[2], 'Longitud' : res[3],'Tipo' : res[4], 'Clase_vial' : res[5], 'Nombre_vial' : res[6], 'Numero_vial' : res[7], 'Codigo_postal' : res[8]},ignore_index=True)
 dataParques.drop(dataParques.columns, axis=1)
 
-parques.to_csv("parquesProcesados.csv",index=False, encoding='utf-8-sig', sep= '\t')
-
+parques.to_csv("datasets_procesados/parquesProcesados.csv",index=False, encoding='utf-8-sig', sep= '\t')
 print("CSV de Parques creados")
 #########################################################################   Restaurantes   #########################################################################
 
 limpiezaXML("restaurantes")
-
 print("CSV de Restaurantes creados")
 #########################################################################   Tiendas   #########################################################################
 
 limpiezaXML("tiendas")
-
 print("CSV de Tiendas creados")
 #########################################################################   Clubs   #########################################################################
 
 limpiezaXML("clubs")
-
 print("CSV de Clubs creados")
 
 #########################################################################   Alojamientos   #########################################################################
 
 limpiezaXML("alojamientos")
-
 print("CSV de Alojamientos creados")
-
-
 print("Preprocesado Completado")

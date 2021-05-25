@@ -9,7 +9,8 @@ sqlAlchemy = SQLAlchemy(app)
 
 class user(sqlAlchemy.Model):
     __tablename__ = 'user'
-    nickname = sqlAlchemy.Column(sqlAlchemy.String(255), primary_key = True)
+    id_user = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
+    nickname = sqlAlchemy.Column(sqlAlchemy.String(255))
     name = sqlAlchemy.Column(sqlAlchemy.String(255))
     surname = sqlAlchemy.Column(sqlAlchemy.String(255))
     email = sqlAlchemy.Column(sqlAlchemy.String(255))
@@ -22,7 +23,8 @@ class user(sqlAlchemy.Model):
     
 class location(sqlAlchemy.Model):
     __tablename__ = 'location'
-    name = sqlAlchemy.Column(sqlAlchemy.String(255), primary_key = True)
+    id_location = sqlAlchemy.Column(sqlAlchemy.Integer(), primary_key = True)
+    name = sqlAlchemy.Column(sqlAlchemy.String(255))
     description = sqlAlchemy.Column(sqlAlchemy.String(1500)) #A lo mejor es necesario cambiar la longitud
     coordinate_latitude = sqlAlchemy.Column(sqlAlchemy.Float())
     coordinate_longitude = sqlAlchemy.Column(sqlAlchemy.Float()) 
