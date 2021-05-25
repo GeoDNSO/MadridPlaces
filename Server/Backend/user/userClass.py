@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask import request
 from flask import jsonify
+import datetime
 #Contiene las clases de la BD
 import modules
 import base64
@@ -136,6 +137,7 @@ def modifyUser():
     password = json_data["password"]
     gender = json_data["gender"]
     birth_date = json_data["birth_date"]
+    b = datetime.datetime.strptime(birth_date, '%Y-%m-%d')
     profile_image = json_data["profile_image"]
     pwdCipher = passwordCipher(password)
     try:
@@ -146,7 +148,7 @@ def modifyUser():
         modifiedUser.email = email
         modifiedUser.password = pwdCipher
         modifiedUser.gender = gender
-        modifiedUser.birth_date = birth_date
+        modifiedUser.birth_date = b
         if(profile_image != ""):
             if("http" not in profile_image):
                 image = UserFunct.decode64Img(profile_image)

@@ -74,7 +74,14 @@ def Monumentos():
 			nombre_vial = separate[7]
 			numero_vial = separate[10] if separate[10] != '' and separate[10] != 's/n'else '0'
 			codigo_postal = separate[17]
-			listaSelenium.append({"locationName" : name, "search" : name + ", monumento " + clase_vial + " " + nombre_vial + " " + numero_vial + ", " + codigo_postal})
+			listaSelenium.append({"locationName" : name, 
+								"search" : 
+									name + ", monumento " + 
+									clase_vial + " " + 
+									nombre_vial + " " + 
+									numero_vial + ", " + 
+									codigo_postal
+								})
 		for a in allImg:
 			image = "https://patrimonioypaisaje.madrid.es" + a["href"]
 			#data=requests.get(image)   # En el caso de volver a BLOB
@@ -98,7 +105,8 @@ def XML(url):
 
 		multimedia = att.find('multimedia').findall('media')
 		if(len(multimedia) == 0):
-			listaSelenium.append({"locationName" : nombre, "search" : nombre + ", " + url + " " + clase_vial + " " + direccion + ", " + codigo_postal}) #Si no hay imagen, se usará google fotos
+			listaSelenium.append({"locationName" : nombre, "search" : nombre + ", " + 
+									url + " " + clase_vial + " " + direccion + ", " + codigo_postal})
 		for media in multimedia:
 			url = media.find("url").text
 			nombre = re.sub('\u014c', 'O', nombre) # Ō por O
