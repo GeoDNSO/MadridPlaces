@@ -276,7 +276,7 @@ public class RegisterFragment extends Fragment {
     private void insertImagesFromGallery(){
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Seleccionar Imagenes"), 0);
     }
@@ -294,21 +294,11 @@ public class RegisterFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 0){
             if(resultCode == Activity.RESULT_OK){
-                if(data.getClipData() != null) {
-                    try {
-                        uri = data.getClipData().getItemAt(0).getUri();
-                        bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else {
-                    try {
-                        uri = data.getData();
-                        bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    uri = data.getData();
+                    bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
                 showImages();
             }
