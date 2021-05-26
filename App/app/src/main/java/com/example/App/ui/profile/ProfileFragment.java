@@ -33,7 +33,6 @@ import com.example.App.App;
 import com.example.App.R;
 import com.example.App.SessionManager;
 import com.example.App.models.TUser;
-import com.example.App.utilities.AppConstants;
 import com.example.App.utilities.ControlValues;
 import com.example.App.utilities.OnResultAction;
 import com.example.App.utilities.Validator;
@@ -337,7 +336,7 @@ public class ProfileFragment extends Fragment {
         //Conseguir los datos del usuario para despues modificarlos
         app = App.getInstance();
         SessionManager sm = app.getSessionManager();
-        TUser u = sm.getSesionUser();
+        TUser u = sm.getSessionUser();
 
         if(Validator.argumentsEmpty(et_Email.getText().toString(), et_Password.getText().toString())){
             Toast.makeText(getActivity(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();

@@ -225,7 +225,7 @@ public class App {
     }
 
     public TUser getSessionUser(){
-        return sessionManager.getSesionUser();
+        return sessionManager.getSessionUser();
     }
 
     public LocationTrack getLocationTrack() {

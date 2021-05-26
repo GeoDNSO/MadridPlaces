@@ -127,7 +127,7 @@ public class SessionManager {
 
     public String getImageProfile() { return prefs.getString(AppConstants.PROFILE_PICTURE, ""); }
 
-    public TUser getSesionUser(){
+    public TUser getSessionUser(){
         return new TUser(getUsername(), getPassword(), getFirstName(),
                 getSurname(), getEmail(), getGender(),
                 getBirthDate(), getCity(), getRol(), getImageProfile());
