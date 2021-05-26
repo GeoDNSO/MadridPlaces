@@ -112,8 +112,6 @@ public class App {
 
     }
 
-
-
     public void askLocationPermission() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
 
@@ -209,7 +207,6 @@ public class App {
         }
         return reachable;
     }
-
 
     public String getAppString(int id){
         return this.mainActivity.getString(id);
