@@ -39,7 +39,7 @@ def selectLugar(): #Recoge todos los lugares excepto monumentos,
 	cursor.execute("SELECT name, road_class, road_name, road_number, category, id_type, zipcode FROM location Join type_of_place on location.type_of_place = type_of_place.id_type")
 	allNames = cursor.fetchall()
 	for obj in allNames:
-		if(obj[5] < 2 or obj[5] >= 15):
+		if(obj[5] == 1 or obj[5] == 4 or obj[5] == 8 or obj[5] == 9):
 			listaSelenium.append({"locationName" : obj[0], "search" : obj[0] + ", " + obj[4] + " " + obj[1] + " " + obj[2] + " " + obj[3] + ", " + str(obj[6])})
 	
 
@@ -58,7 +58,7 @@ def main(): #Uso de Selenium exclusivamente para datos sin imágenes
 #Uso de Web Scrapping para recoger imágenes ya existentes
 
 def Monumentos(): 
-	dataMonumentos = pd.read_csv("monumentos.csv", sep='delimiter', header=None, engine='python')
+	dataMonumentos = pd.read_csv("datasets/monumentos.csv", sep='delimiter', header=None, engine='python')
 	for i in range(1, len(dataMonumentos)):
 		prueba = dataMonumentos.iloc[i, 0]
 		separate = re.split(r'";"', prueba)
@@ -124,13 +124,13 @@ mydb = MySQLdb.connect(host='localhost',
     db='tfg')
 cursor = mydb.cursor()
 
-XML("tiendas")
+XML("datasets/tiendas")
 print("Completado las inserciones de tiendas")
-XML("clubs")
+XML("datasets/clubs")
 print("Completado las inserciones de clubs")
-XML("alojamientos")
+XML("datasets/alojamientos")
 print("Completado las inserciones de alojamientos")
-XML("restaurantes")
+XML("datasets/restaurantes")
 print("Finalizado inserciones de XML")
 print("Comenzando las de Monumentos")
 Monumentos()

@@ -165,12 +165,12 @@ def mapCategoryToInt(category):
 	"Oficinas de Turismo" : 1,
 	"Clubs" : 2,
 	"Tiendas" : 3,
-	"Restaurantes" : 4,
-	"Alojamientos" : 5,
-	"Monumentos" : 6,
-	"Museos" : 7,
-	"Templos" : 8,
-  "Parques" : 19 #CAMBIAR
+	"Parques" : 4,
+	"Restaurantes" : 5,
+	"Alojamientos" : 6,
+	"Monumentos" : 7,
+	"Museos" : 8,
+  "Templos" : 9 #CAMBIAR
 	}
 
 	return idCategories[category]
@@ -181,12 +181,12 @@ def maptIntToCategory(idCategory):
   1 : "Oficinas de Turismo",
   2 : "Clubs",
   3 :"Tiendas",
-  4 :"Restaurantes",
-  5 :"Alojamientos",
-  6 :"Monumentos",
-  7 :"Museos",
-  8 :"Templos",
-  19: "Parques" #CAMBIAR
+  4 :"Parques",
+  5 :"Restaurantes",
+  6 :"Alojamientos",
+  7 :"Monumentos",
+  8 :"Museos",
+  9: "Templos"
   }
 
   return idCategories[idCategory]

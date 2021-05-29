@@ -38,7 +38,7 @@ def find_urls(inp,url,driver,iterate):
 		pass
 
 
-def selectLugar(): #Recoge todos los lugares excepto monumentos, 
+def selectLugar(): #Recoge todos los lugares que no tienen imágenes
 	cursor.execute("SELECT name, road_class, road_name, road_number, category, id_type, zipcode FROM location Join type_of_place on location.type_of_place = type_of_place.id_type WHERE location.name NOT IN (SELECT location_name FROM location_images)")
 	allNames = cursor.fetchall()
 	for obj in allNames:
