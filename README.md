@@ -3,10 +3,10 @@ TFG cuyo objetivo es la creación de una aplicación Android para facilitar el t
 
 
 ## Estructura del Proyecto
-* App. Contiene el proyecto Android de la aplicación
-* Iconos Categorías. Contiene los recursos .svg usados en la aplicación y obtenidos de la web https://www.flaticon.com/
-* Server. Contiene el código Python usado para la implementación del Servidor
-* cargaCSV. Contiene los scripts necesarios para iniciar un proceso ETL a los datos de la aplicación
+* **App**. Contiene el proyecto Android de la aplicación
+* **Iconos Categorías**. Contiene los recursos .svg usados en la aplicación y obtenidos de la web https://www.flaticon.com/
+* **Server**. Contiene el código Python usado para la implementación del Servidor
+* **cargaCSV**. Contiene los scripts necesarios para iniciar un proceso ETL a los datos de la aplicación
 
 ## Construir el servidor
 Para ejecutar el servidor es necesario ejecutar los siguientes comandos (es necesario tener instalada una versión actualizada de Python) desde la carpeta Server/Backend:
